@@ -1,25 +1,31 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix6.mechanisms.swerve.SwerveModule;
-import com.kauailabs.navx.frc.AHRS;
+//import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
+import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
-import frc.robot.util.dashboard.TabManager;
-import frc.robot.util.dashboard.TabManager.SubsystemTab;
+import frc.robot.util.TabManager;
+import frc.robot.util.TabManager.SubsystemTab;
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
+import edu.wpi.first.math.controller.PIDController;
+
+import com.kauailabs.navx.frc.AHRS;
 
 /**
  * Main Swerve Subsytem class
@@ -63,23 +69,17 @@ public class SwerveSubsystem extends SubsystemBase {
             DriveConstants.kBackRightDriveAbsoluteEncoderOffsetRad,
             DriveConstants.kBackRightDriveAbsoluteEncoderReversed);
 
-    private SwerveModulePosition[] swerveModulePositions = new SwerveModulePosition[] {
-        new SwerveModulePosition(),
-        new SwerveModulePosition(),
-        new SwerveModulePosition(),
-        new SwerveModulePosition()
-    };
+   private AHRS gyro = new AHRS(SPI.Port.kMXP);
 
-    private SwerveModuleNeoFalcon[] swerveModules = new SwerveModuleNeoFalcon[] {
-        frontLeft,
-        frontRight,
-        backLeft,
-        backRight
-    };
+   private double toDivideBy;
 
-    private AHRS gyro = new AHRS(SPI.Port.kMXP);
+   // private final PoseEstimator visionPoseEstimator = new PoseEstimator();
 
-    private SwerveDriveOdometry odometry = new SwerveDriveOdometry(DriveConstants.kDriveKinematics, new Rotation2d(0));
+    private final SwerveDrivePoseEstimator poseEstimator = new SwerveDrivePoseEstimator(
+        DriveConstants.kDriveKinematics, 
+        new Rotation2d(0), //FIX why 0 & not getRotation2d? 
+        getModulePositions(),  
+        new Pose2d()); // FIX add the starting pose estimate? 
 
     private ChassisSpeeds robotSpeeds;
 
@@ -90,6 +90,12 @@ public class SwerveSubsystem extends SubsystemBase {
     private Field2d m_field;
 
     public SwerveSubsystem() {
+        
+        PIDController xController = new PIDController(AutoConstants.kPXController, 0, 0);
+        PIDController yController = new PIDController(AutoConstants.kPYController, 0, 0);
+        PIDController thetaController = new PIDController(AutoConstants.kPThetaController, 0, 0);
+        thetaController.enableContinuousInput(-Math.PI, Math.PI);
+
         new Thread(() -> {
             try {
                 Thread.sleep(1000);
@@ -100,10 +106,34 @@ public class SwerveSubsystem extends SubsystemBase {
 
         initShuffleboard();
 
+        toDivideBy = 1;
+    }
+
+    public double[] getSpeedType() {
+        double[] toReturn = new double[2];
+        toReturn[0] = Constants.DriveConstants.kTeleDriveMaxSpeedMetersPerSecond / toDivideBy;
+        toReturn[1] = Constants.DriveConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond / toDivideBy;
+        return toReturn;
+    }
+
+    public void setSpeedType(double divisor) {
+        toDivideBy = divisor;
+    }
+
+    public void autoGyro() {
+        gyro.setAngleAdjustment(180);
+    }
+
+    public double getPitch(){
+        return Units.degreesToRadians((gyro.getPitch()));
+    }
+
+    public double getRoll(){
+        return Units.degreesToRadians((gyro.getRoll()));
     }
 
     public void zeroHeading() {
-        gyro.reset();
+      gyro.reset();
     }
 
     public double getHeading() {
@@ -114,12 +144,17 @@ public class SwerveSubsystem extends SubsystemBase {
         return Rotation2d.fromDegrees(getHeading());
     }
 
-    public Pose2d getPose(){
-        return odometry.getPoseMeters();
+    public Pose2d getCurrentPose(){
+        return poseEstimator.getEstimatedPosition();
     }
 
+    //Resets current pose to a specified pose. 
     public void resetOdometry(Pose2d pose){
-        odometry.resetPosition(getRotation2d(), swerveModulePositions, pose);
+
+        poseEstimator.resetPosition(
+            getRotation2d(), 
+            getModulePositions(),
+            pose);
     }
 
     public ChassisSpeeds getChassisSpeeds(){
@@ -129,35 +164,66 @@ public class SwerveSubsystem extends SubsystemBase {
     public void setChassisSpeeds(ChassisSpeeds speeds){
         robotSpeeds = speeds;
     }
+
+    public void driveRobotRelative(ChassisSpeeds speedGiven) {
+        setChassisSpeeds(speedGiven);
+
+        SwerveModuleState[] moduleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(speedGiven);
+        setModuleStates(moduleStates);
+    }
+
+    public SwerveModulePosition[] getModulePositions() {
+        return new SwerveModulePosition[] {
+            frontLeft.getPosition(),
+            frontRight.getPosition(),
+            backLeft.getPosition(),
+            backRight.getPosition()
+        };
+    }    
     
 
     @Override
     public void periodic() {
-        odometry.update(getRotation2d(), swerveModulePositions);
 
-        m_field.setRobotPose(getPose());
+        //Updates with drivetrain sensors
+        poseEstimator.update(                   
+            getRotation2d(), 
+            getModulePositions());
 
-        updateModulePositions();
+      //  Pair<Pose2d, Double> result = visionPoseEstimator.getEstimatedPose();  
+
+        //Adds vision 
+       // poseEstimator.addVisionMeasurement(result.getFirst(), result.getSecond()); 
+
+        // m_field.setRobotPose(getCurrentPose());
+        SmartDashboard.putNumber("Gyro Reading", getHeading());
+        SmartDashboard.putNumber("Gyro Pitch", getPitch());
+        SmartDashboard.putNumber("Gyro Roll", getRoll());
+
+
     }
 
     public void stopModules() {
-        for (int i = 0; i < swerveModules.length; i++) {
-            swerveModules[i].stop();
-        }
+        frontLeft.stop();
+        frontRight.stop();
+        backLeft.stop();
+        backRight.stop();
     }
 
     public void setModuleStates(SwerveModuleState[] desiredStates) {
         SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
-        for (int i = 0; i < swerveModules.length; i++) {
-            swerveModules[i].setDesiredState(desiredStates[i]);
-        }
+        frontLeft.setDesiredState(desiredStates[0], false);
+        frontRight.setDesiredState(desiredStates[1], false);
+        backLeft.setDesiredState(desiredStates[2], false);
+        backRight.setDesiredState(desiredStates[3], false);
     }
 
-    public void updateModulePositions() {
-        for (int i = 0; i < swerveModulePositions.length; i++) {
-            swerveModulePositions[i] = swerveModules[i].getPosition();
-        }
-        
+    public void setModuleStates(SwerveModuleState[] desiredStates, boolean station) {
+        SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
+        frontLeft.setDesiredState(desiredStates[0], station);
+        frontRight.setDesiredState(desiredStates[1], station);
+        backLeft.setDesiredState(desiredStates[2], station);
+        backRight.setDesiredState(desiredStates[3], station);
     }
 
     private void initShuffleboard(){
@@ -172,7 +238,7 @@ public class SwerveSubsystem extends SubsystemBase {
         fillList(backRight, backRightData);
 
         m_field = new Field2d();
-
+        
         TabManager.getInstance().addFieldWidget(TabManager.getInstance().accessTab(SubsystemTab.AUTON), BuiltInWidgets.kField, "Pose", m_field,
         new int[] { 0, 0 }, new int[] { 6, 4 });
     }
