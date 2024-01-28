@@ -51,13 +51,18 @@ public class SwerveModuleNeo {
 
         magnetConfiguration.withMagnetOffset(Units.radiansToDegrees(absoluteEncoderOffsetRad));
         magnetConfiguration.withAbsoluteSensorRange(AbsoluteSensorRangeValue.Unsigned_0To1);
-        magnetConfiguration.withSensorDirection(SensorDirectionValue.Clockwise_Positive);
+        magnetConfiguration.withSensorDirection(SensorDirectionValue.CounterClockwise_Positive);
 
         absoluteEncoder = new CANcoder(absoluteEncoderId);
 
         absoluteEncoder.getConfigurator().apply(magnetConfiguration);
 
-        driveMotor = new CANSparkMax(driveMotorId, MotorType.kBrushless); // Make sure brushless
+        driveMotor = new CANSparkMax(driveMotorId, MotorType.kBrushless);
+
+        driveMotor.setSmartCurrentLimit(45);
+        driveMotor.setSecondaryCurrentLimit(45);
+        driveMotor.setInverted(driveMotorReversed);
+        driveMotor.setIdleMode(IdleMode.kBrake);
 
         turningMotor = new CANSparkMax(turningMotorId, MotorType.kBrushless);
 
@@ -89,7 +94,7 @@ public class SwerveModuleNeo {
     }
 
     public double getDriveVelocity() {
-        return toMPS(toRPM(driveEncoder.getPosition()));
+        return toMPS(toRPM(driveEncoder.getVelocity()));
     }
 
     public double getTurningPosition() {
