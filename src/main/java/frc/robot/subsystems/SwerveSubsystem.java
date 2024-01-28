@@ -33,7 +33,7 @@ import com.kauailabs.navx.frc.AHRS;
  */
 public class SwerveSubsystem extends SubsystemBase {
 
-    private final SwerveModuleNeoFalcon frontLeft = new SwerveModuleNeoFalcon(
+    private final SwerveModuleNeo frontLeft = new SwerveModuleNeo(
             DriveConstants.kFrontLeftDriveMotorPort,
             DriveConstants.kFrontLeftTurningMotorPort,
             DriveConstants.kFrontLeftDriveAbsoluteEncoderReversed,
@@ -42,7 +42,7 @@ public class SwerveSubsystem extends SubsystemBase {
             DriveConstants.kFrontLeftDriveAbsoluteEncoderOffsetRad,
             DriveConstants.kFrontLeftDriveAbsoluteEncoderReversed);
 
-    private final SwerveModuleNeoFalcon frontRight = new SwerveModuleNeoFalcon(
+    private final SwerveModuleNeo frontRight = new SwerveModuleNeo(
             DriveConstants.kFrontRightDriveMotorPort,
             DriveConstants.kFrontRightTurningMotorPort,
             DriveConstants.kFrontRightDriveAbsoluteEncoderReversed,
@@ -51,7 +51,7 @@ public class SwerveSubsystem extends SubsystemBase {
             DriveConstants.kFrontRightDriveAbsoluteEncoderOffsetRad,
             DriveConstants.kFrontRightDriveAbsoluteEncoderReversed);
 
-    private final SwerveModuleNeoFalcon backLeft = new SwerveModuleNeoFalcon(
+    private final SwerveModuleNeo backLeft = new SwerveModuleNeo(
             DriveConstants.kBackLeftDriveMotorPort,
             DriveConstants.kBackLeftTurningMotorPort,
             DriveConstants.kBackLeftDriveAbsoluteEncoderReversed,
@@ -60,7 +60,7 @@ public class SwerveSubsystem extends SubsystemBase {
             DriveConstants.kBackLeftDriveAbsoluteEncoderOffsetRad,
             DriveConstants.kBackLeftDriveAbsoluteEncoderReversed);
 
-    private final SwerveModuleNeoFalcon backRight = new SwerveModuleNeoFalcon(
+    private final SwerveModuleNeo backRight = new SwerveModuleNeo(
             DriveConstants.kBackRightDriveMotorPort,
             DriveConstants.kBackRightTurningMotorPort,
             DriveConstants.kBackRightDriveAbsoluteEncoderReversed,
@@ -243,7 +243,7 @@ public class SwerveSubsystem extends SubsystemBase {
         new int[] { 0, 0 }, new int[] { 6, 4 });
     }
 
-    private void fillList(SwerveModuleNeoFalcon module, ShuffleboardLayout layout){
+    private void fillList(SwerveModuleNeo module, ShuffleboardLayout layout){
         layout.addNumber("Absolute Position", () -> module.getAbsolutePostion());
         layout.addNumber("Integrated Position", () -> module.getTurningPosition());
         layout.addNumber("Velocity", () -> module.getDriveVelocity());

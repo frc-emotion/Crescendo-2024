@@ -1,23 +1,15 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.FeedbackDevice;
-import com.ctre.phoenix.sensors.AbsoluteSensorRange;
-import com.ctre.phoenix6.hardware.CANcoder;
-import com.ctre.phoenix.sensors.CANCoderStatusFrame;
-import com.ctre.phoenix.sensors.SensorInitializationStrategy;
-import com.ctre.phoenix6.configs.CANcoderConfiguration;
-import com.ctre.phoenix6.configs.CANcoderConfigurator;
-import com.ctre.phoenix6.configs.FeedbackConfigs;
-import com.ctre.phoenix6.configs.MagnetSensorConfigs;
-import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.configs.TalonFXConfigurator;
-import com.ctre.phoenix6.hardware.TalonFX;
-import com.ctre.phoenix6.signals.AbsoluteSensorRangeValue;
-import com.ctre.phoenix6.signals.SensorDirectionValue;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
-import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.SparkPIDController;
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix6.configs.CANcoderConfiguration;
+import com.ctre.phoenix6.configs.FeedbackConfigs;
+import com.ctre.phoenix6.configs.MagnetSensorConfigs;
+import com.ctre.phoenix6.hardware.CANcoder;
+import com.ctre.phoenix6.signals.AbsoluteSensorRangeValue;
+import com.ctre.phoenix6.signals.SensorDirectionValue;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
@@ -37,17 +29,15 @@ import frc.robot.Constants.ModuleConstants;
  * Note: Uses analog absolute encoder instead of a CANCoder
  * 
  */
-public class SwerveModuleNeoFalcon {
+public class SwerveModuleNeo {
 
-    private final TalonFX driveMotor;
+    private final CANSparkMax driveMotor;
     private final CANSparkMax turningMotor;
 
-    private final RelativeEncoder turningEncoder;
+    private final RelativeEncoder driveEncoder, turningEncoder;
     private final SparkPIDController turningPidController;
 
-    private final FeedbackConfigs talonFXConfigurator;
-    private final CANcoderConfiguration canConfiguration;
-    private final MagnetSensorConfigs magnetConfiguration;
+    private MagnetSensorConfigs magnetConfiguration;
 
     private final CANcoder absoluteEncoder;
     private final boolean absoluteEncoderReversed;
@@ -58,49 +48,39 @@ public class SwerveModuleNeoFalcon {
 
     private final int ENCODER_RESET_ITERATIONS = 500;
 
-    public SwerveModuleNeoFalcon(int driveMotorId, int turningMotorId, boolean driveMotorReversed,
+    public SwerveModuleNeo(int driveMotorId, int turningMotorId, boolean driveMotorReversed,
             boolean turningMotorReversed,
             int absoluteEncoderId, double absoluteEncoderOffset, boolean absoluteEncoderReversed) {
+                
         this.absoluteEncoderOffsetRad = absoluteEncoderOffset;
         this.absoluteEncoderReversed = absoluteEncoderReversed;
 
-        canConfiguration = new CANcoderConfiguration();
         magnetConfiguration = new MagnetSensorConfigs();
 
         magnetConfiguration.withMagnetOffset(Units.radiansToDegrees(absoluteEncoderOffsetRad));
         magnetConfiguration.withAbsoluteSensorRange(AbsoluteSensorRangeValue.Unsigned_0To1);
         magnetConfiguration.withSensorDirection(SensorDirectionValue.Clockwise_Positive); 
 
-        // Deprecated ?
-
-        // absoluteEncoder.configSensorInitializationStrategy(SensorInitializationStrategy.BootToAbsolutePosition);
-        // absoluteEncoder.setStatusFramePeriod(CANCoderStatusFrame.SensorData, 10, 20);
-        // absoluteEncoder.setStatusFramePeriod(CANCoderStatusFrame.VbatAndFaults, 100, 200);
-        
         absoluteEncoder = new CANcoder(absoluteEncoderId);
 
         absoluteEncoder.getConfigurator().apply(magnetConfiguration);
-        
-        talonFXConfigurator = new FeedbackConfigs();
-        talonFXConfigurator.withFeedbackRemoteSensorID(FeedbackDevice.IntegratedSensor.value);
 
-        driveMotor = new TalonFX(driveMotorId);
+        driveMotor = new CANSparkMax(driveMotorId, MotorType.kBrushless); // Make sure brushless
 
         turningMotor = new CANSparkMax(turningMotorId, MotorType.kBrushless);
-
-        driveMotor.getConfigurator().apply(talonFXConfigurator);
 
         turningMotor.setSmartCurrentLimit(45);
         turningMotor.setSecondaryCurrentLimit(45);
         turningMotor.setInverted(turningMotorReversed);
         turningMotor.setIdleMode(IdleMode.kBrake);
 
-        // driveMotor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor.value);
-        // turningMotor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
-
         turningEncoder = turningMotor.getEncoder();
         turningEncoder.setPositionConversionFactor(ModuleConstants.kTurningEncoderRot2Rad);
         turningEncoder.setVelocityConversionFactor(ModuleConstants.kTurningEncoderRPM2RadPerSec);
+
+        driveEncoder = driveMotor.getEncoder();
+        driveEncoder.setPositionConversionFactor(ModuleConstants.kTurningEncoderRot2Rad);
+        driveEncoder.setVelocityConversionFactor(ModuleConstants.kTurningEncoderRPM2RadPerSec);
 
         turningPidController = turningMotor.getPIDController();
         
@@ -113,11 +93,11 @@ public class SwerveModuleNeoFalcon {
     }
 
     public double getDrivePosition() {
-        return toMeter(toRot(driveMotor.getPosition().getValueAsDouble()));
+        return toMeter(toRot(driveEncoder.getPosition()));
     }
 
     public double getDriveVelocity() {
-        return toMPS(toRPM(driveMotor.getVelocity().getValueAsDouble()));
+        return toMPS(toRPM(driveEncoder.getPosition()));
     }
 
     public double getTurningPosition() {
@@ -132,6 +112,7 @@ public class SwerveModuleNeoFalcon {
         return new SwerveModulePosition(getDrivePosition(), new Rotation2d(getTurningPosition()));
     }
 
+    // Arshan - I dont really understand what this function does
     public void setReferenceAngle(double referenceAngleRadians){
         double currentAngleRadians = getTurningPosition();
 
@@ -180,7 +161,7 @@ public class SwerveModuleNeoFalcon {
 
 
     public void resetEncoders(){
-        driveMotor.setPosition(0);
+        driveEncoder.setPosition(0);
         turningEncoder.setPosition(Units.degreesToRadians(getAbsolutePostion()));
     }
 
