@@ -69,17 +69,17 @@ public class SwerveSubsystem extends SubsystemBase {
             DriveConstants.kBackRightDriveAbsoluteEncoderOffsetRad,
             DriveConstants.kBackRightDriveAbsoluteEncoderReversed);
 
-   private AHRS gyro = new AHRS(SPI.Port.kMXP);
+    private AHRS gyro = new AHRS(SPI.Port.kMXP);
 
-   private double toDivideBy;
+    private double toDivideBy;
 
-   // private final PoseEstimator visionPoseEstimator = new PoseEstimator();
+    // private final PoseEstimator visionPoseEstimator = new PoseEstimator();
 
-    private final SwerveDrivePoseEstimator poseEstimator = new SwerveDrivePoseEstimator(
-        DriveConstants.kDriveKinematics, 
-        new Rotation2d(0), //FIX why 0 & not getRotation2d? 
-        getModulePositions(),  
-        new Pose2d()); // FIX add the starting pose estimate? 
+    public final SwerveDrivePoseEstimator poseEstimator = new SwerveDrivePoseEstimator(
+            DriveConstants.kDriveKinematics,
+            getRotation2d(), // Was empty pose 2d before
+            getModulePositions(),
+            new Pose2d()); // FIX add the starting pose estimate?
 
     private ChassisSpeeds robotSpeeds;
 
@@ -90,7 +90,7 @@ public class SwerveSubsystem extends SubsystemBase {
     private Field2d m_field;
 
     public SwerveSubsystem() {
-        
+
         PIDController xController = new PIDController(AutoConstants.kPXController, 0, 0);
         PIDController yController = new PIDController(AutoConstants.kPYController, 0, 0);
         PIDController thetaController = new PIDController(AutoConstants.kPThetaController, 0, 0);
@@ -124,16 +124,16 @@ public class SwerveSubsystem extends SubsystemBase {
         gyro.setAngleAdjustment(180);
     }
 
-    public double getPitch(){
+    public double getPitch() {
         return Units.degreesToRadians((gyro.getPitch()));
     }
 
-    public double getRoll(){
+    public double getRoll() {
         return Units.degreesToRadians((gyro.getRoll()));
     }
 
     public void zeroHeading() {
-      gyro.reset();
+        gyro.reset();
     }
 
     public double getHeading() {
@@ -144,24 +144,24 @@ public class SwerveSubsystem extends SubsystemBase {
         return Rotation2d.fromDegrees(getHeading());
     }
 
-    public Pose2d getCurrentPose(){
+    public Pose2d getCurrentPose() {
         return poseEstimator.getEstimatedPosition();
     }
 
-    //Resets current pose to a specified pose. 
-    public void resetOdometry(Pose2d pose){
+    // Resets current pose to a specified pose.
+    public void resetOdometry(Pose2d pose) {
 
         poseEstimator.resetPosition(
-            getRotation2d(), 
-            getModulePositions(),
-            pose);
+                getRotation2d(),
+                getModulePositions(),
+                pose);
     }
 
-    public ChassisSpeeds getChassisSpeeds(){
+    public ChassisSpeeds getChassisSpeeds() {
         return robotSpeeds;
     }
-    
-    public void setChassisSpeeds(ChassisSpeeds speeds){
+
+    public void setChassisSpeeds(ChassisSpeeds speeds) {
         robotSpeeds = speeds;
     }
 
@@ -174,32 +174,30 @@ public class SwerveSubsystem extends SubsystemBase {
 
     public SwerveModulePosition[] getModulePositions() {
         return new SwerveModulePosition[] {
-            frontLeft.getPosition(),
-            frontRight.getPosition(),
-            backLeft.getPosition(),
-            backRight.getPosition()
+                frontLeft.getPosition(),
+                frontRight.getPosition(),
+                backLeft.getPosition(),
+                backRight.getPosition()
         };
-    }    
-    
+    }
 
     @Override
     public void periodic() {
 
-        //Updates with drivetrain sensors
-        poseEstimator.update(                   
-            getRotation2d(), 
-            getModulePositions());
+        // Updates with drivetrain sensors
+        poseEstimator.update(
+                getRotation2d(),
+                getModulePositions());
 
-      //  Pair<Pose2d, Double> result = visionPoseEstimator.getEstimatedPose();  
+        // Pair<Pose2d, Double> result = visionPoseEstimator.getEstimatedPose();
 
-        //Adds vision 
-       // poseEstimator.addVisionMeasurement(result.getFirst(), result.getSecond()); 
+        // Adds vision
+        // poseEstimator.addVisionMeasurement(result.getFirst(), result.getSecond());
 
         // m_field.setRobotPose(getCurrentPose());
         SmartDashboard.putNumber("Gyro Reading", getHeading());
         SmartDashboard.putNumber("Gyro Pitch", getPitch());
         SmartDashboard.putNumber("Gyro Roll", getRoll());
-
 
     }
 
@@ -226,7 +224,7 @@ public class SwerveSubsystem extends SubsystemBase {
         backRight.setDesiredState(desiredStates[3], station);
     }
 
-    private void initShuffleboard(){
+    private void initShuffleboard() {
         ShuffleboardTab moduleData = TabManager.getInstance().accessTab(SubsystemTab.DRIVETRAIN);
         frontLeftData = moduleData.getLayout("Front Left", BuiltInLayouts.kList);
         frontRightData = moduleData.getLayout("Front Right", BuiltInLayouts.kList);
@@ -238,18 +236,17 @@ public class SwerveSubsystem extends SubsystemBase {
         fillList(backRight, backRightData);
 
         m_field = new Field2d();
-        
-        TabManager.getInstance().addFieldWidget(TabManager.getInstance().accessTab(SubsystemTab.AUTON), BuiltInWidgets.kField, "Pose", m_field,
-        new int[] { 0, 0 }, new int[] { 6, 4 });
+
+        TabManager.getInstance().addFieldWidget(TabManager.getInstance().accessTab(SubsystemTab.AUTON),
+                BuiltInWidgets.kField, "Pose", m_field,
+                new int[] { 0, 0 }, new int[] { 6, 4 });
     }
 
-    private void fillList(SwerveModuleNeo module, ShuffleboardLayout layout){
+    private void fillList(SwerveModuleNeo module, ShuffleboardLayout layout) {
         layout.addNumber("Absolute Position", () -> module.getAbsolutePostion());
         layout.addNumber("Integrated Position", () -> module.getTurningPosition());
         layout.addNumber("Velocity", () -> module.getDriveVelocity());
         layout.withSize(2, 4);
     }
 
-
- 
 }
