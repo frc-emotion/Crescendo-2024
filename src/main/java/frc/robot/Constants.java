@@ -272,4 +272,28 @@ public final class Constants {
         
     }
 
+    public static class ShooterConstants {
+            // CAN IDs
+        public static final int feederPort = 0;
+        public static final int shooterPort = 1;
+
+            // Motor Constants
+        public static final int CURRENT_LIMIT = 45;
+
+            // Speeds
+        public static final double FEED_SPEED = 0.25;
+        public static final double SHOOT_SPEED = 0.75;
+
+            // FeedForward Constants
+        public static final double kS = 0;
+        public static final double kV = 0;
+        public static final double kA = 0;
+
+            // Prevent FeedForward overspeeding
+        public static final double kFeedForwardAdjustment = 0.9;
+
+            // Tolerance for atSetpoint() is at target speed
+        public static final double kControllerTolerance = 0;
+    }
+
 }
