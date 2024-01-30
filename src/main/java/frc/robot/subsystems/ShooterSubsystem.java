@@ -40,10 +40,10 @@ public class ShooterSubsystem extends SubsystemBase {
 
     /**
      * Sets the target speed of the shooter using feedforward and BangBangController. Controller values
-     * multiplied by 12 to transfer to voltage. FeedForward is used to sustain speeds and reduce the
-     * use of the BangBangController, and is multiplied by a constant to prevent overspeeding.
+     * multiplied by 12 to change units to volts. Feedforward control is used to sustain speeds and reduce the
+     * use of the BangBangController. Feedforward ouput is multiplied by a constant to prevent overspeeding.
      * 
-     * @param speed The target speed for the shooter motor.
+     * @param speed The target speed for the shooter motor from [-1, 1].
      */
     public void setShooterSpeed(double speed) {
         shooterMotor.setVoltage(
@@ -55,32 +55,32 @@ public class ShooterSubsystem extends SubsystemBase {
     /**
      * Gets the speed of the shooter.
      * 
-     * @return The speed of the shooter from thje CANSparkMax motor controller
+     * @return The speed of the shooter
      */
     public double getShooterSpeed() {
         return shooterMotor.get();
     }
 
     /**
-     * Gets the voltage supplied to the motor
+     * Gets the voltage supplied to the shooter.
      * 
-     * @return The bus voltage from the CANSparkMax
+     * @return The bus voltage to the shooter
      */
     public double getShooterVoltage() {
         return shooterMotor.getBusVoltage();
     }
 
     /** 
-     * Stops supplying power to the motor
+     * Stops supplying power to the shooter.
      */
     public void stopShooter() {
         shooterMotor.stopMotor();
     }
 
     /**
-     * Sets the speed of the feeder
+     * Sets the speed of the feeder.
      * 
-     * @param speed The speed to set the feeder to.
+     * @param speed The speed to set the feeder to
      */
     public void setFeederSpeed(double speed) {
         feederMotor.set(speed);
@@ -92,7 +92,7 @@ public class ShooterSubsystem extends SubsystemBase {
      * @return If the shooter is at the target speed
      */
     public boolean isShooterReady() {
-        return controller.atSetpoint();
+        return controller.atSetpoint(); // TODO: Check if this method works properly
     }
 
     /**

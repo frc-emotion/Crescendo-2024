@@ -21,6 +21,7 @@ public class ShooterCommand extends Command {
         addRequirements(shooterSubsystem);
     }
 
+    @Override
     public void execute() {
         if(shooterSupplier.get()) {
             shooterSubsystem.setShooterSpeed(ShooterConstants.SHOOT_SPEED);
@@ -32,5 +33,11 @@ public class ShooterCommand extends Command {
         } else {
             shooterSubsystem.stopFeeder();
         }
+    }
+
+    @Override
+    public void end(boolean interrupted) {
+        shooterSubsystem.stopFeeder();
+        shooterSubsystem.stopShooter();
     }
 }
