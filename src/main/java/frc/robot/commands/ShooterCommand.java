@@ -29,6 +29,8 @@ public class ShooterCommand extends Command {
         }
         if(feederSupplier.get()) {
             shooterSubsystem.setFeederSpeed(ShooterConstants.FEED_SPEED);
+        } else {
+            shooterSubsystem.stopFeeder();
         }
     }
 }
