@@ -107,10 +107,10 @@ public class SwerveSubsystem extends SubsystemBase {
 
     public SwerveSubsystem() {
 
-        PIDController xController = new PIDController(AutoConstants.kPXController, 0, 0);
-        PIDController yController = new PIDController(AutoConstants.kPYController, 0, 0);
-        PIDController thetaController = new PIDController(AutoConstants.kPThetaController, 0, 0);
-        thetaController.enableContinuousInput(-Math.PI, Math.PI);
+        //PIDController xController = new PIDController(AutoConstants.kPXController, 0, 0);
+        //PIDController yController = new PIDController(AutoConstants.kPYController, 0, 0);
+        //PIDController thetaController = new PIDController(AutoConstants.kPThetaController, 0, 0);
+        //thetaController.enableContinuousInput(-Math.PI, Math.PI);
 
         new Thread(() -> {
             try {
@@ -123,6 +123,7 @@ public class SwerveSubsystem extends SubsystemBase {
         initShuffleboard();
 
         toDivideBy = 1;
+
 
         BooleanSupplier supp = () -> { return true; };
 
@@ -292,7 +293,6 @@ public class SwerveSubsystem extends SubsystemBase {
            kPathConstraints
         );
     }
-
     /**
      * Creates a new Command to pathfind to a certain pose using
      * the target pose and end velocity.
