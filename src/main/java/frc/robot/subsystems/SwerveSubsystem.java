@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.AutoConstants;
@@ -25,13 +26,26 @@ import frc.robot.util.TabManager.SubsystemTab;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.controller.PIDController;
 
+import java.util.function.BooleanSupplier;
+
 import com.kauailabs.navx.frc.AHRS;
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.path.PathConstraints;
+import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
+import com.pathplanner.lib.util.ReplanningConfig;
 
 /**
  * Main Swerve Subsytem class
  * Holds gyro and odometry methods
  */
 public class SwerveSubsystem extends SubsystemBase {
+
+    private static final PathConstraints kPathConstraints = new PathConstraints(
+        AutoConstants.kMaxSpeedMetersPerSecond, 
+        AutoConstants.kMaxAccelerationMetersPerSecondSquared, 
+        AutoConstants.kMaxAngularSpeedRadiansPerSecond, 
+        AutoConstants.kMaxAngularAccelerationRadiansPerSecondSquared
+    );
 
     private final SwerveModuleNeo frontLeft = new SwerveModuleNeo(
             DriveConstants.kFrontLeftDriveMotorPort,
@@ -107,6 +121,18 @@ public class SwerveSubsystem extends SubsystemBase {
         initShuffleboard();
 
         toDivideBy = 1;
+
+        BooleanSupplier supp = () -> { return false; };
+
+        AutoBuilder.configureHolonomic(
+            this::getCurrentPose,
+            this::resetOdometry,
+            this::getChassisSpeeds,
+            this::setChassisSpeeds,
+            new HolonomicPathFollowerConfig(AutoConstants.kMaxSpeedMetersPerSecond, DriveConstants.kWheelBase, new ReplanningConfig()),
+            supp,
+            this
+        );
     }
 
     public double[] getSpeedType() {
@@ -249,4 +275,10 @@ public class SwerveSubsystem extends SubsystemBase {
         layout.withSize(2, 4);
     }
 
+    public Command navigateCommand(Pose2d pose) {
+        return AutoBuilder.pathfindToPose(
+            pose, 
+           kPathConstraints
+        );
+    }
 }
