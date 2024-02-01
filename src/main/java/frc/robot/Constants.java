@@ -295,8 +295,6 @@ public final class Constants {
             // Prevent FeedForward overspeeding
         public static final double kFeedForwardAdjustment = 0.9;
 
-            // Tolerance for atSetpoint() is at target speed
-        public static final double kControllerTolerance = 0;
     }
 
 }
