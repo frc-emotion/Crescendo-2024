@@ -2,17 +2,19 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkPIDController;
+import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
-import edu.wpi.first.math.controller.BangBangController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ShooterConstants;
 
 public class ShooterSubsystem extends SubsystemBase {
     private final CANSparkMax shooterMotor, feederMotor;
-    private final BangBangController controller;
+    private final SparkPIDController controller;
 
     private final RelativeEncoder shooterEncoder;
     private final SimpleMotorFeedforward feedforward;
@@ -32,8 +34,11 @@ public class ShooterSubsystem extends SubsystemBase {
 
         shooterEncoder = shooterMotor.getEncoder();
 
-        controller = new BangBangController();
-        controller.setTolerance(ShooterConstants.kControllerTolerance);
+        controller = shooterMotor.getPIDController();
+        controller.setP(ShooterConstants.kP);
+        controller.setI(ShooterConstants.kI);
+        controller.setD(ShooterConstants.kD);
+        
 
         feedforward = new SimpleMotorFeedforward(ShooterConstants.kS, ShooterConstants.kV, ShooterConstants.kA);
     }
@@ -46,9 +51,10 @@ public class ShooterSubsystem extends SubsystemBase {
      * @param speed The target speed for the shooter motor from [-1, 1].
      */
     public void setShooterSpeed(double speed) {
-        shooterMotor.setVoltage(
-            12.0 * controller.calculate(shooterEncoder.getVelocity(), speed) + 
-            ShooterConstants.kFeedForwardAdjustment * feedforward.calculate(speed)
+        controller.setFF(ShooterConstants.kFeedForwardAdjustment * feedforward.calculate(speed));
+        controller.setReference(
+            speed,
+            ControlType.kVelocity
         );
     }
 
@@ -58,7 +64,7 @@ public class ShooterSubsystem extends SubsystemBase {
      * @return The speed of the shooter
      */
     public double getShooterSpeed() {
-        return shooterMotor.get();
+        return shooterEncoder.getVelocity();
     }
 
     /**
@@ -87,18 +93,9 @@ public class ShooterSubsystem extends SubsystemBase {
     }
 
     /**
-     * Checks if the shooter has reached the setpoint.
-     * 
-     * @return If the shooter is at the target speed
-     */
-    public boolean isShooterReady() {
-        return controller.atSetpoint(); // TODO: Check if this method works properly
-    }
-
-    /**
      * Stops the feeder
      */
     public void stopFeeder() {
-        feederMotor.stopMotor();
+        feederMotor.set(0);
     }
 }

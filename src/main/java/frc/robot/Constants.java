@@ -279,6 +279,9 @@ public final class Constants {
 
             // Motor Constants
         public static final int CURRENT_LIMIT = 45;
+        public static final double kP = 0;
+        public static final double kI = 0;
+        public static final double kD = 0;
 
             // Speeds
         public static final double FEED_SPEED = 0.25;
