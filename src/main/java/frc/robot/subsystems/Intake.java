@@ -87,6 +87,10 @@ public class Intake extends SubsystemBase {
         }
     }
 
+    public void pivotStop(){
+        pivotMotor.set(0);
+    }
+
     public void intakeForward() {
         intakeMotor.set(IntakeConstants.INTAKE_MOTOR_SPEED);
     }
