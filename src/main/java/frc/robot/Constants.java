@@ -279,16 +279,21 @@ public final class Constants {
 
             // Motor Constants
         public static final int CURRENT_LIMIT = 45;
+
+            // PID Controller Constants
         public static final double kP = 0;
         public static final double kI = 0;
         public static final double kD = 0;
+        public static final double kFeedForward = 0;
+        public static final double kMaxOutput = 0;
+        public static final double kMinOutput = 0;
+        public static final double kMaxOutputError = 0;
 
             // Speeds
-        public static final double FEED_SPEED = 0.25;
-        public static final double SHOOT_SPEED = 0.75;
-        
-            // Prevent FeedForward overspeeding
-        public static final double kFeedForward = 0;
+        public static final double kFeedSpeed = 0.25;
+        public static final double kShootSpeedRotationsPerSecond = 0;
+        public static final double kMaxSpeedRotationsPerSecond = 0;
+        public static final double kMaxSpeedRotationsPerSecondSquared = 0;
 
     }
 

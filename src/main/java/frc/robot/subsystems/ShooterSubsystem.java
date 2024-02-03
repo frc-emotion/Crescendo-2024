@@ -6,6 +6,7 @@ import com.revrobotics.SparkPIDController;
 import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
+import com.revrobotics.SparkPIDController.AccelStrategy;
 
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -38,20 +39,25 @@ public class ShooterSubsystem extends SubsystemBase {
         controller.setI(ShooterConstants.kI);
         controller.setD(ShooterConstants.kD);
         controller.setFF(ShooterConstants.kFeedForward);
+
+        controller.setFeedbackDevice(shooterEncoder);
+        controller.setOutputRange(ShooterConstants.kMaxOutput, ShooterConstants.kMinOutput);
+        controller.setSmartMotionAccelStrategy(AccelStrategy.kTrapezoidal, 0);
+        controller.setSmartMotionMaxVelocity(ShooterConstants.kMaxSpeedRotationsPerSecond * 60, 0);
+        controller.setSmartMotionMaxAccel(ShooterConstants.kMaxSpeedRotationsPerSecondSquared * 60, 0);
+        controller.setSmartMotionAllowedClosedLoopError(ShooterConstants.kMaxOutputError, 0);
     }
 
     /**
-     * Sets the target speed of the shooter using feedforward and BangBangController. Controller values
-     * multiplied by 12 to change units to volts. Feedforward control is used to sustain speeds and reduce the
-     * use of the BangBangController. Feedforward ouput is multiplied by a constant to prevent overspeeding.
+     * Sets the target speed of the shooter in rotations per second. 
+     * Multiplies by 60 because the setReference method for velocity takes in rotations per minute.
      * 
-     * @param speed The target speed for the shooter motor from [-1, 1].
+     * @param speed The target speed for the shooter motor in rotations per second.
      */
     public void setShooterSpeed(double speed) {
-        
         controller.setReference(
-            speed,
-            ControlType.kVelocity
+            speed * 60,
+            ControlType.kSmartVelocity
         );
     }
 

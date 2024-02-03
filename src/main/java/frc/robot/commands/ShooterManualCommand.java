@@ -24,12 +24,12 @@ public class ShooterManualCommand extends Command {
     @Override
     public void execute() {
         if(shooterSupplier.get()) {
-            shooterSubsystem.setShooterSpeed(ShooterConstants.SHOOT_SPEED);
+            shooterSubsystem.setShooterSpeed(ShooterConstants.kShootSpeedRotationsPerSecond);
         } else {
             shooterSubsystem.stopShooter();
         }
         if(feederSupplier.get()) {
-            shooterSubsystem.setFeederSpeed(ShooterConstants.FEED_SPEED);
+            shooterSubsystem.setFeederSpeed(ShooterConstants.kFeedSpeed);
         } else {
             shooterSubsystem.stopFeeder();
         }
