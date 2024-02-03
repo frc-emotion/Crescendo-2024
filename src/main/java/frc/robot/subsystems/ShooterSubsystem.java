@@ -17,7 +17,6 @@ public class ShooterSubsystem extends SubsystemBase {
     private final SparkPIDController controller;
 
     private final RelativeEncoder shooterEncoder;
-    private final SimpleMotorFeedforward feedforward;
     
     public ShooterSubsystem() {
         shooterMotor = new CANSparkMax(ShooterConstants.shooterPort, MotorType.kBrushless);
@@ -38,9 +37,8 @@ public class ShooterSubsystem extends SubsystemBase {
         controller.setP(ShooterConstants.kP);
         controller.setI(ShooterConstants.kI);
         controller.setD(ShooterConstants.kD);
-        
 
-        feedforward = new SimpleMotorFeedforward(ShooterConstants.kS, ShooterConstants.kV, ShooterConstants.kA);
+        controller.setFF(ShooterConstants.kFeedForward);
     }
 
     /**
@@ -51,7 +49,7 @@ public class ShooterSubsystem extends SubsystemBase {
      * @param speed The target speed for the shooter motor from [-1, 1].
      */
     public void setShooterSpeed(double speed) {
-        controller.setFF(ShooterConstants.kFeedForwardAdjustment * feedforward.calculate(speed));
+        
         controller.setReference(
             speed,
             ControlType.kVelocity

@@ -286,14 +286,9 @@ public final class Constants {
             // Speeds
         public static final double FEED_SPEED = 0.25;
         public static final double SHOOT_SPEED = 0.75;
-
-            // FeedForward Constants
-        public static final double kS = 0;
-        public static final double kV = 0;
-        public static final double kA = 0;
-
+        
             // Prevent FeedForward overspeeding
-        public static final double kFeedForwardAdjustment = 0.9;
+        public static final double kFeedForward = 0;
 
     }
 
