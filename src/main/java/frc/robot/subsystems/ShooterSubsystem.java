@@ -37,7 +37,6 @@ public class ShooterSubsystem extends SubsystemBase {
         controller.setP(ShooterConstants.kP);
         controller.setI(ShooterConstants.kI);
         controller.setD(ShooterConstants.kD);
-
         controller.setFF(ShooterConstants.kFeedForward);
     }
 
