@@ -54,7 +54,7 @@ public class SwerveXboxCommand extends Command {
 
         currentTranslationalSpeed = speeds[0];
         currentAngularSpeed = speeds[1];
-        
+
         if (slowModeFunc.get()) {
             currentTranslationalSpeed = DriveConstants.kTeleDriveMaxSpeedMetersPerSecond / 4;
             currentAngularSpeed = DriveConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond / 4;
@@ -95,7 +95,6 @@ public class SwerveXboxCommand extends Command {
         SwerveModuleState[] moduleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(robotSpeeds);
         swerveSubsystem.setModuleStates(moduleStates);
     }
-
 
     @Override
     public void end(boolean interrupted) {
