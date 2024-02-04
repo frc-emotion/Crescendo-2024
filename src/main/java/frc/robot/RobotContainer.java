@@ -8,6 +8,12 @@ import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.SwerveXboxCommand;
 import frc.robot.subsystems.SwerveSubsystem;
+
+import com.pathplanner.lib.pathfinding.LocalADStar;
+import com.pathplanner.lib.pathfinding.Pathfinding;
+
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 // import frc.robot.subsystems.VisionSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -78,7 +84,9 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-    throw new UnsupportedOperationException("Unimplemented method 'getAutonomousCommand'");
+    return m_SwerveSubsystem.navigateToPose(
+      new Pose2d(2, 2, m_SwerveSubsystem.getRotation2d())
+    );
   }
 
 }

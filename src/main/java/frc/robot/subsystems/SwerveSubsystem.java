@@ -31,6 +31,8 @@ import java.util.function.BooleanSupplier;
 import com.kauailabs.navx.frc.AHRS;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathConstraints;
+import com.pathplanner.lib.pathfinding.LocalADStar;
+import com.pathplanner.lib.pathfinding.Pathfinding;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.ReplanningConfig;
 
@@ -133,6 +135,8 @@ public class SwerveSubsystem extends SubsystemBase {
             supp,
             this
         );
+
+        Pathfinding.setPathfinder(new LocalADStar());
     }
 
     public double[] getSpeedType() {
@@ -275,10 +279,52 @@ public class SwerveSubsystem extends SubsystemBase {
         layout.withSize(2, 4);
     }
 
-    public Command navigateCommand(Pose2d pose) {
+    /**
+     * Creates a new Command to pathfind to a certain pose using
+     * only the target pose.
+     * 
+     * @param pose  The target pose
+     * @return      The new command to reach the target pose
+     */
+    public Command navigateToPose(Pose2d pose) {
         return AutoBuilder.pathfindToPose(
             pose, 
            kPathConstraints
+        );
+    }
+
+    /**
+     * Creates a new Command to pathfind to a certain pose using
+     * the target pose and end velocity.
+     * 
+     * @param pose          The target pose
+     * @param endVelocity   The end velocity
+     * @return              The new command to reach the target pose
+     */
+    public Command navigateToPose(Pose2d pose, double endVelocity) {
+        return AutoBuilder.pathfindToPose(
+            pose, 
+           kPathConstraints,
+           endVelocity
+        );
+    }
+
+    /**
+     * Creates a new Command to pathfind to a certain pose using
+     * the target pose, end velocity, and the distance the robot
+     * should travel before turning to the target pose's heading.
+     * 
+     * @param pose                  The target pose
+     * @param endVelocity           The end velocity
+     * @param rotationDelayDistance The distance the robot should travel before turning
+     * @return                      The new Command to reach the target pose
+     */
+    public Command navigateToPose(Pose2d pose, double endVelocity, double rotationDelayDistance) {
+        return AutoBuilder.pathfindToPose(
+            pose, 
+           kPathConstraints,
+           endVelocity,
+           rotationDelayDistance
         );
     }
 }
