@@ -272,6 +272,28 @@ public final class Constants {
         
     }
 
-    public static final int PIVOT_PORT = 0;
+    public static final class PivotConstants {
+        public static final int PIVOT_PORT = 11;
+        public static final int LOWER_LIMIT_PORT = 1;
+
+        public static final double PIVOT_KP = 0.6;
+        public static final double PIVOT_KI = 0;
+        public static final double PIVOT_KD = 4;
+        public static final double PIVOT_KF = 0;
+
+
+        public static final double PIVOT_TELEOP_SPEED = 0.25;
+        public static final double PIVOT_AUTO_SPEED = 0.2;
+        public static final double PIVOT_ZERO_SPEED = 0.1;
+
+        public static final double PIVOT_ZERO_THRESHOLD = 5;
+        public static final double PIVOT_MAX_REVOLUTION = 83;
+        public static final double PIVOT_THRESHOLD = 6;
+
+        public static final double TRIGGER_THRESHOLD = 0.3;
+        public static final int absoluteEncoderID = 69;
+    }
+
+    
 
 }
