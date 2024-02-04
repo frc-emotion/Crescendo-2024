@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.sensors.CANCoder;
+import com.ctre.phoenix6.hardware.CANcoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkPIDController;
@@ -54,7 +56,7 @@ public class ShooterSubsystem extends SubsystemBase {
      * 
      * @param speed The target speed for the shooter motor in rotations per second.
      */
-    public void setShooterSpeed(double speed) {
+    public void setShooterVelocity(double speed) {
         controller.setReference(
             speed * 60,
             ControlType.kSmartVelocity
@@ -66,7 +68,7 @@ public class ShooterSubsystem extends SubsystemBase {
      * 
      * @return The speed of the shooter
      */
-    public double getShooterSpeed() {
+    public double getShooterVelocity() {
         return shooterEncoder.getVelocity();
     }
 

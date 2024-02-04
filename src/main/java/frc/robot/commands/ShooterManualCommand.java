@@ -24,7 +24,7 @@ public class ShooterManualCommand extends Command {
     @Override
     public void execute() {
         if(shooterSupplier.get()) {
-            shooterSubsystem.setShooterSpeed(ShooterConstants.kShootSpeedRotationsPerSecond);
+            shooterSubsystem.setShooterVelocity(ShooterConstants.kShootSpeedRotationsPerSecond);
         } else {
             shooterSubsystem.stopShooter();
         }
