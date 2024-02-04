@@ -1,5 +1,7 @@
 package frc.robot.commands;
 
+import java.util.function.Supplier;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.ClimbSubsystem;
 
@@ -12,15 +14,15 @@ import frc.robot.subsystems.ClimbSubsystem;
 public class ClimbManualCommand extends Command {
 
     private final ClimbSubsystem climbSubsystem;
-    private final double position;
+    private Supplier<Double> position;
 
     /**
      * Create a new instance of ClimbManualCommand
      * 
      * @param cs       Climb System being affected by the command
-     * @param position Position to set Climb to
+     * @param position Position to set climb to, given by controller
      */
-    public ClimbManualCommand(ClimbSubsystem cs, double position) {
+    public ClimbManualCommand(ClimbSubsystem cs, Supplier<Double> position) {
         this.climbSubsystem = cs;
         this.position = position;
 
@@ -29,7 +31,7 @@ public class ClimbManualCommand extends Command {
 
     @Override
     public void execute() {
-        climbSubsystem.setPosition(position);
+        climbSubsystem.setPosition(position.get());
     }
 
     @Override
