@@ -124,7 +124,7 @@ public class SwerveSubsystem extends SubsystemBase {
 
         toDivideBy = 1;
 
-        BooleanSupplier supp = () -> { return false; };
+        BooleanSupplier supp = () -> { return true; };
 
         AutoBuilder.configureHolonomic(
             this::getCurrentPose,
