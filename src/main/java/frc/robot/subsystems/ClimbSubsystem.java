@@ -10,6 +10,7 @@ import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.SparkPIDController.AccelStrategy;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 /**
@@ -68,8 +69,11 @@ public class ClimbSubsystem extends SubsystemBase {
      * @param pos The position to climb to
      */
     public void setPosition(double pos) {
-        if (pos > ClimbConstants.EXTENSION_LIMIT)
+        if (pos > ClimbConstants.EXTENSION_LIMIT) {
             pos = ClimbConstants.EXTENSION_LIMIT;
+            DriverStation.reportWarning("Climb position was set above the extension limit.", false);
+        }
+
         controller.setReference(pos, ControlType.kSmartMotion);
     }
 
