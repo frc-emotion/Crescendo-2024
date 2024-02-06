@@ -25,9 +25,7 @@ public class ShooterAutoCommand extends Command {
                 shooterSubsystem.stopFeeder();
                 break;
             }
-        }
-        
+        }   
     }
-    
 }
     

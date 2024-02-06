@@ -1,7 +1,5 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.sensors.CANCoder;
-import com.ctre.phoenix6.hardware.CANcoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkPIDController;
@@ -10,8 +8,7 @@ import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.SparkPIDController.AccelStrategy;
 
-import edu.wpi.first.math.controller.SimpleMotorFeedforward;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ShooterConstants;
 
@@ -36,6 +33,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
         shooterEncoder = shooterMotor.getEncoder();
 
+            // Set up PID Controller constants
         controller = shooterMotor.getPIDController();
         controller.setP(ShooterConstants.kP);
         controller.setI(ShooterConstants.kI);
@@ -43,6 +41,8 @@ public class ShooterSubsystem extends SubsystemBase {
         controller.setFF(ShooterConstants.kFeedForward);
 
         controller.setFeedbackDevice(shooterEncoder);
+
+            // Setup PID output limits
         controller.setOutputRange(ShooterConstants.kMaxOutput, ShooterConstants.kMinOutput);
         controller.setSmartMotionAccelStrategy(AccelStrategy.kTrapezoidal, 0);
         controller.setSmartMotionMaxVelocity(ShooterConstants.kMaxSpeedRotationsPerSecond * 60, 0);
@@ -57,6 +57,13 @@ public class ShooterSubsystem extends SubsystemBase {
      * @param speed The target speed for the shooter motor in rotations per second.
      */
     public void setShooterVelocity(double speed) {
+        if(speed > ShooterConstants.kMaxSpeedRotationsPerSecond) {
+            speed = ShooterConstants.kMaxSpeedRotationsPerSecond;
+            DriverStation.reportWarning("Shooter speed set over the maximum speed", false);
+        } else if(speed < 0) {
+            DriverStation.reportWarning("Shooter speed set below zero", false);
+        }
+
         controller.setReference(
             speed * 60,
             ControlType.kSmartVelocity
@@ -94,6 +101,9 @@ public class ShooterSubsystem extends SubsystemBase {
      * @param speed The speed to set the feeder to
      */
     public void setFeederSpeed(double speed) {
+            // Clamps the value on [-1, 1]
+        speed = Math.max(-1, Math.min(1, speed));
+
         feederMotor.set(speed);
     }
 
