@@ -7,12 +7,13 @@ import frc.robot.Constants.ShooterConstants;
 import frc.robot.subsystems.ShooterSubsystem;
 
 public class ShooterManualCommand extends Command {
-    private final Supplier<Boolean> shooterSupplier, feederSupplier;
+    private final Supplier<Boolean> shooterSupplier;
+    private final Supplier<Double> feederSupplier;
     private final ShooterSubsystem shooterSubsystem;
 
     public ShooterManualCommand(
         Supplier<Boolean> shooterSupplier, 
-        Supplier<Boolean> feederSupplier, 
+        Supplier<Double> feederSupplier, 
         ShooterSubsystem shooterSubsystem
     ) {
         this.shooterSupplier = shooterSupplier;
@@ -28,8 +29,8 @@ public class ShooterManualCommand extends Command {
         } else {
             shooterSubsystem.stopShooter();
         }
-        if(feederSupplier.get()) {
-            shooterSubsystem.setFeederSpeed(ShooterConstants.kFeedSpeed);
+        if(feederSupplier.get() > 0.2) {
+            shooterSubsystem.setFeederSpeed(feederSupplier.get() * ShooterConstants.kFeedSpeed);
         } else {
             shooterSubsystem.stopFeeder();
         }
