@@ -261,6 +261,7 @@ public final class Constants {
     public static final class ClimbConstants {
         public static final int CLIMB_PORT_L = 0;
         public static final int CLIMB_PORT_R = 0;
+        public static final double CLIMB_DEADZONE = 0.1;
         public static final double EXTENSION_LIMIT = 0.0;
         public static final int PID_MIN_OUTPUT = 0;
         public static final int PID_MAX_OUTPUT = 0;

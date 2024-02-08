@@ -3,6 +3,7 @@ package frc.robot.commands;
 import java.util.function.Supplier;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants.ClimbConstants;
 import frc.robot.subsystems.ClimbSubsystem;
 
 /**
@@ -14,24 +15,32 @@ import frc.robot.subsystems.ClimbSubsystem;
 public class ClimbManualCommand extends Command {
 
     private final ClimbSubsystem climbSubsystem;
-    private Supplier<Double> position;
+    private Supplier<Double> input;
+    private double coefficient = 10;
 
     /**
      * Create a new instance of ClimbManualCommand
      * 
-     * @param cs       Climb System being affected by the command
-     * @param position Position to set climb to, given by controller
+     * @param cs    Climb System being affected by the command
+     * @param input Controller joystick input value
      */
-    public ClimbManualCommand(ClimbSubsystem cs, Supplier<Double> position) {
+    public ClimbManualCommand(ClimbSubsystem cs, Supplier<Double> input) {
         this.climbSubsystem = cs;
-        this.position = position;
+        this.input = input;
 
         addRequirements(cs);
     }
 
     @Override
     public void execute() {
-        climbSubsystem.setPosition(position.get());
+        if (input.get() > ClimbConstants.CLIMB_DEADZONE) {
+            // move up
+            climbSubsystem.setPosition(climbSubsystem.getPosition() + (coefficient * input.get()));
+        } else if (input.get() < -ClimbConstants.CLIMB_DEADZONE) {
+            // move down
+            climbSubsystem.setPosition(climbSubsystem.getPosition() - (coefficient * input.get()));
+        }
+        // climbSubsystem.setPosition(input.get());
     }
 
     @Override

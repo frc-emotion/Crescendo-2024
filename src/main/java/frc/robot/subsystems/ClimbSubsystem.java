@@ -78,6 +78,15 @@ public class ClimbSubsystem extends SubsystemBase {
     }
 
     /**
+     * Gets the position using the left encoder
+     * 
+     * @return Current position from left motor encoder
+     */
+    public double getPosition() {
+        return leftEncoder.getPosition();
+    }
+
+    /**
      * Returns left motor current
      * 
      * @return the output current of left motor
