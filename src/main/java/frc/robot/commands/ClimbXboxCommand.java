@@ -7,24 +7,24 @@ import frc.robot.Constants.ClimbConstants;
 import frc.robot.subsystems.ClimbSubsystem;
 
 /**
- * Climb Manual Command
+ * Climb Xbox Command
  * 
  * @author Jason Ballinger
  * @version 2/3/2024
  */
-public class ClimbManualCommand extends Command {
+public class ClimbXboxCommand extends Command {
 
     private final ClimbSubsystem climbSubsystem;
     private Supplier<Double> input;
     private double coefficient = 10;
 
     /**
-     * Create a new instance of ClimbManualCommand
+     * Create a new instance of ClimbXboxCommand
      * 
      * @param cs    Climb System being affected by the command
      * @param input Controller joystick input value
      */
-    public ClimbManualCommand(ClimbSubsystem cs, Supplier<Double> input) {
+    public ClimbXboxCommand(ClimbSubsystem cs, Supplier<Double> input) {
         this.climbSubsystem = cs;
         this.input = input;
 
