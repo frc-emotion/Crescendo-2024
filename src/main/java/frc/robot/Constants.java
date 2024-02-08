@@ -256,20 +256,22 @@ public final class Constants {
         public static final double MAX_ARM_ACCELERATION = 0.05;
         public static final double ARM_GEAR_RATIO = 36.56;
         public static final double ARM_SPROCKET_RADIUS = 0.01;
-
-
-       
     }
 
-
-    public static class ClawConstants {
-
-
-    }
-
-    public static final class ElevatorConstants{
-       
-        
+    public static final class ClimbConstants {
+        public static final int CLIMB_PORT_L = 0;
+        public static final int CLIMB_PORT_R = 0;
+        public static final double CLIMB_DEADZONE = 0.1;
+        public static final double EXTENSION_LIMIT = 0.0;
+        public static final int PID_MIN_OUTPUT = 0;
+        public static final int PID_MAX_OUTPUT = 0;
+        public static final int SLOT_ID = 0;
+        public static final double kP = 0.0;
+        public static final double kI = 0.0;
+        public static final double kD = 0.0;
+        public static final double MAX_ACCELERATION = 0.0;
+        public static final double MAX_VELOCITY = 0.0;
+        public static final int CURRENT_LIMIT = 45;
     }
 
 }
