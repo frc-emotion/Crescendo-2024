@@ -227,37 +227,6 @@ public final class Constants {
         public static final double MAX_ROTATE_ACCELERATION = 3; //FIX
     }
 
-    public static final class ArmConstants {
-       
-        public static final int armMotorPort = 22;
-        public static final int absoluteEncoderPort = 9;
-
-
-        public static final double ARM_SPEED = -0.3;
-        public static final double DOWN_ARM_SPEED = -0.1;
-        public static final double TOP_HEIGHT = Math.PI / 2;
-        public static final double MIDDLE_HEIGHT = Math.PI / 4;
-        public static final double LOW_HEIGHT = Math.PI / 8;
-
-
-        // For Feedfoward
-        public static final double armKS = 0.09;
-        public static final double armKG = 0.27;
-        public static final double armKV = 1.18;
-        public static final double armKA = 0.51;
-
-
-        // For PID controller
-        public static final double armKP = 1.23;
-        public static final double armKD = 0;
-        public static final double armKI = 0;
-        public static final double COUNTS_PER_REVOLUTION = 4096;
-        public static final double MAX_ARM_VELOCITY = 0.1;
-        public static final double MAX_ARM_ACCELERATION = 0.05;
-        public static final double ARM_GEAR_RATIO = 36.56;
-        public static final double ARM_SPROCKET_RADIUS = 0.01;
-    }
-
     public static final class ClimbConstants {
         public static final int CLIMB_PORT_L = 0;
         public static final int CLIMB_PORT_R = 0;
