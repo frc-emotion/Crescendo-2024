@@ -21,11 +21,15 @@ public class ShooterAutoCommand extends Command {
                 shooterSubsystem.setFeederSpeed(ShooterConstants.kFeedSpeed);
                 hasShot = true;
             } else if(hasShot) {
-                shooterSubsystem.stopShooter();
-                shooterSubsystem.stopFeeder();
                 break;
             }
         }   
+    }
+
+    @Override
+    public void end(boolean interrupted) {
+        shooterSubsystem.stopShooter();
+        shooterSubsystem.stopFeeder();
     }
 }
     

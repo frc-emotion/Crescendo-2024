@@ -5,16 +5,20 @@
 package frc.robot;
 
 import frc.robot.Constants.OIConstants;
+import frc.robot.commands.ShooterAutoCommand;
 import frc.robot.commands.ShooterManualCommand;
 import frc.robot.commands.SwerveXboxCommand;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
+
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 // import frc.robot.subsystems.VisionSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -39,9 +43,6 @@ public class RobotContainer {
       new CommandXboxController(OIConstants.kOperatorControllerPort);
 
   private final SendableChooser<Command> autoChooser;
-
-  private final SendableChooser<Command> autoChooser;
-
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
@@ -72,6 +73,18 @@ public class RobotContainer {
     configureBindings();
 
     SmartDashboard.putData("Auto Chooser", autoChooser);
+
+      // Individual Commands
+    NamedCommands.registerCommand(  "ShootNote",        new ShooterAutoCommand(m_shooterSubsystem));
+    NamedCommands.registerCommand(  "VisionUpdatePose", new Command() {}); // replace Command with vision command
+    NamedCommands.registerCommand(  "IntakeNote",       new Command() {}); // replace Command with intake command
+
+      // Command Groups
+    NamedCommands.registerCommand(  "ScoreSpeaker", new SequentialCommandGroup(
+      new Command() {}, // replace with pivot auto command
+      new ShooterAutoCommand(m_shooterSubsystem)
+    ));
+    
   }
 
   /**
