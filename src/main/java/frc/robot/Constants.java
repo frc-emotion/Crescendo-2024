@@ -243,4 +243,29 @@ public final class Constants {
         public static final int CURRENT_LIMIT = 45;
     }
 
+    public static class ShooterConstants {
+            // CAN IDs
+        public static final int feederPort = 0;
+        public static final int shooterPort = 1;
+
+            // Motor Constants
+        public static final int CURRENT_LIMIT = 45;
+
+            // PID Controller Constants
+        public static final double kP = 0;
+        public static final double kI = 0;
+        public static final double kD = 0;
+        public static final double kFeedForward = 0;
+        public static final double kMaxOutput = 0;
+        public static final double kMinOutput = 0;
+        public static final double kMaxOutputError = 0;
+
+            // Speeds
+        public static final double kFeedSpeed = 0.25;
+        public static final double kShootSpeedRotationsPerSecond = 0;
+        public static final double kMaxSpeedRotationsPerSecond = 0;
+        public static final double kMaxSpeedRotationsPerSecondSquared = 0;
+
+    }
+
 }
