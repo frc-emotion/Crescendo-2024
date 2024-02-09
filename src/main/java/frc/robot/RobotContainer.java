@@ -40,6 +40,8 @@ public class RobotContainer {
 
   private final SendableChooser<Command> autoChooser;
 
+  private final SendableChooser<Command> autoChooser;
+
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
