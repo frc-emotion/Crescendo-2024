@@ -3,12 +3,28 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.0,
-        "y": 7.0
+        "x": 0.8362890566203588,
+        "y": 6.558816193370234
       },
       "prevControl": null,
       "nextControl": {
-        "x": 0.5496802347680416,
+        "x": 2.286608821852317,
+        "y": 6.558816193370234
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 2.3545940385066535,
+        "y": 7.0
+      },
+      "prevControl": {
+        "x": 1.1909109614050903,
+        "y": 7.0
+      },
+      "nextControl": {
+        "x": 3.5182771156082167,
         "y": 7.0
       },
       "isLocked": false,
@@ -16,58 +32,37 @@
     },
     {
       "anchor": {
-        "x": 2.0,
-        "y": 5.0
+        "x": 0.8362890566203588,
+        "y": 6.558816193370234
       },
       "prevControl": {
-        "x": 3.1636830771015614,
-        "y": 5.0
-      },
-      "nextControl": {
-        "x": 0.521463405905666,
-        "y": 5.0
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 7.43,
-        "y": 7.4
-      },
-      "prevControl": {
-        "x": 7.312357770895853,
-        "y": 7.4
-      },
-      "nextControl": {
-        "x": 7.547642229104146,
-        "y": 7.4
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 2.0,
-        "y": 5.542965217617766
-      },
-      "prevControl": {
-        "x": 0.9700000000003763,
-        "y": 5.542965217617766
+        "x": -0.31286464455954166,
+        "y": 6.558816193370234
       },
       "nextControl": null,
       "isLocked": false,
       "linkedName": null
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0,
+      "rotationDegrees": 0,
+      "rotateFast": false
+    },
+    {
+      "waypointRelativePos": 1.15,
+      "rotationDegrees": 0,
+      "rotateFast": false
+    }
+  ],
   "constraintZones": [],
   "eventMarkers": [
     {
       "name": "Score @ Speaker",
-      "waypointRelativePos": 1.1,
+      "waypointRelativePos": 0.0,
       "command": {
-        "type": "parallel",
+        "type": "sequential",
         "data": {
           "commands": [
             {
@@ -81,16 +76,16 @@
       }
     },
     {
-      "name": "Wait",
-      "waypointRelativePos": 1.15,
+      "name": "IntakeNote",
+      "waypointRelativePos": 1.0,
       "command": {
         "type": "sequential",
         "data": {
           "commands": [
             {
-              "type": "wait",
+              "type": "named",
               "data": {
-                "waitTime": 3.0
+                "name": "IntakeNote"
               }
             }
           ]
@@ -98,7 +93,7 @@
       }
     },
     {
-      "name": "IntakeNote",
+      "name": "Score @ Speaker 2",
       "waypointRelativePos": 2.0,
       "command": {
         "type": "sequential",
@@ -116,11 +111,14 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0,
+    "rotation": -120.0,
     "rotateFast": false
   },
   "reversed": false,
   "folder": null,
-  "previewStartingState": null,
+  "previewStartingState": {
+    "rotation": -120.0,
+    "velocity": 0
+  },
   "useDefaultConstraints": false
 }
