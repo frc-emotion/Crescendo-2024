@@ -8,7 +8,7 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.118033988749895,
+        "x": 0.5496802347680416,
         "y": 7.0
       },
       "isLocked": false,
@@ -16,44 +16,44 @@
     },
     {
       "anchor": {
-        "x": 1.5311346007307416,
-        "y": 5.377483831890741
+        "x": 2.0,
+        "y": 5.0
       },
       "prevControl": {
-        "x": 2.9325531297898104,
-        "y": 5.377483831890741
+        "x": 3.1636830771015614,
+        "y": 5.0
       },
       "nextControl": {
-        "x": 0.05259800663641068,
-        "y": 5.377483831890741
+        "x": 0.521463405905666,
+        "y": 5.0
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 4.651608047866594,
-        "y": 7.0
+        "x": 7.43,
+        "y": 7.4
       },
       "prevControl": {
-        "x": 3.237286698933195,
-        "y": 6.441255763384336
+        "x": 7.312357770895853,
+        "y": 7.4
       },
       "nextControl": {
-        "x": 6.5487635682831975,
-        "y": 7.749493538930016
+        "x": 7.547642229104146,
+        "y": 7.4
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 7.4710341728375775,
-        "y": 5.782028487133897
+        "x": 2.0,
+        "y": 5.542965217617766
       },
       "prevControl": {
-        "x": 7.3822316875403,
-        "y": 6.806163663902001
+        "x": 0.9700000000003763,
+        "y": 5.542965217617766
       },
       "nextControl": null,
       "isLocked": false,
@@ -65,7 +65,7 @@
   "eventMarkers": [
     {
       "name": "Score @ Speaker",
-      "waypointRelativePos": 1.1500000000000001,
+      "waypointRelativePos": 1.1,
       "command": {
         "type": "parallel",
         "data": {
@@ -77,6 +77,33 @@
               }
             }
           ]
+        }
+      }
+    },
+    {
+      "name": "Wait",
+      "waypointRelativePos": 1.15,
+      "command": {
+        "type": "sequential",
+        "data": {
+          "commands": [
+            {
+              "type": "wait",
+              "data": {
+                "waitTime": 3.0
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "IntakeNote",
+      "waypointRelativePos": 2.0,
+      "command": {
+        "type": "sequential",
+        "data": {
+          "commands": []
         }
       }
     }

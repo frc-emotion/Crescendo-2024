@@ -11,11 +11,15 @@ import frc.robot.commands.SwerveXboxCommand;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.pathfinding.LocalADStar;
 import com.pathplanner.lib.pathfinding.Pathfinding;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 // import frc.robot.subsystems.VisionSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -41,10 +45,13 @@ public class RobotContainer {
   private final CommandXboxController m_operatorController =
       new CommandXboxController(OIConstants.kOperatorControllerPort);
 
+  private final SendableChooser<Command> autoChooser;
+
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
+    autoChooser = AutoBuilder.buildAutoChooser();
 
     m_SwerveSubsystem.setDefaultCommand(
     new SwerveXboxCommand(
@@ -68,6 +75,8 @@ public class RobotContainer {
     );
     // Configure the trigger bindings
     configureBindings();
+
+    SmartDashboard.putData("Auto Chooser", autoChooser);
   }
 
   /**
@@ -96,9 +105,10 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-    return m_SwerveSubsystem.navigateToPose(
-      new Pose2d(2, 2, m_SwerveSubsystem.getRotation2d())
-    );
+    // return m_SwerveSubsystem.navigateToPose(
+    //   new Pose2d(2, 2, m_SwerveSubsystem.getRotation2d())
+    // );
+    return autoChooser.getSelected();
   }
 
 }
