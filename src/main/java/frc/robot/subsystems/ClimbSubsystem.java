@@ -1,21 +1,19 @@
 package frc.robot.subsystems;
 
-import frc.robot.Constants.ClimbConstants;
-
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.RelativeEncoder;
-import com.revrobotics.SparkPIDController;
 import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkPIDController;
 import com.revrobotics.SparkPIDController.AccelStrategy;
-
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.ClimbConstants;
 
 /**
  * Climb Subsystem
- * 
+ *
  * @author Jason Ballinger
  * @version 2/3/2024
  */
@@ -30,8 +28,10 @@ public class ClimbSubsystem extends SubsystemBase {
      */
     public ClimbSubsystem() {
         // Initialize Motors
-        climbMotorLeft = new CANSparkMax(ClimbConstants.CLIMB_PORT_L, MotorType.kBrushless);
-        climbMotorRight = new CANSparkMax(ClimbConstants.CLIMB_PORT_R, MotorType.kBrushless);
+        climbMotorLeft =
+            new CANSparkMax(ClimbConstants.CLIMB_PORT_L, MotorType.kBrushless);
+        climbMotorRight =
+            new CANSparkMax(ClimbConstants.CLIMB_PORT_R, MotorType.kBrushless);
 
         // Set Current Limits
         climbMotorLeft.setSmartCurrentLimit(ClimbConstants.CURRENT_LIMIT);
@@ -53,25 +53,40 @@ public class ClimbSubsystem extends SubsystemBase {
         climbMotorRight.follow(climbMotorLeft);
 
         // PID Stuff
-        controller.setOutputRange(ClimbConstants.PID_MIN_OUTPUT, ClimbConstants.PID_MAX_OUTPUT);
+        controller.setOutputRange(
+            ClimbConstants.PID_MIN_OUTPUT,
+            ClimbConstants.PID_MAX_OUTPUT
+        );
         controller.setFeedbackDevice(leftEncoder);
         controller.setP(ClimbConstants.kP);
         controller.setI(ClimbConstants.kI);
         controller.setD(ClimbConstants.kD);
-        controller.setSmartMotionAccelStrategy(AccelStrategy.kTrapezoidal, ClimbConstants.SLOT_ID);
-        controller.setSmartMotionMaxVelocity(ClimbConstants.MAX_VELOCITY, ClimbConstants.SLOT_ID);
-        controller.setSmartMotionMaxAccel(ClimbConstants.MAX_ACCELERATION, ClimbConstants.SLOT_ID);
+        controller.setSmartMotionAccelStrategy(
+            AccelStrategy.kTrapezoidal,
+            ClimbConstants.SLOT_ID
+        );
+        controller.setSmartMotionMaxVelocity(
+            ClimbConstants.MAX_VELOCITY,
+            ClimbConstants.SLOT_ID
+        );
+        controller.setSmartMotionMaxAccel(
+            ClimbConstants.MAX_ACCELERATION,
+            ClimbConstants.SLOT_ID
+        );
     }
 
     /**
      * Sets the current position
-     * 
+     *
      * @param pos The position to climb to
      */
     public void setPosition(double pos) {
         if (pos > ClimbConstants.EXTENSION_LIMIT) {
             pos = ClimbConstants.EXTENSION_LIMIT;
-            DriverStation.reportWarning("Climb position was set above the extension limit.", false);
+            DriverStation.reportWarning(
+                "Climb position was set above the extension limit.",
+                false
+            );
         }
 
         controller.setReference(pos, ControlType.kSmartMotion);
@@ -79,7 +94,7 @@ public class ClimbSubsystem extends SubsystemBase {
 
     /**
      * Gets the position using the left encoder
-     * 
+     *
      * @return Current position from left motor encoder
      */
     public double getPosition() {
@@ -88,7 +103,7 @@ public class ClimbSubsystem extends SubsystemBase {
 
     /**
      * Returns left motor current
-     * 
+     *
      * @return the output current of left motor
      */
     public double getLeftCurrent() {
@@ -97,7 +112,7 @@ public class ClimbSubsystem extends SubsystemBase {
 
     /**
      * Returns right motor current
-     * 
+     *
      * @return the output current of the right motor
      */
     public double getRightCurrent() {
