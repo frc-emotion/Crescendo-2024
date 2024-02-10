@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import com.revrobotics.CANSparkBase;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkPIDController;
@@ -109,14 +110,13 @@ public class SwerveModuleNeo {
         return new SwerveModulePosition(getDrivePosition(), new Rotation2d(getTurningPosition()));
     }
 
-    // Arshan - I dont really understand what this function does
     public void setReferenceAngle(double referenceAngleRadians) {
         double currentAngleRadians = getTurningPosition();
 
         if (getTurningVelocity() < Math.toRadians(0.5)) {
             if (++resetIteration >= ENCODER_RESET_ITERATIONS) {
                 resetIteration = 0;
-                double absoluteAngle = Units.degreesToRadians(absoluteEncoder.getAbsolutePosition().getValueAsDouble());
+                double absoluteAngle = absoluteEncoder.getAbsolutePosition().getValueAsDouble() * 2.0 * Math.PI;
                 turningEncoder.setPosition(absoluteAngle);
                 currentAngleRadians = absoluteAngle;
             }

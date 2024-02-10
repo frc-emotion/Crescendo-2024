@@ -107,10 +107,10 @@ public class SwerveSubsystem extends SubsystemBase {
 
     public SwerveSubsystem() {
 
-        PIDController xController = new PIDController(AutoConstants.kPXController, 0, 0);
-        PIDController yController = new PIDController(AutoConstants.kPYController, 0, 0);
-        PIDController thetaController = new PIDController(AutoConstants.kPThetaController, 0, 0);
-        thetaController.enableContinuousInput(-Math.PI, Math.PI);
+        //PIDController xController = new PIDController(AutoConstants.kPXController, 0, 0);
+        //PIDController yController = new PIDController(AutoConstants.kPYController, 0, 0);
+        //PIDController thetaController = new PIDController(AutoConstants.kPThetaController, 0, 0);
+        //thetaController.enableContinuousInput(-Math.PI, Math.PI);
 
         new Thread(() -> {
             try {
