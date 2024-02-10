@@ -5,10 +5,10 @@
 package frc.robot;
 
 import frc.robot.Constants.OIConstants;
-import frc.robot.commands.ShooterAutoCommand;
-import frc.robot.commands.ShooterManualCommand;
+// import frc.robot.commands.ShooterAutoCommand;
+// import frc.robot.commands.ShooterManualCommand;
 import frc.robot.commands.SwerveXboxCommand;
-import frc.robot.subsystems.ShooterSubsystem;
+// import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -34,13 +34,13 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   public static final SwerveSubsystem m_SwerveSubsystem = new SwerveSubsystem();
-  public static final ShooterSubsystem m_shooterSubsystem = new ShooterSubsystem();
+  //public static final ShooterSubsystem m_shooterSubsystem = new ShooterSubsystem();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController =
       new CommandXboxController(OIConstants.kDriverControllerPort);
-  private final CommandXboxController m_operatorController =
-      new CommandXboxController(OIConstants.kOperatorControllerPort);
+  // private final CommandXboxController m_operatorController =
+  //     new CommandXboxController(OIConstants.kOperatorControllerPort);
 
   private final SendableChooser<Command> autoChooser;
   /**
@@ -62,28 +62,28 @@ public class RobotContainer {
       () -> m_driverController.getLeftTriggerAxis()
     ));
 
-    m_shooterSubsystem.setDefaultCommand(
-      new ShooterManualCommand(
-        () -> m_operatorController.leftBumper().getAsBoolean(),
-        () -> m_operatorController.getLeftTriggerAxis(),
-        m_shooterSubsystem
-      )
-    );
+    // m_shooterSubsystem.setDefaultCommand(
+    //   new ShooterManualCommand(
+    //     () -> m_operatorController.leftBumper().getAsBoolean(),
+    //     () -> m_operatorController.getLeftTriggerAxis(),
+    //     m_shooterSubsystem
+    //   )
+    // );
     // Configure the trigger bindings
     configureBindings();
 
     SmartDashboard.putData("Auto Chooser", autoChooser);
 
       // Individual Commands
-    NamedCommands.registerCommand(  "ShootNote",        new ShooterAutoCommand(m_shooterSubsystem));
-    NamedCommands.registerCommand(  "VisionUpdatePose", new Command() {}); // replace Command with vision command
-    NamedCommands.registerCommand(  "IntakeNote",       new Command() {}); // replace Command with intake command
+    // NamedCommands.registerCommand(  "ShootNote",        new ShooterAutoCommand(m_shooterSubsystem));
+    // NamedCommands.registerCommand(  "VisionUpdatePose", new Command() {}); // replace Command with vision command
+    // NamedCommands.registerCommand(  "IntakeNote",       new Command() {}); // replace Command with intake command
 
       // Command Groups
-    NamedCommands.registerCommand(  "ScoreSpeaker", new SequentialCommandGroup(
-      new Command() {}, // replace with pivot auto command
-      new ShooterAutoCommand(m_shooterSubsystem)
-    ));
+    // NamedCommands.registerCommand(  "ScoreSpeaker", new SequentialCommandGroup(
+    //   new Command() {}, // replace with pivot auto command
+    //   new ShooterAutoCommand(m_shooterSubsystem)
+    // ));
     
   }
 

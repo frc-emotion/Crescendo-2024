@@ -9,6 +9,8 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.networktables.StructArrayPublisher;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
@@ -105,6 +107,9 @@ public class SwerveSubsystem extends SubsystemBase {
     private ShuffleboardLayout backRightData;
     private Field2d m_field;
 
+    private StructArrayPublisher<SwerveModuleState> publisher = NetworkTableInstance.getDefault()
+        .getStructArrayTopic("PersianSwerveState", SwerveModuleState.struct).publish();
+
     public SwerveSubsystem() {
 
         //PIDController xController = new PIDController(AutoConstants.kPXController, 0, 0);
@@ -130,13 +135,14 @@ public class SwerveSubsystem extends SubsystemBase {
             this::getCurrentPose,
             this::resetOdometry,
             this::getChassisSpeeds,
-            this::setChassisSpeeds,
+            this::driveRobotRelative,
             new HolonomicPathFollowerConfig(AutoConstants.kMaxSpeedMetersPerSecond, DriveConstants.kWheelBase, new ReplanningConfig()),
             supp,
             this
         );
 
         Pathfinding.setPathfinder(new LocalADStar());
+        
     }
 
     public double[] getSpeedType() {
@@ -211,6 +217,15 @@ public class SwerveSubsystem extends SubsystemBase {
         };
     }
 
+    public SwerveModuleState[] getModuleStates() {
+        return new SwerveModuleState[] {
+            frontLeft.getState(),
+            frontRight.getState(),
+            backLeft.getState(),
+            backRight.getState()
+        };
+    }
+
     @Override
     public void periodic() {
 
@@ -228,6 +243,12 @@ public class SwerveSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("Gyro Reading", getHeading());
         SmartDashboard.putNumber("Gyro Pitch", getPitch());
         SmartDashboard.putNumber("Gyro Roll", getRoll());
+
+        SwerveModuleState[] moduleStates = getModuleStates();
+
+        publisher.set(moduleStates);
+
+
 
     }
 
