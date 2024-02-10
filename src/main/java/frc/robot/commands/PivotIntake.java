@@ -1,13 +1,14 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.IntakeSubsystem;
+
 
 public class PivotIntake extends Command {
 
-    private Intake intake;
+    private IntakeSubsystem intake;
 
-    public PivotIntake(Intake intake){
+    public PivotIntake(IntakeSubsystem intake){
         this.intake = intake;
         addRequirements(intake);
     }

@@ -3,15 +3,16 @@ package frc.robot.commands;
 import java.util.function.Supplier;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.IntakeSubsystem;
 
 public class RunIntake {
+
     public class PivotIntake extends Command {
 
-        private Intake intake;
+        private IntakeSubsystem intake;
         private final Supplier<Boolean> rightBumper, leftBumper;
     
-        public PivotIntake(Intake intake, Supplier<Boolean> rightBumper, Supplier<Boolean> leftBumper){
+        public PivotIntake(IntakeSubsystem intake, Supplier<Boolean> rightBumper, Supplier<Boolean> leftBumper){
             this.intake = intake;
             this.rightBumper = rightBumper;
             this.leftBumper = leftBumper;
