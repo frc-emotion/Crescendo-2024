@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
-import frc.robot.commands.ShooterManualCommand;
+//import frc.robot.commands.ShooterManualCommand;
 import frc.robot.commands.SwerveXboxCommand;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
@@ -56,13 +56,13 @@ public class RobotContainer {
             )
         );
 
-        m_shooterSubsystem.setDefaultCommand(
-            new ShooterManualCommand(
-                () -> m_operatorController.leftBumper().getAsBoolean(),
-                () -> m_operatorController.getLeftTriggerAxis(),
-                m_shooterSubsystem
-            )
-        );
+        // m_shooterSubsystem.setDefaultCommand(
+        //     new ShooterManualCommand(
+        //         () -> m_operatorController.leftBumper().getAsBoolean(),
+        //         () -> m_operatorController.getLeftTriggerAxis(),
+        //         m_shooterSubsystem
+        //     )
+        // );
         // Configure the trigger bindings
         configureBindings();
     }
