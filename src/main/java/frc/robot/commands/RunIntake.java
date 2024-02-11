@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.IntakeSubsystem;
 
 public class RunIntake {
+
     public class PivotIntake extends Command {
 
         private IntakeSubsystem intakeSubsystem;

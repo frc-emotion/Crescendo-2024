@@ -9,6 +9,7 @@ public class PivotIntake extends Command {
 
     public PivotIntake(IntakeSubsystem intake){
         this.intakeSubsystem = intake;
+
         addRequirements(intake);
     }
 

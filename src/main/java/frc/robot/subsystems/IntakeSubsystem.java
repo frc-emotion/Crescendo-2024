@@ -11,7 +11,6 @@ import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
-// import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.IntakeConstants;
@@ -21,11 +20,6 @@ public class IntakeSubsystem extends SubsystemBase {
     private final CANSparkMax pivotMotor;
     private final CANSparkMax intakeMotor;
 
-    private final CANcoder pivotEncoder; 
-    private final CANcoderConfiguration intakeCANConfig;
-    private final MagnetSensorConfigs intakeMagnetConfig;
-
-    // private final ArmFeedforward feedforward; NOT USEFUL W/ SPARKPID????
     private final SparkPIDController pivotController;
 
     public boolean down;
@@ -45,24 +39,11 @@ public class IntakeSubsystem extends SubsystemBase {
         pivotMotor.setSecondaryCurrentLimit(IntakeConstants.MAX_CURRENT);
         pivotMotor.setIdleMode(IdleMode.kBrake);
 
-        // feedforward = new ArmFeedforward(IntakeConstants.kS, IntakeConstants.kG, IntakeConstants.kV);
-
         pivotController = pivotMotor.getPIDController();
         pivotController.setP(IntakeConstants.kP_PIVOT);
         pivotController.setI(IntakeConstants.kI_PIVOT);
         pivotController.setD(IntakeConstants.kD_PIVOT);
         pivotController.setOutputRange(IntakeConstants.MIN_POSITION, IntakeConstants.MAX_POSITION);
-
-        intakeCANConfig = new CANcoderConfiguration();
-        intakeMagnetConfig = new MagnetSensorConfigs();
-
-        intakeMagnetConfig.withMagnetOffset(Units.radiansToDegrees(IntakeConstants.INTAKE_ENCODER_OFFSET));
-        intakeMagnetConfig.withAbsoluteSensorRange(AbsoluteSensorRangeValue.Unsigned_0To1);
-        intakeMagnetConfig.withSensorDirection(SensorDirectionValue.Clockwise_Positive); 
-
-        pivotEncoder = new CANcoder(0);
-
-        pivotEncoder.getConfigurator().apply(intakeCANConfig);
     }
 
     public void toggleEndState(){
