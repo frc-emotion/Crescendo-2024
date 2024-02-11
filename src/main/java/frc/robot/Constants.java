@@ -324,4 +324,27 @@ public final class Constants {
 
     
 
+    public static final class IntakeConstants {
+        public static final int INTAKE_PIVOT_PORT = 0;
+        public static final int INTAKE_MOTOR_PORT = 0;
+        public static final int MAX_CURRENT = 45;
+        public static final double CURRENT_SPIKE_THRESHOLD = 0; 
+        public static final double INTAKE_MOTOR_SPEED = 0.5;
+
+        public static final double kS = 0;
+        public static final double kG = 0;
+        public static final double kV = 0; 
+        public static final double kP_PIVOT = 0;
+        public static final double kI_PIVOT = 0;
+        public static final double kD_PIVOT = 0;
+
+        public static final double MAX_POSITION = 0;
+        public static final double MIN_POSITION = 0; 
+        public static final double INTAKE_DOWN_POSITION = 0;
+        public static final double INTAKE_UP_POSITION = 0;
+        
+        public static final double INTAKE_ENCODER_OFFSET = 0;
+    }
+
+
 }
