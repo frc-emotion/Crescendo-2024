@@ -105,7 +105,7 @@ public class PivotSubsystem extends SubsystemBase {
 
     public void setRev(double rev) {
         double target = rev;
-        if (rev < Constants.PivotConstants.PIVOT_ZERO_THRESHOLD) {
+        if (rev < Constants.PivotConstants.PIVOT_MIN_REVOLUTION) {
             target = 0;
         }
         if (rev > Constants.PivotConstants.PIVOT_MAX_REVOLUTION) {
