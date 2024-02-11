@@ -10,8 +10,11 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
-//import frc.robot.commands.ShooterManualCommand;
-import frc.robot.commands.SwerveXboxCommand;
+import frc.robot.commands.Teleop.ShooterManualCommand;
+import frc.robot.commands.Teleop.SwerveXboxCommand;
+import frc.robot.subsystems.ClimbSubsystem;
+import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.PivotSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 
@@ -28,7 +31,10 @@ public class RobotContainer {
 
     // The robot's subsystems and commands are defined here...
     public static final SwerveSubsystem m_SwerveSubsystem = new SwerveSubsystem();
-    public static final ShooterSubsystem m_shooterSubsystem = new ShooterSubsystem();
+    public static final ShooterSubsystem m_ShooterSubsystem = new ShooterSubsystem();
+    public static final IntakeSubsystem m_IntakeSubsystem = new IntakeSubsystem();
+    public static final ClimbSubsystem m_ClimbSubsystem = new ClimbSubsystem();
+    public static final PivotSubsystem m_PivotSubsystem = new PivotSubsystem();
 
     // Replace with CommandPS4Controller or CommandJoystick if needed
     private final CommandXboxController m_driverController = new CommandXboxController(
@@ -56,13 +62,15 @@ public class RobotContainer {
             )
         );
 
-        // m_shooterSubsystem.setDefaultCommand(
-        //     new ShooterManualCommand(
-        //         () -> m_operatorController.leftBumper().getAsBoolean(),
-        //         () -> m_operatorController.getLeftTriggerAxis(),
-        //         m_shooterSubsystem
-        //     )
-        // );
+        m_ShooterSubsystem.setDefaultCommand(
+            new ShooterManualCommand(
+                () -> m_operatorController.leftBumper().getAsBoolean(),
+                () -> m_operatorController.getLeftTriggerAxis(),
+                m_ShooterSubsystem
+            )
+        );
+
+        
         // Configure the trigger bindings
         configureBindings();
     }
