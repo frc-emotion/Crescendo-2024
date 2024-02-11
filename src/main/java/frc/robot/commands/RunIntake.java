@@ -3,16 +3,16 @@ package frc.robot.commands;
 import java.util.function.Supplier;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.IntakeSubsystem;
 
 public class RunIntake {
     public class PivotIntake extends Command {
 
-        private Intake intake;
+        private IntakeSubsystem intakeSubsystem;
         private final Supplier<Boolean> rightBumper, leftBumper;
     
-        public PivotIntake(Intake intake, Supplier<Boolean> rightBumper, Supplier<Boolean> leftBumper){
-            this.intake = intake;
+        public PivotIntake(IntakeSubsystem intake, Supplier<Boolean> rightBumper, Supplier<Boolean> leftBumper){
+            this.intakeSubsystem = intake;
             this.rightBumper = rightBumper;
             this.leftBumper = leftBumper;
             addRequirements(intake);
@@ -25,17 +25,17 @@ public class RunIntake {
         @Override
         public void execute() {
             if(rightBumper.get()){
-                intake.intakeForward();
+                intakeSubsystem.intakeForward();
             }
             else {
-                intake.intakeStop();
+                intakeSubsystem.intakeStop();
             }
     
             if(leftBumper.get()){
-                intake.intakeReverse();
+                intakeSubsystem.intakeReverse();
             }
             else {
-                intake.intakeStop();
+                intakeSubsystem.intakeStop();
             }
 
         }

@@ -16,7 +16,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.IntakeConstants;
 
-public class Intake extends SubsystemBase {
+public class IntakeSubsystem extends SubsystemBase {
 
     private final CANSparkMax pivotMotor;
     private final CANSparkMax intakeMotor;
@@ -30,7 +30,7 @@ public class Intake extends SubsystemBase {
 
     public boolean down;
     
-    public Intake() {
+    public IntakeSubsystem() {
 
         down = false; 
 
