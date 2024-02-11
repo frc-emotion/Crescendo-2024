@@ -28,6 +28,8 @@ public class PivotSubsystem extends SubsystemBase {
     private MagnetSensorConfigs magnetConfiguration;
 
     private DigitalInput lowerLimit;
+    
+    private int index = 0;
 
     public PivotSubsystem() {
 
@@ -54,6 +56,30 @@ public class PivotSubsystem extends SubsystemBase {
         pivotPID.setOutputRange(-Constants.PivotConstants.PIVOT_AUTO_SPEED - 0.05,
                 Constants.PivotConstants.PIVOT_AUTO_SPEED);
 
+    }
+
+    public int getIndex() {
+        return index;
+    }
+
+    public void addIndex() {
+        if (Constants.PivotConstants.PIVOT_POSITIONS.length - 1 != index) {
+            index++;
+        }
+    }
+
+    public void subtractIndex() {
+        if (index != 0) {
+            index--;
+        }
+    }
+
+    public void setIndex(int i) {
+        index = i;
+    }
+
+    public void goToPreset() {
+        setRev(Constants.PivotConstants.PIVOT_POSITIONS[index]);
     }
 
     public boolean getLimit() {

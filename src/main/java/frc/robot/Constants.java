@@ -320,6 +320,8 @@ public final class Constants {
         public static final int absoluteEncoderID = 69;
 
         public static final double placeholder = 0.0;
+        public static final double[] PIVOT_POSITIONS = {0.0, 50.0, 100.0};
+
     }
 
     

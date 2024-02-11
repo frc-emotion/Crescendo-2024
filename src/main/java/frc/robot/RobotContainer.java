@@ -86,9 +86,7 @@ public class RobotContainer {
                 () -> m_operatorController.getLeftY(),
                 () -> m_operatorController.b().getAsBoolean(),
                 () -> m_operatorController.leftStick().getAsBoolean(),
-                () -> m_operatorController.povRight().getAsBoolean(),
                 () -> m_operatorController.povUp().getAsBoolean(),
-                () -> m_operatorController.povLeft().getAsBoolean(),
                 () -> m_operatorController.povDown().getAsBoolean()
                 )
         );

@@ -11,33 +11,21 @@ public class PivotManualCommand extends Command {
     private final PivotSubsystem pivotSubsystem;
 
     private final Supplier<Double> yJoystick;
-    private final Supplier<Boolean> bButton, leftStickButton, dPadRight, dPadUp, dPadLeft, dPadDown;
-
-    private final HashMap<Supplier<Boolean>, Double> preSetPositions;
+    private final Supplier<Boolean> bButton, leftStickButton, dPadUp, dPadDown;
 
     public PivotManualCommand(PivotSubsystem pivotSubsystem, 
             Supplier<Double> yJoystick,
             Supplier<Boolean> bButton,
             Supplier<Boolean> leftStickButton,
-            Supplier<Boolean> dPadRight,
             Supplier<Boolean> dPadUp,
-            Supplier<Boolean> dPadLeft,
             Supplier<Boolean> dPadDown) {
 
         this.yJoystick = yJoystick;
         this.bButton = bButton;
         this.leftStickButton = leftStickButton;
-        this.dPadRight = dPadRight;
         this.dPadUp = dPadUp;
-        this.dPadLeft = dPadLeft;
         this.dPadDown = dPadDown;
         this.pivotSubsystem = pivotSubsystem;
-
-        this.preSetPositions = new HashMap<Supplier<Boolean>, Double>();
-        this.preSetPositions.put(dPadRight, Constants.PivotConstants.placeholder);
-        this.preSetPositions.put(dPadUp, Constants.PivotConstants.placeholder);
-        this.preSetPositions.put(dPadLeft, Constants.PivotConstants.placeholder);
-        this.preSetPositions.put(dPadDown, Constants.PivotConstants.placeholder);
 
         addRequirements(pivotSubsystem);
     }
@@ -67,16 +55,12 @@ public class PivotManualCommand extends Command {
             pivotSubsystem.setRev(0);
         } else {
 
-            boolean picked = false;
-            for (Supplier<Boolean> dPadPosition : preSetPositions.keySet()) {
-                if (dPadPosition.get()) {
-                    picked = true;
-                    pivotSubsystem.setRev(preSetPositions.get(dPadPosition));
-                }
-            }
-
-            if (!picked) {
-                pivotSubsystem.stop();
+            if (dPadDown.get()) {
+                pivotSubsystem.subtractIndex();
+            } else if (dPadUp.get()) {
+                pivotSubsystem.addIndex();
+            } else {
+                pivotSubsystem.goToPreset();
             }
 
         }
