@@ -1,5 +1,8 @@
 package frc.robot.subsystems;
 
+import com.kauailabs.navx.frc.AHRS;
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 //import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -22,10 +25,6 @@ import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.util.TabManager;
 import frc.robot.util.TabManager.SubsystemTab;
-import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
-import edu.wpi.first.math.controller.PIDController;
-
-import com.kauailabs.navx.frc.AHRS;
 
 /**
  * Main Swerve Subsytem class
@@ -34,40 +33,44 @@ import com.kauailabs.navx.frc.AHRS;
 public class SwerveSubsystem extends SubsystemBase {
 
     private final SwerveModuleNeo frontLeft = new SwerveModuleNeo(
-            DriveConstants.kFrontLeftDriveMotorPort,
-            DriveConstants.kFrontLeftTurningMotorPort,
-            DriveConstants.kFrontLeftDriveAbsoluteEncoderReversed,
-            DriveConstants.kFrontLeftTurningEncoderReversed,
-            DriveConstants.kFrontLeftDriveAbsoluteEncoderPort,
-            DriveConstants.kFrontLeftDriveAbsoluteEncoderOffsetRad,
-            DriveConstants.kFrontLeftDriveAbsoluteEncoderReversed);
+        DriveConstants.kFrontLeftDriveMotorPort,
+        DriveConstants.kFrontLeftTurningMotorPort,
+        DriveConstants.kFrontLeftDriveAbsoluteEncoderReversed,
+        DriveConstants.kFrontLeftTurningEncoderReversed,
+        DriveConstants.kFrontLeftDriveAbsoluteEncoderPort,
+        DriveConstants.kFrontLeftDriveAbsoluteEncoderOffsetRad,
+        DriveConstants.kFrontLeftDriveAbsoluteEncoderReversed
+    );
 
     private final SwerveModuleNeo frontRight = new SwerveModuleNeo(
-            DriveConstants.kFrontRightDriveMotorPort,
-            DriveConstants.kFrontRightTurningMotorPort,
-            DriveConstants.kFrontRightDriveAbsoluteEncoderReversed,
-            DriveConstants.kFrontRightTurningEncoderReversed,
-            DriveConstants.kFrontRightDriveAbsoluteEncoderPort,
-            DriveConstants.kFrontRightDriveAbsoluteEncoderOffsetRad,
-            DriveConstants.kFrontRightDriveAbsoluteEncoderReversed);
+        DriveConstants.kFrontRightDriveMotorPort,
+        DriveConstants.kFrontRightTurningMotorPort,
+        DriveConstants.kFrontRightDriveAbsoluteEncoderReversed,
+        DriveConstants.kFrontRightTurningEncoderReversed,
+        DriveConstants.kFrontRightDriveAbsoluteEncoderPort,
+        DriveConstants.kFrontRightDriveAbsoluteEncoderOffsetRad,
+        DriveConstants.kFrontRightDriveAbsoluteEncoderReversed
+    );
 
     private final SwerveModuleNeo backLeft = new SwerveModuleNeo(
-            DriveConstants.kBackLeftDriveMotorPort,
-            DriveConstants.kBackLeftTurningMotorPort,
-            DriveConstants.kBackLeftDriveAbsoluteEncoderReversed,
-            DriveConstants.kBackLeftTurningEncoderReversed,
-            DriveConstants.kBackLeftDriveAbsoluteEncoderPort,
-            DriveConstants.kBackLeftDriveAbsoluteEncoderOffsetRad,
-            DriveConstants.kBackLeftDriveAbsoluteEncoderReversed);
+        DriveConstants.kBackLeftDriveMotorPort,
+        DriveConstants.kBackLeftTurningMotorPort,
+        DriveConstants.kBackLeftDriveAbsoluteEncoderReversed,
+        DriveConstants.kBackLeftTurningEncoderReversed,
+        DriveConstants.kBackLeftDriveAbsoluteEncoderPort,
+        DriveConstants.kBackLeftDriveAbsoluteEncoderOffsetRad,
+        DriveConstants.kBackLeftDriveAbsoluteEncoderReversed
+    );
 
     private final SwerveModuleNeo backRight = new SwerveModuleNeo(
-            DriveConstants.kBackRightDriveMotorPort,
-            DriveConstants.kBackRightTurningMotorPort,
-            DriveConstants.kBackRightDriveAbsoluteEncoderReversed,
-            DriveConstants.kBackRightTurningEncoderReversed,
-            DriveConstants.kBackRightDriveAbsoluteEncoderPort,
-            DriveConstants.kBackRightDriveAbsoluteEncoderOffsetRad,
-            DriveConstants.kBackRightDriveAbsoluteEncoderReversed);
+        DriveConstants.kBackRightDriveMotorPort,
+        DriveConstants.kBackRightTurningMotorPort,
+        DriveConstants.kBackRightDriveAbsoluteEncoderReversed,
+        DriveConstants.kBackRightTurningEncoderReversed,
+        DriveConstants.kBackRightDriveAbsoluteEncoderPort,
+        DriveConstants.kBackRightDriveAbsoluteEncoderOffsetRad,
+        DriveConstants.kBackRightDriveAbsoluteEncoderReversed
+    );
 
     private AHRS gyro = new AHRS(SPI.Port.kMXP);
 
@@ -76,10 +79,11 @@ public class SwerveSubsystem extends SubsystemBase {
     // private final PoseEstimator visionPoseEstimator = new PoseEstimator();
 
     public final SwerveDrivePoseEstimator poseEstimator = new SwerveDrivePoseEstimator(
-            DriveConstants.kDriveKinematics,
-            getRotation2d(), // Was empty pose 2d before
-            getModulePositions(),
-            new Pose2d()); // FIX add the starting pose estimate?
+        DriveConstants.kDriveKinematics,
+        getRotation2d(), // Was empty pose 2d before
+        getModulePositions(),
+        new Pose2d()
+    ); // FIX add the starting pose estimate?
 
     private ChassisSpeeds robotSpeeds;
 
@@ -90,19 +94,30 @@ public class SwerveSubsystem extends SubsystemBase {
     private Field2d m_field;
 
     public SwerveSubsystem() {
-
-        PIDController xController = new PIDController(AutoConstants.kPXController, 0, 0);
-        PIDController yController = new PIDController(AutoConstants.kPYController, 0, 0);
-        PIDController thetaController = new PIDController(AutoConstants.kPThetaController, 0, 0);
+        PIDController xController = new PIDController(
+            AutoConstants.kPXController,
+            0,
+            0
+        );
+        PIDController yController = new PIDController(
+            AutoConstants.kPYController,
+            0,
+            0
+        );
+        PIDController thetaController = new PIDController(
+            AutoConstants.kPThetaController,
+            0,
+            0
+        );
         thetaController.enableContinuousInput(-Math.PI, Math.PI);
 
         new Thread(() -> {
             try {
                 Thread.sleep(1000);
                 zeroHeading();
-            } catch (Exception io) {
-            }
-        }).start();
+            } catch (Exception io) {}
+        })
+            .start();
 
         initShuffleboard();
 
@@ -111,8 +126,12 @@ public class SwerveSubsystem extends SubsystemBase {
 
     public double[] getSpeedType() {
         double[] toReturn = new double[2];
-        toReturn[0] = Constants.DriveConstants.kTeleDriveMaxSpeedMetersPerSecond / toDivideBy;
-        toReturn[1] = Constants.DriveConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond / toDivideBy;
+        toReturn[0] =
+            Constants.DriveConstants.kTeleDriveMaxSpeedMetersPerSecond /
+            toDivideBy;
+        toReturn[1] =
+            Constants.DriveConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond /
+            toDivideBy;
         return toReturn;
     }
 
@@ -150,11 +169,11 @@ public class SwerveSubsystem extends SubsystemBase {
 
     // Resets current pose to a specified pose.
     public void resetOdometry(Pose2d pose) {
-
         poseEstimator.resetPosition(
-                getRotation2d(),
-                getModulePositions(),
-                pose);
+            getRotation2d(),
+            getModulePositions(),
+            pose
+        );
     }
 
     public ChassisSpeeds getChassisSpeeds() {
@@ -168,26 +187,25 @@ public class SwerveSubsystem extends SubsystemBase {
     public void driveRobotRelative(ChassisSpeeds speedGiven) {
         setChassisSpeeds(speedGiven);
 
-        SwerveModuleState[] moduleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(speedGiven);
+        SwerveModuleState[] moduleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(
+            speedGiven
+        );
         setModuleStates(moduleStates);
     }
 
     public SwerveModulePosition[] getModulePositions() {
         return new SwerveModulePosition[] {
-                frontLeft.getPosition(),
-                frontRight.getPosition(),
-                backLeft.getPosition(),
-                backRight.getPosition()
+            frontLeft.getPosition(),
+            frontRight.getPosition(),
+            backLeft.getPosition(),
+            backRight.getPosition(),
         };
     }
 
     @Override
     public void periodic() {
-
         // Updates with drivetrain sensors
-        poseEstimator.update(
-                getRotation2d(),
-                getModulePositions());
+        poseEstimator.update(getRotation2d(), getModulePositions());
 
         // Pair<Pose2d, Double> result = visionPoseEstimator.getEstimatedPose();
 
@@ -198,7 +216,6 @@ public class SwerveSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("Gyro Reading", getHeading());
         SmartDashboard.putNumber("Gyro Pitch", getPitch());
         SmartDashboard.putNumber("Gyro Roll", getRoll());
-
     }
 
     public void stopModules() {
@@ -209,15 +226,24 @@ public class SwerveSubsystem extends SubsystemBase {
     }
 
     public void setModuleStates(SwerveModuleState[] desiredStates) {
-        SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
+        SwerveDriveKinematics.desaturateWheelSpeeds(
+            desiredStates,
+            DriveConstants.kPhysicalMaxSpeedMetersPerSecond
+        );
         frontLeft.setDesiredState(desiredStates[0], false);
         frontRight.setDesiredState(desiredStates[1], false);
         backLeft.setDesiredState(desiredStates[2], false);
         backRight.setDesiredState(desiredStates[3], false);
     }
 
-    public void setModuleStates(SwerveModuleState[] desiredStates, boolean station) {
-        SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
+    public void setModuleStates(
+        SwerveModuleState[] desiredStates,
+        boolean station
+    ) {
+        SwerveDriveKinematics.desaturateWheelSpeeds(
+            desiredStates,
+            DriveConstants.kPhysicalMaxSpeedMetersPerSecond
+        );
         frontLeft.setDesiredState(desiredStates[0], station);
         frontRight.setDesiredState(desiredStates[1], station);
         backLeft.setDesiredState(desiredStates[2], station);
@@ -225,11 +251,16 @@ public class SwerveSubsystem extends SubsystemBase {
     }
 
     private void initShuffleboard() {
-        ShuffleboardTab moduleData = TabManager.getInstance().accessTab(SubsystemTab.DRIVETRAIN);
-        frontLeftData = moduleData.getLayout("Front Left", BuiltInLayouts.kList);
-        frontRightData = moduleData.getLayout("Front Right", BuiltInLayouts.kList);
+        ShuffleboardTab moduleData = TabManager
+            .getInstance()
+            .accessTab(SubsystemTab.DRIVETRAIN);
+        frontLeftData =
+            moduleData.getLayout("Front Left", BuiltInLayouts.kList);
+        frontRightData =
+            moduleData.getLayout("Front Right", BuiltInLayouts.kList);
         backLeftData = moduleData.getLayout("Back Left", BuiltInLayouts.kList);
-        backRightData = moduleData.getLayout("Back Right", BuiltInLayouts.kList);
+        backRightData =
+            moduleData.getLayout("Back Right", BuiltInLayouts.kList);
         fillList(frontLeft, frontLeftData);
         fillList(frontRight, frontRightData);
         fillList(backLeft, backLeftData);
@@ -237,16 +268,28 @@ public class SwerveSubsystem extends SubsystemBase {
 
         m_field = new Field2d();
 
-        TabManager.getInstance().addFieldWidget(TabManager.getInstance().accessTab(SubsystemTab.AUTON),
-                BuiltInWidgets.kField, "Pose", m_field,
-                new int[] { 0, 0 }, new int[] { 6, 4 });
+        TabManager
+            .getInstance()
+            .addFieldWidget(
+                TabManager.getInstance().accessTab(SubsystemTab.AUTON),
+                BuiltInWidgets.kField,
+                "Pose",
+                m_field,
+                new int[] { 0, 0 },
+                new int[] { 6, 4 }
+            );
     }
 
     private void fillList(SwerveModuleNeo module, ShuffleboardLayout layout) {
-        layout.addNumber("Absolute Position", () -> module.getAbsolutePostion());
-        layout.addNumber("Integrated Position", () -> module.getTurningPosition());
+        layout.addNumber(
+            "Absolute Position",
+            () -> module.getAbsolutePostion()
+        );
+        layout.addNumber(
+            "Integrated Position",
+            () -> module.getTurningPosition()
+        );
         layout.addNumber("Velocity", () -> module.getDriveVelocity());
         layout.withSize(2, 4);
     }
-
 }
