@@ -77,22 +77,6 @@ public class PivotSubsystem extends SubsystemBase {
         pivotMotor.set(0);
     }
 
-    public void setAgainst() {
-        setRev(79); // TODO: Needs to be changed
-    }
-
-    public void setLine() {
-        setRev(16.35); // TODO: Needs to be changed
-    }
-
-    public void setWheel() {
-        setRev(33); // TODO: Needs to be changed
-    }
-
-    public void setTrench() {
-        setRev(7.5); // TODO: Needs to be changed
-    }
-
     public void setRev(double rev) {
         double target = rev;
         if (rev < Constants.PivotConstants.PIVOT_ZERO_THRESHOLD) {

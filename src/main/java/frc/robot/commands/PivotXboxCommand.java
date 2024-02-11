@@ -54,16 +54,16 @@ public class PivotXboxCommand extends Command {
             switch (dPad.get().intValue()) {
                 // TODO: Needs to be updated thru testing
                 case 0:
-                    pivotSubsystem.setAgainst();
+                    pivotSubsystem.setRev(Constants.PivotConstants.placeholder);
                     break;
                 case 90:
-                    pivotSubsystem.setLine();
+                    pivotSubsystem.setRev(Constants.PivotConstants.placeholder);
                     break;
                 case 180:
-                    pivotSubsystem.setWheel();
+                    pivotSubsystem.setRev(Constants.PivotConstants.placeholder);
                     break;
                 case 270:
-                    pivotSubsystem.setTrench();
+                    pivotSubsystem.setRev(Constants.PivotConstants.placeholder);
                     break;
                 default:
                     pivotSubsystem.stop();

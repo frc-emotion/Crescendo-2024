@@ -318,6 +318,8 @@ public final class Constants {
 
         public static final double TRIGGER_THRESHOLD = 0.3;
         public static final int absoluteEncoderID = 69;
+
+        public static final double placeholder = 0;
     }
 
     
