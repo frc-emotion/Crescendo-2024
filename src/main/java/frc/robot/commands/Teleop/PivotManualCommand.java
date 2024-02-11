@@ -49,7 +49,7 @@ public class PivotManualCommand extends Command {
             if (dPadDown.get()) { // If dpad down is pressed, sets to automatic mode and changes to the next lowest preset as target
                 mode = false;
                 pivotSubsystem.subtractIndex();
-                
+
             } else if (dPadUp.get()) {  // if dpad up is pressed, sets to automatic mode and changes to next highest preset as target
                 mode = false;
                 pivotSubsystem.addIndex();
@@ -69,10 +69,10 @@ public class PivotManualCommand extends Command {
     private void manualControl() {
         double output;
          
-        if(pivotSubsystem.getRev() >= Constants.PivotConstants.PIVOT_MAX_REVOLUTION) {   // If over or equal to maximum position
+        if(pivotSubsystem.getRev() >= Constants.PivotConstants.PIVOT_MAX_REVOLUTION) {   // If over or equal to maximum position, makes it so the pivot can only go down
             output = Clamp(yJoystick.get(), 0, -1); 
 
-        } else if(pivotSubsystem.getRev() <= Constants.PivotConstants.PIVOT_MIN_REVOLUTION) {   // If under or equal to the minimum position
+        } else if(pivotSubsystem.getRev() <= Constants.PivotConstants.PIVOT_MIN_REVOLUTION) {   // If under or equal to the minimum position, makes it so the pivot can only go up
             output = Clamp(yJoystick.get(), 1, 0);
             
         } else {    // If the pivot is in normal operation between max and min values
