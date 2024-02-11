@@ -34,15 +34,15 @@ public class PivotSubsystem extends SubsystemBase {
         this.pivotMotor = new CANSparkMax(Constants.PivotConstants.PIVOT_PORT, MotorType.kBrushless);
         this.lowerLimit = new DigitalInput(Constants.PivotConstants.LOWER_LIMIT_PORT);
 
-        // magnetConfiguration = new MagnetSensorConfigs();
+        magnetConfiguration = new MagnetSensorConfigs();
 
-        // magnetConfiguration.withMagnetOffset(Units.radiansToDegrees(absoluteEncoderOffsetRad));
-        // magnetConfiguration.withAbsoluteSensorRange(AbsoluteSensorRangeValue.Unsigned_0To1);
-        // magnetConfiguration.withSensorDirection(SensorDirectionValue.CounterClockwise_Positive);
+        //magnetConfiguration.withMagnetOffset(Units.radiansToDegrees(absoluteEncoderOffsetRad));
+        magnetConfiguration.withAbsoluteSensorRange(AbsoluteSensorRangeValue.Signed_PlusMinusHalf);
+        magnetConfiguration.withSensorDirection(SensorDirectionValue.CounterClockwise_Positive);
 
         absoluteEncoder = new CANcoder(Constants.PivotConstants.absoluteEncoderID);
 
-        //absoluteEncoder.getConfigurator().apply(magnetConfiguration);
+        absoluteEncoder.getConfigurator().apply(magnetConfiguration);
 
         pivotPID = pivotMotor.getPIDController();
 
@@ -66,11 +66,11 @@ public class PivotSubsystem extends SubsystemBase {
 
     public void calibrate() {
         pivotMotor.set(0);
-        pivotMotor.getEncoder().setPosition(0);
+        pivotMotor.getEncoder().setPosition(getRev());
     }
 
     public double getRev() {
-        return -absoluteEncoder.getPosition().getValueAsDouble();
+        return -absoluteEncoder.getPosition().getValueAsDouble() * 180.0;
     }
 
     public void stop() {
