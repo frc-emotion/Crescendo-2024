@@ -11,7 +11,7 @@ import java.util.function.Supplier;
  * @author Jason Ballinger
  * @version 2/3/2024
  */
-public class ClimbXboxCommand extends Command {
+public class ClimbManualCommand extends Command {
 
     private final ClimbSubsystem climbSubsystem;
     private Supplier<Double> input;
@@ -23,7 +23,7 @@ public class ClimbXboxCommand extends Command {
      * @param cs    Climb System being affected by the command
      * @param input Controller joystick input value
      */
-    public ClimbXboxCommand(ClimbSubsystem cs, Supplier<Double> input) {
+    public ClimbManualCommand(ClimbSubsystem cs, Supplier<Double> input) {
         this.climbSubsystem = cs;
         this.input = input;
 

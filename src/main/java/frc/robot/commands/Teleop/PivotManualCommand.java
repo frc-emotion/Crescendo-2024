@@ -1,35 +1,50 @@
 package frc.robot.commands.Teleop;
 
+import java.util.HashMap;
 import java.util.function.Supplier;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.subsystems.PivotSubsystem;
 
-public class PivotXboxCommand extends Command {
+public class PivotManualCommand extends Command {
     private final PivotSubsystem pivotSubsystem;
 
-    private final Supplier<Double> yJoystick, dPad;
-    private final Supplier<Boolean> xButton, yButton, leftStickButton;
+    private final Supplier<Double> yJoystick;
+    private final Supplier<Boolean> bButton, leftStickButton, dPadRight, dPadUp, dPadLeft, dPadDown;
 
-    public PivotXboxCommand(PivotSubsystem pivotSubsystem, Supplier<Double> yJoystick,
-            Supplier<Boolean> xButton,
-            Supplier<Boolean> yButton,
+    private final HashMap<Supplier<Boolean>, Double> preSetPositions;
+
+    public PivotManualCommand(PivotSubsystem pivotSubsystem, 
+            Supplier<Double> yJoystick,
+            Supplier<Boolean> bButton,
             Supplier<Boolean> leftStickButton,
-            Supplier<Double> dPad) {
+            Supplier<Boolean> dPadRight,
+            Supplier<Boolean> dPadUp,
+            Supplier<Boolean> dPadLeft,
+            Supplier<Boolean> dPadDown) {
 
         this.yJoystick = yJoystick;
-        this.xButton = xButton;
-        this.yButton = yButton;
+        this.bButton = bButton;
         this.leftStickButton = leftStickButton;
-        this.dPad = dPad;
+        this.dPadRight = dPadRight;
+        this.dPadUp = dPadUp;
+        this.dPadLeft = dPadLeft;
+        this.dPadDown = dPadDown;
         this.pivotSubsystem = pivotSubsystem;
+
+        this.preSetPositions = new HashMap<Supplier<Boolean>, Double>();
+        this.preSetPositions.put(dPadRight, Constants.PivotConstants.placeholder);
+        this.preSetPositions.put(dPadUp, Constants.PivotConstants.placeholder);
+        this.preSetPositions.put(dPadLeft, Constants.PivotConstants.placeholder);
+        this.preSetPositions.put(dPadDown, Constants.PivotConstants.placeholder);
+
         addRequirements(pivotSubsystem);
     }
 
     @Override
     public void execute() {
-        if (xButton.get()) {
+        if (bButton.get()) {
             pivotSubsystem.calibrate();
         } else if (Math.abs(yJoystick.get()) > Constants.PivotConstants.TRIGGER_THRESHOLD) {
 
@@ -51,24 +66,19 @@ public class PivotXboxCommand extends Command {
         } else if (leftStickButton.get()) {
             pivotSubsystem.setRev(0);
         } else {
-            switch (dPad.get().intValue()) {
-                // TODO: Needs to be updated thru testing
-                case 0:
-                    pivotSubsystem.setRev(Constants.PivotConstants.placeholder);
-                    break;
-                case 90:
-                    pivotSubsystem.setRev(Constants.PivotConstants.placeholder);
-                    break;
-                case 180:
-                    pivotSubsystem.setRev(Constants.PivotConstants.placeholder);
-                    break;
-                case 270:
-                    pivotSubsystem.setRev(Constants.PivotConstants.placeholder);
-                    break;
-                default:
-                    pivotSubsystem.stop();
-                    break;
+
+            boolean picked = false;
+            for (Supplier<Boolean> dPadPosition : preSetPositions.keySet()) {
+                if (dPadPosition.get()) {
+                    picked = true;
+                    pivotSubsystem.setRev(preSetPositions.get(dPadPosition));
+                }
             }
+
+            if (!picked) {
+                pivotSubsystem.stop();
+            }
+
         }
     }
 

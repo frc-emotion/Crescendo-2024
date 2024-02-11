@@ -10,6 +10,9 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
+import frc.robot.commands.Teleop.ClimbManualCommand;
+import frc.robot.commands.Teleop.IntakeManualCommand;
+import frc.robot.commands.Teleop.PivotManualCommand;
 import frc.robot.commands.Teleop.ShooterManualCommand;
 import frc.robot.commands.Teleop.SwerveXboxCommand;
 import frc.robot.subsystems.ClimbSubsystem;
@@ -51,9 +54,9 @@ public class RobotContainer {
         m_SwerveSubsystem.setDefaultCommand(
             new SwerveXboxCommand(
                 m_SwerveSubsystem,
-                () -> -m_driverController.getRawAxis(OIConstants.kDriverYAxis),
-                () -> -m_driverController.getRawAxis(OIConstants.kDriverXAxis),
-                () -> m_driverController.getRawAxis(OIConstants.kDriverRotAxis),
+                () -> -m_driverController.getLeftY(),
+                () -> -m_driverController.getLeftX(),
+                () -> m_driverController.getRightX(),
                 () -> !m_driverController.a().getAsBoolean(),
                 () -> m_driverController.leftBumper().getAsBoolean(),
                 () -> m_driverController.rightBumper().getAsBoolean(),
@@ -64,9 +67,37 @@ public class RobotContainer {
 
         m_ShooterSubsystem.setDefaultCommand(
             new ShooterManualCommand(
-                () -> m_operatorController.leftBumper().getAsBoolean(),
+                () -> m_operatorController.a().getAsBoolean(),
                 () -> m_operatorController.getLeftTriggerAxis(),
                 m_ShooterSubsystem
+            )
+        );
+
+        m_ClimbSubsystem.setDefaultCommand(
+            new ClimbManualCommand(
+                m_ClimbSubsystem, 
+                () -> m_operatorController.getRightY()
+                )
+            );
+
+        m_PivotSubsystem.setDefaultCommand(
+            new PivotManualCommand(
+                m_PivotSubsystem,
+                () -> m_operatorController.getLeftY(),
+                () -> m_operatorController.b().getAsBoolean(),
+                () -> m_operatorController.leftStick().getAsBoolean(),
+                () -> m_operatorController.povRight().getAsBoolean(),
+                () -> m_operatorController.povUp().getAsBoolean(),
+                () -> m_operatorController.povLeft().getAsBoolean(),
+                () -> m_operatorController.povDown().getAsBoolean()
+                )
+        );
+
+        m_IntakeSubsystem.setDefaultCommand(
+            new IntakeManualCommand(
+                m_IntakeSubsystem,
+                () -> m_operatorController.rightBumper().getAsBoolean(),
+                () -> m_operatorController.leftBumper().getAsBoolean()
             )
         );
 
