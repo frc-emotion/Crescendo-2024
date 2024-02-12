@@ -312,14 +312,16 @@ public final class Constants {
         public static final double PIVOT_AUTO_SPEED = 0.2;
         public static final double PIVOT_ZERO_SPEED = 0.1;
 
-        public static final double PIVOT_ZERO_THRESHOLD = 5;
+        public static final double PIVOT_MIN_REVOLUTION = 5;
         public static final double PIVOT_MAX_REVOLUTION = 83;
         public static final double PIVOT_THRESHOLD = 6;
 
         public static final double TRIGGER_THRESHOLD = 0.3;
         public static final int absoluteEncoderID = 69;
 
-        public static final double placeholder = 0;
+        public static final double placeholder = 0.0;
+        public static final double[] PIVOT_POSITIONS = {0.0, 50.0, 100.0};
+
     }
 
     

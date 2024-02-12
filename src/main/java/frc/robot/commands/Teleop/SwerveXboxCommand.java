@@ -1,4 +1,4 @@
-package frc.robot.commands;
+package frc.robot.commands.Teleop;
 
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
