@@ -7,7 +7,6 @@ package frc.robot;
 import frc.robot.Constants.OIConstants;
 // import frc.robot.commands.ShooterAutoCommand;
 // import frc.robot.commands.ShooterManualCommand;
-import frc.robot.commands.SwerveXboxCommand;
 // import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 
@@ -60,10 +59,14 @@ public class RobotContainer {
         OIConstants.kOperatorControllerPort
     );
 
+    private final SendableChooser<Command> autoChooser;
+
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
      */
     public RobotContainer() {
+        autoChooser = AutoBuilder.buildAutoChooser();
+
         m_SwerveSubsystem.setDefaultCommand(
             new SwerveXboxCommand(
                 m_SwerveSubsystem,
@@ -115,6 +118,8 @@ public class RobotContainer {
         
         // Configure the trigger bindings
         configureBindings();
+
+        SmartDashboard.putData("Auto Chooser", autoChooser);
     }
 
     /**
