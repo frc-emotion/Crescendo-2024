@@ -54,15 +54,9 @@ public class SwerveModuleNeo {
 
         magnetConfiguration = new MagnetSensorConfigs();
 
-        magnetConfiguration.withMagnetOffset(
-            Units.radiansToDegrees(absoluteEncoderOffsetRad)
-        );
-        magnetConfiguration.withAbsoluteSensorRange(
-            AbsoluteSensorRangeValue.Unsigned_0To1
-        );
-        magnetConfiguration.withSensorDirection(
-            SensorDirectionValue.CounterClockwise_Positive
-        );
+        magnetConfiguration.withMagnetOffset(absoluteEncoderOffsetRad);
+        magnetConfiguration.withAbsoluteSensorRange(AbsoluteSensorRangeValue.Signed_PlusMinusHalf);
+        magnetConfiguration.withSensorDirection(SensorDirectionValue.CounterClockwise_Positive);
 
         absoluteEncoder = new CANcoder(absoluteEncoderId);
 
@@ -137,10 +131,7 @@ public class SwerveModuleNeo {
         if (getTurningVelocity() < Math.toRadians(0.5)) {
             if (++resetIteration >= ENCODER_RESET_ITERATIONS) {
                 resetIteration = 0;
-                double absoluteAngle =
-                    absoluteEncoder.getAbsolutePosition().getValueAsDouble() *
-                    2.0 *
-                    Math.PI;
+                double absoluteAngle = Units.degreesToRadians(getAbsolutePostion());//absoluteEncoder.getAbsolutePosition().getValueAsDouble() * 2.0 * Math.PI;
                 turningEncoder.setPosition(absoluteAngle);
                 currentAngleRadians = absoluteAngle;
             }
@@ -189,7 +180,7 @@ public class SwerveModuleNeo {
     }
 
     public double getAbsolutePostion() {
-        return absoluteEncoder.getAbsolutePosition().getValueAsDouble();
+        return absoluteEncoder.getAbsolutePosition().getValueAsDouble() * 180;
     }
 
     public void resetEncoders() {
@@ -251,19 +242,15 @@ public class SwerveModuleNeo {
         return rpm * (ModuleConstants.kDriveEncoderRPM2MeterPerSec);
     }
 
-    public static double RPMToFalcon(double RPM, double gearRatio) {
-        double motorRPM = RPM * gearRatio;
-        double sensorCounts = motorRPM * (2048.0 / 600.0);
-        return sensorCounts;
-    }
+    // public static double RPMToFalcon(double RPM, double gearRatio) {
+    //     double motorRPM = RPM * gearRatio;
+    //     double sensorCounts = motorRPM * (2048.0 / 600.0);
+    //     return sensorCounts;
+    // }
 
-    public static double MPSToFalcon(
-        double velocity,
-        double circumference,
-        double gearRatio
-    ) {
-        double wheelRPM = ((velocity * 60) / circumference);
-        double wheelVelocity = RPMToFalcon(wheelRPM, gearRatio);
-        return wheelVelocity;
-    }
+    // public static double MPSToFalcon(double velocity, double circumference, double gearRatio) {
+    //     double wheelRPM = ((velocity * 60) / circumference);
+    //     double wheelVelocity = RPMToFalcon(wheelRPM, gearRatio);
+    //     return wheelVelocity;
+    // }
 }

@@ -12,6 +12,8 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.networktables.StructArrayPublisher;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
@@ -19,18 +21,38 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.util.TabManager;
 import frc.robot.util.TabManager.SubsystemTab;
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
+import edu.wpi.first.math.controller.PIDController;
+
+import java.util.function.BooleanSupplier;
+
+import com.kauailabs.navx.frc.AHRS;
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.path.PathConstraints;
+import com.pathplanner.lib.pathfinding.LocalADStar;
+import com.pathplanner.lib.pathfinding.Pathfinding;
+import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
+import com.pathplanner.lib.util.ReplanningConfig;
 
 /**
  * Main Swerve Subsytem class
  * Holds gyro and odometry methods
  */
 public class SwerveSubsystem extends SubsystemBase {
+
+    private static final PathConstraints kPathConstraints = new PathConstraints(
+        AutoConstants.kMaxSpeedMetersPerSecond, 
+        AutoConstants.kMaxAccelerationMetersPerSecondSquared, 
+        AutoConstants.kMaxAngularSpeedRadiansPerSecond, 
+        AutoConstants.kMaxAngularAccelerationRadiansPerSecondSquared
+    );
 
     private final SwerveModuleNeo frontLeft = new SwerveModuleNeo(
         DriveConstants.kFrontLeftDriveMotorPort,
@@ -93,23 +115,15 @@ public class SwerveSubsystem extends SubsystemBase {
     private ShuffleboardLayout backRightData;
     private Field2d m_field;
 
+    private StructArrayPublisher<SwerveModuleState> publisher = NetworkTableInstance.getDefault()
+        .getStructArrayTopic("PersianSwerveState", SwerveModuleState.struct).publish();
+
     public SwerveSubsystem() {
-        PIDController xController = new PIDController(
-            AutoConstants.kPXController,
-            0,
-            0
-        );
-        PIDController yController = new PIDController(
-            AutoConstants.kPYController,
-            0,
-            0
-        );
-        PIDController thetaController = new PIDController(
-            AutoConstants.kPThetaController,
-            0,
-            0
-        );
-        thetaController.enableContinuousInput(-Math.PI, Math.PI);
+
+        //PIDController xController = new PIDController(AutoConstants.kPXController, 0, 0);
+        //PIDController yController = new PIDController(AutoConstants.kPYController, 0, 0);
+        //PIDController thetaController = new PIDController(AutoConstants.kPThetaController, 0, 0);
+        //thetaController.enableContinuousInput(-Math.PI, Math.PI);
 
         new Thread(() -> {
             try {
@@ -122,6 +136,21 @@ public class SwerveSubsystem extends SubsystemBase {
         initShuffleboard();
 
         toDivideBy = 1;
+
+        BooleanSupplier supp = () -> { return true; };
+
+        AutoBuilder.configureHolonomic(
+            this::getCurrentPose,
+            this::resetOdometry,
+            this::getChassisSpeeds,
+            this::driveRobotRelative,
+            new HolonomicPathFollowerConfig(AutoConstants.kMaxSpeedMetersPerSecond, DriveConstants.kWheelBase, new ReplanningConfig()),
+            supp,
+            this
+        );
+
+        Pathfinding.setPathfinder(new LocalADStar());
+        
     }
 
     public double[] getSpeedType() {
@@ -195,10 +224,19 @@ public class SwerveSubsystem extends SubsystemBase {
 
     public SwerveModulePosition[] getModulePositions() {
         return new SwerveModulePosition[] {
-            frontLeft.getPosition(),
-            frontRight.getPosition(),
-            backLeft.getPosition(),
-            backRight.getPosition(),
+                frontLeft.getPosition(),
+                frontRight.getPosition(),
+                backLeft.getPosition(),
+                backRight.getPosition()
+        };
+    }
+
+    public SwerveModuleState[] getModuleStates() {
+        return new SwerveModuleState[] {
+            frontLeft.getState(),
+            frontRight.getState(),
+            backLeft.getState(),
+            backRight.getState()
         };
     }
 
@@ -216,6 +254,13 @@ public class SwerveSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("Gyro Reading", getHeading());
         SmartDashboard.putNumber("Gyro Pitch", getPitch());
         SmartDashboard.putNumber("Gyro Roll", getRoll());
+
+        SwerveModuleState[] moduleStates = getModuleStates();
+
+        publisher.set(moduleStates);
+
+
+
     }
 
     public void stopModules() {
@@ -291,5 +336,54 @@ public class SwerveSubsystem extends SubsystemBase {
         );
         layout.addNumber("Velocity", () -> module.getDriveVelocity());
         layout.withSize(2, 4);
+    }
+
+    /**
+     * Creates a new Command to pathfind to a certain pose using
+     * only the target pose.
+     * 
+     * @param pose  The target pose
+     * @return      The new command to reach the target pose
+     */
+    public Command navigateToPose(Pose2d pose) {
+        return AutoBuilder.pathfindToPose(
+            pose, 
+           kPathConstraints
+        );
+    }
+
+    /**
+     * Creates a new Command to pathfind to a certain pose using
+     * the target pose and end velocity.
+     * 
+     * @param pose          The target pose
+     * @param endVelocity   The end velocity
+     * @return              The new command to reach the target pose
+     */
+    public Command navigateToPose(Pose2d pose, double endVelocity) {
+        return AutoBuilder.pathfindToPose(
+            pose, 
+           kPathConstraints,
+           endVelocity
+        );
+    }
+
+    /**
+     * Creates a new Command to pathfind to a certain pose using
+     * the target pose, end velocity, and the distance the robot
+     * should travel before turning to the target pose's heading.
+     * 
+     * @param pose                  The target pose
+     * @param endVelocity           The end velocity
+     * @param rotationDelayDistance The distance the robot should travel before turning
+     * @return                      The new Command to reach the target pose
+     */
+    public Command navigateToPose(Pose2d pose, double endVelocity, double rotationDelayDistance) {
+        return AutoBuilder.pathfindToPose(
+            pose, 
+           kPathConstraints,
+           endVelocity,
+           rotationDelayDistance
+        );
     }
 }
