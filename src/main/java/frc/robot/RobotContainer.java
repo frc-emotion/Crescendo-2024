@@ -21,6 +21,18 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.OIConstants;
+import frc.robot.commands.Teleop.ClimbManualCommand;
+import frc.robot.commands.Teleop.IntakeManualCommand;
+import frc.robot.commands.Teleop.PivotManualCommand;
+import frc.robot.commands.Teleop.ShooterManualCommand;
+import frc.robot.commands.Teleop.SwerveXboxCommand;
+import frc.robot.subsystems.ClimbSubsystem;
+import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.PivotSubsystem;
+import frc.robot.subsystems.ShooterSubsystem;
+import frc.robot.subsystems.SwerveSubsystem;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -32,85 +44,103 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 public class RobotContainer {
-  // The robot's subsystems and commands are defined here...
-  public static final SwerveSubsystem m_SwerveSubsystem = new SwerveSubsystem();
-  //public static final ShooterSubsystem m_shooterSubsystem = new ShooterSubsystem();
 
-  // Replace with CommandPS4Controller or CommandJoystick if needed
-  private final CommandXboxController m_driverController =
-      new CommandXboxController(OIConstants.kDriverControllerPort);
-  // private final CommandXboxController m_operatorController =
-  //     new CommandXboxController(OIConstants.kOperatorControllerPort);
+    // The robot's subsystems and commands are defined here...
+    public static final SwerveSubsystem m_SwerveSubsystem = new SwerveSubsystem();
+    public static final ShooterSubsystem m_ShooterSubsystem = new ShooterSubsystem();
+    public static final IntakeSubsystem m_IntakeSubsystem = new IntakeSubsystem();
+    public static final ClimbSubsystem m_ClimbSubsystem = new ClimbSubsystem();
+    public static final PivotSubsystem m_PivotSubsystem = new PivotSubsystem();
 
-  private final SendableChooser<Command> autoChooser;
-  /**
-   * The container for the robot. Contains subsystems, OI devices, and commands.
-   */
-  public RobotContainer() {
-    autoChooser = AutoBuilder.buildAutoChooser();
+    // Replace with CommandPS4Controller or CommandJoystick if needed
+    private final CommandXboxController m_driverController = new CommandXboxController(
+        OIConstants.kDriverControllerPort
+    );
+    private final CommandXboxController m_operatorController = new CommandXboxController(
+        OIConstants.kOperatorControllerPort
+    );
 
-    m_SwerveSubsystem.setDefaultCommand(
-    new SwerveXboxCommand(
-      m_SwerveSubsystem,
-      () -> -m_driverController.getRawAxis(OIConstants.kDriverYAxis),
-      () -> -m_driverController.getRawAxis(OIConstants.kDriverXAxis),
-      () -> m_driverController.getRawAxis(OIConstants.kDriverRotAxis),
-      () -> !m_driverController.a().getAsBoolean(),
-      () -> m_driverController.leftBumper().getAsBoolean(),
-      () -> m_driverController.rightBumper().getAsBoolean(),
-      () -> m_driverController.getRightTriggerAxis(),
-      () -> m_driverController.getLeftTriggerAxis()
-    ));
+    /**
+     * The container for the robot. Contains subsystems, OI devices, and commands.
+     */
+    public RobotContainer() {
+        m_SwerveSubsystem.setDefaultCommand(
+            new SwerveXboxCommand(
+                m_SwerveSubsystem,
+                () -> -m_driverController.getLeftY(),
+                () -> -m_driverController.getLeftX(),
+                () -> m_driverController.getRightX(),
+                () -> !m_driverController.a().getAsBoolean(),
+                () -> m_driverController.leftBumper().getAsBoolean(),
+                () -> m_driverController.rightBumper().getAsBoolean(),
+                () -> m_driverController.getRightTriggerAxis(),
+                () -> m_driverController.getLeftTriggerAxis()
+            )
+        );
 
-    // m_shooterSubsystem.setDefaultCommand(
-    //   new ShooterManualCommand(
-    //     () -> m_operatorController.leftBumper().getAsBoolean(),
-    //     () -> m_operatorController.getLeftTriggerAxis(),
-    //     m_shooterSubsystem
-    //   )
-    // );
-    // Configure the trigger bindings
-    configureBindings();
+        m_ShooterSubsystem.setDefaultCommand(
+            new ShooterManualCommand(
+                () -> m_operatorController.a().getAsBoolean(),
+                () -> m_operatorController.getLeftTriggerAxis(),
+                m_ShooterSubsystem
+            )
+        );
 
-    SmartDashboard.putData("Auto Chooser", autoChooser);
+        m_ClimbSubsystem.setDefaultCommand(
+            new ClimbManualCommand(
+                m_ClimbSubsystem, 
+                () -> m_operatorController.getRightY()
+                )
+            );
 
-      // Individual Commands
-    // NamedCommands.registerCommand(  "ShootNote",        new ShooterAutoCommand(m_shooterSubsystem));
-    // NamedCommands.registerCommand(  "VisionUpdatePose", new Command() {}); // replace Command with vision command
-    // NamedCommands.registerCommand(  "IntakeNote",       new Command() {}); // replace Command with intake command
+        m_PivotSubsystem.setDefaultCommand(
+            new PivotManualCommand(
+                m_PivotSubsystem,
+                () -> m_operatorController.getLeftY(),
+                () -> m_operatorController.b().getAsBoolean(),
+                () -> m_operatorController.leftStick().getAsBoolean(),
+                () -> m_operatorController.povUp().getAsBoolean(),
+                () -> m_operatorController.povDown().getAsBoolean()
+                )
+        );
 
-      // Command Groups
-    // NamedCommands.registerCommand(  "ScoreSpeaker", new SequentialCommandGroup(
-    //   new Command() {}, // replace with pivot auto command
-    //   new ShooterAutoCommand(m_shooterSubsystem)
-    // ));
-    
-  }
+        m_IntakeSubsystem.setDefaultCommand(
+            new IntakeManualCommand(
+                m_IntakeSubsystem,
+                () -> m_operatorController.rightBumper().getAsBoolean(),
+                () -> m_operatorController.leftBumper().getAsBoolean()
+            )
+        );
 
-  /**
-   * Use this method to define your trigger->command mappings. Triggers can be
-   * created via the
-   * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with
-   * an arbitrary
-   * predicate, or via the named factories in {@link
-   * edu.wpi.first.wpilibj2.command.button.CommandGenericHID}'s subclasses for
-   * {@link
-   * CommandXboxController
-   * Xbox}/{@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller
-   * PS4} controllers or
-   * {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
-   * joysticks}.
-   */
-  private void configureBindings() {
-    // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
-    // new Trigger(m_exampleSubsystem::exampleCondition)
-    // .onTrue(new ExampleCommand(m_exampleSubsystem));
+        
+        // Configure the trigger bindings
+        configureBindings();
+    }
 
-    // Schedule `exampleMethodCommand` when the Xbox controller's B button is
-    // pressed,
-    // cancelling on release.
-    // m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
-  }
+    /**
+     * Use this method to define your trigger->command mappings. Triggers can be
+     * created via the
+     * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with
+     * an arbitrary
+     * predicate, or via the named factories in {@link
+     * edu.wpi.first.wpilibj2.command.button.CommandGenericHID}'s subclasses for
+     * {@link
+     * CommandXboxController
+     * Xbox}/{@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller
+     * PS4} controllers or
+     * {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
+     * joysticks}.
+     */
+    private void configureBindings() {
+        // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
+        // new Trigger(m_exampleSubsystem::exampleCondition)
+        // .onTrue(new ExampleCommand(m_exampleSubsystem));
+
+        // Schedule `exampleMethodCommand` when the Xbox controller's B button is
+        // pressed,
+        // cancelling on release.
+        // m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
+    }
 
   public Command getAutonomousCommand() {
     // return m_SwerveSubsystem.navigateToPose(
