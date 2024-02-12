@@ -46,10 +46,10 @@ public class RobotContainer {
 
     // The robot's subsystems and commands are defined here...
     public static final SwerveSubsystem m_SwerveSubsystem = new SwerveSubsystem();
-    public static final ShooterSubsystem m_ShooterSubsystem = new ShooterSubsystem();
-    public static final IntakeSubsystem m_IntakeSubsystem = new IntakeSubsystem();
-    public static final ClimbSubsystem m_ClimbSubsystem = new ClimbSubsystem();
-    public static final PivotSubsystem m_PivotSubsystem = new PivotSubsystem();
+    // public static final ShooterSubsystem m_ShooterSubsystem = new ShooterSubsystem();
+    // public static final IntakeSubsystem m_IntakeSubsystem = new IntakeSubsystem();
+    // public static final ClimbSubsystem m_ClimbSubsystem = new ClimbSubsystem();
+    // public static final PivotSubsystem m_PivotSubsystem = new PivotSubsystem();
 
     // Replace with CommandPS4Controller or CommandJoystick if needed
     private final CommandXboxController m_driverController = new CommandXboxController(
@@ -81,39 +81,39 @@ public class RobotContainer {
             )
         );
 
-        m_ShooterSubsystem.setDefaultCommand(
-            new ShooterManualCommand(
-                () -> m_operatorController.a().getAsBoolean(),
-                () -> m_operatorController.getLeftTriggerAxis(),
-                m_ShooterSubsystem
-            )
-        );
+        // m_ShooterSubsystem.setDefaultCommand(
+        //     new ShooterManualCommand(
+        //         () -> m_operatorController.a().getAsBoolean(),
+        //         () -> m_operatorController.getLeftTriggerAxis(),
+        //         m_ShooterSubsystem
+        //     )
+        // );
 
-        m_ClimbSubsystem.setDefaultCommand(
-            new ClimbManualCommand(
-                m_ClimbSubsystem, 
-                () -> m_operatorController.getRightY()
-                )
-            );
+        // m_ClimbSubsystem.setDefaultCommand(
+        //     new ClimbManualCommand(
+        //         m_ClimbSubsystem, 
+        //         () -> m_operatorController.getRightY()
+        //         )
+        //     );
 
-        m_PivotSubsystem.setDefaultCommand(
-            new PivotManualCommand(
-                m_PivotSubsystem,
-                () -> m_operatorController.getLeftY(),
-                () -> m_operatorController.b().getAsBoolean(),
-                () -> m_operatorController.leftStick().getAsBoolean(),
-                () -> m_operatorController.povUp().getAsBoolean(),
-                () -> m_operatorController.povDown().getAsBoolean()
-                )
-        );
+        // m_PivotSubsystem.setDefaultCommand(
+        //     new PivotManualCommand(
+        //         m_PivotSubsystem,
+        //         () -> m_operatorController.getLeftY(),
+        //         () -> m_operatorController.b().getAsBoolean(),
+        //         () -> m_operatorController.leftStick().getAsBoolean(),
+        //         () -> m_operatorController.povUp().getAsBoolean(),
+        //         () -> m_operatorController.povDown().getAsBoolean()
+        //         )
+        // );
 
-        m_IntakeSubsystem.setDefaultCommand(
-            new IntakeManualCommand(
-                m_IntakeSubsystem,
-                () -> m_operatorController.rightBumper().getAsBoolean(),
-                () -> m_operatorController.leftBumper().getAsBoolean()
-            )
-        );
+        // m_IntakeSubsystem.setDefaultCommand(
+        //     new IntakeManualCommand(
+        //         m_IntakeSubsystem,
+        //         () -> m_operatorController.rightBumper().getAsBoolean(),
+        //         () -> m_operatorController.leftBumper().getAsBoolean()
+        //     )
+        // );
 
         
         // Configure the trigger bindings
