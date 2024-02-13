@@ -67,18 +67,18 @@ public class SwerveXboxCommand extends Command {
         currentTranslationalSpeed = speeds[0];
         currentAngularSpeed = speeds[1];
 
-        if (slowModeFunc.get()) {
-            currentTranslationalSpeed =
-                DriveConstants.kTeleDriveMaxSpeedMetersPerSecond / 4;
-            currentAngularSpeed =
-                DriveConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond / 4;
-        } else if (turboModeFunc.get()) {
-            // If driver is farzad
-            currentTranslationalSpeed =
-                DriveConstants.kTeleDriveMaxSpeedMetersPerSecond;
-            currentAngularSpeed =
-                DriveConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond;
-        }
+        // if (slowModeFunc.get()) {
+        //     currentTranslationalSpeed =
+        //         DriveConstants.kTeleDriveMaxSpeedMetersPerSecond / 4;
+        //     currentAngularSpeed =
+        //         DriveConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond / 4;
+        // } else if (turboModeFunc.get()) {
+        //     // If driver is farzad
+        //     currentTranslationalSpeed =
+        //         DriveConstants.kTeleDriveMaxSpeedMetersPerSecond;
+        //     currentAngularSpeed =
+        //         DriveConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond;
+        // }
 
         // deadBand
         xSpeed = Math.abs(xSpeed) > (OIConstants.kDeadband / 2) ? xSpeed : 0.0;

@@ -70,14 +70,14 @@ public class RobotContainer {
         m_SwerveSubsystem.setDefaultCommand(
             new SwerveXboxCommand(
                 m_SwerveSubsystem,
-                () -> -m_driverController.getLeftY(),
-                () -> -m_driverController.getLeftX(),
-                () -> m_driverController.getRightX(),
-                () -> !m_driverController.a().getAsBoolean(),
-                () -> m_driverController.leftBumper().getAsBoolean(),
-                () -> m_driverController.rightBumper().getAsBoolean(),
+                () -> -m_driverController.getHID().getLeftY(),
+                () -> -m_driverController.getHID().getLeftX(),
+                () -> m_driverController.getHID().getRightX(),
+                () -> !m_driverController.getHID().getAButton(),
+                () -> m_driverController.getHID().getLeftBumper(),
+                () -> m_driverController.getHID().getRightBumper(),
                 () -> m_driverController.getRightTriggerAxis(),
-                () -> m_driverController.getLeftTriggerAxis()
+                () -> m_driverController.getHID().getLeftTriggerAxis()
             )
         );
 

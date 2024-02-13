@@ -135,7 +135,7 @@ public class SwerveSubsystem extends SubsystemBase {
 
         initShuffleboard();
 
-        toDivideBy = 1;
+        toDivideBy = 2.0;
 
         BooleanSupplier supp = () -> { return true; };
 
@@ -185,7 +185,7 @@ public class SwerveSubsystem extends SubsystemBase {
     }
 
     public double getHeading() {
-        return Math.IEEEremainder(-gyro.getAngle(), 360);
+        return Math.IEEEremainder(gyro.getAngle(), 360);
     }
 
     public Rotation2d getRotation2d() {
