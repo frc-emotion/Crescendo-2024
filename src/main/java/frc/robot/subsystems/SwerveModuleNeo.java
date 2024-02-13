@@ -180,7 +180,7 @@ public class SwerveModuleNeo {
     }
 
     public double getAbsolutePostion() {
-        return absoluteEncoder.getAbsolutePosition().getValueAsDouble() * 180;
+        return absoluteEncoder.getAbsolutePosition().getValueAsDouble() * 360;
     }
 
     public void resetEncoders() {

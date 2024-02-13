@@ -40,7 +40,7 @@ public final class Constants {
         public static final int kDriverTurboButtonIdx =
             XboxController.Button.kRightBumper.value;
 
-        public static final double kDeadband = 0.08;
+        public static final double kDeadband = 0.15;
     }
 
     public static final class ModuleConstants {
@@ -136,10 +136,10 @@ public final class Constants {
          * Calculate by Positioning wheels at zero manually and reading absolute encoder values
          */
         
-        public static final double kFrontLeftDriveAbsoluteEncoderOffsetRad =    -39.0/180; 
-        public static final double kBackLeftDriveAbsoluteEncoderOffsetRad =     68.68/180;
-        public static final double kFrontRightDriveAbsoluteEncoderOffsetRad =   -1.4/180;
-        public static final double kBackRightDriveAbsoluteEncoderOffsetRad =    55.32/180;
+        public static final double kFrontLeftDriveAbsoluteEncoderOffsetRad =    19.42 / 360; 
+        public static final double kBackLeftDriveAbsoluteEncoderOffsetRad =     -35.94 / 360;
+        public static final double kFrontRightDriveAbsoluteEncoderOffsetRad =   -89.03 / 360;
+        public static final double kBackRightDriveAbsoluteEncoderOffsetRad =    64.16 / 360;
         //  public static final double kFrontLeftDriveAbsoluteEncoderOffsetRad = -Units.degreesToRadians(180 + 0.5); 
         //  public static final double kBackLeftDriveAbsoluteEncoderOffsetRad = -Units.degreesToRadians(180 + 39.8 - 3.1);
         //  public static final double kFrontRightDriveAbsoluteEncoderOffsetRad = -Units.degreesToRadians(180 + -154.098 - 0.7);
