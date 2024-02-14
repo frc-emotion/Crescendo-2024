@@ -10,6 +10,7 @@ public class ShooterAutoCommand extends Command {
 
     public ShooterAutoCommand(ShooterSubsystem shooterSubsystem) {
         this.shooterSubsystem = shooterSubsystem;
+        addRequirements(shooterSubsystem);
     }
 
     public void execute() {
