@@ -2,6 +2,7 @@ package frc.robot.commands.Teleop;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.ClimbConstants;
+import frc.robot.Constants.OIConstants;
 import frc.robot.subsystems.ClimbSubsystem;
 import java.util.function.Supplier;
 
@@ -32,12 +33,12 @@ public class ClimbManualCommand extends Command {
 
     @Override
     public void execute() {
-        if (input.get() > ClimbConstants.CLIMB_DEADZONE) {
+        if (input.get() > OIConstants.CLIMB_DEADZONE) {
             // move up
             climbSubsystem.setPosition(
                 climbSubsystem.getPosition() + (coefficient * input.get())
             );
-        } else if (input.get() < -ClimbConstants.CLIMB_DEADZONE) {
+        } else if (input.get() < -OIConstants.CLIMB_DEADZONE) {
             // move down
             climbSubsystem.setPosition(
                 climbSubsystem.getPosition() - (coefficient * input.get())

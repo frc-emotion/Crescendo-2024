@@ -41,6 +41,9 @@ public final class Constants {
             XboxController.Button.kRightBumper.value;
 
         public static final double kDeadband = 0.15;
+
+        public static final double CLIMB_DEADZONE = 0.1;
+        public static final double SHOOTER_DEADZONE = 0.1;
     }
 
     public static final class ModuleConstants {
@@ -252,7 +255,6 @@ public final class Constants {
 
         public static final int CLIMB_PORT_L = 0;
         public static final int CLIMB_PORT_R = 0;
-        public static final double CLIMB_DEADZONE = 0.1;
         public static final double EXTENSION_LIMIT = 0.0;
         public static final int PID_MIN_OUTPUT = 0;
         public static final int PID_MAX_OUTPUT = 0;
@@ -288,6 +290,7 @@ public final class Constants {
         public static final double kShootSpeedRotationsPerSecond = 0;
         public static final double kMaxSpeedRotationsPerSecond = 0;
         public static final double kMaxSpeedRotationsPerSecondSquared = 0;
+        public static final int BREAK_SENSOR_PORT = 0;
     }
 
     public static final class PivotConstants {

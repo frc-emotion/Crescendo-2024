@@ -7,6 +7,8 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkPIDController;
 import com.revrobotics.SparkPIDController.AccelStrategy;
+
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ShooterConstants;
@@ -17,6 +19,8 @@ public class ShooterSubsystem extends SubsystemBase {
     private final SparkPIDController controller;
 
     private final RelativeEncoder shooterEncoder;
+
+    private DigitalInput breakSensor;
 
     public ShooterSubsystem() {
         shooterMotor =
@@ -62,6 +66,8 @@ public class ShooterSubsystem extends SubsystemBase {
             ShooterConstants.kMaxOutputError,
             0
         );
+
+        breakSensor = new DigitalInput(ShooterConstants.BREAK_SENSOR_PORT);
     }
 
     /**
@@ -126,5 +132,9 @@ public class ShooterSubsystem extends SubsystemBase {
      */
     public void stopFeeder() {
         feederMotor.set(0);
+    }
+
+    public boolean isProjectileFed() {
+        return breakSensor.get();
     }
 }
