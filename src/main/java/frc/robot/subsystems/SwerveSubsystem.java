@@ -14,6 +14,9 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructArrayPublisher;
+import edu.wpi.first.networktables.StructPublisher;
+import edu.wpi.first.networktables.StructTopic;
+import edu.wpi.first.util.datalog.StructArrayLogEntry;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
@@ -117,6 +120,10 @@ public class SwerveSubsystem extends SubsystemBase {
 
     private StructArrayPublisher<SwerveModuleState> publisher = NetworkTableInstance.getDefault()
         .getStructArrayTopic("PersianSwerveState", SwerveModuleState.struct).publish();
+    
+    private StructPublisher<Rotation2d> publisher2 = NetworkTableInstance.getDefault()
+        .getStructTopic("PersianRotation", Rotation2d.struct).publish();
+    
 
     public SwerveSubsystem() {
 
@@ -256,9 +263,10 @@ public class SwerveSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("Gyro Roll", getRoll());
 
         SwerveModuleState[] moduleStates = getModuleStates();
+        Rotation2d currentRotation = getRotation2d();
 
         publisher.set(moduleStates);
-
+        publisher2.set(currentRotation);
 
 
     }
