@@ -73,6 +73,7 @@ public class RobotContainer {
                 () -> -m_driverController.getHID().getLeftY(),
                 () -> -m_driverController.getHID().getLeftX(),
                 () -> m_driverController.getHID().getRightX(),
+                () -> m_driverController.getHID().getBButton(),
                 () -> !m_driverController.getHID().getAButton(),
                 () -> m_driverController.getHID().getLeftBumper(),
                 () -> m_driverController.getHID().getRightBumper(),
@@ -145,6 +146,16 @@ public class RobotContainer {
         // pressed,
         // cancelling on release.
         // m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
+
+        /*
+        m_driverController.b().onTrue(
+            new Command() {
+                public void execute() {
+                    m_SwerveSubsystem.zeroHeading();
+                }
+            }
+        );
+        */
     }
 
   public Command getAutonomousCommand() {

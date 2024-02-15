@@ -132,13 +132,14 @@ public class SwerveSubsystem extends SubsystemBase {
         //PIDController thetaController = new PIDController(AutoConstants.kPThetaController, 0, 0);
         //thetaController.enableContinuousInput(-Math.PI, Math.PI);
 
+        /*
         new Thread(() -> {
             try {
                 Thread.sleep(1000);
                 zeroHeading();
             } catch (Exception io) {}
         })
-            .start();
+            .start(); */
 
         initShuffleboard();
 

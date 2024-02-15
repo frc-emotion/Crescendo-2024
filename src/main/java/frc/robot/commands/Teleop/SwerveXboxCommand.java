@@ -13,7 +13,7 @@ public class SwerveXboxCommand extends Command {
 
     private final SwerveSubsystem swerveSubsystem;
     private final Supplier<Double> xSpdFunc, ySpdFunc, turningSpdFunc, hardRight, hardLeft;
-    private final Supplier<Boolean> fieldOrientedFunc, slowModeFunc, turboModeFunc;
+    private final Supplier<Boolean> fieldOrientedFunc, resetHeadingFunc, slowModeFunc, turboModeFunc;
 
     private final SlewRateLimiter xLimiter, yLimiter, turningLimiter;
 
@@ -24,6 +24,7 @@ public class SwerveXboxCommand extends Command {
         Supplier<Double> xSpdFunc,
         Supplier<Double> ySpdFunc,
         Supplier<Double> turningSpdFunc,
+        Supplier<Boolean> resetHeadingFunc,
         Supplier<Boolean> fieldOrientedFunc,
         Supplier<Boolean> slowModeFunc,
         Supplier<Boolean> turboModeFunc,
@@ -36,6 +37,7 @@ public class SwerveXboxCommand extends Command {
         this.xSpdFunc = xSpdFunc;
         this.ySpdFunc = ySpdFunc;
         this.turningSpdFunc = turningSpdFunc;
+        this.resetHeadingFunc = resetHeadingFunc;
         this.fieldOrientedFunc = fieldOrientedFunc;
         this.slowModeFunc = slowModeFunc;
         this.turboModeFunc = turboModeFunc;
@@ -122,6 +124,11 @@ public class SwerveXboxCommand extends Command {
         } else {
             robotSpeeds = new ChassisSpeeds(xSpeed, ySpeed, turningSpeed);
         }
+
+        if(resetHeadingFunc.get()) {
+            swerveSubsystem.zeroHeading();
+        }
+        
 
         swerveSubsystem.setChassisSpeeds(robotSpeeds);
 
