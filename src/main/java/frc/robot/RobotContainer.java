@@ -5,33 +5,16 @@
 package frc.robot;
 
 import frc.robot.Constants.OIConstants;
-// import frc.robot.commands.ShooterAutoCommand;
-// import frc.robot.commands.ShooterManualCommand;
-// import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 
 import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-// import frc.robot.subsystems.VisionSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.Constants.DriveConstants;
-import frc.robot.Constants.OIConstants;
-import frc.robot.commands.Teleop.ClimbManualCommand;
-import frc.robot.commands.Teleop.IntakeManualCommand;
-import frc.robot.commands.Teleop.PivotManualCommand;
-import frc.robot.commands.Teleop.ShooterManualCommand;
 import frc.robot.commands.Teleop.SwerveXboxCommand;
-import frc.robot.subsystems.ClimbSubsystem;
-import frc.robot.subsystems.IntakeSubsystem;
-import frc.robot.subsystems.PivotSubsystem;
-import frc.robot.subsystems.ShooterSubsystem;
-import frc.robot.subsystems.SwerveSubsystem;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -73,6 +56,7 @@ public class RobotContainer {
                 () -> -m_driverController.getHID().getLeftY(),
                 () -> -m_driverController.getHID().getLeftX(),
                 () -> m_driverController.getHID().getRightX(),
+                () -> m_driverController.getHID().getBButton(),
                 () -> !m_driverController.getHID().getAButton(),
                 () -> m_driverController.getHID().getLeftBumper(),
                 () -> m_driverController.getHID().getRightBumper(),
@@ -145,6 +129,16 @@ public class RobotContainer {
         // pressed,
         // cancelling on release.
         // m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
+
+        /*
+        m_driverController.b().onTrue(
+            new Command() {
+                public void execute() {
+                    m_SwerveSubsystem.zeroHeading();
+                }
+            }
+        );
+        */
     }
 
   public Command getAutonomousCommand() {

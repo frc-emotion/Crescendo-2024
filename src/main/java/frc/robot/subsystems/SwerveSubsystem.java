@@ -1,9 +1,7 @@
 package frc.robot.subsystems;
 
 import com.kauailabs.navx.frc.AHRS;
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
-//import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -15,8 +13,6 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructArrayPublisher;
 import edu.wpi.first.networktables.StructPublisher;
-import edu.wpi.first.networktables.StructTopic;
-import edu.wpi.first.util.datalog.StructArrayLogEntry;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
@@ -29,14 +25,12 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.OIConstants;
 import frc.robot.util.TabManager;
 import frc.robot.util.TabManager.SubsystemTab;
-import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
-import edu.wpi.first.math.controller.PIDController;
 
 import java.util.function.BooleanSupplier;
 
-import com.kauailabs.navx.frc.AHRS;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.pathfinding.LocalADStar;
@@ -132,17 +126,18 @@ public class SwerveSubsystem extends SubsystemBase {
         //PIDController thetaController = new PIDController(AutoConstants.kPThetaController, 0, 0);
         //thetaController.enableContinuousInput(-Math.PI, Math.PI);
 
+        /*
         new Thread(() -> {
             try {
                 Thread.sleep(1000);
                 zeroHeading();
             } catch (Exception io) {}
         })
-            .start();
+            .start(); */
 
         initShuffleboard();
 
-        toDivideBy = 2.0;
+        toDivideBy = OIConstants.kSpeedDivideAdjustment;
 
         BooleanSupplier supp = () -> { return true; };
 
