@@ -29,6 +29,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.OIConstants;
 import frc.robot.util.TabManager;
 import frc.robot.util.TabManager.SubsystemTab;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
@@ -143,7 +144,7 @@ public class SwerveSubsystem extends SubsystemBase {
 
         initShuffleboard();
 
-        toDivideBy = 2.0;
+        toDivideBy = OIConstants.kSpeedDivideAdjustment;
 
         BooleanSupplier supp = () -> { return true; };
 

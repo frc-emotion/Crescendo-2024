@@ -44,6 +44,7 @@ public final class Constants {
 
         public static final double CLIMB_DEADZONE = 0.1;
         public static final double SHOOTER_DEADZONE = 0.1;
+        public static final double kPersianSpeedMultiplier = 2.0;
     }
 
     public static final class ModuleConstants {
