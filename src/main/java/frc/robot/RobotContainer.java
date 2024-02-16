@@ -47,7 +47,7 @@ public class RobotContainer {
     // The robot's subsystems and commands are defined here...
     public static final SwerveSubsystem m_SwerveSubsystem = new SwerveSubsystem();
     // public static final ShooterSubsystem m_ShooterSubsystem = new ShooterSubsystem();
-    // public static final IntakeSubsystem m_IntakeSubsystem = new IntakeSubsystem();
+     public static final IntakeSubsystem m_IntakeSubsystem = new IntakeSubsystem();
     // public static final ClimbSubsystem m_ClimbSubsystem = new ClimbSubsystem();
     // public static final PivotSubsystem m_PivotSubsystem = new PivotSubsystem();
 
@@ -107,13 +107,13 @@ public class RobotContainer {
         //         )
         // );
 
-        // m_IntakeSubsystem.setDefaultCommand(
-        //     new IntakeManualCommand(
-        //         m_IntakeSubsystem,
-        //         () -> m_operatorController.rightBumper().getAsBoolean(),
-        //         () -> m_operatorController.leftBumper().getAsBoolean()
-        //     )
-        // );
+        m_IntakeSubsystem.setDefaultCommand(
+            new IntakeManualCommand(
+                m_IntakeSubsystem,
+                () -> m_operatorController.rightBumper().getAsBoolean(),
+                () -> m_operatorController.leftBumper().getAsBoolean()
+            )
+        );
 
         
         // Configure the trigger bindings

@@ -18,6 +18,7 @@ public class TabManager {
         DRIVETRAIN,
         VISION,
         AUTON,
+        INTAKE
     }
 
     public TabManager() {

@@ -2,7 +2,10 @@ package frc.robot.commands.Teleop;
 
 import java.util.function.Supplier;
 
+import com.revrobotics.CANSparkBase.ControlType;
+
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants.IntakeConstants;
 import frc.robot.subsystems.IntakeSubsystem;
 
 public class IntakeManualCommand extends Command {
@@ -22,7 +25,7 @@ public class IntakeManualCommand extends Command {
 
     @Override
     public void initialize() {
-        intakeSubsystem.toggleEndState();
+        intakeSubsystem.toggleState();
     }
 
     @Override
@@ -41,12 +44,17 @@ public class IntakeManualCommand extends Command {
             intakeSubsystem.intakeStop();
         }
         
-        intakeSubsystem.pivot();
+        if(intakeSubsystem.isDown()){
+            intakeSubsystem.setReference(IntakeConstants.INTAKE_DOWN_POSITION);
+        } else {
+            intakeSubsystem.setReference(IntakeConstants.INTAKE_UP_POSITION);
+        }
     }
 
     @Override
     public void end(boolean interrupted) {
         intakeSubsystem.pivotStop();
+        intakeSubsystem.intakeStop();
     }
 
     @Override
