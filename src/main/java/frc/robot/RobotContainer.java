@@ -15,7 +15,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.commands.Teleop.IntakeManualCommand;
+import frc.robot.commands.Teleop.IntakeDriveCommand;
 import frc.robot.commands.Teleop.SwerveXboxCommand;
 
 /**
@@ -94,13 +94,12 @@ public class RobotContainer {
         // );
 
         m_IntakeSubsystem.setDefaultCommand(
-            new IntakeManualCommand(
+            new IntakeDriveCommand(
                 m_IntakeSubsystem,
                 () -> m_operatorController.rightBumper().getAsBoolean(),
                 () -> m_operatorController.leftBumper().getAsBoolean()
             )
         );
-
         
         // Configure the trigger bindings
         configureBindings();
