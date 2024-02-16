@@ -81,13 +81,11 @@ public class SwerveXboxCommand extends Command {
         // deadBand
         xSpeed = Math.abs(xSpeed) > (OIConstants.kDeadband / 2) ? xSpeed : 0.0;
         ySpeed = Math.abs(ySpeed) > (OIConstants.kDeadband / 2) ? ySpeed : 0.0;
-        turningSpeed =
-            Math.abs(turningSpeed) > OIConstants.kDeadband ? turningSpeed : 0.0;
+        turningSpeed = Math.abs(turningSpeed) > OIConstants.kDeadband ? turningSpeed : 0.0;
 
         xSpeed = xLimiter.calculate(xSpeed) * currentTranslationalSpeed;
         ySpeed = yLimiter.calculate(ySpeed) * currentTranslationalSpeed;
-        turningSpeed =
-            turningLimiter.calculate(turningSpeed) * currentAngularSpeed;
+        turningSpeed = turningLimiter.calculate(turningSpeed) * currentAngularSpeed;
 
         ChassisSpeeds robotSpeeds;
 
@@ -125,12 +123,10 @@ public class SwerveXboxCommand extends Command {
             swerveSubsystem.zeroHeading();
         }
         
-
         swerveSubsystem.setChassisSpeeds(robotSpeeds);
 
-        SwerveModuleState[] moduleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(
-            robotSpeeds
-        );
+        SwerveModuleState[] moduleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(robotSpeeds);
+        
         swerveSubsystem.setModuleStates(moduleStates);
     }
 

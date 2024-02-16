@@ -2,8 +2,6 @@ package frc.robot.commands.Teleop;
 
 import java.util.function.Supplier;
 
-import com.revrobotics.CANSparkBase.ControlType;
-
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.subsystems.IntakeSubsystem;
