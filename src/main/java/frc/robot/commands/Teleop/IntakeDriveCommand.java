@@ -3,14 +3,15 @@ package frc.robot.commands.Teleop;
 import java.util.function.Supplier;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants.IntakeConstants;
 import frc.robot.subsystems.IntakeSubsystem;
 
-public class IntakeManualCommand extends Command {
+public class IntakeDriveCommand extends Command {
 
     private IntakeSubsystem intakeSubsystem;
     private final Supplier<Boolean> rightBumper, leftBumper;
 
-    public IntakeManualCommand(IntakeSubsystem intake, 
+    public IntakeDriveCommand(IntakeSubsystem intake, 
     Supplier<Boolean> rightBumper, 
     Supplier<Boolean> leftBumper){
 
@@ -22,7 +23,6 @@ public class IntakeManualCommand extends Command {
 
     @Override
     public void initialize() {
-        intakeSubsystem.toggleEndState();
     }
 
     @Override
@@ -41,16 +41,15 @@ public class IntakeManualCommand extends Command {
             intakeSubsystem.intakeStop();
         }
         
-        intakeSubsystem.pivot();
     }
 
     @Override
     public void end(boolean interrupted) {
-        intakeSubsystem.pivotStop();
+        intakeSubsystem.intakeStop();
     }
 
     @Override
     public boolean isFinished(){
-        return intakeSubsystem.checkCurrentSpike();
+        return false;
     }
 }

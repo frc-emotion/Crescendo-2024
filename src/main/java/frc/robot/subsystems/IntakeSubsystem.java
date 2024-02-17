@@ -1,10 +1,5 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix6.configs.CANcoderConfiguration;
-import com.ctre.phoenix6.configs.MagnetSensorConfigs;
-import com.ctre.phoenix6.hardware.CANcoder;
-import com.ctre.phoenix6.signals.AbsoluteSensorRangeValue;
-import com.ctre.phoenix6.signals.SensorDirectionValue;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.SparkPIDController;
 import com.revrobotics.CANSparkBase.ControlType;
@@ -12,8 +7,13 @@ import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.IntakeConstants;
+import frc.robot.util.TabManager;
+import frc.robot.util.TabManager.SubsystemTab;
 
 public class IntakeSubsystem extends SubsystemBase {
 
@@ -44,28 +44,31 @@ public class IntakeSubsystem extends SubsystemBase {
         pivotController.setI(IntakeConstants.kI_PIVOT);
         pivotController.setD(IntakeConstants.kD_PIVOT);
         pivotController.setOutputRange(IntakeConstants.MIN_POSITION, IntakeConstants.MAX_POSITION);
+    
+        initShuffleboard();
     }
 
-    public void toggleEndState(){
+    public void toggleState(){
         down = !down;
     }
 
-    public void pivot(){
-        if(down){
-            pivotController.setReference(IntakeConstants.INTAKE_DOWN_POSITION, ControlType.kPosition);
-        }
-        if(!down){
-            pivotController.setReference(IntakeConstants.INTAKE_UP_POSITION, ControlType.kPosition);
-        }
+    public boolean isDown() {
+        return down == true;
+    }
+
+    public void setReference(double position) {
+        pivotController.setReference(position, ControlType.kPosition);
     }
 
     public boolean checkCurrentSpike(){
         if(pivotMotor.getOutputCurrent() > IntakeConstants.CURRENT_SPIKE_THRESHOLD) {
             return true;
         }
-        else {
-            return false;
-        }
+        return false;
+    }
+
+    public double getPosition() {
+        return pivotMotor.getEncoder().getPosition();
     }
 
     public void pivotStop(){
@@ -83,4 +86,19 @@ public class IntakeSubsystem extends SubsystemBase {
     public void intakeStop() {
         intakeMotor.set(0);
     }
+
+    private void initShuffleboard() {
+        ShuffleboardTab moduleData = TabManager
+            .getInstance()
+            .accessTab(SubsystemTab.INTAKE);
+        ShuffleboardLayout persianPositions = moduleData.getLayout("Persian Positions", BuiltInLayouts.kList);
+
+        persianPositions.addNumber("Intake Motor Position", () -> intakeMotor.get());
+
+        persianPositions.addNumber("Pivot Motor Position", () -> pivotMotor.get());
+
+        persianPositions.withSize(2, 4);
+
+    }
+
 }

@@ -1,7 +1,6 @@
 package frc.robot.commands.Teleop;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants.ClimbConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.subsystems.ClimbSubsystem;
 import java.util.function.Supplier;
