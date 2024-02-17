@@ -95,10 +95,14 @@ public class RobotContainer {
         // );
 
         m_IntakeSubsystem.setDefaultCommand(
-            new IntakePivotCommand(
-                m_IntakeSubsystem
+            new IntakeDriveCommand(
+                m_IntakeSubsystem,
+                () -> m_operatorController.leftBumper().getAsBoolean(),
+                () -> m_operatorController.rightBumper().getAsBoolean()
             )
         );
+
+        m_operatorController.a().onTrue(new IntakePivotCommand(m_IntakeSubsystem));
         
         // Configure the trigger bindings
         configureBindings();
