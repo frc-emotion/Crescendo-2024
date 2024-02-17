@@ -5,8 +5,8 @@
 package frc.robot;
 
 import frc.robot.Constants.OIConstants;
-import frc.robot.subsystems.IntakeSubsystem;
-import frc.robot.subsystems.SwerveSubsystem;
+import frc.robot.subsystems.drive.SwerveSubsystem;
+import frc.robot.subsystems.intake.IntakeSubsystem;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 

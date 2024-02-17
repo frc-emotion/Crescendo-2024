@@ -41,7 +41,7 @@ public class Robot extends LoggedRobot {
   @Override
   public void robotInit() {
 
-    Logger.recordMetadata("ProjectName", "MyProject"); // Set a metadata value
+    Logger.recordMetadata("Crescendo2024", "Crescendo"); // Set a metadata value
 
     if (isReal()) {
         Logger.addDataReceiver(new WPILOGWriter()); // Log to a USB stick ("/U/logs")
@@ -60,8 +60,6 @@ public class Robot extends LoggedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
-
-    
 
     // Starts recording to data log
     DataLogManager.start();

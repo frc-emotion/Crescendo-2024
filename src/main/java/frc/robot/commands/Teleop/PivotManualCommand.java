@@ -4,7 +4,7 @@ import java.util.function.Supplier;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
-import frc.robot.subsystems.PivotSubsystem;
+import frc.robot.subsystems.pivot.PivotSubsystem;
 
 public class PivotManualCommand extends Command {
     private final PivotSubsystem pivotSubsystem;
