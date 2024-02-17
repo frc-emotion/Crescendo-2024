@@ -6,12 +6,12 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.subsystems.IntakeSubsystem;
 
-public class IntakeManualCommand extends Command {
+public class IntakeDriveCommand extends Command {
 
     private IntakeSubsystem intakeSubsystem;
     private final Supplier<Boolean> rightBumper, leftBumper;
 
-    public IntakeManualCommand(IntakeSubsystem intake, 
+    public IntakeDriveCommand(IntakeSubsystem intake, 
     Supplier<Boolean> rightBumper, 
     Supplier<Boolean> leftBumper){
 
@@ -23,7 +23,6 @@ public class IntakeManualCommand extends Command {
 
     @Override
     public void initialize() {
-        intakeSubsystem.toggleState();
     }
 
     @Override
@@ -42,21 +41,15 @@ public class IntakeManualCommand extends Command {
             intakeSubsystem.intakeStop();
         }
         
-        if(intakeSubsystem.isDown()){
-            intakeSubsystem.setReference(IntakeConstants.INTAKE_DOWN_POSITION);
-        } else {
-            intakeSubsystem.setReference(IntakeConstants.INTAKE_UP_POSITION);
-        }
     }
 
     @Override
     public void end(boolean interrupted) {
-        intakeSubsystem.pivotStop();
         intakeSubsystem.intakeStop();
     }
 
     @Override
     public boolean isFinished(){
-        return intakeSubsystem.checkCurrentSpike();
+        return false;
     }
 }
