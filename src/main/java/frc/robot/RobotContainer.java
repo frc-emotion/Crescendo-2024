@@ -17,7 +17,9 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.Teleop.IntakeDriveCommand;
 import frc.robot.commands.Teleop.IntakePivotCommand;
-import frc.robot.commands.Teleop.swerve.SwerveXboxCommand;
+import frc.robot.commands.Teleop.swerve.DefaultSwerveXboxCommand;
+import frc.robot.commands.Teleop.swerve.SlowModeSwerveCommand;
+import frc.robot.commands.Teleop.swerve.TurboModeSwerveCommand;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -54,17 +56,19 @@ public class RobotContainer {
         autoChooser = AutoBuilder.buildAutoChooser();
 
         m_SwerveSubsystem.setDefaultCommand(
-            new SwerveXboxCommand(
+            new DefaultSwerveXboxCommand(
                 m_SwerveSubsystem,
                 () -> -m_driverController.getHID().getLeftY(),
                 () -> -m_driverController.getHID().getLeftX(),
                 () -> m_driverController.getHID().getRightX(),
                 () -> m_driverController.getHID().getBButton(),
-                () -> !m_driverController.getHID().getAButton(),
+                () -> !m_driverController.getHID().getAButton()
+                /*
                 () -> m_driverController.getHID().getLeftBumper(),
                 () -> m_driverController.getHID().getRightBumper(),
                 () -> m_driverController.getRightTriggerAxis(),
                 () -> m_driverController.getHID().getLeftTriggerAxis()
+                */
             )
         );
 
@@ -144,7 +148,28 @@ public class RobotContainer {
         );
         */
         //m_operatorController.a().onTrue(new IntakePivotCommand(m_IntakeSubsystem));
+        
+        m_driverController.leftBumper().whileTrue(
+            new SlowModeSwerveCommand(
+                m_SwerveSubsystem,
+                () -> -m_driverController.getHID().getLeftY(),
+                () -> -m_driverController.getHID().getLeftX(),
+                () -> m_driverController.getHID().getRightX(),
+                () -> m_driverController.getHID().getBButton(),
+                () -> !m_driverController.getHID().getAButton()
+            )
+        );
 
+        m_driverController.rightBumper().whileTrue(
+            new TurboModeSwerveCommand(
+                m_SwerveSubsystem,
+                () -> -m_driverController.getHID().getLeftY(),
+                () -> -m_driverController.getHID().getLeftX(),
+                () -> m_driverController.getHID().getRightX(),
+                () -> m_driverController.getHID().getBButton(),
+                () -> !m_driverController.getHID().getAButton()
+            )
+        );
     }
 
   public Command getAutonomousCommand() {

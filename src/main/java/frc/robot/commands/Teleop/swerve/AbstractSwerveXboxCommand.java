@@ -9,38 +9,37 @@ import frc.robot.Constants.OIConstants;
 import frc.robot.subsystems.SwerveSubsystem;
 import java.util.function.Supplier;
 
-public class SwerveXboxCommand extends Command {
+public abstract class AbstractSwerveXboxCommand extends Command {
 
-    private final SwerveSubsystem swerveSubsystem;
-    private final Supplier<Double> xSpdFunc, ySpdFunc, turningSpdFunc, hardRight, hardLeft;
-    private final Supplier<Boolean> fieldOrientedFunc, resetHeadingFunc, slowModeFunc, turboModeFunc;
+    protected final SwerveSubsystem swerveSubsystem;
+    protected final Supplier<Double> xSpdFunc, ySpdFunc, turningSpdFunc;
+    protected final Supplier<Boolean> fieldOrientedFunc, resetHeadingFunc;
 
-    private final SlewRateLimiter xLimiter, yLimiter, turningLimiter;
+    protected final SlewRateLimiter xLimiter, yLimiter, turningLimiter;
 
-    private double[] speeds;
+    protected double[] speeds;
+    protected double currentTranslationalSpeed, currentAngularSpeed;
+    protected ChassisSpeeds robotSpeeds;
+    protected double xSpeed, ySpeed, turningSpeed;
 
-    public SwerveXboxCommand(
+    public AbstractSwerveXboxCommand(
         SwerveSubsystem swerveSubsystem,
         Supplier<Double> xSpdFunc,
         Supplier<Double> ySpdFunc,
         Supplier<Double> turningSpdFunc,
         Supplier<Boolean> resetHeadingFunc,
-        Supplier<Boolean> fieldOrientedFunc,
-        Supplier<Boolean> slowModeFunc,
-        Supplier<Boolean> turboModeFunc,
-        Supplier<Double> hardLeft,
-        Supplier<Double> hardRight
+        Supplier<Boolean> fieldOrientedFunc
+        //Supplier<Boolean> slowModeFunc,
+        //Supplier<Boolean> turboModeFunc,
+        //Supplier<Double> hardLeft,
+        //Supplier<Double> hardRight
     ) {
-        this.hardLeft = hardLeft;
-        this.hardRight = hardRight;
         this.swerveSubsystem = swerveSubsystem;
         this.xSpdFunc = xSpdFunc;
         this.ySpdFunc = ySpdFunc;
         this.turningSpdFunc = turningSpdFunc;
         this.resetHeadingFunc = resetHeadingFunc;
         this.fieldOrientedFunc = fieldOrientedFunc;
-        this.slowModeFunc = slowModeFunc;
-        this.turboModeFunc = turboModeFunc;
 
         this.xLimiter =
             new SlewRateLimiter(
@@ -54,29 +53,23 @@ public class SwerveXboxCommand extends Command {
             new SlewRateLimiter(
                 DriveConstants.kTeleDriveMaxAngularAccelerationUnitsPerSecond
             );
+
+        robotSpeeds = new ChassisSpeeds();
+
         addRequirements(swerveSubsystem);
     }
 
     @Override
     public void execute() {
-        double xSpeed = xSpdFunc.get();
-        double ySpeed = ySpdFunc.get();
-        double turningSpeed = turningSpdFunc.get();
-        double currentTranslationalSpeed, currentAngularSpeed;
+        xSpeed = xSpdFunc.get();
+        ySpeed = ySpdFunc.get();
+        turningSpeed = turningSpdFunc.get();
+        
 
         speeds = swerveSubsystem.getSpeedType();
 
         currentTranslationalSpeed = speeds[0];
         currentAngularSpeed = speeds[1];
-
-        if (slowModeFunc.get()) {
-            currentTranslationalSpeed /= 2;
-            currentAngularSpeed /= 2;
-        } else if (turboModeFunc.get()) {
-            // If driver is persian
-            currentTranslationalSpeed *= OIConstants.kPersianSpeedMultiplier;
-            currentAngularSpeed *= OIConstants.kPersianSpeedMultiplier;
-        }
 
         // deadBand
         xSpeed = Math.abs(xSpeed) > (OIConstants.kDeadband / 2) ? xSpeed : 0.0;
@@ -87,9 +80,8 @@ public class SwerveXboxCommand extends Command {
         ySpeed = yLimiter.calculate(ySpeed) * currentTranslationalSpeed;
         turningSpeed = turningLimiter.calculate(turningSpeed) * currentAngularSpeed;
 
-        ChassisSpeeds robotSpeeds;
-
         if (fieldOrientedFunc.get()) {
+            /*
             if (hardLeft.get() > 0.2) {
                 robotSpeeds =
                     ChassisSpeeds.fromFieldRelativeSpeeds(
@@ -106,7 +98,7 @@ public class SwerveXboxCommand extends Command {
                         0,
                         swerveSubsystem.getRotation2d()
                     );
-            } else {
+            } else {*/
                 robotSpeeds =
                     ChassisSpeeds.fromFieldRelativeSpeeds(
                         xSpeed,
@@ -114,7 +106,7 @@ public class SwerveXboxCommand extends Command {
                         turningSpeed,
                         swerveSubsystem.getRotation2d()
                     );
-            }
+            //}
         } else {
             robotSpeeds = new ChassisSpeeds(xSpeed, ySpeed, turningSpeed);
         }
@@ -122,11 +114,11 @@ public class SwerveXboxCommand extends Command {
         if(resetHeadingFunc.get()) {
             swerveSubsystem.zeroHeading();
         }
-        
-        swerveSubsystem.setChassisSpeeds(robotSpeeds);
+    }
 
+    protected void sendSpeedsToSubsystem() {
+        swerveSubsystem.setChassisSpeeds(robotSpeeds);
         SwerveModuleState[] moduleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(robotSpeeds);
-        
         swerveSubsystem.setModuleStates(moduleStates);
     }
 
