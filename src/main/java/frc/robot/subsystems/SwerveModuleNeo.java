@@ -1,16 +1,14 @@
 package frc.robot.subsystems;
 
-import com.revrobotics.CANSparkBase;
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.RelativeEncoder;
-import com.revrobotics.SparkPIDController;
 import com.ctre.phoenix6.configs.MagnetSensorConfigs;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.signals.AbsoluteSensorRangeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
-
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkPIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
@@ -20,7 +18,7 @@ import frc.robot.Constants.ModuleConstants;
 
 /**
  * Note: Uses analog absolute encoder instead of a CANCoder
- * 
+ *
  */
 public class SwerveModuleNeo {
 
@@ -41,17 +39,22 @@ public class SwerveModuleNeo {
 
     private final int ENCODER_RESET_ITERATIONS = 500;
 
-    public SwerveModuleNeo(int driveMotorId, int turningMotorId, boolean driveMotorReversed,
-            boolean turningMotorReversed,
-            int absoluteEncoderId, double absoluteEncoderOffset, boolean absoluteEncoderReversed) {
-
+    public SwerveModuleNeo(
+        int driveMotorId,
+        int turningMotorId,
+        boolean driveMotorReversed,
+        boolean turningMotorReversed,
+        int absoluteEncoderId,
+        double absoluteEncoderOffset,
+        boolean absoluteEncoderReversed
+    ) {
         this.absoluteEncoderOffsetRad = absoluteEncoderOffset;
         this.absoluteEncoderReversed = absoluteEncoderReversed;
 
         magnetConfiguration = new MagnetSensorConfigs();
 
-        magnetConfiguration.withMagnetOffset(Units.radiansToDegrees(absoluteEncoderOffsetRad));
-        magnetConfiguration.withAbsoluteSensorRange(AbsoluteSensorRangeValue.Unsigned_0To1);
+        magnetConfiguration.withMagnetOffset(absoluteEncoderOffsetRad);
+        magnetConfiguration.withAbsoluteSensorRange(AbsoluteSensorRangeValue.Signed_PlusMinusHalf);
         magnetConfiguration.withSensorDirection(SensorDirectionValue.CounterClockwise_Positive);
 
         absoluteEncoder = new CANcoder(absoluteEncoderId);
@@ -73,12 +76,20 @@ public class SwerveModuleNeo {
         turningMotor.setIdleMode(IdleMode.kBrake);
 
         turningEncoder = turningMotor.getEncoder();
-        turningEncoder.setPositionConversionFactor(ModuleConstants.kTurningEncoderRot2Rad);
-        turningEncoder.setVelocityConversionFactor(ModuleConstants.kTurningEncoderRPM2RadPerSec);
+        turningEncoder.setPositionConversionFactor(
+            ModuleConstants.kTurningEncoderRot2Rad
+        );
+        turningEncoder.setVelocityConversionFactor(
+            ModuleConstants.kTurningEncoderRPM2RadPerSec
+        );
 
         driveEncoder = driveMotor.getEncoder();
-        driveEncoder.setPositionConversionFactor(ModuleConstants.kTurningEncoderRot2Rad);
-        driveEncoder.setVelocityConversionFactor(ModuleConstants.kTurningEncoderRPM2RadPerSec);
+        driveEncoder.setPositionConversionFactor(
+            ModuleConstants.kTurningEncoderRot2Rad
+        );
+        driveEncoder.setVelocityConversionFactor(
+            ModuleConstants.kTurningEncoderRPM2RadPerSec
+        );
 
         turningPidController = turningMotor.getPIDController();
 
@@ -107,7 +118,10 @@ public class SwerveModuleNeo {
     }
 
     public SwerveModulePosition getPosition() {
-        return new SwerveModulePosition(getDrivePosition(), new Rotation2d(getTurningPosition()));
+        return new SwerveModulePosition(
+            getDrivePosition(),
+            new Rotation2d(getTurningPosition())
+        );
     }
 
     public void setReferenceAngle(double referenceAngleRadians) {
@@ -116,7 +130,7 @@ public class SwerveModuleNeo {
         if (getTurningVelocity() < Math.toRadians(0.5)) {
             if (++resetIteration >= ENCODER_RESET_ITERATIONS) {
                 resetIteration = 0;
-                double absoluteAngle = absoluteEncoder.getAbsolutePosition().getValueAsDouble() * 2.0 * Math.PI;
+                double absoluteAngle = Units.degreesToRadians(getAbsolutePostion());//absoluteEncoder.getAbsolutePosition().getValueAsDouble() * 2.0 * Math.PI;
                 turningEncoder.setPosition(absoluteAngle);
                 currentAngleRadians = absoluteAngle;
             }
@@ -129,7 +143,10 @@ public class SwerveModuleNeo {
             currentAngleRadiansMod += 2.0 * Math.PI;
         }
 
-        double adjustedReferenceAngleRadians = referenceAngleRadians + currentAngleRadians - currentAngleRadiansMod;
+        double adjustedReferenceAngleRadians =
+            referenceAngleRadians +
+            currentAngleRadians -
+            currentAngleRadiansMod;
 
         if (referenceAngleRadians - currentAngleRadiansMod > Math.PI) {
             adjustedReferenceAngleRadians -= 2.0 * Math.PI;
@@ -139,13 +156,18 @@ public class SwerveModuleNeo {
 
         this.referenceAngleRadians = referenceAngleRadians;
 
-        turningPidController.setReference(adjustedReferenceAngleRadians, CANSparkMax.ControlType.kPosition);
-
+        turningPidController.setReference(
+            adjustedReferenceAngleRadians,
+            CANSparkMax.ControlType.kPosition
+        );
     }
 
     public void setSpeed(SwerveModuleState state, boolean isOpenLoop) {
         if (isOpenLoop) {
-            driveMotor.set(state.speedMetersPerSecond / DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
+            driveMotor.set(
+                state.speedMetersPerSecond /
+                DriveConstants.kPhysicalMaxSpeedMetersPerSecond
+            );
         } else {
             // double velocity = MPSToFalcon(state.speedMetersPerSecond,
             // (((ModuleConstants.kWheelDiameterMeters / 2)) * 2 * Math.PI), 1 /
@@ -157,22 +179,27 @@ public class SwerveModuleNeo {
     }
 
     public double getAbsolutePostion() {
-        return absoluteEncoder.getAbsolutePosition().getValueAsDouble();
+        return absoluteEncoder.getAbsolutePosition().getValueAsDouble() * 360;
     }
 
     public void resetEncoders() {
         driveEncoder.setPosition(0);
-        turningEncoder.setPosition(Units.degreesToRadians(getAbsolutePostion()));
+        turningEncoder.setPosition(
+            Units.degreesToRadians(getAbsolutePostion())
+        );
     }
 
     public SwerveModuleState getState() {
-        return new SwerveModuleState(getDriveVelocity(), new Rotation2d(getTurningPosition()));
+        return new SwerveModuleState(
+            getDriveVelocity(),
+            new Rotation2d(getTurningPosition())
+        );
     }
 
     /**
      * May have to use velocity PID and a feedforward command to have more accurate
      * driving
-     * 
+     *
      * @param state
      */
 
@@ -214,15 +241,15 @@ public class SwerveModuleNeo {
         return rpm * (ModuleConstants.kDriveEncoderRPM2MeterPerSec);
     }
 
-    public static double RPMToFalcon(double RPM, double gearRatio) {
-        double motorRPM = RPM * gearRatio;
-        double sensorCounts = motorRPM * (2048.0 / 600.0);
-        return sensorCounts;
-    }
+    // public static double RPMToFalcon(double RPM, double gearRatio) {
+    //     double motorRPM = RPM * gearRatio;
+    //     double sensorCounts = motorRPM * (2048.0 / 600.0);
+    //     return sensorCounts;
+    // }
 
-    public static double MPSToFalcon(double velocity, double circumference, double gearRatio) {
-        double wheelRPM = ((velocity * 60) / circumference);
-        double wheelVelocity = RPMToFalcon(wheelRPM, gearRatio);
-        return wheelVelocity;
-    }
+    // public static double MPSToFalcon(double velocity, double circumference, double gearRatio) {
+    //     double wheelRPM = ((velocity * 60) / circumference);
+    //     double wheelVelocity = RPMToFalcon(wheelRPM, gearRatio);
+    //     return wheelVelocity;
+    // }
 }
