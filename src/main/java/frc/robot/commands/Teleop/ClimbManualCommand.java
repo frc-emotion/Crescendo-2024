@@ -33,15 +33,17 @@ public class ClimbManualCommand extends Command {
     @Override
     public void execute() {
         if (input.get() > OIConstants.CLIMB_DEADZONE) {
-            // move up
-            climbSubsystem.setPosition(
-                climbSubsystem.getPosition() + (coefficient * input.get())
-            );
+            // // move up
+            // climbSubsystem.setPosition(
+            //     climbSubsystem.getPosition() + (coefficient * input.get())
+            // );
+            climbSubsystem.rawClimbUp();
         } else if (input.get() < -OIConstants.CLIMB_DEADZONE) {
-            // move down
-            climbSubsystem.setPosition(
-                climbSubsystem.getPosition() - (coefficient * input.get())
-            );
+            // // move down
+            // climbSubsystem.setPosition(
+            //     climbSubsystem.getPosition() - (coefficient * input.get())
+            // );
+            climbSubsystem.rawClimbDown();
         }
         // climbSubsystem.setPosition(input.get());
     }

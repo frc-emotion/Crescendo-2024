@@ -126,4 +126,19 @@ public class ClimbSubsystem extends SubsystemBase {
         climbMotorLeft.stopMotor();
         climbMotorRight.stopMotor();
     }
+
+    // TESTING % OUTPUT
+
+    public void rawClimbUp(){
+        climbMotorLeft.set(0.15);
+        climbMotorLeft.set(0.15);
+    }
+
+    public void rawClimbDown(){
+        climbMotorLeft.set(-0.15);
+        climbMotorLeft.set(-0.15);
+    }
+
+
+    // 
 }
