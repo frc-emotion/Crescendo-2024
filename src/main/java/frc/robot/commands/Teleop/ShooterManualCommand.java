@@ -32,6 +32,7 @@ public class ShooterManualCommand extends Command {
     @Override
     public void execute() {
         if (shooterSupplier.get()) {
+            /*
             if(feederState) {
                 shooterSubsystem.setFeederSpeed(
                     ShooterConstants.kFeedSpeed
@@ -43,8 +44,11 @@ public class ShooterManualCommand extends Command {
                 shooterSubsystem.stopShooter();
             }
             feederState = !feederState;
+            */
+            shooterSubsystem.setShooterRaw(0.15);
         }
 
+        /*
             // Stops the shooter once indexed
         if(shooterSubsystem.isProjectileFed() && !hasIndexed) {
             shooterSubsystem.stopFeeder();
@@ -56,10 +60,11 @@ public class ShooterManualCommand extends Command {
                 end(true);
             }
         }
+        */
 
 
         if (feederSupplier.get() > OIConstants.SHOOTER_DEADZONE) {
-            shooterSubsystem.setShooterVelocity(
+            shooterSubsystem.setFeederSpeed(
                 feederSupplier.get() * ShooterConstants.kShootSpeedRotationsPerSecond
             );
         } else {

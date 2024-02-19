@@ -10,6 +10,8 @@ import com.revrobotics.SparkPIDController.AccelStrategy;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ShooterConstants;
 
@@ -70,6 +72,11 @@ public class ShooterSubsystem extends SubsystemBase {
         breakSensor = new DigitalInput(ShooterConstants.BREAK_SENSOR_PORT);
     }
 
+    @Override
+    public void periodic() {
+        SmartDashboard.putBoolean("Is Note Fed?", isProjectileFed());
+    }
+
     /**
      * Sets the target speed of the shooter in rotations per second.
      * Multiplies by 60 because the setReference method for velocity takes in rotations per minute.
@@ -125,6 +132,12 @@ public class ShooterSubsystem extends SubsystemBase {
         speed = Math.max(-1, Math.min(1, speed));
 
         feederMotor.set(speed);
+    }
+
+    public void setShooterRaw(double speed) {
+        speed = Math.max(-1, Math.min(1, speed));
+
+        shooterMotor.set(speed);
     }
 
     /**
