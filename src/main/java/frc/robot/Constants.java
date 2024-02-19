@@ -325,11 +325,12 @@ public final class Constants {
     
 
     public static final class IntakeConstants {
-        public static final int INTAKE_PIVOT_PORT = 0;
-        public static final int INTAKE_MOTOR_PORT = 0;
+        public static final int INTAKE_PIVOT_PORT = 15;
+        public static final int INTAKE_MOTOR_PORT = 19;
         public static final int MAX_CURRENT = 45;
-        public static final double CURRENT_SPIKE_THRESHOLD = 0; 
+        public static final double CURRENT_SPIKE_THRESHOLD = 20.0; 
         public static final double INTAKE_MOTOR_SPEED = 0.5;
+        public static final double INTAKE_PIVOT_SPEED = 0.1;
 
         public static final double kS = 0;
         public static final double kG = 0;

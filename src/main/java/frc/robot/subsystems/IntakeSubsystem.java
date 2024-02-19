@@ -29,7 +29,7 @@ public class IntakeSubsystem extends SubsystemBase {
         down = false; 
 
         pivotMotor = new CANSparkMax(IntakeConstants.INTAKE_PIVOT_PORT, MotorType.kBrushless);
-        intakeMotor = new CANSparkMax(IntakeConstants.INTAKE_PIVOT_PORT, MotorType.kBrushless);
+        intakeMotor = new CANSparkMax(IntakeConstants.INTAKE_MOTOR_PORT, MotorType.kBrushless);
 
         intakeMotor.setSmartCurrentLimit(IntakeConstants.MAX_CURRENT);
         intakeMotor.setSecondaryCurrentLimit(IntakeConstants.MAX_CURRENT);
@@ -75,6 +75,18 @@ public class IntakeSubsystem extends SubsystemBase {
         pivotMotor.set(0);
     }
 
+    public void simplePivot() {
+        pivotMotor.set(IntakeConstants.INTAKE_PIVOT_SPEED);
+    }
+
+    public void stopSimple() {
+        pivotMotor.set(0.0);
+    }
+
+    public void revSimplePivot() {
+        pivotMotor.set(-IntakeConstants.INTAKE_PIVOT_SPEED);
+    }
+
     public void intakeForward() {
         intakeMotor.set(IntakeConstants.INTAKE_MOTOR_SPEED);
     }
@@ -96,6 +108,8 @@ public class IntakeSubsystem extends SubsystemBase {
         persianPositions.addNumber("Intake Motor Position", () -> intakeMotor.get());
 
         persianPositions.addNumber("Pivot Motor Position", () -> pivotMotor.get());
+
+        persianPositions.addDouble("Current", () -> pivotMotor.getOutputCurrent());
 
         persianPositions.withSize(2, 4);
 

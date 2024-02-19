@@ -23,11 +23,12 @@ public class IntakePivotCommand extends Command {
 
     @Override
     public void execute() {
-        if(intakeSubsystem.isDown()){
-            intakeSubsystem.setReference(IntakeConstants.INTAKE_DOWN_POSITION);
-        } else {
-            intakeSubsystem.setReference(IntakeConstants.INTAKE_UP_POSITION);
-        }
+        // if(intakeSubsystem.isDown()){
+        //     intakeSubsystem.setReference(IntakeConstants.INTAKE_DOWN_POSITION);
+        // } else {
+        //     intakeSubsystem.setReference(IntakeConstants.INTAKE_UP_POSITION);
+        // }
+        
     }
 
     @Override

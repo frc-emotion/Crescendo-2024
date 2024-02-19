@@ -98,7 +98,9 @@ public class RobotContainer {
             new IntakeDriveCommand(
                 m_IntakeSubsystem,
                 () -> m_operatorController.leftBumper().getAsBoolean(),
-                () -> m_operatorController.rightBumper().getAsBoolean()
+                () -> m_operatorController.rightBumper().getAsBoolean(),
+                () -> m_operatorController.getLeftTriggerAxis(),
+                () -> m_operatorController.getRightTriggerAxis()
             )
         );
         
@@ -141,7 +143,7 @@ public class RobotContainer {
             }
         );
         */
-        m_operatorController.a().onTrue(new IntakePivotCommand(m_IntakeSubsystem));
+        //m_operatorController.a().onTrue(new IntakePivotCommand(m_IntakeSubsystem));
 
     }
 
