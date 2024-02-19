@@ -13,14 +13,13 @@ public class TurboModeSwerveCommand  extends AbstractSwerveXboxCommand {
         Supplier<Double> xSpdFunc,
         Supplier<Double> ySpdFunc,
         Supplier<Double> turningSpdFunc,
-        Supplier<Boolean> resetHeadingFunc,
-        Supplier<Boolean> fieldOrientedFunc
+        Supplier<Boolean> resetHeadingFunc
         //Supplier<Boolean> slowModeFunc,
         //Supplier<Boolean> turboModeFunc,
         //Supplier<Double> hardLeft,
         //Supplier<Double> hardRight
     ) {
-        super(swerveSubsystem, xSpdFunc, ySpdFunc, turningSpdFunc, resetHeadingFunc, fieldOrientedFunc);
+        super(swerveSubsystem, xSpdFunc, ySpdFunc, turningSpdFunc, resetHeadingFunc);
     }
 
     @Override

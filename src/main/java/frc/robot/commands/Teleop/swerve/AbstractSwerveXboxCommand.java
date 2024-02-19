@@ -13,7 +13,7 @@ public abstract class AbstractSwerveXboxCommand extends Command {
 
     protected final SwerveSubsystem swerveSubsystem;
     protected final Supplier<Double> xSpdFunc, ySpdFunc, turningSpdFunc;
-    protected final Supplier<Boolean> fieldOrientedFunc, resetHeadingFunc;
+    protected final Supplier<Boolean> resetHeadingFunc;
 
     protected final SlewRateLimiter xLimiter, yLimiter, turningLimiter;
 
@@ -27,8 +27,8 @@ public abstract class AbstractSwerveXboxCommand extends Command {
         Supplier<Double> xSpdFunc,
         Supplier<Double> ySpdFunc,
         Supplier<Double> turningSpdFunc,
-        Supplier<Boolean> resetHeadingFunc,
-        Supplier<Boolean> fieldOrientedFunc
+        Supplier<Boolean> resetHeadingFunc
+        //Supplier<Boolean> fieldOrientedFunc
         //Supplier<Boolean> slowModeFunc,
         //Supplier<Boolean> turboModeFunc,
         //Supplier<Double> hardLeft,
@@ -39,7 +39,6 @@ public abstract class AbstractSwerveXboxCommand extends Command {
         this.ySpdFunc = ySpdFunc;
         this.turningSpdFunc = turningSpdFunc;
         this.resetHeadingFunc = resetHeadingFunc;
-        this.fieldOrientedFunc = fieldOrientedFunc;
 
         this.xLimiter =
             new SlewRateLimiter(
@@ -80,43 +79,14 @@ public abstract class AbstractSwerveXboxCommand extends Command {
         ySpeed = yLimiter.calculate(ySpeed) * currentTranslationalSpeed;
         turningSpeed = turningLimiter.calculate(turningSpeed) * currentAngularSpeed;
 
-        if (fieldOrientedFunc.get()) {
-            /*
-            if (hardLeft.get() > 0.2) {
-                robotSpeeds =
-                    ChassisSpeeds.fromFieldRelativeSpeeds(
-                        0,
-                        -0.8,
-                        0,
-                        swerveSubsystem.getRotation2d()
-                    );
-            } else if (hardRight.get() > 0.2) {
-                robotSpeeds =
-                    ChassisSpeeds.fromFieldRelativeSpeeds(
-                        0,
-                        0.8,
-                        0,
-                        swerveSubsystem.getRotation2d()
-                    );
-            } else {*/
-                robotSpeeds =
-                    ChassisSpeeds.fromFieldRelativeSpeeds(
-                        xSpeed,
-                        ySpeed,
-                        turningSpeed,
-                        swerveSubsystem.getRotation2d()
-                    );
-            //}
-        } else {
-            robotSpeeds = new ChassisSpeeds(xSpeed, ySpeed, turningSpeed);
-        }
-
         if(resetHeadingFunc.get()) {
             swerveSubsystem.zeroHeading();
         }
     }
 
     protected void sendSpeedsToSubsystem() {
+        robotSpeeds = new ChassisSpeeds(xSpeed, ySpeed, turningSpeed);
+
         swerveSubsystem.setChassisSpeeds(robotSpeeds);
         SwerveModuleState[] moduleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(robotSpeeds);
         swerveSubsystem.setModuleStates(moduleStates);

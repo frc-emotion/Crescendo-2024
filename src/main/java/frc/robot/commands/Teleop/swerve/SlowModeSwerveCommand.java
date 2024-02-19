@@ -12,8 +12,7 @@ public class SlowModeSwerveCommand extends AbstractSwerveXboxCommand {
         Supplier<Double> xSpdFunc,
         Supplier<Double> ySpdFunc,
         Supplier<Double> turningSpdFunc,
-        Supplier<Boolean> resetHeadingFunc,
-        Supplier<Boolean> fieldOrientedFunc
+        Supplier<Boolean> resetHeadingFunc
         //Supplier<Boolean> turboModeFunc,
         //Supplier<Double> hardLeft,
         //Supplier<Double> hardRight
@@ -23,8 +22,7 @@ public class SlowModeSwerveCommand extends AbstractSwerveXboxCommand {
             xSpdFunc,
             ySpdFunc,
             turningSpdFunc,
-            resetHeadingFunc,
-            fieldOrientedFunc
+            resetHeadingFunc
         );
     }
 

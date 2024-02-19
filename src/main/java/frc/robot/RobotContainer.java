@@ -61,8 +61,7 @@ public class RobotContainer {
                 () -> -m_driverController.getHID().getLeftY(),
                 () -> -m_driverController.getHID().getLeftX(),
                 () -> m_driverController.getHID().getRightX(),
-                () -> m_driverController.getHID().getBButton(),
-                () -> !m_driverController.getHID().getAButton()
+                () -> m_driverController.getHID().getBButton()
                 /*
                 () -> m_driverController.getHID().getLeftBumper(),
                 () -> m_driverController.getHID().getRightBumper(),
@@ -155,8 +154,7 @@ public class RobotContainer {
                 () -> -m_driverController.getHID().getLeftY(),
                 () -> -m_driverController.getHID().getLeftX(),
                 () -> m_driverController.getHID().getRightX(),
-                () -> m_driverController.getHID().getBButton(),
-                () -> !m_driverController.getHID().getAButton()
+                () -> m_driverController.getHID().getBButton()
             )
         );
 
@@ -166,8 +164,7 @@ public class RobotContainer {
                 () -> -m_driverController.getHID().getLeftY(),
                 () -> -m_driverController.getHID().getLeftX(),
                 () -> m_driverController.getHID().getRightX(),
-                () -> m_driverController.getHID().getBButton(),
-                () -> !m_driverController.getHID().getAButton()
+                () -> m_driverController.getHID().getBButton()
             )
         );
     }
