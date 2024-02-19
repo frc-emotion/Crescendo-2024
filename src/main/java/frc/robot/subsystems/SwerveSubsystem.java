@@ -94,6 +94,7 @@ public class SwerveSubsystem extends SubsystemBase {
     private AHRS gyro = new AHRS(SPI.Port.kMXP);
 
     private double toDivideBy;
+    private double driveSpeedMPS, driveAccelMPSS, driveAngularSpeedRPS, driveAngularAccelRPSS;
 
     // private final PoseEstimator visionPoseEstimator = new PoseEstimator();
 
@@ -138,6 +139,10 @@ public class SwerveSubsystem extends SubsystemBase {
         initShuffleboard();
 
         toDivideBy = OIConstants.kSpeedDivideAdjustment;
+        driveSpeedMPS = DriveConstants.kTeleDriveMaxSpeedMetersPerSecond / toDivideBy;
+        driveAccelMPSS = DriveConstants.kTeleDriveMaxAccelerationUnitsPerSecond / toDivideBy;
+        driveAngularSpeedRPS = DriveConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond / toDivideBy;
+        driveAngularAccelRPSS = DriveConstants.kTeleDriveMaxAngularAccelerationUnitsPerSecond / toDivideBy;
 
         BooleanSupplier supp = () -> { return true; };
 
@@ -157,17 +162,20 @@ public class SwerveSubsystem extends SubsystemBase {
 
     public double[] getSpeedType() {
         double[] toReturn = new double[2];
-        toReturn[0] =
-            Constants.DriveConstants.kTeleDriveMaxSpeedMetersPerSecond /
-            toDivideBy;
-        toReturn[1] =
-            Constants.DriveConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond /
-            toDivideBy;
+        toReturn[0] = driveSpeedMPS;
+        toReturn[1] = driveAngularSpeedRPS;
         return toReturn;
     }
 
-    public void setSpeedType(double divisor) {
+    public void setSpeedDivisor(double divisor) {
         toDivideBy = divisor;
+    }
+
+    public void setMaxSpeeds(double driveSpeedMPS, double driveAccelMPSS, double driveAngularSpeedRPS, double driveAngularAccelRPSS) {
+        this.driveSpeedMPS = driveSpeedMPS;
+        this.driveAccelMPSS = driveAccelMPSS;
+        this.driveAngularSpeedRPS = driveAngularSpeedRPS;
+        this.driveAngularAccelRPSS = driveAngularAccelRPSS;
     }
 
     public void autoGyro() {

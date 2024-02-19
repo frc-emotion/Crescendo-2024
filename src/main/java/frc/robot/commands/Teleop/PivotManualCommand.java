@@ -55,10 +55,11 @@ public class PivotManualCommand extends Command {
             }
         }
 
+        manualControl();
         if(mode) { 
-            manualControl();
+            // manualControl();
         } else {
-            pivotSubsystem.goToPreset();
+            //pivotSubsystem.goToPreset();
         }
     }
 
