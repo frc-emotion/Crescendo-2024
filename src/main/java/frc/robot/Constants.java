@@ -279,9 +279,6 @@ public final class Constants {
         public static final double CURRENT_SPIKE_THRESHOLD = 0; 
         public static final double INTAKE_MOTOR_SPEED = 0.5;
 
-        public static final double kS = 0;
-        public static final double kG = 0;
-        public static final double kV = 0; 
         public static final double kP_PIVOT = 0;
         public static final double kI_PIVOT = 0;
         public static final double kD_PIVOT = 0;
