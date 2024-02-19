@@ -32,8 +32,9 @@ public class SlowModeSwerveCommand extends AbstractSwerveXboxCommand {
     public void execute() {
         super.execute();
 
-        currentTranslationalSpeed /= 2;
-        currentAngularSpeed /= 2;
+        xSpeed /= 2;
+        ySpeed /= 2;
+        turningSpeed /= 2;
 
         sendSpeedsToSubsystem();
     }
