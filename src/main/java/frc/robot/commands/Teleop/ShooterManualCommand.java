@@ -3,26 +3,27 @@ package frc.robot.commands.Teleop;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.ShooterConstants;
+import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import java.util.function.Supplier;
 
 public class ShooterManualCommand extends Command {
 
     private final Supplier<Boolean> shooterSupplier;
-    private final Supplier<Double> feederSupplier;
     private final ShooterSubsystem shooterSubsystem;
+    private final IntakeSubsystem intakeSubsystem;
 
     private boolean feederState;
     private boolean hasIndexed;
 
     public ShooterManualCommand(
         Supplier<Boolean> shooterSupplier,
-        Supplier<Double> feederSupplier,
-        ShooterSubsystem shooterSubsystem
+        ShooterSubsystem shooterSubsystem,
+        IntakeSubsystem intakeSubsystem
     ) {
         this.shooterSupplier = shooterSupplier;
-        this.feederSupplier = feederSupplier;
         this.shooterSubsystem = shooterSubsystem;
+        this.intakeSubsystem = intakeSubsystem;
         addRequirements(shooterSubsystem);
 
         feederState = false;
@@ -64,9 +65,7 @@ public class ShooterManualCommand extends Command {
 
 
         if (feederSupplier.get() > OIConstants.SHOOTER_DEADZONE) {
-            shooterSubsystem.setFeederSpeed(
-                feederSupplier.get() * ShooterConstants.kShootSpeedRotationsPerSecond
-            );
+            shooterSubsystem.setFeederSpeed(ShooterConstants.kShootSpeedRotationsPerSecond);
         } else {
             shooterSubsystem.stopFeeder();
         }

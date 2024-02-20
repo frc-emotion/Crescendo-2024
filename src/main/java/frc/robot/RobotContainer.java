@@ -109,6 +109,7 @@ public class RobotContainer {
         
         // Configure the trigger bindings
         configureBindings();
+        registerNamedCommands();
 
         SmartDashboard.putData("Auto Chooser", autoChooser);
     }
@@ -171,6 +172,10 @@ public class RobotContainer {
                 m_SwerveSubsystem.zeroHeading();
             }
         });
+    }
+
+    private void registerNamedCommands() {
+        
     }
 
   public Command getAutonomousCommand() {
