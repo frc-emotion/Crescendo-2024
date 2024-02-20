@@ -2,6 +2,7 @@ package frc.robot.commands.Teleop.swerve;
 
 import java.util.function.Supplier;
 
+import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.subsystems.SwerveSubsystem;
 
@@ -11,8 +12,7 @@ public class SlowModeSwerveCommand extends AbstractSwerveXboxCommand {
         SwerveSubsystem swerveSubsystem,
         Supplier<Double> xSpdFunc,
         Supplier<Double> ySpdFunc,
-        Supplier<Double> turningSpdFunc,
-        Supplier<Boolean> resetHeadingFunc
+        Supplier<Double> turningSpdFunc
         //Supplier<Boolean> turboModeFunc,
         //Supplier<Double> hardLeft,
         //Supplier<Double> hardRight
@@ -21,20 +21,28 @@ public class SlowModeSwerveCommand extends AbstractSwerveXboxCommand {
             swerveSubsystem,
             xSpdFunc,
             ySpdFunc,
-            turningSpdFunc,
-            resetHeadingFunc
+            turningSpdFunc
         );
     }
 
     @Override
-    public void execute() {
-        super.execute();
+    public void initialize() {
+        swerveSubsystem.setMaxSpeeds(
+            DriveConstants.kTeleDriveMaxSpeedMetersPerSecond / 4,
+            DriveConstants.kTeleDriveMaxAccelerationUnitsPerSecond / 4,
+            DriveConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond / 4,
+            DriveConstants.kTeleDriveMaxAngularAccelerationUnitsPerSecond / 4
+        );
+    }
 
-        xSpeed /= 2;
-        ySpeed /= 2;
-        turningSpeed /= 2;
-
-        sendSpeedsToSubsystem();
+    @Override
+    public void end(boolean interrupted) {
+        swerveSubsystem.setMaxSpeeds(
+            DriveConstants.kTeleDriveMaxSpeedMetersPerSecond / 2,
+            DriveConstants.kTeleDriveMaxAccelerationUnitsPerSecond / 2,
+            DriveConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond / 2,
+            DriveConstants.kTeleDriveMaxAngularAccelerationUnitsPerSecond / 2
+        );
     }
     
 }

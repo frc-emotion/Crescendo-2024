@@ -105,9 +105,9 @@ public class IntakeSubsystem extends SubsystemBase {
             .accessTab(SubsystemTab.INTAKE);
         ShuffleboardLayout persianPositions = moduleData.getLayout("Persian Positions", BuiltInLayouts.kList);
 
-        persianPositions.addNumber("Intake Motor Position", () -> intakeMotor.get());
+        persianPositions.addNumber("Intake Motor Position", () -> intakeMotor.getEncoder().getPosition());
 
-        persianPositions.addNumber("Pivot Motor Position", () -> pivotMotor.get());
+        persianPositions.addNumber("Pivot Motor Position", () -> pivotMotor.getEncoder().getPosition());
 
         persianPositions.addDouble("Current", () -> pivotMotor.getOutputCurrent());
 

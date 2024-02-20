@@ -233,6 +233,8 @@ public final class Constants {
             kMaxAngularSpeedRadiansPerSecond,
             kMaxAngularAccelerationRadiansPerSecondSquared
         );
+
+		public static final double INTAKE_TIMEOUT = 0;
     }
 
     public static final class CameraConstants {

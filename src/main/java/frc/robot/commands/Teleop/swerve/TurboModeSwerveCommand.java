@@ -12,24 +12,36 @@ public class TurboModeSwerveCommand  extends AbstractSwerveXboxCommand {
         SwerveSubsystem swerveSubsystem,
         Supplier<Double> xSpdFunc,
         Supplier<Double> ySpdFunc,
-        Supplier<Double> turningSpdFunc,
-        Supplier<Boolean> resetHeadingFunc
+        Supplier<Double> turningSpdFunc
         //Supplier<Boolean> slowModeFunc,
         //Supplier<Boolean> turboModeFunc,
         //Supplier<Double> hardLeft,
         //Supplier<Double> hardRight
     ) {
-        super(swerveSubsystem, xSpdFunc, ySpdFunc, turningSpdFunc, resetHeadingFunc);
+        super(swerveSubsystem, xSpdFunc, ySpdFunc, turningSpdFunc);
     }
 
     @Override
-    public void execute() {
-        super.execute();
+    public void initialize() {
+        swerveSubsystem.setMaxSpeeds(
+            DriveConstants.kTeleDriveMaxSpeedMetersPerSecond,
+            DriveConstants.kTeleDriveMaxAccelerationUnitsPerSecond ,
+            DriveConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond,
+            DriveConstants.kTeleDriveMaxAngularAccelerationUnitsPerSecond
+        );
+    }
 
-        xSpeed *= 2;
-        ySpeed *= 2;
-        turningSpeed *= 2;
+    @Override
+    public void end(boolean interrupted) {
+        if(interrupted) {
+            swerveSubsystem.stopModules();
+        }
 
-        sendSpeedsToSubsystem();
+        swerveSubsystem.setMaxSpeeds(
+            DriveConstants.kTeleDriveMaxSpeedMetersPerSecond / 2,
+            DriveConstants.kTeleDriveMaxAccelerationUnitsPerSecond / 2,
+            DriveConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond / 2,
+            DriveConstants.kTeleDriveMaxAngularAccelerationUnitsPerSecond / 2
+        );
     }
 }

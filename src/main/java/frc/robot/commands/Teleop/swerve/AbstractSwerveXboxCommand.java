@@ -13,7 +13,6 @@ public abstract class AbstractSwerveXboxCommand extends Command {
 
     protected final SwerveSubsystem swerveSubsystem;
     protected final Supplier<Double> xSpdFunc, ySpdFunc, turningSpdFunc;
-    protected final Supplier<Boolean> resetHeadingFunc;
 
     protected final SlewRateLimiter xLimiter, yLimiter, turningLimiter;
 
@@ -26,8 +25,7 @@ public abstract class AbstractSwerveXboxCommand extends Command {
         SwerveSubsystem swerveSubsystem,
         Supplier<Double> xSpdFunc,
         Supplier<Double> ySpdFunc,
-        Supplier<Double> turningSpdFunc,
-        Supplier<Boolean> resetHeadingFunc
+        Supplier<Double> turningSpdFunc
         //Supplier<Boolean> fieldOrientedFunc
         //Supplier<Boolean> slowModeFunc,
         //Supplier<Boolean> turboModeFunc,
@@ -38,7 +36,6 @@ public abstract class AbstractSwerveXboxCommand extends Command {
         this.xSpdFunc = xSpdFunc;
         this.ySpdFunc = ySpdFunc;
         this.turningSpdFunc = turningSpdFunc;
-        this.resetHeadingFunc = resetHeadingFunc;
 
         this.xLimiter =
             new SlewRateLimiter(
@@ -60,11 +57,11 @@ public abstract class AbstractSwerveXboxCommand extends Command {
 
     @Override
     public void execute() {
+
         xSpeed = xSpdFunc.get();
         ySpeed = ySpdFunc.get();
         turningSpeed = turningSpdFunc.get();
         
-
         speeds = swerveSubsystem.getSpeedType();
 
         currentTranslationalSpeed = speeds[0];
@@ -79,9 +76,7 @@ public abstract class AbstractSwerveXboxCommand extends Command {
         ySpeed = yLimiter.calculate(ySpeed) * currentTranslationalSpeed;
         turningSpeed = turningLimiter.calculate(turningSpeed) * currentAngularSpeed;
 
-        if(resetHeadingFunc.get()) {
-            swerveSubsystem.zeroHeading();
-        }
+        sendSpeedsToSubsystem();
     }
 
     protected void sendSpeedsToSubsystem() {

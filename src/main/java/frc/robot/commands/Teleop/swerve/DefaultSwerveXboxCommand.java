@@ -13,14 +13,23 @@ public class DefaultSwerveXboxCommand extends AbstractSwerveXboxCommand {
         SwerveSubsystem swerveSubsystem,
         Supplier<Double> xSpdFunc,
         Supplier<Double> ySpdFunc,
-        Supplier<Double> turningSpdFunc,
-        Supplier<Boolean> resetHeadingFunc
+        Supplier<Double> turningSpdFunc
         //Supplier<Boolean> slowModeFunc,
         //Supplier<Boolean> turboModeFunc,
         //Supplier<Double> hardLeft,
         //Supplier<Double> hardRight
     ) {
-        super(swerveSubsystem, xSpdFunc, ySpdFunc, turningSpdFunc, resetHeadingFunc);
+        super(swerveSubsystem, xSpdFunc, ySpdFunc, turningSpdFunc);
+    }
+
+    @Override
+    public void initialize() {
+        swerveSubsystem.setMaxSpeeds(
+            DriveConstants.kTeleDriveMaxSpeedMetersPerSecond / 2,
+            DriveConstants.kTeleDriveMaxAccelerationUnitsPerSecond / 2,
+            DriveConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond / 2,
+            DriveConstants.kTeleDriveMaxAngularAccelerationUnitsPerSecond / 2
+        );
     }
 
     @Override
