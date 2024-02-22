@@ -101,6 +101,7 @@ public final class Constants {
             new Translation2d(kWheelBase / 2, -kTrackWidth / 2),
             new Translation2d(-kWheelBase / 2, kTrackWidth / 2),
             new Translation2d(-kWheelBase / 2, -kTrackWidth / 2)
+            
         );
 
         /**CAN IDs for all drive motors */
@@ -155,7 +156,7 @@ public final class Constants {
         // public static final double kFrontRightDriveAbsoluteEncoderOffsetRad = -Units.degreesToRadians(157.7 - 4.7);
         // public static final double kBackRightDriveAbsoluteEncoderOffsetRad = -Units.degreesToRadians(39.8 - 3.1);
 
-        public static final double kPhysicalMaxSpeedMetersPerSecond =
+        public static final double kPhysicalMaxSpeedMetersPerSecond = // 4.96 m/s
             6380.0 /
             60.0 *
             (14.0 / 50.0) *
@@ -233,6 +234,8 @@ public final class Constants {
             kMaxAngularSpeedRadiansPerSecond,
             kMaxAngularAccelerationRadiansPerSecondSquared
         );
+
+		public static final double INTAKE_TIMEOUT = 0;
     }
 
     public static final class CameraConstants {
@@ -256,8 +259,8 @@ public final class Constants {
 
     public static final class ClimbConstants {
 
-        public static final int CLIMB_PORT_L = 0;
-        public static final int CLIMB_PORT_R = 0;
+        public static final int CLIMB_PORT_L = 11;
+        public static final int CLIMB_PORT_R = 18;
         public static final double EXTENSION_LIMIT = 0.0;
         public static final int PID_MIN_OUTPUT = 0;
         public static final int PID_MAX_OUTPUT = 0;
@@ -268,13 +271,14 @@ public final class Constants {
         public static final double MAX_ACCELERATION = 0.0;
         public static final double MAX_VELOCITY = 0.0;
         public static final int CURRENT_LIMIT = 45;
+        public static final Double DEADZONE = 0.2;
     }
 
     public static class ShooterConstants {
 
         // CAN IDs
-        public static final int feederPort = 0;
-        public static final int shooterPort = 1;
+        public static final int feederPort = 22;
+        public static final int shooterPort = 21;
 
         // Motor Constants
         public static final int CURRENT_LIMIT = 45;
@@ -294,11 +298,11 @@ public final class Constants {
         public static final double kMaxSpeedRotationsPerSecond = 0;
         public static final double kMaxSpeedRotationsPerSecondSquared = 0;
         public static final int BREAK_SENSOR_PORT = 0;
+		public static final double GEAR_REDUCTION = 0.5;
     }
 
     public static final class PivotConstants {
-        public static final int PIVOT_PORT = 11;
-        public static final int LOWER_LIMIT_PORT = 1;
+        public static final int PIVOT_PORT = 20;
 
         public static final double PIVOT_KP = 0.6;
         public static final double PIVOT_KI = 0;
@@ -306,7 +310,7 @@ public final class Constants {
         public static final double PIVOT_KF = 0;
 
 
-        public static final double PIVOT_TELEOP_SPEED = 0.25;
+        public static final double PIVOT_TELEOP_SPEED = 0.9;
         public static final double PIVOT_AUTO_SPEED = 0.2;
         public static final double PIVOT_ZERO_SPEED = 0.1;
 
@@ -319,6 +323,8 @@ public final class Constants {
 
         public static final double placeholder = 0.0;
         public static final double[] PIVOT_POSITIONS = {0.0, 50.0, 100.0};
+        public static final double CURRENT_SPIKE_THRESHOLD = 0;
+        public static final double GEAR_REDUCTION = 60.0;
 
     }
 
@@ -345,6 +351,7 @@ public final class Constants {
         public static final double INTAKE_UP_POSITION = 0;
         
         public static final double INTAKE_ENCODER_OFFSET = 0;
+		public static final double GEAR_REDUCTION = 82.8;
     }
 
 }

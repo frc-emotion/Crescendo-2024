@@ -5,19 +5,22 @@
 package frc.robot;
 
 import frc.robot.Constants.OIConstants;
-import frc.robot.subsystems.IntakeSubsystem;
-import frc.robot.subsystems.SwerveSubsystem;
+
+import frc.robot.subsystems.*;
+import frc.robot.commands.Teleop.swerve.*;
+import frc.robot.commands.Teleop.*;
+
+import java.time.Instant;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.commands.Teleop.IntakeDriveCommand;
-import frc.robot.commands.Teleop.IntakePivotCommand;
-import frc.robot.commands.Teleop.swerve.SwerveXboxCommand;
+
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -32,10 +35,10 @@ public class RobotContainer {
 
     // The robot's subsystems and commands are defined here...
     public static final SwerveSubsystem m_SwerveSubsystem = new SwerveSubsystem();
-    // public static final ShooterSubsystem m_ShooterSubsystem = new ShooterSubsystem();
-     public static final IntakeSubsystem m_IntakeSubsystem = new IntakeSubsystem();
-    // public static final ClimbSubsystem m_ClimbSubsystem = new ClimbSubsystem();
-    // public static final PivotSubsystem m_PivotSubsystem = new PivotSubsystem();
+    public static final ShooterSubsystem m_ShooterSubsystem = new ShooterSubsystem();
+    public static final IntakeSubsystem m_IntakeSubsystem = new IntakeSubsystem();
+    public static final ClimbSubsystem m_ClimbSubsystem = new ClimbSubsystem();
+    public static final PivotSubsystem m_PivotSubsystem = new PivotSubsystem();
 
     // Replace with CommandPS4Controller or CommandJoystick if needed
     private final CommandXboxController m_driverController = new CommandXboxController(
@@ -54,45 +57,44 @@ public class RobotContainer {
         autoChooser = AutoBuilder.buildAutoChooser();
 
         m_SwerveSubsystem.setDefaultCommand(
-            new SwerveXboxCommand(
+            new DefaultSwerveXboxCommand(
                 m_SwerveSubsystem,
-                () -> -m_driverController.getHID().getLeftY(),
-                () -> -m_driverController.getHID().getLeftX(),
-                () -> m_driverController.getHID().getRightX(),
-                () -> m_driverController.getHID().getBButton(),
-                () -> !m_driverController.getHID().getAButton(),
+                () -> m_driverController.getHID().getLeftY(),
+                () -> m_driverController.getHID().getLeftX(),
+                () -> m_driverController.getHID().getRightX()
+                /*
                 () -> m_driverController.getHID().getLeftBumper(),
                 () -> m_driverController.getHID().getRightBumper(),
                 () -> m_driverController.getRightTriggerAxis(),
                 () -> m_driverController.getHID().getLeftTriggerAxis()
+                */
             )
         );
 
-        // m_ShooterSubsystem.setDefaultCommand(
-        //     new ShooterManualCommand(
-        //         () -> m_operatorController.a().getAsBoolean(),
-        //         () -> m_operatorController.getLeftTriggerAxis(),
-        //         m_ShooterSubsystem
-        //     )
-        // );
+         m_ShooterSubsystem.setDefaultCommand(
+             new ShooterManualCommand(
+                 () -> m_operatorController.getHID().getAButton(),
+                 m_operatorController.getHID()::getYButton,
+                 m_ShooterSubsystem
+             )
+        );
 
-        // m_ClimbSubsystem.setDefaultCommand(
-        //     new ClimbManualCommand(
-        //         m_ClimbSubsystem, 
-        //         () -> m_operatorController.getRightY()
-        //         )
-        //     );
+        m_ClimbSubsystem.setDefaultCommand(
+            new ClimbManualCommand(
+                m_ClimbSubsystem, 
+                () -> m_operatorController.getHID().getRightY()
+                )
+            );
 
-        // m_PivotSubsystem.setDefaultCommand(
-        //     new PivotManualCommand(
-        //         m_PivotSubsystem,
-        //         () -> m_operatorController.getLeftY(),
-        //         () -> m_operatorController.b().getAsBoolean(),
-        //         () -> m_operatorController.leftStick().getAsBoolean(),
-        //         () -> m_operatorController.povUp().getAsBoolean(),
-        //         () -> m_operatorController.povDown().getAsBoolean()
-        //         )
-        // );
+         m_PivotSubsystem.setDefaultCommand(
+             new PivotManualCommand(
+                 m_PivotSubsystem,
+                 () -> m_operatorController.getHID().getLeftY(),
+                 () -> m_operatorController.getHID().getLeftStickButton(),
+                 () -> m_operatorController.getHID().getPOV() == 0,
+                 () -> m_operatorController.getHID().getPOV() == 180
+                 )
+         );
 
         m_IntakeSubsystem.setDefaultCommand(
             new IntakeDriveCommand(
@@ -106,6 +108,7 @@ public class RobotContainer {
         
         // Configure the trigger bindings
         configureBindings();
+        registerNamedCommands();
 
         SmartDashboard.putData("Auto Chooser", autoChooser);
     }
@@ -143,8 +146,40 @@ public class RobotContainer {
             }
         );
         */
-        //m_operatorController.a().onTrue(new IntakePivotCommand(m_IntakeSubsystem));
+        m_operatorController.a().onTrue(new InstantCommand() {
+            public void execute() {
+                m_PivotSubsystem.calibrate();
+            }
+        }
+        );
+        
+        m_driverController.leftBumper().whileTrue(
+            new SlowModeSwerveCommand(
+                m_SwerveSubsystem,
+                () -> -m_driverController.getHID().getLeftY(),
+                () -> -m_driverController.getHID().getLeftX(),
+                () -> m_driverController.getHID().getRightX()
+            )
+        );
 
+        m_driverController.rightBumper().whileTrue(
+            new TurboModeSwerveCommand(
+                m_SwerveSubsystem,
+                () -> -m_driverController.getHID().getLeftY(),
+                () -> -m_driverController.getHID().getLeftX(),
+                () -> m_driverController.getHID().getRightX()
+            )
+        );
+
+        m_driverController.b().onTrue(new InstantCommand() {
+            public void execute() {
+                m_SwerveSubsystem.zeroHeading();
+            }
+        });
+    }
+
+    private void registerNamedCommands() {
+        
     }
 
   public Command getAutonomousCommand() {
