@@ -31,10 +31,4 @@ public class DefaultSwerveXboxCommand extends AbstractSwerveXboxCommand {
             DriveConstants.kTeleDriveMaxAngularAccelerationUnitsPerSecond / 2
         );
     }
-
-    @Override
-    public void execute() {
-        super.execute();
-        sendSpeedsToSubsystem();
-    }
 }

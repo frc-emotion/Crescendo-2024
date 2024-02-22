@@ -8,8 +8,13 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkPIDController;
 import com.revrobotics.SparkPIDController.AccelStrategy;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ClimbConstants;
+import frc.robot.util.TabManager;
+import frc.robot.util.TabManager.SubsystemTab;
 
 /**
  * Climb Subsystem
@@ -73,6 +78,8 @@ public class ClimbSubsystem extends SubsystemBase {
             ClimbConstants.MAX_ACCELERATION,
             ClimbConstants.SLOT_ID
         );
+
+        initShuffleboard();
     }
 
     /**
@@ -125,5 +132,29 @@ public class ClimbSubsystem extends SubsystemBase {
     public void stop() {
         climbMotorLeft.stopMotor();
         climbMotorRight.stopMotor();
+    }
+
+
+    private void initShuffleboard() {
+        ShuffleboardTab moduleData = TabManager
+            .getInstance()
+            .accessTab(SubsystemTab.CLIMB);
+        ShuffleboardLayout persianPositions = moduleData.getLayout("Persian Positions", BuiltInLayouts.kList);
+
+        persianPositions.addNumber("Left Climb Position", () -> leftEncoder.getPosition());
+
+        persianPositions.addNumber("Right Climb Position", () -> climbMotorRight.getEncoder().getPosition());
+
+        persianPositions.addDouble("Left Climb Current", () -> climbMotorLeft.getOutputCurrent());
+
+        persianPositions.addDouble("Right Climb Current", () -> climbMotorRight.getOutputCurrent());
+
+        persianPositions.withSize(2, 4);
+
+    }
+
+    public void setRawSpeed(double speed) {
+        climbMotorLeft.set(speed);
+        climbMotorRight.set(speed);
     }
 }

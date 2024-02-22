@@ -1,6 +1,7 @@
 package frc.robot.commands.Teleop.swerve;
 
 import edu.wpi.first.math.filter.SlewRateLimiter;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -80,8 +81,10 @@ public abstract class AbstractSwerveXboxCommand extends Command {
     }
 
     protected void sendSpeedsToSubsystem() {
-        robotSpeeds = new ChassisSpeeds(xSpeed, ySpeed, turningSpeed);
-
+        //robotSpeeds = new ChassisSpeeds(xSpeed, ySpeed, turningSpeed);
+        
+        robotSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, turningSpeed, swerveSubsystem.getRotation2d());
+        
         swerveSubsystem.setChassisSpeeds(robotSpeeds);
         SwerveModuleState[] moduleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(robotSpeeds);
         swerveSubsystem.setModuleStates(moduleStates);

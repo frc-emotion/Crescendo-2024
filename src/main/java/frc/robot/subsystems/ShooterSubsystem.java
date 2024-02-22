@@ -10,10 +10,15 @@ import com.revrobotics.SparkPIDController.AccelStrategy;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ShooterConstants;
+import frc.robot.util.TabManager;
+import frc.robot.util.TabManager.SubsystemTab;
 
 public class ShooterSubsystem extends SubsystemBase {
 
@@ -40,6 +45,7 @@ public class ShooterSubsystem extends SubsystemBase {
         feederMotor.setIdleMode(IdleMode.kBrake);
 
         shooterEncoder = shooterMotor.getEncoder();
+        shooterEncoder.setPositionConversionFactor(1 / ShooterConstants.GEAR_REDUCTION);
 
         // Set up PID Controller constants
         controller = shooterMotor.getPIDController();
@@ -70,6 +76,7 @@ public class ShooterSubsystem extends SubsystemBase {
         );
 
         breakSensor = new DigitalInput(ShooterConstants.BREAK_SENSOR_PORT);
+        initShuffleboard();
     }
 
     @Override
@@ -129,7 +136,7 @@ public class ShooterSubsystem extends SubsystemBase {
      */
     public void setFeederSpeed(double speed) {
         // Clamps the value on [-1, 1]
-        speed = Math.max(-1, Math.min(1, speed));
+        //speed = Math.max(-1, Math.min(1, speed));
 
         feederMotor.set(speed);
     }
@@ -149,5 +156,24 @@ public class ShooterSubsystem extends SubsystemBase {
 
     public boolean isProjectileFed() {
         return breakSensor.get();
+    }
+
+    private void initShuffleboard() {
+        ShuffleboardTab moduleData = TabManager
+            .getInstance()
+            .accessTab(SubsystemTab.SHOOTER);
+
+        ShuffleboardLayout persianPositions = moduleData.getLayout("Persian Positions", BuiltInLayouts.kList);
+
+        persianPositions.addBoolean("Line Breaker", () -> breakSensor.get());
+
+        persianPositions.addDouble("Shooter Velocity", () -> shooterEncoder.getVelocity());
+
+        persianPositions.addDouble("Feeder Position", () -> feederMotor.getEncoder().getPosition());
+
+        persianPositions.addDouble("Feeder Velocity", () -> feederMotor.getEncoder().getVelocity());
+
+        persianPositions.withSize(2, 4);
+
     }
 }
