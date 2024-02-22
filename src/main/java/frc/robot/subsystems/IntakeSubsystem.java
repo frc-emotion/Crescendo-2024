@@ -56,7 +56,7 @@ public class IntakeSubsystem extends SubsystemBase {
     }
 
     public boolean isDown() {
-        return down == true;
+        return down;
     }
 
     public void setReference(double position) {
@@ -78,6 +78,9 @@ public class IntakeSubsystem extends SubsystemBase {
         pivotMotor.set(0);
     }
 
+
+    // TESTING ---------------------------------------------
+
     public void simplePivot() {
         pivotMotor.set(IntakeConstants.INTAKE_PIVOT_SPEED);
     }
@@ -89,6 +92,8 @@ public class IntakeSubsystem extends SubsystemBase {
     public void revSimplePivot() {
         pivotMotor.set(-IntakeConstants.INTAKE_PIVOT_SPEED);
     }
+
+    // INTAKE MOTORS -------------------------------------------
 
     public void intakeForward() {
         intakeMotor.set(IntakeConstants.INTAKE_MOTOR_SPEED);

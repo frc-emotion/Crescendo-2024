@@ -354,5 +354,4 @@ public final class Constants {
 		public static final double GEAR_REDUCTION = 82.8;
     }
 
-
 }

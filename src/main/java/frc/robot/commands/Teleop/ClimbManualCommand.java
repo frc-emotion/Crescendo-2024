@@ -35,10 +35,11 @@ public class ClimbManualCommand extends Command {
     public void execute() {
         /*
         if (input.get() > OIConstants.CLIMB_DEADZONE) {
-            // move up
-            climbSubsystem.setPosition(
-                climbSubsystem.getPosition() + (coefficient * input.get())
-            );
+            // // move up
+            // climbSubsystem.setPosition(
+            //     climbSubsystem.getPosition() + (coefficient * input.get())
+            // );
+            climbSubsystem.rawClimbUp();
         } else if (input.get() < -OIConstants.CLIMB_DEADZONE) {
             // move down
             climbSubsystem.setPosition(
@@ -49,6 +50,7 @@ public class ClimbManualCommand extends Command {
             climbSubsystem.setRawSpeed(input.get());
         } else {
             climbSubsystem.stop();
+
         }
         
         // climbSubsystem.setPosition(input.get());
