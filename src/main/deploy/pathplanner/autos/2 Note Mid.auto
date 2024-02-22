@@ -1,0 +1,31 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 1.3973572133190786,
+      "y": 5.507130871149041
+    },
+    "rotation": 0
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Pickup Mid"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Score Middle"
+          }
+        }
+      ]
+    }
+  },
+  "folder": "New Autos",
+  "choreoAuto": false
+}

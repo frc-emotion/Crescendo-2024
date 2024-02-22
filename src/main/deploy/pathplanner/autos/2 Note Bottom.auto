@@ -1,0 +1,31 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 0.68,
+      "y": 4.3
+    },
+    "rotation": -60.0
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Pickup Bottom"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Score Bottom"
+          }
+        }
+      ]
+    }
+  },
+  "folder": "New Autos",
+  "choreoAuto": false
+}
