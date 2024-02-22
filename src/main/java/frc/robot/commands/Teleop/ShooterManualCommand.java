@@ -3,21 +3,21 @@ package frc.robot.commands.Teleop;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.ShooterConstants;
+import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import java.util.function.Supplier;
 
 public class ShooterManualCommand extends Command {
 
-    private final Supplier<Boolean> shooterSupplier;
-    private final Supplier<Double> feederSupplier;
+    private final Supplier<Boolean> shooterSupplier, feederSupplier;
     private final ShooterSubsystem shooterSubsystem;
 
     private boolean feederState;
     private boolean hasIndexed;
 
     public ShooterManualCommand(
+        Supplier<Boolean> feederSupplier,
         Supplier<Boolean> shooterSupplier,
-        Supplier<Double> feederSupplier,
         ShooterSubsystem shooterSubsystem
     ) {
         this.shooterSupplier = shooterSupplier;
@@ -45,7 +45,16 @@ public class ShooterManualCommand extends Command {
             }
             feederState = !feederState;
             */
-            shooterSubsystem.setShooterRaw(0.15);
+            shooterSubsystem.setShooterRaw(0.3);
+            
+        } else {
+            shooterSubsystem.stopShooter();
+        }
+
+        if(feederSupplier.get()) {
+            shooterSubsystem.setFeederSpeed(-0.15);
+        } else {
+            shooterSubsystem.stopFeeder();
         }
 
         /*
@@ -63,13 +72,10 @@ public class ShooterManualCommand extends Command {
         */
 
 
-        if (feederSupplier.get() > OIConstants.SHOOTER_DEADZONE) {
-            shooterSubsystem.setFeederSpeed(
-                feederSupplier.get() * ShooterConstants.kShootSpeedRotationsPerSecond
-            );
-        } else {
-            shooterSubsystem.stopFeeder();
-        }
+        // if (feederSupplier.get() > OIConstants.SHOOTER_DEADZONE) {
+        //     shooterSubsystem.setFeederSpeed(ShooterConstants.kShootSpeedRotationsPerSecond);
+        // } else {
+        // }
     }
 
     @Override

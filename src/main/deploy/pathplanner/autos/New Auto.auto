@@ -2,10 +2,17 @@
   "version": 1.0,
   "startingPose": {
     "position": {
+<<<<<<< HEAD
       "x": 0.68,
       "y": 4.3
     },
     "rotation": -60.0
+=======
+      "x": 0.42133236422144166,
+      "y": 6.043323140791246
+    },
+    "rotation": 0
+>>>>>>> 3ab17aa17df55ffc44005aee52467b000ee62622
   },
   "command": {
     "type": "sequential",
@@ -13,6 +20,10 @@
       "commands": []
     }
   },
+<<<<<<< HEAD
   "folder": "New Autos",
+=======
+  "folder": null,
+>>>>>>> 3ab17aa17df55ffc44005aee52467b000ee62622
   "choreoAuto": false
 }

@@ -167,10 +167,6 @@ public class SwerveSubsystem extends SubsystemBase {
         return toReturn;
     }
 
-    public void setSpeedDivisor(double divisor) {
-        toDivideBy = divisor;
-    }
-
     public void setMaxSpeeds(double driveSpeedMPS, double driveAccelMPSS, double driveAngularSpeedRPS, double driveAngularAccelRPSS) {
         this.driveSpeedMPS = driveSpeedMPS;
         this.driveAccelMPSS = driveAccelMPSS;

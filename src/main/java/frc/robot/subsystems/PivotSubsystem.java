@@ -1,46 +1,33 @@
 package frc.robot.subsystems;
 
 import frc.robot.Constants;
-import edu.wpi.first.wpilibj.DigitalInput;
+import frc.robot.Constants.PivotConstants;
+import frc.robot.util.TabManager;
+import frc.robot.util.TabManager.SubsystemTab;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkPIDController;
-import com.ctre.phoenix6.configs.MagnetSensorConfigs;
-import com.ctre.phoenix6.hardware.CANcoder;
-import com.ctre.phoenix6.signals.AbsoluteSensorRangeValue;
-import com.ctre.phoenix6.signals.SensorDirectionValue;
 import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
 public class PivotSubsystem extends SubsystemBase {
-    
-
     private CANSparkMax pivotMotor;
     private SparkPIDController pivotPID;
-
-    private CANcoder absoluteEncoder;
-    private MagnetSensorConfigs magnetConfiguration;
-
-    private DigitalInput lowerLimit;
+    private RelativeEncoder relativeEncoder;
     
     private int index = 0;
+
+    private boolean calibration = false;
 
     public PivotSubsystem() {
 
         this.pivotMotor = new CANSparkMax(Constants.PivotConstants.PIVOT_PORT, MotorType.kBrushless);
-        this.lowerLimit = new DigitalInput(Constants.PivotConstants.LOWER_LIMIT_PORT);
-
-        magnetConfiguration = new MagnetSensorConfigs();
-
-        //magnetConfiguration.withMagnetOffset(Units.radiansToDegrees(absoluteEncoderOffsetRad));
-        magnetConfiguration.withAbsoluteSensorRange(AbsoluteSensorRangeValue.Signed_PlusMinusHalf);
-        magnetConfiguration.withSensorDirection(SensorDirectionValue.CounterClockwise_Positive);
-
-        absoluteEncoder = new CANcoder(Constants.PivotConstants.absoluteEncoderID);
-
-        absoluteEncoder.getConfigurator().apply(magnetConfiguration);
 
         pivotPID = pivotMotor.getPIDController();
 
@@ -52,6 +39,23 @@ public class PivotSubsystem extends SubsystemBase {
         pivotPID.setOutputRange(-Constants.PivotConstants.PIVOT_AUTO_SPEED - 0.05,
                 Constants.PivotConstants.PIVOT_AUTO_SPEED);
 
+        relativeEncoder = pivotMotor.getEncoder();
+
+        relativeEncoder.setPositionConversionFactor(1.0 / PivotConstants.GEAR_REDUCTION);
+
+        initShuffleboard();
+    }
+
+    private void initShuffleboard() {
+        ShuffleboardTab tab = TabManager.getInstance().accessTab(SubsystemTab.INTAKE);
+        ShuffleboardLayout layout = tab.getLayout("Persian Positions", BuiltInLayouts.kList);
+
+        layout.addDouble("Pivot Position Revolutions", this::getRev);
+        layout.addDouble("Pivot Position Degrees", this::getDegrees);
+        layout.addDouble("Pivot Current", this::getCurrent);
+        layout.addDouble("Pivot Preset Index", this::getIndex);
+
+        layout.withSize(2, 4);
     }
 
     public int getIndex() {
@@ -78,21 +82,37 @@ public class PivotSubsystem extends SubsystemBase {
         setRev(Constants.PivotConstants.PIVOT_POSITIONS[index]);
     }
 
-    public boolean getLimit() {
-        return lowerLimit.get();
+    public double getCurrent() {
+        return pivotMotor.getAppliedOutput();
     }
 
     public void setSpeed(double speed) {
         pivotMotor.set(speed);
     }
 
+    public boolean getCalibration() {
+        return calibration;
+    }
+
+    public void endCalibrate() {
+        calibration = false;
+        
+        pivotMotor.set(0.0);
+        
+        relativeEncoder.setPosition(0);
+    }
+
     public void calibrate() {
-        pivotMotor.set(0);
-        pivotMotor.getEncoder().setPosition(getRev());
+        calibration = true;
+        pivotMotor.set(-0.2);
     }
 
     public double getRev() {
-        return -absoluteEncoder.getPosition().getValueAsDouble() * 180.0;
+        return relativeEncoder.getPosition();
+    }
+
+    public double getDegrees() {
+        return getRev() * 360.0;
     }
 
     public void stop() {

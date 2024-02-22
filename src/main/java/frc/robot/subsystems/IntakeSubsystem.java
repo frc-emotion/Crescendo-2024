@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.IntakeConstants;
+import frc.robot.Constants.PivotConstants;
 import frc.robot.util.TabManager;
 import frc.robot.util.TabManager.SubsystemTab;
 
@@ -44,6 +45,8 @@ public class IntakeSubsystem extends SubsystemBase {
         pivotController.setI(IntakeConstants.kI_PIVOT);
         pivotController.setD(IntakeConstants.kD_PIVOT);
         pivotController.setOutputRange(IntakeConstants.MIN_POSITION, IntakeConstants.MAX_POSITION);
+
+        pivotMotor.getEncoder().setPositionConversionFactor(1.0 / IntakeConstants.GEAR_REDUCTION);
     
         initShuffleboard();
     }
@@ -53,7 +56,7 @@ public class IntakeSubsystem extends SubsystemBase {
     }
 
     public boolean isDown() {
-        return down == true;
+        return down;
     }
 
     public void setReference(double position) {
@@ -75,6 +78,9 @@ public class IntakeSubsystem extends SubsystemBase {
         pivotMotor.set(0);
     }
 
+
+    // TESTING ---------------------------------------------
+
     public void simplePivot() {
         pivotMotor.set(IntakeConstants.INTAKE_PIVOT_SPEED);
     }
@@ -86,6 +92,8 @@ public class IntakeSubsystem extends SubsystemBase {
     public void revSimplePivot() {
         pivotMotor.set(-IntakeConstants.INTAKE_PIVOT_SPEED);
     }
+
+    // INTAKE MOTORS -------------------------------------------
 
     public void intakeForward() {
         intakeMotor.set(IntakeConstants.INTAKE_MOTOR_SPEED);
@@ -105,9 +113,9 @@ public class IntakeSubsystem extends SubsystemBase {
             .accessTab(SubsystemTab.INTAKE);
         ShuffleboardLayout persianPositions = moduleData.getLayout("Persian Positions", BuiltInLayouts.kList);
 
-        persianPositions.addNumber("Intake Motor Position", () -> intakeMotor.get());
+        persianPositions.addNumber("Intake Motor Position", () -> intakeMotor.getEncoder().getPosition());
 
-        persianPositions.addNumber("Pivot Motor Position", () -> pivotMotor.get());
+        persianPositions.addNumber("Pivot Motor Position", () -> pivotMotor.getEncoder().getPosition());
 
         persianPositions.addDouble("Current", () -> pivotMotor.getOutputCurrent());
 

@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.MagnetSensorConfigs;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.signals.AbsoluteSensorRangeValue;
@@ -58,8 +59,8 @@ public class SwerveModuleNeo {
         magnetConfiguration.withSensorDirection(SensorDirectionValue.CounterClockwise_Positive);
 
         absoluteEncoder = new CANcoder(absoluteEncoderId);
-
         absoluteEncoder.getConfigurator().apply(magnetConfiguration);
+
 
         driveMotor = new CANSparkMax(driveMotorId, MotorType.kBrushless);
 
