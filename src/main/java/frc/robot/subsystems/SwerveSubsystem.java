@@ -16,6 +16,7 @@ import edu.wpi.first.networktables.StructPublisher;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
@@ -107,10 +108,7 @@ public class SwerveSubsystem extends SubsystemBase {
 
     private ChassisSpeeds robotSpeeds;
 
-    private ShuffleboardLayout frontLeftData;
-    private ShuffleboardLayout frontRightData;
-    private ShuffleboardLayout backLeftData;
-    private ShuffleboardLayout backRightData;
+    private ShuffleboardLayout frontLeftData, frontRightData, backLeftData, backRightData, sensorData;
     private Field2d m_field;
 
     private StructArrayPublisher<SwerveModuleState> publisher = NetworkTableInstance.getDefault()
@@ -247,7 +245,7 @@ public class SwerveSubsystem extends SubsystemBase {
     }
 
     @Override
-    public void periodic() {
+    public void periodic() { 
         // Updates with drivetrain sensors
         poseEstimator.update(getRotation2d(), getModulePositions());
 
@@ -257,15 +255,15 @@ public class SwerveSubsystem extends SubsystemBase {
         // poseEstimator.addVisionMeasurement(result.getFirst(), result.getSecond());
 
         // m_field.setRobotPose(getCurrentPose());
-        SmartDashboard.putNumber("Gyro Reading", getHeading());
-        SmartDashboard.putNumber("Gyro Pitch", getPitch());
-        SmartDashboard.putNumber("Gyro Roll", getRoll());
+        //SmartDashboard.putNumber("Gyro Reading", getHeading());
+        //SmartDashboard.putNumber("Gyro Pitch", getPitch());
+        //SmartDashboard.putNumber("Gyro Roll", getRoll());
 
-        SwerveModuleState[] moduleStates = getModuleStates();
-        Rotation2d currentRotation = getRotation2d();
+        //SwerveModuleState[] moduleStates = getModuleStates();
+        //Rotation2d currentRotation = getRotation2d();
 
-        publisher.set(moduleStates);
-        publisher2.set(currentRotation);
+        //publisher.set(moduleStates);
+        //publisher2.set(currentRotation);
 
 
     }
@@ -317,6 +315,11 @@ public class SwerveSubsystem extends SubsystemBase {
         fillList(frontRight, frontRightData);
         fillList(backLeft, backLeftData);
         fillList(backRight, backRightData);
+
+        sensorData = moduleData.getLayout("Gyro Data", BuiltInLayouts.kList);
+        sensorData.addNumber("Gyro Heading", () -> getHeading());
+        sensorData.addNumber("Gyro Pitch", () -> getPitch());
+        sensorData.addNumber("Gyro Roll", () -> getRoll());
 
         m_field = new Field2d();
 

@@ -14,6 +14,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkPIDController;
 import com.revrobotics.CANSparkBase.ControlType;
+import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
 public class PivotSubsystem extends SubsystemBase {
@@ -27,7 +28,8 @@ public class PivotSubsystem extends SubsystemBase {
 
     public PivotSubsystem() {
 
-        this.pivotMotor = new CANSparkMax(Constants.PivotConstants.PIVOT_PORT, MotorType.kBrushless);
+        pivotMotor = new CANSparkMax(Constants.PivotConstants.PIVOT_PORT, MotorType.kBrushless);
+        pivotMotor.setIdleMode(IdleMode.kBrake);
 
         pivotPID = pivotMotor.getPIDController();
 
@@ -47,7 +49,7 @@ public class PivotSubsystem extends SubsystemBase {
     }
 
     private void initShuffleboard() {
-        ShuffleboardTab tab = TabManager.getInstance().accessTab(SubsystemTab.INTAKE);
+        ShuffleboardTab tab = TabManager.getInstance().accessTab(SubsystemTab.PIVOT);
         ShuffleboardLayout layout = tab.getLayout("Persian Positions", BuiltInLayouts.kList);
 
         layout.addDouble("Pivot Position Revolutions", this::getRev);

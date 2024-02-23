@@ -60,6 +60,7 @@ public class SwerveModuleNeo {
 
         absoluteEncoder = new CANcoder(absoluteEncoderId);
         absoluteEncoder.getConfigurator().apply(magnetConfiguration);
+        absoluteEncoder.getPosition().setUpdateFrequency(absoluteEncoder.getPosition().getAppliedUpdateFrequency() / 4);
 
 
         driveMotor = new CANSparkMax(driveMotorId, MotorType.kBrushless);
@@ -112,6 +113,10 @@ public class SwerveModuleNeo {
 
     public double getTurningPosition() {
         return turningEncoder.getPosition();
+    }
+
+    public double getAbsoluteEncoderUpdateFrequency() {
+        return absoluteEncoder.getPosition().getAppliedUpdateFrequency();
     }
 
     public double getTurningVelocity() {

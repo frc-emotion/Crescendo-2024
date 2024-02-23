@@ -33,12 +33,14 @@ public class PivotManualCommand extends Command {
 
     @Override
     public void execute() { 
+        /*
         if (pivotSubsystem.getCalibration() && pivotSubsystem.getCurrent() > PivotConstants.CURRENT_SPIKE_THRESHOLD) {
             pivotSubsystem.endCalibrate();
             return;
         } else if (pivotSubsystem.getCalibration()) {
             return;
         }
+        */
 
         // if (Math.abs(yJoystick.get()) > Constants.PivotConstants.TRIGGER_THRESHOLD) {    // If manual input is detected, changes mode to manual mode.
         //     mode = true;
@@ -58,7 +60,15 @@ public class PivotManualCommand extends Command {
         //     }
         // }
 
-        manualControl(); // remove before official use
+        // remove before official use
+        double output = yJoystick.get();
+
+        //pivotSubsystem.setSpeed(output * Constants.PivotConstants.PIVOT_TELEOP_SPEED);
+        if (Math.abs(output) > Constants.OIConstants.PIVOT_DEADZONE) {
+            pivotSubsystem.setSpeed(Math.signum(output) * Constants.PivotConstants.PIVOT_TELEOP_SPEED);
+        } else {
+            pivotSubsystem.stop();
+        }
 
         /*
         if(mode) { 
@@ -69,15 +79,6 @@ public class PivotManualCommand extends Command {
         */
         //}
 
-    }
-
-    /**
-     * Manages the manual control mode for the 
-     */
-    private void manualControl() {
-        double output = yJoystick.get();
-
-        pivotSubsystem.setSpeed(output * Constants.PivotConstants.PIVOT_TELEOP_SPEED);
     }
 
     @Override

@@ -14,6 +14,7 @@ import java.time.Instant;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -44,9 +45,14 @@ public class RobotContainer {
     private final CommandXboxController m_driverController = new CommandXboxController(
         OIConstants.kDriverControllerPort
     );
+
+    private final XboxController driverController_HID = m_driverController.getHID();
+
     private final CommandXboxController m_operatorController = new CommandXboxController(
         OIConstants.kOperatorControllerPort
     );
+
+    private final XboxController operatorController_HID = m_operatorController.getHID();
 
     private final SendableChooser<Command> autoChooser;
 
@@ -59,22 +65,22 @@ public class RobotContainer {
         m_SwerveSubsystem.setDefaultCommand(
             new DefaultSwerveXboxCommand(
                 m_SwerveSubsystem,
-                () -> m_driverController.getHID().getLeftY(),
-                () -> m_driverController.getHID().getLeftX(),
-                () -> m_driverController.getHID().getRightX()
+                () -> driverController_HID.getLeftY(),
+                () -> driverController_HID.getLeftX(),
+                () -> driverController_HID.getRightX()
                 /*
-                () -> m_driverController.getHID().getLeftBumper(),
-                () -> m_driverController.getHID().getRightBumper(),
+                () -> driverController_HID.getLeftBumper(),
+                () -> driverController_HID.getRightBumper(),
                 () -> m_driverController.getRightTriggerAxis(),
-                () -> m_driverController.getHID().getLeftTriggerAxis()
+                () -> driverController_HID.getLeftTriggerAxis()
                 */
             )
         );
 
          m_ShooterSubsystem.setDefaultCommand(
              new ShooterManualCommand(
-                 () -> m_operatorController.getHID().getAButton(),
-                 m_operatorController.getHID()::getYButton,
+                 () -> operatorController_HID.getAButton(),
+                 operatorController_HID::getYButton,
                  m_ShooterSubsystem
              )
         );
@@ -82,25 +88,25 @@ public class RobotContainer {
         m_ClimbSubsystem.setDefaultCommand(
             new ClimbManualCommand(
                 m_ClimbSubsystem, 
-                () -> m_operatorController.getHID().getRightY()
+                () -> operatorController_HID.getRightY()
                 )
             );
 
          m_PivotSubsystem.setDefaultCommand(
              new PivotManualCommand(
                  m_PivotSubsystem,
-                 () -> m_operatorController.getHID().getLeftY(),
-                 () -> m_operatorController.getHID().getLeftStickButton(),
-                 () -> m_operatorController.getHID().getPOV() == 0,
-                 () -> m_operatorController.getHID().getPOV() == 180
+                 () -> operatorController_HID.getLeftY(),
+                 () -> operatorController_HID.getLeftStickButton(),
+                 () -> operatorController_HID.getPOV() == 0,
+                 () -> operatorController_HID.getPOV() == 180
                  )
          );
 
         m_IntakeSubsystem.setDefaultCommand(
             new IntakeDriveCommand(
                 m_IntakeSubsystem,
-                () -> m_operatorController.leftBumper().getAsBoolean(),
-                () -> m_operatorController.rightBumper().getAsBoolean(),
+                () -> operatorController_HID.getLeftBumper(),
+                () -> operatorController_HID.getRightBumper(),
                 () -> m_operatorController.getLeftTriggerAxis(),
                 () -> m_operatorController.getRightTriggerAxis()
             )
@@ -137,15 +143,6 @@ public class RobotContainer {
         // cancelling on release.
         // m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
 
-        /*
-        m_driverController.b().onTrue(
-            new Command() {
-                public void execute() {
-                    m_SwerveSubsystem.zeroHeading();
-                }
-            }
-        );
-        */
         m_operatorController.a().onTrue(new InstantCommand() {
             public void execute() {
                 m_PivotSubsystem.calibrate();
@@ -156,18 +153,18 @@ public class RobotContainer {
         m_driverController.leftBumper().whileTrue(
             new SlowModeSwerveCommand(
                 m_SwerveSubsystem,
-                () -> -m_driverController.getHID().getLeftY(),
-                () -> -m_driverController.getHID().getLeftX(),
-                () -> m_driverController.getHID().getRightX()
+                () -> -driverController_HID.getLeftY(),
+                () -> -driverController_HID.getLeftX(),
+                () -> driverController_HID.getRightX()
             )
         );
 
         m_driverController.rightBumper().whileTrue(
             new TurboModeSwerveCommand(
                 m_SwerveSubsystem,
-                () -> -m_driverController.getHID().getLeftY(),
-                () -> -m_driverController.getHID().getLeftX(),
-                () -> m_driverController.getHID().getRightX()
+                () -> -driverController_HID.getLeftY(),
+                () -> -driverController_HID.getLeftX(),
+                () -> driverController_HID.getRightX()
             )
         );
 

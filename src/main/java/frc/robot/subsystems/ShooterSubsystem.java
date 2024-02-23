@@ -45,7 +45,8 @@ public class ShooterSubsystem extends SubsystemBase {
         feederMotor.setIdleMode(IdleMode.kBrake);
 
         shooterEncoder = shooterMotor.getEncoder();
-        shooterEncoder.setPositionConversionFactor(1 / ShooterConstants.GEAR_REDUCTION);
+        shooterEncoder.setVelocityConversionFactor(2);
+        
 
         // Set up PID Controller constants
         controller = shooterMotor.getPIDController();
@@ -54,13 +55,14 @@ public class ShooterSubsystem extends SubsystemBase {
         controller.setD(ShooterConstants.kD);
         controller.setFF(ShooterConstants.kFeedForward);
 
-        controller.setFeedbackDevice(shooterEncoder);
+        //controller.setFeedbackDevice(shooterEncoder);
 
         // Setup PID output limits
-        controller.setOutputRange(
-            ShooterConstants.kMaxOutput,
-            ShooterConstants.kMinOutput
-        );
+        // controller.setOutputRange(
+        //     ShooterConstants.kMinOutput,
+        //     ShooterConstants.kMaxOutput
+        // );
+        /*
         controller.setSmartMotionAccelStrategy(AccelStrategy.kTrapezoidal, 0);
         controller.setSmartMotionMaxVelocity(
             ShooterConstants.kMaxSpeedRotationsPerSecond * 60,
@@ -74,6 +76,7 @@ public class ShooterSubsystem extends SubsystemBase {
             ShooterConstants.kMaxOutputError,
             0
         );
+        */
 
         breakSensor = new DigitalInput(ShooterConstants.BREAK_SENSOR_PORT);
         initShuffleboard();
@@ -84,24 +87,8 @@ public class ShooterSubsystem extends SubsystemBase {
         SmartDashboard.putBoolean("Is Note Fed?", isProjectileFed());
     }
 
-    /**
-     * Sets the target speed of the shooter in rotations per second.
-     * Multiplies by 60 because the setReference method for velocity takes in rotations per minute.
-     *
-     * @param speed The target speed for the shooter motor in rotations per second.
-     */
     public void setShooterVelocity(double speed) {
-        if (speed > ShooterConstants.kMaxSpeedRotationsPerSecond) {
-            speed = ShooterConstants.kMaxSpeedRotationsPerSecond;
-            DriverStation.reportWarning(
-                "Shooter speed set over the maximum speed",
-                false
-            );
-        } else if (speed < 0) {
-            DriverStation.reportWarning("Shooter speed set below zero", false);
-        }
-
-        controller.setReference(speed * 60, ControlType.kSmartVelocity);
+        controller.setReference(speed / 2, ControlType.kVelocity);
     }
 
     /**
@@ -110,7 +97,7 @@ public class ShooterSubsystem extends SubsystemBase {
      * @return The speed of the shooter
      */
     public double getShooterVelocity() {
-        return shooterEncoder.getVelocity();
+        return shooterEncoder.getVelocity() * 2;
     }
 
     /**
@@ -167,7 +154,9 @@ public class ShooterSubsystem extends SubsystemBase {
 
         persianPositions.addBoolean("Line Breaker", () -> breakSensor.get());
 
-        persianPositions.addDouble("Shooter Velocity", () -> shooterEncoder.getVelocity());
+        persianPositions.addDouble("Shooter Velocity", this::getShooterVelocity);
+
+        persianPositions.addDouble("Shooter Conversion Factor", shooterEncoder::getVelocityConversionFactor);
 
         persianPositions.addDouble("Feeder Position", () -> feederMotor.getEncoder().getPosition());
 

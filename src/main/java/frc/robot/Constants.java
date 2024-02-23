@@ -42,8 +42,9 @@ public final class Constants {
 
         public static final double kDeadband = 0.15;
 
-        public static final double CLIMB_DEADZONE = 0.1;
-        public static final double SHOOTER_DEADZONE = 0.1;
+        public static final double CLIMB_DEADZONE = 0.2;
+        public static final double SHOOTER_DEADZONE = 0.2;
+        public static final double PIVOT_DEADZONE = 0.2;
         public static final double kPersianSpeedMultiplier = 2.0;
         public static final double kSpeedDivideAdjustment = 2.0;
         
@@ -284,15 +285,16 @@ public final class Constants {
         public static final int CURRENT_LIMIT = 45;
 
         // PID Controller Constants
-        public static final double kP = 0;
+        public static final double kP = 0.004;
         public static final double kI = 0;
         public static final double kD = 0;
-        public static final double kFeedForward = 0;
-        public static final double kMaxOutput = 0;
-        public static final double kMinOutput = 0;
+        public static final double kFeedForward = 0.00025;
+        public static final double kMaxOutput = 1;
+        public static final double kMinOutput = -1;
         public static final double kMaxOutputError = 0;
 
         // Speeds
+        
         public static final double kFeedSpeed = 0.25;
         public static final double kShootSpeedRotationsPerSecond = 0;
         public static final double kMaxSpeedRotationsPerSecond = 0;
@@ -310,7 +312,7 @@ public final class Constants {
         public static final double PIVOT_KF = 0;
 
 
-        public static final double PIVOT_TELEOP_SPEED = 0.9;
+        public static final double PIVOT_TELEOP_SPEED = 0.3;
         public static final double PIVOT_AUTO_SPEED = 0.2;
         public static final double PIVOT_ZERO_SPEED = 0.1;
 
@@ -336,7 +338,7 @@ public final class Constants {
         public static final int MAX_CURRENT = 45;
         public static final double CURRENT_SPIKE_THRESHOLD = 20.0; 
         public static final double INTAKE_MOTOR_SPEED = 0.5;
-        public static final double INTAKE_PIVOT_SPEED = 0.1;
+        public static final double INTAKE_PIVOT_SPEED = 0.3;
 
         public static final double kS = 0;
         public static final double kG = 0;

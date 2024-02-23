@@ -45,14 +45,14 @@ public class ShooterManualCommand extends Command {
             }
             feederState = !feederState;
             */
-            shooterSubsystem.setShooterRaw(0.3);
+            shooterSubsystem.setShooterVelocity(4000);
             
         } else {
             shooterSubsystem.stopShooter();
         }
 
         if(feederSupplier.get()) {
-            shooterSubsystem.setFeederSpeed(-0.15);
+            shooterSubsystem.setFeederSpeed(-0.3);
         } else {
             shooterSubsystem.stopFeeder();
         }
