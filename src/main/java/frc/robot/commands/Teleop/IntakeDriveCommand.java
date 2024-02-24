@@ -3,6 +3,7 @@ package frc.robot.commands.Teleop;
 import java.util.function.Supplier;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.subsystems.IntakeSubsystem;
 
@@ -10,19 +11,15 @@ public class IntakeDriveCommand extends Command {
 
     private IntakeSubsystem intakeSubsystem;
     private final Supplier<Boolean> rightBumper, leftBumper;
-    private final Supplier<Double> leftAxis, rightAxis;
 
     public IntakeDriveCommand(IntakeSubsystem intake, 
     Supplier<Boolean> rightBumper, 
-    Supplier<Boolean> leftBumper,
-    Supplier<Double> leftAxis,
-    Supplier<Double> rightAxis){
+    Supplier<Boolean> leftBumper
+    ){
 
         this.intakeSubsystem = intake;
         this.rightBumper = rightBumper;
         this.leftBumper = leftBumper;
-        this.leftAxis = leftAxis;
-        this.rightAxis = rightAxis;
         addRequirements(intake);
     }
 
@@ -42,13 +39,13 @@ public class IntakeDriveCommand extends Command {
             intakeSubsystem.intakeStop();
         }
 
-        if (leftAxis.get() > 0.2) {
-            intakeSubsystem.revSimplePivot();
-        } else if (rightAxis.get() > 0.2) {
-            intakeSubsystem.simplePivot();
-        } else {
-            intakeSubsystem.stopSimple();
-        }
+        // if (leftAxis.get() > Constants.OIConstants.INTAKE_DEADZONE) {
+        //     intakeSubsystem.revSimplePivot();
+        // } else if (rightAxis.get() > Constants.OIConstants.INTAKE_DEADZONE) {
+        //     intakeSubsystem.simplePivot();
+        // } else {
+        //     intakeSubsystem.pivotStop();
+        // }
         
     }
 

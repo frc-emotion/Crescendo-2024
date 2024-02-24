@@ -30,7 +30,9 @@ public class PivotSubsystem extends SubsystemBase {
 
         pivotMotor = new CANSparkMax(Constants.PivotConstants.PIVOT_PORT, MotorType.kBrushless);
         pivotMotor.setIdleMode(IdleMode.kBrake);
-
+        pivotMotor.setSmartCurrentLimit(Constants.PivotConstants.MAX_CURRENT_SMART);
+        pivotMotor.setSecondaryCurrentLimit(Constants.PivotConstants.MAX_CURRENT);
+        
         pivotPID = pivotMotor.getPIDController();
 
         pivotPID.setP(Constants.PivotConstants.PIVOT_KP);
@@ -38,12 +40,13 @@ public class PivotSubsystem extends SubsystemBase {
         pivotPID.setD(Constants.PivotConstants.PIVOT_KD);
         pivotPID.setFF(Constants.PivotConstants.PIVOT_KF);
 
-        pivotPID.setOutputRange(-Constants.PivotConstants.PIVOT_AUTO_SPEED - 0.05,
+        pivotPID.setOutputRange(-Constants.PivotConstants.PIVOT_AUTO_SPEED,
                 Constants.PivotConstants.PIVOT_AUTO_SPEED);
 
         relativeEncoder = pivotMotor.getEncoder();
 
-        relativeEncoder.setPositionConversionFactor(1.0 / PivotConstants.GEAR_REDUCTION);
+        relativeEncoder.setPositionConversionFactor((-1.0 / PivotConstants.GEAR_REDUCTION) * 360);
+        relativeEncoder.setPosition(-60.0);
 
         initShuffleboard();
     }
@@ -56,6 +59,7 @@ public class PivotSubsystem extends SubsystemBase {
         layout.addDouble("Pivot Position Degrees", this::getDegrees);
         layout.addDouble("Pivot Current", this::getCurrent);
         layout.addDouble("Pivot Preset Index", this::getIndex);
+        layout.addNumber("Current Preset", this::getPreset);
 
         layout.withSize(2, 4);
     }
@@ -82,6 +86,10 @@ public class PivotSubsystem extends SubsystemBase {
 
     public void goToPreset() {
         setRev(Constants.PivotConstants.PIVOT_POSITIONS[index]);
+    }
+
+    public double getPreset() {
+        return Constants.PivotConstants.PIVOT_POSITIONS[index];
     }
 
     public double getCurrent() {
@@ -114,22 +122,22 @@ public class PivotSubsystem extends SubsystemBase {
     }
 
     public double getDegrees() {
-        return getRev() * 360.0;
+        return getRev();
     }
 
     public void stop() {
         pivotMotor.set(0);
     }
 
-    public void setRev(double rev) {
-        double target = rev;
-        if (rev < Constants.PivotConstants.PIVOT_MIN_REVOLUTION) {
-            target = 0;
-        }
-        if (rev > Constants.PivotConstants.PIVOT_MAX_REVOLUTION) {
-            target = Constants.PivotConstants.PIVOT_MAX_REVOLUTION;
-        }
-        pivotPID.setReference(-target, ControlType.kPosition);
+    public void setRev(double target) {
+        // double target = rev;
+        // if (rev < Constants.PivotConstants.PIVOT_MIN_REVOLUTION) {
+        //     target = 0;
+        // }
+        // if (rev > Constants.PivotConstants.PIVOT_MAX_REVOLUTION) {
+        //     target = Constants.PivotConstants.PIVOT_MAX_REVOLUTION;
+        // }
+        pivotPID.setReference(target, ControlType.kPosition);
     }
 
 }

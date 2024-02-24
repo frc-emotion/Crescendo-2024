@@ -7,10 +7,9 @@ package frc.robot;
 import frc.robot.Constants.OIConstants;
 
 import frc.robot.subsystems.*;
-import frc.robot.commands.Teleop.swerve.*;
+import frc.robot.commands.Auto.SubsystemCommands.IntakeDriveAutoCommand;
 import frc.robot.commands.Teleop.*;
-
-import java.time.Instant;
+import frc.robot.commands.Teleop.swerve.*;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 
@@ -21,7 +20,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -67,7 +65,8 @@ public class RobotContainer {
                 m_SwerveSubsystem,
                 () -> driverController_HID.getLeftY(),
                 () -> driverController_HID.getLeftX(),
-                () -> driverController_HID.getRightX()
+                () -> driverController_HID.getRightX(),
+                () -> driverController_HID.getRightTriggerAxis() > OIConstants.kDeadband
                 /*
                 () -> driverController_HID.getLeftBumper(),
                 () -> driverController_HID.getRightBumper(),
@@ -98,7 +97,8 @@ public class RobotContainer {
                  () -> operatorController_HID.getLeftY(),
                  () -> operatorController_HID.getLeftStickButton(),
                  () -> operatorController_HID.getPOV() == 0,
-                 () -> operatorController_HID.getPOV() == 180
+                 () -> operatorController_HID.getPOV() == 180,
+                 () -> operatorController_HID.getPOV() == 90
                  )
          );
 
@@ -106,9 +106,7 @@ public class RobotContainer {
             new IntakeDriveCommand(
                 m_IntakeSubsystem,
                 () -> operatorController_HID.getLeftBumper(),
-                () -> operatorController_HID.getRightBumper(),
-                () -> m_operatorController.getLeftTriggerAxis(),
-                () -> m_operatorController.getRightTriggerAxis()
+                () -> operatorController_HID.getRightBumper()
             )
         );
         
@@ -150,12 +148,13 @@ public class RobotContainer {
         }
         );
         
-        m_driverController.leftBumper().whileTrue(
+        m_driverController.leftBumper().whileTrue(  
             new SlowModeSwerveCommand(
                 m_SwerveSubsystem,
                 () -> -driverController_HID.getLeftY(),
                 () -> -driverController_HID.getLeftX(),
-                () -> driverController_HID.getRightX()
+                () -> driverController_HID.getRightX(),
+                () -> driverController_HID.getRightTriggerAxis() > OIConstants.kDeadband
             )
         );
 
@@ -164,7 +163,8 @@ public class RobotContainer {
                 m_SwerveSubsystem,
                 () -> -driverController_HID.getLeftY(),
                 () -> -driverController_HID.getLeftX(),
-                () -> driverController_HID.getRightX()
+                () -> driverController_HID.getRightX(),
+                () -> driverController_HID.getRightTriggerAxis() > OIConstants.kDeadband
             )
         );
 
@@ -173,6 +173,10 @@ public class RobotContainer {
                 m_SwerveSubsystem.zeroHeading();
             }
         });
+
+        m_operatorController.x().onTrue(
+            new IntakePivotCommand(m_IntakeSubsystem)
+        );
     }
 
     private void registerNamedCommands() {

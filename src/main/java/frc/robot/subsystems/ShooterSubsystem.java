@@ -33,14 +33,14 @@ public class ShooterSubsystem extends SubsystemBase {
         shooterMotor =
             new CANSparkMax(ShooterConstants.shooterPort, MotorType.kBrushless);
 
-        shooterMotor.setSmartCurrentLimit(ShooterConstants.CURRENT_LIMIT);
+        shooterMotor.setSmartCurrentLimit(ShooterConstants.CURRENT_LIMIT_SMART);
         shooterMotor.setSecondaryCurrentLimit(ShooterConstants.CURRENT_LIMIT);
         shooterMotor.setIdleMode(IdleMode.kCoast);
 
         feederMotor =
             new CANSparkMax(ShooterConstants.feederPort, MotorType.kBrushless);
 
-        feederMotor.setSmartCurrentLimit(ShooterConstants.CURRENT_LIMIT);
+        feederMotor.setSmartCurrentLimit(ShooterConstants.CURRENT_LIMIT_SMART);
         feederMotor.setSecondaryCurrentLimit(ShooterConstants.CURRENT_LIMIT);
         feederMotor.setIdleMode(IdleMode.kBrake);
 

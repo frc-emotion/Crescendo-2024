@@ -64,10 +64,8 @@ public class IntakeSubsystem extends SubsystemBase {
     }
 
     public boolean checkCurrentSpike(){
-        if(pivotMotor.getOutputCurrent() > IntakeConstants.CURRENT_SPIKE_THRESHOLD) {
-            return true;
-        }
-        return false;
+        return pivotMotor.getOutputCurrent() > IntakeConstants.CURRENT_SPIKE_THRESHOLD;
+
     }
 
     public double getPosition() {

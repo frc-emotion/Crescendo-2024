@@ -45,6 +45,7 @@ public final class Constants {
         public static final double CLIMB_DEADZONE = 0.2;
         public static final double SHOOTER_DEADZONE = 0.2;
         public static final double PIVOT_DEADZONE = 0.2;
+        public static final double INTAKE_DEADZONE = 0.2;
         public static final double kPersianSpeedMultiplier = 2.0;
         public static final double kSpeedDivideAdjustment = 2.0;
         
@@ -301,19 +302,22 @@ public final class Constants {
         public static final double kMaxSpeedRotationsPerSecondSquared = 0;
         public static final int BREAK_SENSOR_PORT = 0;
 		public static final double GEAR_REDUCTION = 0.5;
+        public static final int CURRENT_LIMIT_SMART = 20;
     }
 
     public static final class PivotConstants {
         public static final int PIVOT_PORT = 20;
 
-        public static final double PIVOT_KP = 0.6;
+        public static final double PIVOT_KP = 10.0;
         public static final double PIVOT_KI = 0;
         public static final double PIVOT_KD = 4;
         public static final double PIVOT_KF = 0;
 
+        public static final int MAX_CURRENT = 45;
+        public static final int MAX_CURRENT_SMART = 20;
 
         public static final double PIVOT_TELEOP_SPEED = 0.3;
-        public static final double PIVOT_AUTO_SPEED = 0.2;
+        public static final double PIVOT_AUTO_SPEED = 0.3;
         public static final double PIVOT_ZERO_SPEED = 0.1;
 
         public static final double PIVOT_MIN_REVOLUTION = 5;
@@ -324,9 +328,11 @@ public final class Constants {
         public static final int absoluteEncoderID = 69;
 
         public static final double placeholder = 0.0;
-        public static final double[] PIVOT_POSITIONS = {0.0, 50.0, 100.0};
+        public static final double[] PIVOT_POSITIONS = {-60.0, 0};
         public static final double CURRENT_SPIKE_THRESHOLD = 0;
         public static final double GEAR_REDUCTION = 60.0;
+
+        public static final double MAX_ERROR = 3;
 
     }
 
@@ -336,7 +342,7 @@ public final class Constants {
         public static final int INTAKE_PIVOT_PORT = 15;
         public static final int INTAKE_MOTOR_PORT = 19;
         public static final int MAX_CURRENT = 45;
-        public static final double CURRENT_SPIKE_THRESHOLD = 20.0; 
+        public static final double CURRENT_SPIKE_THRESHOLD = 5.2; 
         public static final double INTAKE_MOTOR_SPEED = 0.5;
         public static final double INTAKE_PIVOT_SPEED = 0.3;
 

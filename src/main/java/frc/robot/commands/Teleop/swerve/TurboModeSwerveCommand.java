@@ -2,41 +2,44 @@ package frc.robot.commands.Teleop.swerve;
 
 import java.util.function.Supplier;
 
+import edu.wpi.first.math.filter.SlewRateLimiter;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import frc.robot.Constants.DriveConstants;
-import frc.robot.Constants.OIConstants;
 import frc.robot.subsystems.SwerveSubsystem;
 
-public class SlowModeSwerveCommand extends DefaultSwerveXboxCommand {
+public class TurboModeSwerveCommand  extends DefaultSwerveXboxCommand {
 
-    public SlowModeSwerveCommand(
+    
+    public TurboModeSwerveCommand(
         SwerveSubsystem swerveSubsystem,
         Supplier<Double> xSpdFunc,
         Supplier<Double> ySpdFunc,
-        Supplier<Double> turningSpdFunc
+        Supplier<Double> turningSpdFunc,
+        Supplier<Boolean> isFieldCentricFunc
+        //Supplier<Boolean> slowModeFunc,
         //Supplier<Boolean> turboModeFunc,
         //Supplier<Double> hardLeft,
         //Supplier<Double> hardRight
     ) {
-        super(
-            swerveSubsystem,
-            xSpdFunc,
-            ySpdFunc,
-            turningSpdFunc
-        );
+        super(swerveSubsystem, xSpdFunc, ySpdFunc, turningSpdFunc, isFieldCentricFunc);
     }
 
     @Override
     public void initialize() {
         swerveSubsystem.setMaxSpeeds(
-            DriveConstants.kTeleDriveMaxSpeedMetersPerSecond / 4,
-            DriveConstants.kTeleDriveMaxAccelerationUnitsPerSecond / 4,
-            DriveConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond / 4,
-            DriveConstants.kTeleDriveMaxAngularAccelerationUnitsPerSecond / 4
+            DriveConstants.kTeleDriveMaxSpeedMetersPerSecond,
+            DriveConstants.kTeleDriveMaxAccelerationUnitsPerSecond ,
+            DriveConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond,
+            DriveConstants.kTeleDriveMaxAngularAccelerationUnitsPerSecond
         );
     }
 
     @Override
     public void end(boolean interrupted) {
+        if(interrupted) {
+            swerveSubsystem.stopModules();
+        }
+
         swerveSubsystem.setMaxSpeeds(
             DriveConstants.kTeleDriveMaxSpeedMetersPerSecond / 2,
             DriveConstants.kTeleDriveMaxAccelerationUnitsPerSecond / 2,
@@ -44,5 +47,4 @@ public class SlowModeSwerveCommand extends DefaultSwerveXboxCommand {
             DriveConstants.kTeleDriveMaxAngularAccelerationUnitsPerSecond / 2
         );
     }
-    
 }

@@ -11,7 +11,7 @@ public class PivotManualCommand extends Command {
     private final PivotSubsystem pivotSubsystem;
 
     private final Supplier<Double> yJoystick;
-    private final Supplier<Boolean> leftStickButton, dPadUp, dPadDown;
+    private final Supplier<Boolean> leftStickButton, dPadUp, dPadDown, dPadRight;
 
     private boolean mode; // true = manual, false = auto
 
@@ -19,12 +19,14 @@ public class PivotManualCommand extends Command {
             Supplier<Double> yJoystick,
             Supplier<Boolean> leftStickButton,
             Supplier<Boolean> dPadUp,
-            Supplier<Boolean> dPadDown) {
+            Supplier<Boolean> dPadDown,
+            Supplier<Boolean> dPadRight) {
 
         this.yJoystick = yJoystick;
         this.leftStickButton = leftStickButton;
         this.dPadUp = dPadUp;
         this.dPadDown = dPadDown;
+        this.dPadRight = dPadRight;
         this.pivotSubsystem = pivotSubsystem;
 
         addRequirements(pivotSubsystem);
@@ -50,26 +52,25 @@ public class PivotManualCommand extends Command {
         //     pivotSubsystem.setRev(0);
 
         // } else {    // Automatic Control
-        //     if (dPadDown.get()) { // If dpad down is pressed, sets to automatic mode and changes to the next lowest preset as target
-        //         mode = false;
-        //         pivotSubsystem.subtractIndex();
-
-        //     } else if (dPadUp.get()) {  // if dpad up is pressed, sets to automatic mode and changes to next highest preset as target
-        //         mode = false;
-        //         pivotSubsystem.addIndex();
-        //     }
-        // }
-
-        // remove before official use
         double output = yJoystick.get();
 
-        //pivotSubsystem.setSpeed(output * Constants.PivotConstants.PIVOT_TELEOP_SPEED);
-        if (Math.abs(output) > Constants.OIConstants.PIVOT_DEADZONE) {
+        if (dPadDown.get()) { // If dpad down is pressed, sets to automatic mode and changes to the next lowest preset as target
+            mode = false;
+            pivotSubsystem.subtractIndex();
+
+        } else if (dPadUp.get()) {  // if dpad up is pressed, sets to automatic mode and changes to next highest preset as target
+            mode = false;
+            pivotSubsystem.addIndex();
+        } else if (dPadRight.get()) {
+            mode = true;
+        } else if (Math.abs(output) > Constants.OIConstants.PIVOT_DEADZONE) {
+            mode = true;
             pivotSubsystem.setSpeed(Math.signum(output) * Constants.PivotConstants.PIVOT_TELEOP_SPEED);
-        } else {
+        } else if(!mode && Math.abs(pivotSubsystem.getDegrees() + pivotSubsystem.getPreset()) > PivotConstants.MAX_ERROR) {
+            pivotSubsystem.goToPreset();
+        }  else {  
             pivotSubsystem.stop();
         }
-
         /*
         if(mode) { 
             manualControl();

@@ -25,8 +25,8 @@ import frc.robot.util.TabManager.SubsystemTab;
 public class ClimbSubsystem extends SubsystemBase {
 
     private CANSparkMax climbMotorLeft, climbMotorRight;
-    private RelativeEncoder leftEncoder; // , rightEncoder;
-    private SparkPIDController controller;
+    //private RelativeEncoder leftEncoder; // , rightEncoder;
+    //private SparkPIDController controller;
 
     /**
      * Constructs a ClimbSubsystem instance
@@ -47,37 +47,37 @@ public class ClimbSubsystem extends SubsystemBase {
         climbMotorRight.setIdleMode(IdleMode.kBrake);
 
         // Get Encoders
-        leftEncoder = climbMotorLeft.getEncoder();
+        //leftEncoder = climbMotorLeft.getEncoder();
         // rightEncoder = climbMotorRight.getEncoder();
 
         // Get PID controllers
-        controller = climbMotorLeft.getPIDController();
+        //controller = climbMotorLeft.getPIDController();
 
         // Set Climb Motor 2 to follow Climb Motor 1
         // TODO: Test with + without, there may be a delay 
         climbMotorRight.follow(climbMotorLeft);
 
         // PID Stuff
-        controller.setOutputRange(
-            ClimbConstants.PID_MIN_OUTPUT,
-            ClimbConstants.PID_MAX_OUTPUT
-        );
-        controller.setFeedbackDevice(leftEncoder);
-        controller.setP(ClimbConstants.kP);
-        controller.setI(ClimbConstants.kI);
-        controller.setD(ClimbConstants.kD);
-        controller.setSmartMotionAccelStrategy(
-            AccelStrategy.kTrapezoidal,
-            ClimbConstants.SLOT_ID
-        );
-        controller.setSmartMotionMaxVelocity(
-            ClimbConstants.MAX_VELOCITY,
-            ClimbConstants.SLOT_ID
-        );
-        controller.setSmartMotionMaxAccel(
-            ClimbConstants.MAX_ACCELERATION,
-            ClimbConstants.SLOT_ID
-        );
+        // controller.setOutputRange(
+        //     ClimbConstants.PID_MIN_OUTPUT,
+        //     ClimbConstants.PID_MAX_OUTPUT
+        // );
+        // controller.setFeedbackDevice(leftEncoder);
+        // controller.setP(ClimbConstants.kP);
+        // controller.setI(ClimbConstants.kI);
+        // controller.setD(ClimbConstants.kD);
+        // controller.setSmartMotionAccelStrategy(
+        //     AccelStrategy.kTrapezoidal,
+        //     ClimbConstants.SLOT_ID
+        // );
+        // controller.setSmartMotionMaxVelocity(
+        //     ClimbConstants.MAX_VELOCITY,
+        //     ClimbConstants.SLOT_ID
+        // );
+        // controller.setSmartMotionMaxAccel(
+        //     ClimbConstants.MAX_ACCELERATION,
+        //     ClimbConstants.SLOT_ID
+        // );
 
         initShuffleboard();
     }
@@ -87,26 +87,26 @@ public class ClimbSubsystem extends SubsystemBase {
      *
      * @param pos The position to climb to
      */
-    public void setPosition(double pos) {
-        if (pos > ClimbConstants.EXTENSION_LIMIT) {
-            pos = ClimbConstants.EXTENSION_LIMIT;
-            DriverStation.reportWarning(
-                "Climb position was set above the extension limit.",
-                false
-            );
-        }
+    // public void setPosition(double pos) {
+    //     if (pos > ClimbConstants.EXTENSION_LIMIT) {
+    //         pos = ClimbConstants.EXTENSION_LIMIT;
+    //         DriverStation.reportWarning(
+    //             "Climb position was set above the extension limit.",
+    //             false
+    //         );
+    //     }
 
-        controller.setReference(pos, ControlType.kSmartMotion);
-    }
+    //     controller.setReference(pos, ControlType.kSmartMotion);
+    // }
 
     /**
      * Gets the position using the left encoder
      *
      * @return Current position from left motor encoder
      */
-    public double getPosition() {
-        return leftEncoder.getPosition();
-    }
+    // public double getPosition() {
+    //     return leftEncoder.getPosition();
+    // }
 
     /**
      * Returns left motor current
@@ -141,7 +141,7 @@ public class ClimbSubsystem extends SubsystemBase {
             .accessTab(SubsystemTab.CLIMB);
         ShuffleboardLayout persianPositions = moduleData.getLayout("Persian Positions", BuiltInLayouts.kList);
 
-        persianPositions.addNumber("Left Climb Position", () -> leftEncoder.getPosition());
+        persianPositions.addNumber("Left Climb Position", () -> climbMotorLeft.getEncoder().getPosition());
 
         persianPositions.addNumber("Right Climb Position", () -> climbMotorRight.getEncoder().getPosition());
 
