@@ -1,4 +1,4 @@
-package frc.robot.commands.Teleop.swerve;
+package frc.robot.commands.Teleop.swerve.field;
 
 import java.util.function.Supplier;
 
@@ -7,7 +7,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.subsystems.SwerveSubsystem;
 
-public class TurboModeSwerveCommand  extends AbstractSwerveXboxCommand {
+public class TurboModeSwerveCommand  extends DefaultSwerveXboxCommand {
     public TurboModeSwerveCommand(
         SwerveSubsystem swerveSubsystem,
         Supplier<Double> xSpdFunc,
