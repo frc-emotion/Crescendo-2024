@@ -1,4 +1,4 @@
-package frc.robot.commands.Teleop.swerve;
+package frc.robot.commands.Teleop.swerve.field;
 
 import java.util.function.Supplier;
 
@@ -35,6 +35,7 @@ public class DefaultSwerveXboxCommand extends AbstractSwerveXboxCommand {
     @Override
     public void execute() {
         super.execute();
+        robotSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, turningSpeed, swerveSubsystem.getRotation2d());
         sendSpeedsToSubsystem();
     }
 }
