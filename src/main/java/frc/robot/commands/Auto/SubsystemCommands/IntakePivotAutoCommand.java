@@ -18,15 +18,16 @@ public class IntakePivotAutoCommand extends InstantCommand {
     @Override
     public void initialize() {
         intakeSubsystem.toggleState();
+
     }
 
     @Override
     public void execute() {
-        if(intakeSubsystem.isDown()){
-            intakeSubsystem.setReference(IntakeConstants.INTAKE_DOWN_POSITION);
-        } else {
-            intakeSubsystem.setReference(IntakeConstants.INTAKE_UP_POSITION);
-        }
+        // if(intakeSubsystem.isDown()){
+        //     intakeSubsystem.setReference(IntakeConstants.INTAKE_DOWN_POSITION);
+        // } else {
+        //     intakeSubsystem.setReference(IntakeConstants.INTAKE_UP_POSITION);
+        // }
     }
 
     public static Command getAutoCommand() {

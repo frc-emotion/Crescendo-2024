@@ -1,9 +1,7 @@
 package frc.robot.commands.Teleop;
 
-import java.util.function.Supplier;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.subsystems.IntakeSubsystem;
 
@@ -18,17 +16,28 @@ public class IntakePivotCommand extends Command {
     }
 
     @Override
+    public void initialize() {
+        if(intakeSubsystem.isDown()) {
+            intakeSubsystem.setGoal(IntakeConstants.DEPLOYED_POS);
+        } else {
+            intakeSubsystem.setGoal(IntakeConstants.RETRACTED_POS);
+        }
+    }
+
+    @Override
     public void execute() {
         // if (leftAxis.get() > Constants.OIConstants.INTAKE_DEADZONE) {
         //     intakeSubsystem.revSimplePivot();
         // } else if (rightAxis.get() > Constants.OIConstants.INTAKE_DEADZONE) {
         //     intakeSubsystem.simplePivot();
         // }
-        if(intakeSubsystem.isDown()){
-            intakeSubsystem.revSimplePivot();
-        } else {
-            intakeSubsystem.simplePivot();
-        }
+        // if(intakeSubsystem.isDown()){
+        //     intakeSubsystem.revSimplePivot();
+        // } else {
+        //     intakeSubsystem.simplePivot();
+        // }
+
+        intakeSubsystem.travelToSetpoint();
     }
 
     @Override
@@ -39,6 +48,6 @@ public class IntakePivotCommand extends Command {
 
     @Override
     public boolean isFinished(){
-        return intakeSubsystem.checkCurrentSpike();
+        return intakeSubsystem.hasReachedSetpoint();
     }
 }

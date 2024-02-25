@@ -45,10 +45,10 @@ public class ShooterManualCommand extends Command {
             }
             feederState = !feederState;
             */
-            shooterSubsystem.setShooterVelocity(4000);
+            shooterSubsystem.runToTargetRPM();
             
         } else {
-            shooterSubsystem.stopShooter();
+            shooterSubsystem.setShooterVelocity(ShooterConstants.IDLE_SPEED);
         }
 
         if(feederSupplier.get()) {
@@ -65,7 +65,6 @@ public class ShooterManualCommand extends Command {
             try {
                 wait(100);
             } catch(InterruptedException iex) {
-                
                 end(true);
             }
         }

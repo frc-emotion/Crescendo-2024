@@ -5,7 +5,7 @@
 package frc.robot;
 
 import frc.robot.Constants.OIConstants;
-
+import frc.robot.Constants.ShooterConstants;
 import frc.robot.subsystems.*;
 import frc.robot.commands.Auto.SubsystemCommands.IntakeDriveAutoCommand;
 import frc.robot.commands.Teleop.*;
@@ -142,6 +142,7 @@ public class RobotContainer {
         // m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
 
         m_operatorController.a().onTrue(new InstantCommand() {
+            @Override
             public void execute() {
                 m_PivotSubsystem.calibrate();
             }
@@ -169,13 +170,38 @@ public class RobotContainer {
         );
 
         m_driverController.b().onTrue(new InstantCommand() {
+            @Override
             public void execute() {
                 m_SwerveSubsystem.zeroHeading();
             }
         });
 
+        m_operatorController.povDown().or(m_operatorController.povUp()).onTrue(new InstantCommand() {
+            @Override
+            public void execute() {
+                int index = m_PivotSubsystem.getIndex();
+                m_ShooterSubsystem.setTargetRPM(ShooterConstants.PRESET_SPEEDS[index]);
+            }
+        });
+
         m_operatorController.x().onTrue(
             new IntakePivotCommand(m_IntakeSubsystem)
+        );
+
+        m_operatorController.leftTrigger(OIConstants.kDeadband).whileTrue(
+            new Command() {
+                @Override
+                public void execute() {
+                    m_IntakeSubsystem.intakeForward();
+                    m_ShooterSubsystem.setFeederSpeed(ShooterConstants.kFeedSpeed);
+                }
+
+                @Override
+                public void end(boolean interrupted) {
+                    m_IntakeSubsystem.intakeStop();
+                    m_ShooterSubsystem.stopFeeder();
+                }
+            }
         );
     }
 

@@ -25,7 +25,7 @@ import frc.robot.util.TabManager.SubsystemTab;
 public class ClimbSubsystem extends SubsystemBase {
 
     private CANSparkMax climbMotorLeft, climbMotorRight;
-    //private RelativeEncoder leftEncoder; // , rightEncoder;
+    private RelativeEncoder leftEncoder, rightEncoder;
     //private SparkPIDController controller;
 
     /**
@@ -47,8 +47,8 @@ public class ClimbSubsystem extends SubsystemBase {
         climbMotorRight.setIdleMode(IdleMode.kBrake);
 
         // Get Encoders
-        //leftEncoder = climbMotorLeft.getEncoder();
-        // rightEncoder = climbMotorRight.getEncoder();
+        leftEncoder = climbMotorLeft.getEncoder();
+        rightEncoder = climbMotorRight.getEncoder();
 
         // Get PID controllers
         //controller = climbMotorLeft.getPIDController();
@@ -132,6 +132,14 @@ public class ClimbSubsystem extends SubsystemBase {
     public void stop() {
         climbMotorLeft.stopMotor();
         climbMotorRight.stopMotor();
+    }
+
+    /** 
+     * Resets encoders
+     */
+    public void reset() {
+        leftEncoder.setPosition(0);
+        rightEncoder.setPosition(0);
     }
 
 

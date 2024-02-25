@@ -303,6 +303,9 @@ public final class Constants {
         public static final int BREAK_SENSOR_PORT = 0;
 		public static final double GEAR_REDUCTION = 0.5;
         public static final int CURRENT_LIMIT_SMART = 20;
+
+        public static final double[] PRESET_SPEEDS = {100, 4000};
+        public static final double IDLE_SPEED = PRESET_SPEEDS[0];
     }
 
     public static final class PivotConstants {
@@ -360,6 +363,16 @@ public final class Constants {
         
         public static final double INTAKE_ENCODER_OFFSET = 0;
 		public static final double GEAR_REDUCTION = 82.8;
+
+        public static final double kMaxVelocity = 0;
+        public static final double kMaxAccel = 0;
+
+        public static final double DEPLOYED_POS = 0;
+        public static final double RETRACTED_POS = 0;
+        
+        public static final int BEAM_BREAKER_PORT = 1;
+
+        public static final double[] PRESET_SPEEDS = {100, 3000};
     }
 
 }

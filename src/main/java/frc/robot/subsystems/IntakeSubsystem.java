@@ -6,7 +6,10 @@ import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
+import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -21,7 +24,10 @@ public class IntakeSubsystem extends SubsystemBase {
     private final CANSparkMax pivotMotor;
     private final CANSparkMax intakeMotor;
 
-    private final SparkPIDController pivotController;
+    private final DigitalInput breakSensor;
+
+    //private final SparkPIDController pivotController;
+    private final ProfiledPIDController pivotController;
 
     public boolean down;
     
@@ -40,11 +46,20 @@ public class IntakeSubsystem extends SubsystemBase {
         pivotMotor.setSecondaryCurrentLimit(IntakeConstants.MAX_CURRENT);
         pivotMotor.setIdleMode(IdleMode.kBrake);
 
-        pivotController = pivotMotor.getPIDController();
-        pivotController.setP(IntakeConstants.kP_PIVOT);
-        pivotController.setI(IntakeConstants.kI_PIVOT);
-        pivotController.setD(IntakeConstants.kD_PIVOT);
-        pivotController.setOutputRange(IntakeConstants.MIN_POSITION, IntakeConstants.MAX_POSITION);
+        pivotController = new ProfiledPIDController(
+            IntakeConstants.kP_PIVOT, 
+            IntakeConstants.kI_PIVOT, 
+            IntakeConstants.kD_PIVOT, 
+            new TrapezoidProfile.Constraints(IntakeConstants.kMaxVelocity, IntakeConstants.kMaxAccel)
+        );
+
+        breakSensor = new DigitalInput(IntakeConstants.BEAM_BREAKER_PORT);
+        
+        
+        // pivotController.setP(IntakeConstants.kP_PIVOT);
+        // pivotController.setI(IntakeConstants.kI_PIVOT);
+        // pivotController.setD(IntakeConstants.kD_PIVOT);
+        // pivotController.setOutputRange(IntakeConstants.MIN_POSITION, IntakeConstants.MAX_POSITION);
 
         pivotMotor.getEncoder().setPositionConversionFactor(1.0 / IntakeConstants.GEAR_REDUCTION);
     
@@ -59,10 +74,6 @@ public class IntakeSubsystem extends SubsystemBase {
         return down;
     }
 
-    public void setReference(double position) {
-        pivotController.setReference(position, ControlType.kPosition);
-    }
-
     public boolean checkCurrentSpike(){
         return pivotMotor.getOutputCurrent() > IntakeConstants.CURRENT_SPIKE_THRESHOLD;
 
@@ -74,6 +85,22 @@ public class IntakeSubsystem extends SubsystemBase {
 
     public void pivotStop(){
         pivotMotor.set(0);
+    }
+
+    public void setGoal(double position) {
+        pivotController.setGoal(position);
+    }
+
+    public void travelToSetpoint() {
+        pivotMotor.set(pivotController.calculate(getPosition()));
+    }
+
+    public boolean hasReachedSetpoint() {
+        return pivotController.atSetpoint();
+    }
+
+    public boolean getBeamState() {
+        return breakSensor.get();
     }
 
 

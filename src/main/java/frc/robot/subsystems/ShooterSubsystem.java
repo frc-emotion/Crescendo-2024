@@ -29,6 +29,8 @@ public class ShooterSubsystem extends SubsystemBase {
 
     private DigitalInput breakSensor;
 
+    private double targetRPM;
+
     public ShooterSubsystem() {
         shooterMotor =
             new CANSparkMax(ShooterConstants.shooterPort, MotorType.kBrushless);
@@ -79,6 +81,9 @@ public class ShooterSubsystem extends SubsystemBase {
         */
 
         breakSensor = new DigitalInput(ShooterConstants.BREAK_SENSOR_PORT);
+
+        targetRPM = 0;
+
         initShuffleboard();
     }
 
@@ -89,6 +94,18 @@ public class ShooterSubsystem extends SubsystemBase {
 
     public void setShooterVelocity(double speed) {
         controller.setReference(speed / 2, ControlType.kVelocity);
+    }
+
+    public void setTargetRPM(double target) {
+        targetRPM = target;
+    }
+
+    public void runToTargetRPM() {
+        setShooterVelocity(targetRPM);
+    }
+
+    public double getTargetRPM() {
+        return targetRPM;
     }
 
     /**

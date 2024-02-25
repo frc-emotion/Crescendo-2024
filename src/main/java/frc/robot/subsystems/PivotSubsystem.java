@@ -4,6 +4,7 @@ import frc.robot.Constants;
 import frc.robot.Constants.PivotConstants;
 import frc.robot.util.TabManager;
 import frc.robot.util.TabManager.SubsystemTab;
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
@@ -32,7 +33,7 @@ public class PivotSubsystem extends SubsystemBase {
         pivotMotor.setIdleMode(IdleMode.kBrake);
         pivotMotor.setSmartCurrentLimit(Constants.PivotConstants.MAX_CURRENT_SMART);
         pivotMotor.setSecondaryCurrentLimit(Constants.PivotConstants.MAX_CURRENT);
-        
+
         pivotPID = pivotMotor.getPIDController();
 
         pivotPID.setP(Constants.PivotConstants.PIVOT_KP);
@@ -46,7 +47,7 @@ public class PivotSubsystem extends SubsystemBase {
         relativeEncoder = pivotMotor.getEncoder();
 
         relativeEncoder.setPositionConversionFactor((-1.0 / PivotConstants.GEAR_REDUCTION) * 360);
-        relativeEncoder.setPosition(-60.0);
+        resetPosition(-60.0);
 
         initShuffleboard();
     }
@@ -62,6 +63,10 @@ public class PivotSubsystem extends SubsystemBase {
         layout.addNumber("Current Preset", this::getPreset);
 
         layout.withSize(2, 4);
+    }
+
+    public void resetPosition(double offset) {
+        relativeEncoder.setPosition(offset);
     }
 
     public int getIndex() {

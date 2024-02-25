@@ -29,6 +29,14 @@ public class IntakeDriveCommand extends Command {
 
     @Override
     public void execute() {
+
+        //if beambreak not triggered
+        // continue with triggers
+        if(intakeSubsystem.getBeamState() && intakeSubsystem.isDown()) {
+            intakeSubsystem.intakeStop();
+            return;
+        }
+
         if(rightBumper.get()){
             intakeSubsystem.intakeForward();
         }
