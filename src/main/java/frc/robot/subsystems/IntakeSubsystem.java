@@ -23,6 +23,7 @@ public class IntakeSubsystem extends SubsystemBase {
 
     private final CANSparkMax pivotMotor;
     private final CANSparkMax intakeMotor;
+    private final CANSparkMax intakeMotor2;
 
     private final DigitalInput breakSensor;
 
@@ -37,10 +38,14 @@ public class IntakeSubsystem extends SubsystemBase {
 
         pivotMotor = new CANSparkMax(IntakeConstants.INTAKE_PIVOT_PORT, MotorType.kBrushless);
         intakeMotor = new CANSparkMax(IntakeConstants.INTAKE_MOTOR_PORT, MotorType.kBrushless);
+        intakeMotor2 = new CANSparkMax(IntakeConstants.INTAKE_MOTOR_PORT, MotorType.kBrushless);
 
         intakeMotor.setSmartCurrentLimit(IntakeConstants.MAX_CURRENT);
         intakeMotor.setSecondaryCurrentLimit(IntakeConstants.MAX_CURRENT);
         intakeMotor.setIdleMode(IdleMode.kCoast);
+        intakeMotor2.setSmartCurrentLimit(IntakeConstants.MAX_CURRENT);
+        intakeMotor2.setSecondaryCurrentLimit(IntakeConstants.MAX_CURRENT);
+        intakeMotor2.setIdleMode(IdleMode.kCoast);
  
         pivotMotor.setSmartCurrentLimit(IntakeConstants.MAX_CURRENT);
         pivotMotor.setSecondaryCurrentLimit(IntakeConstants.MAX_CURRENT);
@@ -122,14 +127,17 @@ public class IntakeSubsystem extends SubsystemBase {
 
     public void intakeForward() {
         intakeMotor.set(IntakeConstants.INTAKE_MOTOR_SPEED);
+        intakeMotor2.set(IntakeConstants.INTAKE_MOTOR_SPEED);
     }
 
     public void intakeReverse() {
         intakeMotor.set(-IntakeConstants.INTAKE_MOTOR_SPEED);
+        intakeMotor2.set(-IntakeConstants.INTAKE_MOTOR_SPEED);
     }
 
     public void intakeStop() {
         intakeMotor.set(0);
+        intakeMotor2.set(0);
     }
 
     private void initShuffleboard() {
@@ -139,6 +147,7 @@ public class IntakeSubsystem extends SubsystemBase {
         ShuffleboardLayout persianPositions = moduleData.getLayout("Persian Positions", BuiltInLayouts.kList);
 
         persianPositions.addNumber("Intake Motor Position", () -> intakeMotor.getEncoder().getPosition());
+        persianPositions.addNumber("Intake Motor2 Position", () -> intakeMotor2.getEncoder().getPosition());
 
         persianPositions.addNumber("Pivot Motor Position", () -> pivotMotor.getEncoder().getPosition());
 
