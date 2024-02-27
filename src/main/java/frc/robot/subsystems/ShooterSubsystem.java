@@ -108,6 +108,10 @@ public class ShooterSubsystem extends SubsystemBase {
         return targetRPM;
     }
 
+    public boolean isAtTarget() {
+        return Math.abs(shooterEncoder.getVelocity() - targetRPM) < ShooterConstants.kMaxOutputError;
+    }
+
     /**
      * Gets the speed of the shooter.
      *

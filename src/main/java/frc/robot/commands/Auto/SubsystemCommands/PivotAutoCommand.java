@@ -22,16 +22,10 @@ public class PivotAutoCommand extends Command {
     public void execute() {
         pivotSubsystem.goToPreset();
     
-    
-    }
-
-    @Override
-    public void end(boolean interrupted) {
-        
     }
 
     @Override
     public boolean isFinished() {
-        return false; // pivotSubsystem.isAtTarget();
+        return pivotSubsystem.isAtTarget();
     }
 }

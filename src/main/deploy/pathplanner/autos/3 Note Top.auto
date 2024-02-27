@@ -12,15 +12,40 @@
     "data": {
       "commands": [
         {
-          "type": "path",
+          "type": "named",
           "data": {
-            "pathName": "Pickup Top"
+            "name": "ScoreSpeaker"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "IntakeNote"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Pickup Top"
+                }
+              }
+            ]
           }
         },
         {
           "type": "path",
           "data": {
             "pathName": "Score Top"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ScoreSpeaker"
           }
         },
         {
@@ -30,9 +55,22 @@
           }
         },
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "Pickup Mid"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "IntakeNote"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Pickup Mid"
+                }
+              }
+            ]
           }
         },
         {
@@ -40,10 +78,16 @@
           "data": {
             "pathName": "Score Top"
           }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ScoreSpeaker"
+          }
         }
       ]
     }
   },
-  "folder": "New Autos",
+  "folder": null,
   "choreoAuto": false
 }

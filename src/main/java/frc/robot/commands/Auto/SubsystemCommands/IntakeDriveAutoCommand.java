@@ -6,29 +6,24 @@ import frc.robot.subsystems.IntakeSubsystem;
 
 public class IntakeDriveAutoCommand extends InstantCommand {
     private IntakeSubsystem intakeSubsystem;
-    private PersianState persianState;
-
-    public enum PersianState {
-        ON,
-        REVERSE,
-        OFF;
-    }
     
-    public IntakeDriveAutoCommand(IntakeSubsystem intakeSubsystem, PersianState persianState) {
+    public IntakeDriveAutoCommand(IntakeSubsystem intakeSubsystem) {
         this.intakeSubsystem = intakeSubsystem;
-        this.persianState = persianState;
         addRequirements(intakeSubsystem);
     }
 
     @Override
     public void execute() {
-        switch (persianState) {
-            case ON:
-                intakeSubsystem.intakeForward();
-            case REVERSE:
-                intakeSubsystem.intakeReverse();
-            case OFF:
-                intakeSubsystem.intakeStop();  
-        }
+        intakeSubsystem.intakeForward();
+    }
+
+    @Override
+    public boolean isFinished() {
+        return intakeSubsystem.getBeamState();
+    }
+
+    @Override
+    public void end(boolean interrupted) {
+        intakeSubsystem.intakeStop();
     }
 }

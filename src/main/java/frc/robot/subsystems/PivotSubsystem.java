@@ -145,4 +145,8 @@ public class PivotSubsystem extends SubsystemBase {
         pivotPID.setReference(target, ControlType.kPosition);
     }
 
+    public boolean isAtTarget() {
+        return Math.abs(relativeEncoder.getVelocity() - getPreset()) < PivotConstants.MAX_ERROR;
+    }
+
 }
