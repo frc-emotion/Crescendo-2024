@@ -22,8 +22,8 @@ import frc.robot.util.TabManager.SubsystemTab;
 public class IntakeSubsystem extends SubsystemBase {
 
     private final CANSparkMax pivotMotor;
+    private final CANSparkMax pivotMotor2;
     private final CANSparkMax intakeMotor;
-    private final CANSparkMax intakeMotor2;
 
     private final DigitalInput breakSensor;
 
@@ -37,19 +37,23 @@ public class IntakeSubsystem extends SubsystemBase {
         down = false; 
 
         pivotMotor = new CANSparkMax(IntakeConstants.INTAKE_PIVOT_PORT, MotorType.kBrushless);
+        pivotMotor2 = new CANSparkMax(IntakeConstants.INTAKE_PIVOT_2_PORT, MotorType.kBrushless);
         intakeMotor = new CANSparkMax(IntakeConstants.INTAKE_MOTOR_PORT, MotorType.kBrushless);
-        intakeMotor2 = new CANSparkMax(IntakeConstants.INTAKE_MOTOR_PORT, MotorType.kBrushless);
 
-        intakeMotor.setSmartCurrentLimit(IntakeConstants.MAX_CURRENT);
+        intakeMotor.setSmartCurrentLimit(IntakeConstants.SMART_MAX_CURRENT);
         intakeMotor.setSecondaryCurrentLimit(IntakeConstants.MAX_CURRENT);
         intakeMotor.setIdleMode(IdleMode.kCoast);
-        intakeMotor2.setSmartCurrentLimit(IntakeConstants.MAX_CURRENT);
-        intakeMotor2.setSecondaryCurrentLimit(IntakeConstants.MAX_CURRENT);
-        intakeMotor2.setIdleMode(IdleMode.kCoast);
  
-        pivotMotor.setSmartCurrentLimit(IntakeConstants.MAX_CURRENT);
+        pivotMotor.setSmartCurrentLimit(IntakeConstants.SMART_MAX_CURRENT);
         pivotMotor.setSecondaryCurrentLimit(IntakeConstants.MAX_CURRENT);
         pivotMotor.setIdleMode(IdleMode.kBrake);
+
+        pivotMotor2.setSmartCurrentLimit(IntakeConstants.SMART_MAX_CURRENT);
+        pivotMotor2.setSecondaryCurrentLimit(IntakeConstants.MAX_CURRENT);
+        pivotMotor2.setIdleMode(IdleMode.kBrake);
+        pivotMotor2.setInverted(true);
+
+        pivotMotor2.follow(pivotMotor);
 
         pivotController = new ProfiledPIDController(
             IntakeConstants.kP_PIVOT, 
@@ -57,6 +61,7 @@ public class IntakeSubsystem extends SubsystemBase {
             IntakeConstants.kD_PIVOT, 
             new TrapezoidProfile.Constraints(IntakeConstants.kMaxVelocity, IntakeConstants.kMaxAccel)
         );
+        pivotController.setTolerance(IntakeConstants.kMaxError);
 
         breakSensor = new DigitalInput(IntakeConstants.BEAM_BREAKER_PORT);
         
@@ -86,6 +91,10 @@ public class IntakeSubsystem extends SubsystemBase {
 
     public double getPosition() {
         return pivotMotor.getEncoder().getPosition();
+    }
+
+    public double getDegrees() {
+        return (pivotMotor.getEncoder().getPosition() / IntakeConstants.GEAR_REDUCTION) * 360.0;
     }
 
     public void pivotStop(){
@@ -127,17 +136,14 @@ public class IntakeSubsystem extends SubsystemBase {
 
     public void intakeForward() {
         intakeMotor.set(IntakeConstants.INTAKE_MOTOR_SPEED);
-        intakeMotor2.set(IntakeConstants.INTAKE_MOTOR_SPEED);
     }
 
     public void intakeReverse() {
         intakeMotor.set(-IntakeConstants.INTAKE_MOTOR_SPEED);
-        intakeMotor2.set(-IntakeConstants.INTAKE_MOTOR_SPEED);
     }
 
     public void intakeStop() {
         intakeMotor.set(0);
-        intakeMotor2.set(0);
     }
 
     private void initShuffleboard() {
@@ -147,9 +153,10 @@ public class IntakeSubsystem extends SubsystemBase {
         ShuffleboardLayout persianPositions = moduleData.getLayout("Persian Positions", BuiltInLayouts.kList);
 
         persianPositions.addNumber("Intake Motor Position", () -> intakeMotor.getEncoder().getPosition());
-        persianPositions.addNumber("Intake Motor2 Position", () -> intakeMotor2.getEncoder().getPosition());
 
         persianPositions.addNumber("Pivot Motor Position", () -> pivotMotor.getEncoder().getPosition());
+        persianPositions.addNumber("Pivot Motor 2 Position", () -> pivotMotor.getEncoder().getPosition());
+        persianPositions.addNumber("Pivot Position Degrees", this::getDegrees);
 
         persianPositions.addDouble("Current", () -> pivotMotor.getOutputCurrent());
 

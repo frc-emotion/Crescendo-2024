@@ -326,14 +326,13 @@ public final class Constants {
         public static final double PIVOT_MIN_REVOLUTION = 5;
         public static final double PIVOT_MAX_REVOLUTION = 83;
         public static final double PIVOT_THRESHOLD = 6;
+        public static final double[] PIVOT_POSITIONS = {-60.0, 0};
 
         public static final double TRIGGER_THRESHOLD = 0.3;
         public static final int absoluteEncoderID = 69;
-
-        public static final double placeholder = 0.0;
-        public static final double[] PIVOT_POSITIONS = {-60.0, 0};
+        
         public static final double CURRENT_SPIKE_THRESHOLD = 0;
-        public static final double GEAR_REDUCTION = 60.0;
+        public static final double GEAR_REDUCTION = 75.0;
 
         public static final double MAX_ERROR = 3;
 
@@ -342,37 +341,65 @@ public final class Constants {
     
 
     public static final class IntakeConstants {
+
+            // CAN IDs and Ports
         public static final int INTAKE_PIVOT_PORT = 15;
         public static final int INTAKE_MOTOR_PORT = 19;
+        public static final int INTAKE_PIVOT_2_PORT = 25;
+        public static final int BEAM_BREAKER_PORT = 1;
+
+            // Motor Limits
         public static final int MAX_CURRENT = 45;
+        public static final int SMART_MAX_CURRENT = 20;
         public static final double CURRENT_SPIKE_THRESHOLD = 5.2; 
         public static final double INTAKE_MOTOR_SPEED = 0.5;
         public static final double INTAKE_PIVOT_SPEED = 0.3;
 
-        public static final double kS = 0;
-        public static final double kG = 0;
-        public static final double kV = 0; 
-        public static final double kP_PIVOT = 0;
-        public static final double kI_PIVOT = 0;
-        public static final double kD_PIVOT = 0;
-
+        /*
         public static final double MAX_POSITION = 0;
         public static final double MIN_POSITION = 0; 
         public static final double INTAKE_DOWN_POSITION = 0;
         public static final double INTAKE_UP_POSITION = 0;
-        
-        public static final double INTAKE_ENCODER_OFFSET = 0;
+        */
+    
+            // Intake Pivot Constants
+        public static final double kP_PIVOT = 0.01;
+        public static final double kI_PIVOT = 0;
+        public static final double kD_PIVOT = 0;
+
 		public static final double GEAR_REDUCTION = 82.8;
 
-        public static final double kMaxVelocity = 0;
-        public static final double kMaxAccel = 0;
+            // Input Constants
+        private static final double kMaxVelocityDeg = 20;
+        private static final double kMaxAccelDeg = 5;
+        private static final double kMaxErrorDeg = 3;
 
-        public static final double DEPLOYED_POS = 0;
-        public static final double RETRACTED_POS = 0;
+        private static final double DEPLOYED_POS_DEG =30;
+        private static final double RETRACTED_POS_DEG = 0;
+
+
+        //  Do not edit these constants -------------
+
+            // Actual Constants
+        public static final double kMaxVelocity = pivotDegreesToMeters(kMaxVelocityDeg);
+        public static final double kMaxAccel = pivotDegreesToMeters(kMaxAccelDeg);
+        public static final double kMaxError = pivotDegreesToMeters(kMaxErrorDeg);
         
-        public static final int BEAM_BREAKER_PORT = 1;
+        public static final double DEPLOYED_POS = pivotDegreesToMeters(DEPLOYED_POS_DEG);
+        public static final double RETRACTED_POS = pivotDegreesToMeters(RETRACTED_POS_DEG);
 
-        public static final double[] PRESET_SPEEDS = {100, 3000};
+        // -----------------------------------------
+
+        /**
+         * Converts degrees to the number of meters to feed as the targets for PID
+         * 
+         * @param degrees   The target number of degrees
+         * @return          The equivalent measurement in meters
+         */
+        private static double pivotDegreesToMeters(double degrees) {
+            return (degrees / 360.0) / GEAR_REDUCTION;
+        }
+        
     }
 
 }
