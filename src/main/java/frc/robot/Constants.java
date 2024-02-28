@@ -242,6 +242,8 @@ public final class Constants {
         public static final double INTAKE_TIMEOUT = 0;
 
         public static final double SHOOTER_SPEED_RPM = 2000.0;
+
+        public static final double SCORE_SPEAKER_TIMEOUT = 3.0;
     }
 
     public static final class CameraConstants {
