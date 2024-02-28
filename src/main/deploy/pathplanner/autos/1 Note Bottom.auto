@@ -2,19 +2,25 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.75,
-      "y": 4.5
+      "x": 1.3509924162705473,
+      "y": 5.570593998330854
     },
-    "rotation": -60.0
+    "rotation": 0
   },
   "command": {
     "type": "sequential",
     "data": {
       "commands": [
         {
+          "type": "named",
+          "data": {
+            "name": "ScoreSpeaker"
+          }
+        },
+        {
           "type": "path",
           "data": {
-            "pathName": "2 Note Bottom Path "
+            "pathName": "Travel Out Of Line"
           }
         }
       ]

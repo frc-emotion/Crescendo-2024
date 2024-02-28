@@ -2,37 +2,31 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.3826715309960145,
-      "y": 5.565873600441298
+      "x": 1.248376211038137,
+      "y": 5.52661562465982
     },
-    "rotation": 0
+    "rotation": 0.0
   },
   "command": {
     "type": "sequential",
     "data": {
       "commands": [
         {
+          "type": "named",
+          "data": {
+            "name": "ScoreSpeaker"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 10.0
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "Pickup Mid"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Score Middle"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Pickup Top"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Score Middle"
           }
         }
       ]

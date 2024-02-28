@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkPIDController;
 import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkBase.IdleMode;
@@ -155,14 +156,14 @@ public class IntakeSubsystem extends SubsystemBase {
             .accessTab(SubsystemTab.INTAKE);
         ShuffleboardLayout persianPositions = moduleData.getLayout("Persian Positions", BuiltInLayouts.kList);
 
-        persianPositions.addNumber("Intake Motor Position", () -> intakeMotor.getEncoder().getPosition());
+        //persianPositions.addNumber("Intake Motor Position", () -> intakeMotor.getEncoder().getPosition());
 
-        persianPositions.addNumber("Pivot Motor Position", () -> pivotMotor.getEncoder().getPosition());
-        persianPositions.addNumber("Pivot Motor 2 Position", () -> pivotMotor2.getEncoder().getPosition());
+        persianPositions.addNumber("Pivot Motor Position", this::getPosition);
+        //persianPositions.addNumber("Pivot Motor 2 Position", () -> pivotMotor2.getEncoder().getPosition());
         persianPositions.addNumber("Pivot Position Degrees", this::getDegrees);
         persianPositions.addBoolean("Beam Break", () -> getBeamState());
 
-        persianPositions.addDouble("Current", () -> pivotMotor.getOutputCurrent());
+        //persianPositions.addDouble("Current", () -> pivotMotor.getOutputCurrent());
 
         persianPositions.withSize(2, 4);
 

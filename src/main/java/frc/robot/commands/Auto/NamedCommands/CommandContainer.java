@@ -24,10 +24,4 @@ public class CommandContainer {
     public Command enRoute(PivotSubsystem pivot) {
         return new PivotAutoCommand(pivot, 1);
     }
-
-    public Command shootSpeaker(IntakeSubsystem intakeSubsystem, ShooterSubsystem shooterSubsystem) {
-        return new SequentialCommandGroup(
-            
-        );
-    }
 }
