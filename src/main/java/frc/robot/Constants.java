@@ -382,32 +382,32 @@ public final class Constants {
         //  Do not edit these constants -------------
 
         // Actual Constants
-        public static final double kMaxVelocity = pivotDegreesToMeters(
+        public static final double kMaxVelocity = pivotDegreesToRevolutions(
             kMaxVelocityDeg
         );
-        public static final double kMaxAccel = pivotDegreesToMeters(
+        public static final double kMaxAccel = pivotDegreesToRevolutions(
             kMaxAccelDeg
         );
-        public static final double kMaxError = pivotDegreesToMeters(
+        public static final double kMaxError = pivotDegreesToRevolutions(
             kMaxErrorDeg
         );
 
-        public static final double DEPLOYED_POS = pivotDegreesToMeters(
+        public static final double DEPLOYED_POS = pivotDegreesToRevolutions(
             DEPLOYED_POS_DEG
         );
-        public static final double RETRACTED_POS = pivotDegreesToMeters(
+        public static final double RETRACTED_POS = pivotDegreesToRevolutions(
             RETRACTED_POS_DEG
         );
 
         // -----------------------------------------
 
         /**
-         * Converts degrees to the number of meters to feed as the targets for PID
+         * Converts degrees to the number of revolutions to feed as the targets for PID
          *
          * @param degrees   The target number of degrees
          * @return          The equivalent measurement in meters
          */
-        private static double pivotDegreesToMeters(double degrees) {
+        private static double pivotDegreesToRevolutions(double degrees) {
             return (degrees / 360.0) / GEAR_REDUCTION;
         }
     }
