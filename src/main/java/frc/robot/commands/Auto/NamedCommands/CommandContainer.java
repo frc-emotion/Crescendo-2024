@@ -27,7 +27,7 @@ public class CommandContainer {
 
     public Command shootSpeaker(IntakeSubsystem intakeSubsystem, ShooterSubsystem shooterSubsystem) {
         return new SequentialCommandGroup(
-            shooterSubsystem.setShooterVelocity(ShooterConstants.PRESET_SPEEDS[1]);
+            
         );
     }
 }

@@ -42,7 +42,7 @@ public class IntakeSubsystem extends SubsystemBase {
 
         intakeMotor.setSmartCurrentLimit(IntakeConstants.SMART_MAX_CURRENT);
         intakeMotor.setSecondaryCurrentLimit(IntakeConstants.MAX_CURRENT);
-        intakeMotor.setIdleMode(IdleMode.kCoast);
+        intakeMotor.setIdleMode(IdleMode.kBrake);
  
         pivotMotor.setSmartCurrentLimit(IntakeConstants.SMART_MAX_CURRENT);
         pivotMotor.setSecondaryCurrentLimit(IntakeConstants.MAX_CURRENT);
@@ -51,9 +51,8 @@ public class IntakeSubsystem extends SubsystemBase {
         pivotMotor2.setSmartCurrentLimit(IntakeConstants.SMART_MAX_CURRENT);
         pivotMotor2.setSecondaryCurrentLimit(IntakeConstants.MAX_CURRENT);
         pivotMotor2.setIdleMode(IdleMode.kBrake);
-        pivotMotor2.setInverted(true);
 
-        pivotMotor2.follow(pivotMotor);
+        pivotMotor2.follow(pivotMotor, true);
 
         pivotController = new ProfiledPIDController(
             IntakeConstants.kP_PIVOT, 
@@ -142,6 +141,10 @@ public class IntakeSubsystem extends SubsystemBase {
         intakeMotor.set(-IntakeConstants.INTAKE_MOTOR_SPEED);
     }
 
+    public void setIntake(double speed) {
+        intakeMotor.set(speed);
+    }
+
     public void intakeStop() {
         intakeMotor.set(0);
     }
@@ -155,8 +158,9 @@ public class IntakeSubsystem extends SubsystemBase {
         persianPositions.addNumber("Intake Motor Position", () -> intakeMotor.getEncoder().getPosition());
 
         persianPositions.addNumber("Pivot Motor Position", () -> pivotMotor.getEncoder().getPosition());
-        persianPositions.addNumber("Pivot Motor 2 Position", () -> pivotMotor.getEncoder().getPosition());
+        persianPositions.addNumber("Pivot Motor 2 Position", () -> pivotMotor2.getEncoder().getPosition());
         persianPositions.addNumber("Pivot Position Degrees", this::getDegrees);
+        persianPositions.addBoolean("Beam Break", () -> getBeamState());
 
         persianPositions.addDouble("Current", () -> pivotMotor.getOutputCurrent());
 

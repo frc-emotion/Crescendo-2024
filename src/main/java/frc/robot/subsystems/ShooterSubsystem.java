@@ -45,6 +45,7 @@ public class ShooterSubsystem extends SubsystemBase {
         feederMotor.setSmartCurrentLimit(ShooterConstants.CURRENT_LIMIT_SMART);
         feederMotor.setSecondaryCurrentLimit(ShooterConstants.CURRENT_LIMIT);
         feederMotor.setIdleMode(IdleMode.kBrake);
+        feederMotor.setInverted(true);
 
         shooterEncoder = shooterMotor.getEncoder();
         shooterEncoder.setVelocityConversionFactor(2);
@@ -93,6 +94,10 @@ public class ShooterSubsystem extends SubsystemBase {
     }
 
     public void setShooterVelocity(double speed) {
+        if(speed == 0)  {
+            setShooterRaw(0);
+            return;
+        }
         controller.setReference(speed / 2, ControlType.kVelocity);
     }
 
@@ -150,7 +155,7 @@ public class ShooterSubsystem extends SubsystemBase {
     }
 
     public void setShooterRaw(double speed) {
-        speed = Math.max(-1, Math.min(1, speed));
+        //speed = Math.max(-1, Math.min(1, speed));
 
         shooterMotor.set(speed);
     }

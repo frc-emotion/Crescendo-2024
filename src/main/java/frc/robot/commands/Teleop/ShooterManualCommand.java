@@ -20,8 +20,8 @@ public class ShooterManualCommand extends Command {
         Supplier<Boolean> shooterSupplier,
         ShooterSubsystem shooterSubsystem
     ) {
-        this.shooterSupplier = shooterSupplier;
         this.feederSupplier = feederSupplier;
+        this.shooterSupplier = shooterSupplier;
         this.shooterSubsystem = shooterSubsystem;
         addRequirements(shooterSubsystem);
 
@@ -45,10 +45,12 @@ public class ShooterManualCommand extends Command {
             }
             feederState = !feederState;
             */
-            shooterSubsystem.runToTargetRPM();
+            shooterSubsystem.setShooterVelocity(3000);
+            //shooterSubsystem.setShooterRaw(0.3);
             
         } else {
-            shooterSubsystem.setShooterVelocity(ShooterConstants.IDLE_SPEED);
+            shooterSubsystem.setShooterRaw(0);
+            //shooterSubsystem.setShooterVelocity(0);
         }
 
         if(feederSupplier.get()) {

@@ -102,11 +102,21 @@ public class RobotContainer {
                  )
          );
 
+        // m_IntakeSubsystem.setDefaultCommand(
+        //     new IntakeDriveCommand(
+        //         m_IntakeSubsystem,
+        //         () -> operatorController_HID.getLeftBumper(),
+        //         () -> operatorController_HID.getRightBumper()
+        //     )
+        // );
+
         m_IntakeSubsystem.setDefaultCommand(
             new IntakeDriveCommand(
                 m_IntakeSubsystem,
                 () -> operatorController_HID.getLeftBumper(),
-                () -> operatorController_HID.getRightBumper()
+                () -> operatorController_HID.getRightBumper(),
+                () -> driverController_HID.getLeftTriggerAxis(),
+                () -> driverController_HID.getRightTriggerAxis()
             )
         );
         
@@ -192,7 +202,7 @@ public class RobotContainer {
             new Command() {
                 @Override
                 public void execute() {
-                    m_IntakeSubsystem.intakeForward();
+                    m_IntakeSubsystem.setIntake(075);
                     m_ShooterSubsystem.setFeederSpeed(ShooterConstants.kFeedSpeed);
                 }
 

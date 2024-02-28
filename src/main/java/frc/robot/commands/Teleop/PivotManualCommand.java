@@ -30,7 +30,7 @@ public class PivotManualCommand extends Command {
         this.pivotSubsystem = pivotSubsystem;
 
         addRequirements(pivotSubsystem);
-        mode = false;
+        mode = true;
     }
 
     @Override
@@ -66,7 +66,7 @@ public class PivotManualCommand extends Command {
         } else if (Math.abs(output) > Constants.OIConstants.PIVOT_DEADZONE) {
             mode = true;
             pivotSubsystem.setSpeed(Math.signum(output) * Constants.PivotConstants.PIVOT_TELEOP_SPEED);
-        } else if(!mode && Math.abs(pivotSubsystem.getDegrees() + pivotSubsystem.getPreset()) > PivotConstants.MAX_ERROR) {
+        } else if(!mode && pivotSubsystem.isAtTarget()) {
             pivotSubsystem.goToPreset();
         }  else {  
             pivotSubsystem.stop();

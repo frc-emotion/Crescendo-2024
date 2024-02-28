@@ -238,6 +238,8 @@ public final class Constants {
         );
 
 		public static final double INTAKE_TIMEOUT = 0;
+
+        public static final double SHOOTER_SPEED_RPM = 0;
     }
 
     public static final class CameraConstants {
@@ -300,11 +302,11 @@ public final class Constants {
         public static final double kShootSpeedRotationsPerSecond = 0;
         public static final double kMaxSpeedRotationsPerSecond = 0;
         public static final double kMaxSpeedRotationsPerSecondSquared = 0;
-        public static final int BREAK_SENSOR_PORT = 0;
+        public static final int BREAK_SENSOR_PORT = 9;
 		public static final double GEAR_REDUCTION = 0.5;
         public static final int CURRENT_LIMIT_SMART = 20;
 
-        public static final double[] PRESET_SPEEDS = {100, 4000};
+        public static final double[] PRESET_SPEEDS = {0, 4000};
         public static final double IDLE_SPEED = PRESET_SPEEDS[0];
     }
 
@@ -345,14 +347,14 @@ public final class Constants {
             // CAN IDs and Ports
         public static final int INTAKE_PIVOT_PORT = 15;
         public static final int INTAKE_MOTOR_PORT = 19;
-        public static final int INTAKE_PIVOT_2_PORT = 25;
+        public static final int INTAKE_PIVOT_2_PORT = 29;
         public static final int BEAM_BREAKER_PORT = 1;
 
             // Motor Limits
         public static final int MAX_CURRENT = 45;
         public static final int SMART_MAX_CURRENT = 20;
         public static final double CURRENT_SPIKE_THRESHOLD = 5.2; 
-        public static final double INTAKE_MOTOR_SPEED = 0.5;
+        public static final double INTAKE_MOTOR_SPEED = 0.35;
         public static final double INTAKE_PIVOT_SPEED = 0.3;
 
         /*
@@ -367,7 +369,7 @@ public final class Constants {
         public static final double kI_PIVOT = 0;
         public static final double kD_PIVOT = 0;
 
-		public static final double GEAR_REDUCTION = 82.8;
+		public static final double GEAR_REDUCTION = 43.5;
 
             // Input Constants
         private static final double kMaxVelocityDeg = 20;
