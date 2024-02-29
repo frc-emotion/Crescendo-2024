@@ -5,19 +5,32 @@
 package frc.robot;
 
 import frc.robot.Constants.AutoConstants;
+import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.ShooterConstants;
+import frc.robot.Constants.DriveConstants.DriveMode;
 import frc.robot.subsystems.*;
+import frc.robot.util.TabManager;
+import frc.robot.util.TabManager.SubsystemTab;
 import frc.robot.commands.Auto.NamedCommands.CommandContainer;
 import frc.robot.commands.Auto.NamedCommands.ShootSpeaker;
 import frc.robot.commands.Auto.SubsystemCommands.IntakeDriveAutoCommand;
 import frc.robot.commands.Teleop.*;
 import frc.robot.commands.Teleop.swerve.*;
 
+import java.awt.Color;
+import java.util.Map;
+
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -126,7 +139,7 @@ public class RobotContainer {
         configureBindings();
         registerNamedCommands();
 
-        SmartDashboard.putData("Auto Chooser", autoChooser);
+        // SmartDashboard.putData("Auto Chooser", autoChooser);
     }
 
     /**
@@ -204,7 +217,7 @@ public class RobotContainer {
             new Command() {
                 @Override
                 public void execute() {
-                    m_IntakeSubsystem.setIntake(075);
+                    m_IntakeSubsystem.setIntake(IntakeConstants.SHOOTER_TRANSFER_SPEED);
                     m_ShooterSubsystem.setFeederSpeed(ShooterConstants.kFeedSpeed);
                 }
 
@@ -228,6 +241,37 @@ public class RobotContainer {
         NamedCommands.registerCommand("ScoreSpeaker", new ShootSpeaker(m_ShooterSubsystem, m_IntakeSubsystem).withTimeout(AutoConstants.SCORE_SPEAKER_TIMEOUT));
         NamedCommands.registerCommand("IntakeNote", CommandContainer.intakeNote(m_IntakeSubsystem));
         NamedCommands.registerCommand("ResetPivot", CommandContainer.enRoute(m_PivotSubsystem));
+    }
+
+    private void initializeGameShuffleboard() {
+         ShuffleboardTab gameShuffleboardTab = TabManager
+            .getInstance()
+            .accessTab(SubsystemTab.GAME);
+
+            // Generic Data - The heading, whether or not debug mode is active, and the auto chooser.
+        gameShuffleboardTab.addNumber(  "Robot Heading",    () -> m_SwerveSubsystem.getHeading()).withWidget(BuiltInWidgets.kGyro).withPosition(10, 0).withSize(3, 4);
+        gameShuffleboardTab.addBoolean( "Debug Mode",       () -> Constants.DEBUG_MODE_ACTIVE).withPosition(10, 4).withSize(3, 1);
+        gameShuffleboardTab.add(        "Auto Chooser",     autoChooser).withPosition(10, 5).withSize(3, 1);
+
+            // Drive Layout - Shows which drive mode is active (Slow, Normal, Turbo)
+        ShuffleboardLayout generalLayout = gameShuffleboardTab.getLayout("Drive Mode", BuiltInLayouts.kGrid).withPosition(5, 0).withProperties(Map.of("Number of columns", 3, "Number of Rows", 1)).withSize(5, 2);
+        generalLayout.addBoolean(   "Slow Mode Active",    () -> DriveConstants.currentDriveMode == DriveMode.SLOW).withWidget(BuiltInWidgets.kBooleanBox).withProperties(Map.of("Color when false", Color.gray, "Color when true", Color.yellow));
+        generalLayout.addBoolean(   "Normal Mode Active",  () -> DriveConstants.currentDriveMode == DriveMode.NORMAL).withWidget(BuiltInWidgets.kBooleanBox).withProperties(Map.of("Color when false", Color.gray, "Color when true", Color.green));
+        generalLayout.addBoolean(   "Turbo Mode Active",   () -> DriveConstants.currentDriveMode == DriveMode.TURBO).withWidget(BuiltInWidgets.kBooleanBox).withProperties(Map.of("Color when false", Color.gray, "Color when true", Color.blue));
+
+            // Intake Layout - Shows the deployed state of the intake and if the beam sensor is detecting something
+        ShuffleboardLayout intakeLayout = gameShuffleboardTab.getLayout("Intake Data", BuiltInLayouts.kGrid).withProperties(Map.of("Number of columns", 2, "Number of Rows", 1)).withPosition(0, 0).withSize(5, 2);
+        intakeLayout.addBoolean("Intake Down", () -> !m_IntakeSubsystem.isDown()).withWidget(BuiltInWidgets.kBooleanBox);
+        intakeLayout.addBoolean("Beam Broken", () -> m_IntakeSubsystem.getBeamState()).withWidget(BuiltInWidgets.kBooleanBox);
+
+            // Shooter Layout - Shows the Shooter RPM, if the Shooter has reached the target speed, and the position of the Shooter Pivot
+        ShuffleboardLayout shooterLayout = gameShuffleboardTab.getLayout("Shooter Data", BuiltInLayouts.kGrid).withProperties(Map.of("Number of columns", 2, "Number of Rows", 1)).withPosition(8, 0).withSize(5, 2);;
+        shooterLayout.addNumber(    "Shooter RPM",      () -> m_ShooterSubsystem.getShooterVelocity()).withWidget(BuiltInWidgets.kDial).withProperties(Map.of("min", 0, "max", ShooterConstants.PRESET_SPEEDS[1] + 1000));
+        shooterLayout.addBoolean(   "Shooter At Speed", () -> m_ShooterSubsystem.isAtTarget()).withWidget(BuiltInWidgets.kBooleanBox);
+        shooterLayout.addNumber(    "Pivot Position",   () -> -m_PivotSubsystem.getDegrees()).withWidget(BuiltInWidgets.kDial).withProperties(Map.of("Min", -60, "Max", 60));
+
+            // Sets GAME to active tab
+        Shuffleboard.selectTab("GAME");
     }
 
   public Command getAutonomousCommand() {

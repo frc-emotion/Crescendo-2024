@@ -301,6 +301,8 @@ public class SwerveSubsystem extends SubsystemBase {
     }
 
     private void initShuffleboard() {
+        if(!Constants.DEBUG_MODE_ACTIVE) return;
+
         ShuffleboardTab moduleData = TabManager
             .getInstance()
             .accessTab(SubsystemTab.DRIVETRAIN);

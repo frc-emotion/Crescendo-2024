@@ -2,9 +2,9 @@ package frc.robot.commands.Teleop.swerve;
 
 import java.util.function.Supplier;
 
-import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.DriveConstants.DriveMode;
 import frc.robot.subsystems.SwerveSubsystem;
 
 public class DefaultSwerveXboxCommand extends AbstractSwerveXboxCommand {
@@ -27,6 +27,7 @@ public class DefaultSwerveXboxCommand extends AbstractSwerveXboxCommand {
 
     @Override
     public void initialize() {
+        DriveConstants.currentDriveMode = DriveMode.NORMAL;
         swerveSubsystem.setMaxSpeeds(
             DriveConstants.kTeleDriveMaxSpeedMetersPerSecond / 2,
             DriveConstants.kTeleDriveMaxAccelerationUnitsPerSecond / 2,

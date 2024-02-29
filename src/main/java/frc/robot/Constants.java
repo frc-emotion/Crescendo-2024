@@ -20,6 +20,16 @@ import edu.wpi.first.wpilibj.XboxController;
  */
 public final class Constants {
 
+
+
+
+        // DEBUG MODE
+    public static final boolean DEBUG_MODE_ACTIVE = true;
+
+
+
+
+
     //Add all Driver/Teleop Controller here
     public static final class OIConstants {
 
@@ -87,6 +97,14 @@ public final class Constants {
     } */
 
     public static final class DriveConstants {
+        public static enum DriveMode {
+            NORMAL,
+            TURBO,
+            SLOW
+        }
+
+        public static DriveMode currentDriveMode = DriveMode.NORMAL;
+
 
         public static final double kTrackWidth = Units.inchesToMeters(24.0);
         // Distance between right and left wheels
@@ -397,6 +415,7 @@ public final class Constants {
         public static final double RETRACTED_POS = pivotDegreesToRevolutions(
             RETRACTED_POS_DEG
         );
+        protected static final double SHOOTER_TRANSFER_SPEED = 0.75;
 
         // -----------------------------------------
 

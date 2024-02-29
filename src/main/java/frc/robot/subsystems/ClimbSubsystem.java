@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import frc.robot.Constants.ClimbConstants;
 import frc.robot.util.TabManager;
 import frc.robot.util.TabManager.SubsystemTab;
@@ -144,6 +145,8 @@ public class ClimbSubsystem extends SubsystemBase {
 
 
     private void initShuffleboard() {
+        if(!Constants.DEBUG_MODE_ACTIVE) return;
+
         ShuffleboardTab moduleData = TabManager
             .getInstance()
             .accessTab(SubsystemTab.CLIMB);

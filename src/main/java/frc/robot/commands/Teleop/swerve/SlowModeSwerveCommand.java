@@ -3,7 +3,7 @@ package frc.robot.commands.Teleop.swerve;
 import java.util.function.Supplier;
 
 import frc.robot.Constants.DriveConstants;
-import frc.robot.Constants.OIConstants;
+import frc.robot.Constants.DriveConstants.DriveMode;
 import frc.robot.subsystems.SwerveSubsystem;
 
 public class SlowModeSwerveCommand extends DefaultSwerveXboxCommand {
@@ -29,6 +29,7 @@ public class SlowModeSwerveCommand extends DefaultSwerveXboxCommand {
 
     @Override
     public void initialize() {
+        DriveConstants.currentDriveMode = DriveMode.SLOW;
         swerveSubsystem.setMaxSpeeds(
             DriveConstants.kTeleDriveMaxSpeedMetersPerSecond / 4,
             DriveConstants.kTeleDriveMaxAccelerationUnitsPerSecond / 4,

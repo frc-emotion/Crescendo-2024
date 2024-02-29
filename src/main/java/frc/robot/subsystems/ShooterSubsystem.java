@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.util.TabManager;
 import frc.robot.util.TabManager.SubsystemTab;
@@ -173,6 +174,8 @@ public class ShooterSubsystem extends SubsystemBase {
     }
 
     private void initShuffleboard() {
+        if(!Constants.DEBUG_MODE_ACTIVE) return;
+
         ShuffleboardTab moduleData = TabManager
             .getInstance()
             .accessTab(SubsystemTab.SHOOTER);
