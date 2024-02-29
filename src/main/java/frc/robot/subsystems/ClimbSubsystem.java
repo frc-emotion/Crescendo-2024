@@ -149,9 +149,9 @@ public class ClimbSubsystem extends SubsystemBase {
             .accessTab(SubsystemTab.CLIMB);
         ShuffleboardLayout persianPositions = moduleData.getLayout("Persian Positions", BuiltInLayouts.kList);
 
-        persianPositions.addNumber("Left Climb Position", () -> climbMotorLeft.getEncoder().getPosition());
+        persianPositions.addNumber("Left Climb Position", () -> leftEncoder.getPosition());
 
-        persianPositions.addNumber("Right Climb Position", () -> climbMotorRight.getEncoder().getPosition());
+        persianPositions.addNumber("Right Climb Position", () -> rightEncoder.getPosition());
 
         persianPositions.addDouble("Left Climb Current", () -> climbMotorLeft.getOutputCurrent());
 
@@ -164,6 +164,10 @@ public class ClimbSubsystem extends SubsystemBase {
     public void setRawSpeed(double speed) {
         climbMotorLeft.set(speed);
         climbMotorRight.set(speed);
+    }
+
+    public double getPosition() {
+        return rightEncoder.getPosition();
     }
 
 }

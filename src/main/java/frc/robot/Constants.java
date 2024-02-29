@@ -278,6 +278,7 @@ public final class Constants {
         public static final double MAX_VELOCITY = 0.0;
         public static final int CURRENT_LIMIT = 45;
         public static final Double DEADZONE = 0.2;
+        public static final double kSpeed = 0.5;
     }
 
     public static class ShooterConstants {
@@ -306,7 +307,7 @@ public final class Constants {
         public static final double kMaxSpeedRotationsPerSecondSquared = 0;
         public static final int BREAK_SENSOR_PORT = 9;
 		public static final double GEAR_REDUCTION = 0.5;
-        public static final int CURRENT_LIMIT_SMART = 20;
+        public static final int CURRENT_LIMIT_SMART = 40;
 
         public static final double[] PRESET_SPEEDS = {0, 4000};
         public static final double IDLE_SPEED = PRESET_SPEEDS[0];
@@ -352,7 +353,7 @@ public final class Constants {
 
         // Motor Limits
         public static final int MAX_CURRENT = 45;
-        public static final int SMART_MAX_CURRENT = 20;
+        public static final int SMART_MAX_CURRENT = 45;
         public static final double CURRENT_SPIKE_THRESHOLD = 5.2; 
         public static final double INTAKE_MOTOR_SPEED = 0.35;
         public static final double INTAKE_PIVOT_SPEED = 0.3;
@@ -365,7 +366,7 @@ public final class Constants {
         */
 
         // Intake Pivot Constants
-        public static final double kP_PIVOT = 0.01;
+        public static final double kP_PIVOT = 3;
         public static final double kI_PIVOT = 0;
         public static final double kD_PIVOT = 0;
 
@@ -376,21 +377,16 @@ public final class Constants {
         private static final double kMaxAccelDeg = 5;
         private static final double kMaxErrorDeg = 3;
 
-        private static final double DEPLOYED_POS_DEG = 30;
+        private static final double DEPLOYED_POS_DEG = -13.5;
         private static final double RETRACTED_POS_DEG = 0;
 
         //  Do not edit these constants -------------
 
         // Actual Constants
-        public static final double kMaxVelocity = pivotDegreesToRevolutions(
-            kMaxVelocityDeg
-        );
-        public static final double kMaxAccel = pivotDegreesToRevolutions(
-            kMaxAccelDeg
-        );
-        public static final double kMaxError = pivotDegreesToRevolutions(
-            kMaxErrorDeg
-        );
+        public static final double kMaxVelocity = 4;
+        public static final double kMaxAccel = 4;
+        public static final double kMaxError = 1;
+
 
         public static final double DEPLOYED_POS = pivotDegreesToRevolutions(
             DEPLOYED_POS_DEG

@@ -25,7 +25,7 @@ public class ShooterSubsystem extends SubsystemBase {
     private final CANSparkMax shooterMotor, feederMotor;
     private final SparkPIDController controller;
 
-    private final RelativeEncoder shooterEncoder;
+    private final RelativeEncoder shooterEncoder, feederEncoder;
 
     private DigitalInput breakSensor;
 
@@ -48,8 +48,9 @@ public class ShooterSubsystem extends SubsystemBase {
         feederMotor.setInverted(true);
 
         shooterEncoder = shooterMotor.getEncoder();
-        shooterEncoder.setVelocityConversionFactor(2);
+        //shooterEncoder.setVelocityConversionFactor(2);
         
+        feederEncoder = feederMotor.getEncoder();
 
         // Set up PID Controller constants
         controller = shooterMotor.getPIDController();
@@ -88,16 +89,16 @@ public class ShooterSubsystem extends SubsystemBase {
         initShuffleboard();
     }
 
-    @Override
-    public void periodic() {
-        SmartDashboard.putBoolean("Is Note Fed?", isProjectileFed());
-    }
+    // @Override
+    // public void periodic() {
+    //     SmartDashboard.putBoolean("Is Note Fed?", isProjectileFed());
+    // }
 
     public void setShooterVelocity(double speed) {
-        if(speed == 0)  {
-            setShooterRaw(0);
-            return;
-        }
+        // if(speed == 0)  {
+        //     setShooterRaw(0);
+        //     return;
+        // }
         controller.setReference(speed / 2, ControlType.kVelocity);
     }
 
@@ -184,9 +185,9 @@ public class ShooterSubsystem extends SubsystemBase {
 
         persianPositions.addDouble("Shooter Conversion Factor", shooterEncoder::getVelocityConversionFactor);
 
-        persianPositions.addDouble("Feeder Position", () -> feederMotor.getEncoder().getPosition());
+        persianPositions.addDouble("Feeder Position", () -> feederEncoder.getPosition());
 
-        persianPositions.addDouble("Feeder Velocity", () -> feederMotor.getEncoder().getVelocity());
+        persianPositions.addDouble("Feeder Velocity", () -> feederEncoder.getVelocity());
 
         persianPositions.withSize(2, 4);
 

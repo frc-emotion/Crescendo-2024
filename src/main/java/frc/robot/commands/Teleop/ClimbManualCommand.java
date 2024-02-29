@@ -46,8 +46,10 @@ public class ClimbManualCommand extends Command {
                 climbSubsystem.getPosition() - (coefficient * input.get())
             );
         }*/
-        if (Math.abs(input.get()) > ClimbConstants.DEADZONE) {
-            climbSubsystem.setRawSpeed(input.get());
+        if (input.get() < -ClimbConstants.DEADZONE && climbSubsystem.getPosition() > 0) {
+            climbSubsystem.setRawSpeed(-ClimbConstants.kSpeed);
+        } else if(input.get() > ClimbConstants.DEADZONE) {
+            climbSubsystem.setRawSpeed(ClimbConstants.kSpeed);
         } else {
             climbSubsystem.stop();
 

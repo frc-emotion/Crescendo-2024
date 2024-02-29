@@ -46,7 +46,7 @@ public class ShooterManualCommand extends Command {
             feederState = !feederState;
             */
             shooterSubsystem.setShooterVelocity(3000);
-            //shooterSubsystem.setShooterRaw(0.3);
+            //shooterSubsystem.setShooterRaw(0.5);
             
         } else {
             shooterSubsystem.setShooterRaw(0);
@@ -77,6 +77,11 @@ public class ShooterManualCommand extends Command {
         //     shooterSubsystem.setFeederSpeed(ShooterConstants.kShootSpeedRotationsPerSecond);
         // } else {
         // }
+    }
+
+    @Override
+    public boolean isFinished() {
+        return false;
     }
 
     @Override

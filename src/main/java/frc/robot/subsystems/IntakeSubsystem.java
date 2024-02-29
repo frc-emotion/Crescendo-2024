@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkPIDController;
 import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkBase.IdleMode;
@@ -25,6 +26,8 @@ public class IntakeSubsystem extends SubsystemBase {
     private final CANSparkMax pivotMotor2;
     private final CANSparkMax intakeMotor;
 
+    private RelativeEncoder pivotEncoder, pivotEncoder2, driveEncoder;
+
     private final DigitalInput breakSensor;
 
     //private final SparkPIDController pivotController;
@@ -34,7 +37,7 @@ public class IntakeSubsystem extends SubsystemBase {
     
     public IntakeSubsystem() {
 
-        down = false; 
+        down = true; 
 
         pivotMotor = new CANSparkMax(IntakeConstants.INTAKE_PIVOT_PORT, MotorType.kBrushless);
         pivotMotor2 = new CANSparkMax(IntakeConstants.INTAKE_PIVOT_2_PORT, MotorType.kBrushless);
@@ -60,7 +63,7 @@ public class IntakeSubsystem extends SubsystemBase {
             IntakeConstants.kD_PIVOT, 
             new TrapezoidProfile.Constraints(IntakeConstants.kMaxVelocity, IntakeConstants.kMaxAccel)
         );
-        pivotController.setTolerance(IntakeConstants.kMaxError);
+        //pivotController.setTolerance(IntakeConstants.kMaxError);
 
         breakSensor = new DigitalInput(IntakeConstants.BEAM_BREAKER_PORT);
         
@@ -70,8 +73,14 @@ public class IntakeSubsystem extends SubsystemBase {
         // pivotController.setD(IntakeConstants.kD_PIVOT);
         // pivotController.setOutputRange(IntakeConstants.MIN_POSITION, IntakeConstants.MAX_POSITION);
 
-        pivotMotor.getEncoder().setPositionConversionFactor(1.0 / IntakeConstants.GEAR_REDUCTION);
+        pivotEncoder = pivotMotor.getEncoder();
+        pivotEncoder.setPositionConversionFactor(1.0 / IntakeConstants.GEAR_REDUCTION);
     
+        pivotEncoder2 = pivotMotor2.getEncoder();
+        pivotEncoder2.setPositionConversionFactor(1.0 / IntakeConstants.GEAR_REDUCTION);
+
+        driveEncoder = intakeMotor.getEncoder();
+
         initShuffleboard();
     }
 
@@ -89,11 +98,11 @@ public class IntakeSubsystem extends SubsystemBase {
     }
 
     public double getPosition() {
-        return pivotMotor.getEncoder().getPosition();
+        return pivotEncoder.getPosition();
     }
 
     public double getDegrees() {
-        return (pivotMotor.getEncoder().getPosition() / IntakeConstants.GEAR_REDUCTION) * 360.0;
+        return (pivotEncoder.getPosition() / IntakeConstants.GEAR_REDUCTION) * 360.0;
     }
 
     public void pivotStop(){
@@ -109,7 +118,7 @@ public class IntakeSubsystem extends SubsystemBase {
     }
 
     public boolean hasReachedSetpoint() {
-        return pivotController.atSetpoint();
+        return pivotController.atGoal();
     }
 
     public boolean getBeamState() {
@@ -149,18 +158,25 @@ public class IntakeSubsystem extends SubsystemBase {
         intakeMotor.set(0);
     }
 
+    public double getGoal() {
+        return pivotController.getGoal().position;
+    }
+
     private void initShuffleboard() {
         ShuffleboardTab moduleData = TabManager
             .getInstance()
             .accessTab(SubsystemTab.INTAKE);
         ShuffleboardLayout persianPositions = moduleData.getLayout("Persian Positions", BuiltInLayouts.kList);
 
-        persianPositions.addNumber("Intake Motor Position", () -> intakeMotor.getEncoder().getPosition());
+        persianPositions.addNumber("Intake Motor Position", () -> driveEncoder.getPosition());
 
-        persianPositions.addNumber("Pivot Motor Position", () -> pivotMotor.getEncoder().getPosition());
-        persianPositions.addNumber("Pivot Motor 2 Position", () -> pivotMotor2.getEncoder().getPosition());
+        persianPositions.addNumber("Pivot Motor Position", () -> pivotEncoder.getPosition());
+        persianPositions.addNumber("Pivot Motor 2 Position", () -> pivotEncoder2.getPosition());
         persianPositions.addNumber("Pivot Position Degrees", this::getDegrees);
         persianPositions.addBoolean("Beam Break", () -> getBeamState());
+        persianPositions.addBoolean("At Setpoint", this::hasReachedSetpoint);
+        persianPositions.addBoolean("Is Down", this::isDown);
+        persianPositions.addDouble("Current Goal", this::getGoal);
 
         persianPositions.addDouble("Current", () -> pivotMotor.getOutputCurrent());
 

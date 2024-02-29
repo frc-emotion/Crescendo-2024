@@ -18,9 +18,9 @@ public class IntakePivotCommand extends Command {
     @Override
     public void initialize() {
         if(intakeSubsystem.isDown()) {
-            intakeSubsystem.setGoal(IntakeConstants.DEPLOYED_POS);
+            intakeSubsystem.setGoal(-0.32); 
         } else {
-            intakeSubsystem.setGoal(IntakeConstants.RETRACTED_POS);
+            intakeSubsystem.setGoal(0);
         }
     }
 

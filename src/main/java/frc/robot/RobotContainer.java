@@ -79,7 +79,7 @@ public class RobotContainer {
          m_ShooterSubsystem.setDefaultCommand(
              new ShooterManualCommand(
                  () -> operatorController_HID.getAButton(),
-                 operatorController_HID::getYButton,
+                 () -> operatorController_HID.getRightTriggerAxis() > OIConstants.kDeadband,
                  m_ShooterSubsystem
              )
         );
@@ -94,11 +94,11 @@ public class RobotContainer {
          m_PivotSubsystem.setDefaultCommand(
              new PivotManualCommand(
                  m_PivotSubsystem,
-                 () -> operatorController_HID.getLeftY(),
-                 () -> operatorController_HID.getLeftStickButton(),
-                 () -> operatorController_HID.getPOV() == 0,
-                 () -> operatorController_HID.getPOV() == 180,
-                 () -> operatorController_HID.getPOV() == 90
+                 () -> operatorController_HID.getLeftY()
+                // () -> operatorController_HID.getLeftStickButton()
+                //  () -> operatorController_HID.getPOV() == 0,
+                //  () -> operatorController_HID.getPOV() == 180,
+                //  () -> operatorController_HID.getPOV() == 90
                  )
          );
 
@@ -114,9 +114,7 @@ public class RobotContainer {
             new IntakeDriveCommand(
                 m_IntakeSubsystem,
                 () -> operatorController_HID.getLeftBumper(),
-                () -> operatorController_HID.getRightBumper(),
-                () -> driverController_HID.getLeftTriggerAxis(),
-                () -> driverController_HID.getRightTriggerAxis()
+                () -> operatorController_HID.getRightBumper()
             )
         );
         
