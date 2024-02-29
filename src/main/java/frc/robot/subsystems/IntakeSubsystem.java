@@ -178,7 +178,7 @@ public class IntakeSubsystem extends SubsystemBase {
         persianPositions.addBoolean("Is Down", this::isDown);
         persianPositions.addDouble("Current Goal", this::getGoal);
 
-        persianPositions.addDouble("Current", () -> pivotMotor.getOutputCurrent());
+        //persianPositions.addDouble("Current", () -> pivotMotor.getOutputCurrent());
 
         persianPositions.withSize(2, 4);
 

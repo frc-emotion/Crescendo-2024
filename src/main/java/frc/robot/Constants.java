@@ -242,6 +242,8 @@ public final class Constants {
         public static final double INTAKE_TIMEOUT = 0;
 
         public static final double SHOOTER_SPEED_RPM = 2000.0;
+
+        public static final double SCORE_SPEAKER_TIMEOUT = 3.0;
     }
 
     public static final class CameraConstants {
@@ -277,6 +279,7 @@ public final class Constants {
         public static final double MAX_ACCELERATION = 0.0;
         public static final double MAX_VELOCITY = 0.0;
         public static final int CURRENT_LIMIT = 45;
+        public static final int SMART_MAX_CURRENT = 40;
         public static final Double DEADZONE = 0.2;
         public static final double kSpeed = 0.5;
     }
@@ -297,7 +300,7 @@ public final class Constants {
         public static final double kFeedForward = 0.00025;
         public static final double kMaxOutput = 1;
         public static final double kMinOutput = -1;
-        public static final double kMaxOutputError = 0;
+        public static final double kMaxOutputError = 75;
 
         // Speeds
 
@@ -309,7 +312,7 @@ public final class Constants {
 		public static final double GEAR_REDUCTION = 0.5;
         public static final int CURRENT_LIMIT_SMART = 40;
 
-        public static final double[] PRESET_SPEEDS = {0, 4000};
+        public static final double[] PRESET_SPEEDS = {3000, 0};
         public static final double IDLE_SPEED = PRESET_SPEEDS[0];
     }
 
@@ -323,7 +326,7 @@ public final class Constants {
         public static final double PIVOT_KF = 0;
 
         public static final int MAX_CURRENT = 45;
-        public static final int MAX_CURRENT_SMART = 20;
+        public static final int MAX_CURRENT_SMART = 40;
 
         public static final double PIVOT_TELEOP_SPEED = 0.3;
         public static final double PIVOT_AUTO_SPEED = 0.3;
@@ -353,7 +356,7 @@ public final class Constants {
 
         // Motor Limits
         public static final int MAX_CURRENT = 45;
-        public static final int SMART_MAX_CURRENT = 45;
+        public static final int SMART_MAX_CURRENT = 40;
         public static final double CURRENT_SPIKE_THRESHOLD = 5.2; 
         public static final double INTAKE_MOTOR_SPEED = 0.35;
         public static final double INTAKE_PIVOT_SPEED = 0.3;

@@ -42,7 +42,7 @@ public class ClimbSubsystem extends SubsystemBase {
         climbMotorLeft.setSmartCurrentLimit(ClimbConstants.CURRENT_LIMIT);
         climbMotorLeft.setSecondaryCurrentLimit(ClimbConstants.CURRENT_LIMIT);
         climbMotorLeft.setIdleMode(IdleMode.kBrake);
-        climbMotorRight.setSmartCurrentLimit(ClimbConstants.CURRENT_LIMIT);
+        climbMotorRight.setSmartCurrentLimit(ClimbConstants.SMART_MAX_CURRENT);
         climbMotorRight.setSecondaryCurrentLimit(ClimbConstants.CURRENT_LIMIT);
         climbMotorRight.setIdleMode(IdleMode.kBrake);
 
@@ -55,7 +55,7 @@ public class ClimbSubsystem extends SubsystemBase {
 
         // Set Climb Motor 2 to follow Climb Motor 1
         // TODO: Test with + without, there may be a delay 
-        climbMotorRight.follow(climbMotorLeft);
+        climbMotorRight.follow(climbMotorLeft, true);
 
         // PID Stuff
         // controller.setOutputRange(

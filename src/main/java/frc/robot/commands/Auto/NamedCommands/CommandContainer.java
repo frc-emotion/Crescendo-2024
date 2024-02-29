@@ -13,7 +13,7 @@ import frc.robot.subsystems.ShooterSubsystem;
 
 public class CommandContainer {
     
-    public Command intakeNote(IntakeSubsystem intakeSubsystem) {
+    public static Command intakeNote(IntakeSubsystem intakeSubsystem) {
         return new SequentialCommandGroup(
             new IntakePivotCommand(intakeSubsystem),
             new IntakeDriveAutoCommand(intakeSubsystem),
@@ -21,13 +21,7 @@ public class CommandContainer {
         );
     }
 
-    public Command enRoute(PivotSubsystem pivot) {
+    public static Command enRoute(PivotSubsystem pivot) {
         return new PivotAutoCommand(pivot, 1);
-    }
-
-    public Command shootSpeaker(IntakeSubsystem intakeSubsystem, ShooterSubsystem shooterSubsystem) {
-        return new SequentialCommandGroup(
-            
-        );
     }
 }

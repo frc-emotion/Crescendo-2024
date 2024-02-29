@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.6777587794889373,
-      "y": 6.740728186286426
+      "x": 0.68,
+      "y": 6.74
     },
     "rotation": 60.0
   },
@@ -18,13 +18,19 @@
           }
         },
         {
+          "type": "path",
+          "data": {
+            "pathName": "Top Travel to Mid"
+          }
+        },
+        {
           "type": "parallel",
           "data": {
             "commands": [
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Pickup Top"
+                  "pathName": "Pickup Mid"
                 }
               },
               {

@@ -4,14 +4,18 @@
 
 package frc.robot;
 
+import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.subsystems.*;
+import frc.robot.commands.Auto.NamedCommands.CommandContainer;
+import frc.robot.commands.Auto.NamedCommands.ShootSpeaker;
 import frc.robot.commands.Auto.SubsystemCommands.IntakeDriveAutoCommand;
 import frc.robot.commands.Teleop.*;
 import frc.robot.commands.Teleop.swerve.*;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -211,10 +215,19 @@ public class RobotContainer {
                 }
             }
         );
+
+        m_operatorController.start().onTrue(new InstantCommand() {
+            @Override
+            public void execute() {
+                m_ClimbSubsystem.reset();
+            }
+        });
     }
 
     private void registerNamedCommands() {
-        
+        NamedCommands.registerCommand("ScoreSpeaker", new ShootSpeaker(m_ShooterSubsystem, m_IntakeSubsystem).withTimeout(AutoConstants.SCORE_SPEAKER_TIMEOUT));
+        NamedCommands.registerCommand("IntakeNote", CommandContainer.intakeNote(m_IntakeSubsystem));
+        NamedCommands.registerCommand("ResetPivot", CommandContainer.enRoute(m_PivotSubsystem));
     }
 
   public Command getAutonomousCommand() {

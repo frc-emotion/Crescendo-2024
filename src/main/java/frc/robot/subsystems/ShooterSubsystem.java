@@ -180,10 +180,9 @@ public class ShooterSubsystem extends SubsystemBase {
         ShuffleboardLayout persianPositions = moduleData.getLayout("Persian Positions", BuiltInLayouts.kList);
 
         persianPositions.addBoolean("Line Breaker", () -> breakSensor.get());
+         persianPositions.addBoolean("At Target Speed", this::isAtTarget);
 
         persianPositions.addDouble("Shooter Velocity", this::getShooterVelocity);
-
-        persianPositions.addDouble("Shooter Conversion Factor", shooterEncoder::getVelocityConversionFactor);
 
         persianPositions.addDouble("Feeder Position", () -> feederEncoder.getPosition());
 

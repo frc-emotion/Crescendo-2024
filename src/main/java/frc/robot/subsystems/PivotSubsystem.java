@@ -58,7 +58,7 @@ public class PivotSubsystem extends SubsystemBase {
 
         layout.addDouble("Pivot Position Revolutions", this::getRev);
         layout.addDouble("Pivot Position Degrees", this::getDegrees);
-        layout.addDouble("Pivot Current", this::getCurrent);
+        //layout.addDouble("Pivot Current", this::getCurrent);
         layout.addDouble("Pivot Preset Index", this::getIndex);
         layout.addNumber("Current Preset", this::getPreset);
 
