@@ -138,6 +138,7 @@ public class RobotContainer {
         // Configure the trigger bindings
         configureBindings();
         registerNamedCommands();
+        initializeGameShuffleboard();
 
         // SmartDashboard.putData("Auto Chooser", autoChooser);
     }
