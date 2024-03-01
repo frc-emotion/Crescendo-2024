@@ -8,21 +8,21 @@ import frc.robot.Constants.DriveConstants.DriveMode;
 import frc.robot.subsystems.SwerveSubsystem;
 
 public class DefaultSwerveXboxCommand extends AbstractSwerveXboxCommand {
-    protected final Supplier<Boolean> isFieldCentricFunc;
+    protected final Supplier<Boolean> isRobotCentricFunc;
     
     public DefaultSwerveXboxCommand(
         SwerveSubsystem swerveSubsystem,
         Supplier<Double> xSpdFunc,
         Supplier<Double> ySpdFunc,
         Supplier<Double> turningSpdFunc,
-        Supplier<Boolean> isFieldCentricFunc
+        Supplier<Boolean> isRobotCentricFunc
         //Supplier<Boolean> slowModeFunc,
         //Supplier<Boolean> turboModeFunc,
         //Supplier<Double> hardLeft,
         //Supplier<Double> hardRight
     ) {
         super(swerveSubsystem, xSpdFunc, ySpdFunc, turningSpdFunc);
-        this.isFieldCentricFunc = isFieldCentricFunc;
+        this.isRobotCentricFunc = isRobotCentricFunc;
     }
 
     @Override
@@ -38,10 +38,12 @@ public class DefaultSwerveXboxCommand extends AbstractSwerveXboxCommand {
 
     @Override
     public void execute() {
-        if(!isFieldCentricFunc.get()) {
+        if(!isRobotCentricFunc.get()) {
+            DriveConstants.isRobotCentric = false;
             super.execute();
             sendSpeedsToSubsystem();
         } else {
+            DriveConstants.isRobotCentric = true;
             super.execute();
             robotSpeeds = new ChassisSpeeds(xSpeed, ySpeed, turningSpeed);
             sendSpeedsToSubsystem();

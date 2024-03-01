@@ -104,6 +104,7 @@ public final class Constants {
         }
 
         public static DriveMode currentDriveMode = DriveMode.NORMAL;
+        public static boolean isRobotCentric = false;
 
 
         public static final double kTrackWidth = Units.inchesToMeters(24.0);

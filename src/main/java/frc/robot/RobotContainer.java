@@ -255,10 +255,11 @@ public class RobotContainer {
         gameShuffleboardTab.add(        "Auto Chooser",     autoChooser).withPosition(10, 5).withSize(3, 1);
 
             // Drive Layout - Shows which drive mode is active (Slow, Normal, Turbo)
-        ShuffleboardLayout generalLayout = gameShuffleboardTab.getLayout("Drive Mode", BuiltInLayouts.kGrid).withPosition(5, 0).withProperties(Map.of("Number of columns", 3, "Number of Rows", 1)).withSize(5, 2);
+        ShuffleboardLayout generalLayout = gameShuffleboardTab.getLayout("Drive Mode", BuiltInLayouts.kGrid).withPosition(5, 0).withProperties(Map.of("Number of columns", 4, "Number of Rows", 1)).withSize(5, 2);
         generalLayout.addBoolean(   "Slow Mode Active",    () -> DriveConstants.currentDriveMode == DriveMode.SLOW).withWidget(BuiltInWidgets.kBooleanBox).withProperties(Map.of("Color when false", Color.gray, "Color when true", Color.yellow));
         generalLayout.addBoolean(   "Normal Mode Active",  () -> DriveConstants.currentDriveMode == DriveMode.NORMAL).withWidget(BuiltInWidgets.kBooleanBox).withProperties(Map.of("Color when false", Color.gray, "Color when true", Color.green));
         generalLayout.addBoolean(   "Turbo Mode Active",   () -> DriveConstants.currentDriveMode == DriveMode.TURBO).withWidget(BuiltInWidgets.kBooleanBox).withProperties(Map.of("Color when false", Color.gray, "Color when true", Color.blue));
+        generalLayout.addBoolean(   "Robot Centric Mode Active", () -> DriveConstants.isRobotCentric).withWidget(BuiltInWidgets.kBooleanBox).withProperties(Map.of("Color when false", Color.gray, "Color when true", Color.magenta));
 
             // Intake Layout - Shows the deployed state of the intake and if the beam sensor is detecting something
         ShuffleboardLayout intakeLayout = gameShuffleboardTab.getLayout("Intake Data", BuiltInLayouts.kGrid).withProperties(Map.of("Number of columns", 2, "Number of Rows", 1)).withPosition(0, 0).withSize(5, 2);

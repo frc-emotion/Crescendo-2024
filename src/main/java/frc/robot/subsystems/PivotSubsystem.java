@@ -53,7 +53,7 @@ public class PivotSubsystem extends SubsystemBase {
     }
 
     private void initShuffleboard() {
-        if(Constants.DEBUG_MODE_ACTIVE) return;
+        if(!Constants.DEBUG_MODE_ACTIVE) return;
 
         ShuffleboardTab tab = TabManager.getInstance().accessTab(SubsystemTab.PIVOT);
         ShuffleboardLayout layout = tab.getLayout("Persian Positions", BuiltInLayouts.kList);
