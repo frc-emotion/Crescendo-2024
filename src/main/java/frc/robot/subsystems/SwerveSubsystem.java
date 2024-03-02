@@ -154,7 +154,10 @@ public class SwerveSubsystem extends SubsystemBase {
             this
         );
 
+        zeroHeading();
         Pathfinding.setPathfinder(new LocalADStar());
+
+        robotSpeeds = new ChassisSpeeds();
         
     }
 

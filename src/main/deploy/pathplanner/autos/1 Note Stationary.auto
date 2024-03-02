@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.248376211038137,
-      "y": 5.52661562465982
+      "x": 1.3973572133190786,
+      "y": 5.53650223579517
     },
-    "rotation": 0.0
+    "rotation": 0
   },
   "command": {
     "type": "sequential",
@@ -15,18 +15,6 @@
           "type": "named",
           "data": {
             "name": "ScoreSpeaker"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 5.0
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Pickup Mid"
           }
         }
       ]

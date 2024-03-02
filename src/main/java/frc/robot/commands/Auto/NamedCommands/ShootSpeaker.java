@@ -18,14 +18,14 @@ public class ShootSpeaker extends Command  {
 
     @Override
     public void initialize() {
-        shooterSubsystem.setTargetRPM(ShooterConstants.kShootSpeedRotationsPerSecond);
+        //shooterSubsystem.setTargetRPM(ShooterConstants.kShootSpeedRotationsPerSecond);
     }
     
     @Override
     public void execute() {
-        shooterSubsystem.runToTargetRPM();
-        if(shooterSubsystem.isAtTarget()) {
-            shooterSubsystem.setFeederSpeed(ShooterConstants.kFeedSpeed);
+        shooterSubsystem.setShooterVelocity(4000);
+        if(shooterSubsystem.isAtTarget(4000)) {
+            shooterSubsystem.setFeederSpeed(0.15);
             intakeSubsystem.intakeForward();
         }
     }

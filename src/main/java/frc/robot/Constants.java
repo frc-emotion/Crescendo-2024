@@ -24,7 +24,7 @@ public final class Constants {
 
 
         // DEBUG MODE
-    public static final boolean DEBUG_MODE_ACTIVE = true;
+    public static final boolean DEBUG_MODE_ACTIVE = false;
 
 
 
@@ -262,7 +262,7 @@ public final class Constants {
 
         public static final double SHOOTER_SPEED_RPM = 2000.0;
 
-        public static final double SCORE_SPEAKER_TIMEOUT = 3.0;
+        public static final double SCORE_SPEAKER_TIMEOUT = 6.0;
     }
 
     public static final class CameraConstants {
@@ -288,7 +288,7 @@ public final class Constants {
 
         public static final int CLIMB_PORT_L = 11;
         public static final int CLIMB_PORT_R = 18;
-        public static final double EXTENSION_LIMIT = 0.0;
+        public static final double EXTENSION_LIMIT = 130.0;
         public static final int PID_MIN_OUTPUT = 0;
         public static final int PID_MAX_OUTPUT = 0;
         public static final int SLOT_ID = 0;
@@ -300,7 +300,7 @@ public final class Constants {
         public static final int CURRENT_LIMIT = 45;
         public static final int SMART_MAX_CURRENT = 40;
         public static final Double DEADZONE = 0.2;
-        public static final double kSpeed = 0.5;
+        public static final double kSpeed = 0.8;
     }
 
     public static class ShooterConstants {
@@ -377,7 +377,7 @@ public final class Constants {
         public static final int MAX_CURRENT = 45;
         public static final int SMART_MAX_CURRENT = 40;
         public static final double CURRENT_SPIKE_THRESHOLD = 5.2; 
-        public static final double INTAKE_MOTOR_SPEED = 0.35;
+        public static final double INTAKE_MOTOR_SPEED = 0.3;
         public static final double INTAKE_PIVOT_SPEED = 0.3;
 
         /*

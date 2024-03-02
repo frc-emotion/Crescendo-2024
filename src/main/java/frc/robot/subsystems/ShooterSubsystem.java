@@ -96,6 +96,7 @@ public class ShooterSubsystem extends SubsystemBase {
     // }
 
     public void setShooterVelocity(double speed) {
+        targetRPM = speed;
         // if(speed == 0)  {
         //     setShooterRaw(0);
         //     return;
@@ -113,6 +114,10 @@ public class ShooterSubsystem extends SubsystemBase {
 
     public double getTargetRPM() {
         return targetRPM;
+    }
+
+    public boolean isAtTarget(double target) {
+        return Math.abs(shooterEncoder.getVelocity() - target) < ShooterConstants.kMaxOutputError;
     }
 
     public boolean isAtTarget() {
@@ -171,6 +176,10 @@ public class ShooterSubsystem extends SubsystemBase {
 
     public boolean isProjectileFed() {
         return breakSensor.get();
+    }
+
+    public double getShooterTemp() {
+        return shooterMotor.getMotorTemperature();
     }
 
     private void initShuffleboard() {

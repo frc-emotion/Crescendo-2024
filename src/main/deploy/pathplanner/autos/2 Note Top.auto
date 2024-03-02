@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.6777587794889373,
-      "y": 6.740728186286426
+      "x": 0.7218158264581296,
+      "y": 6.667299774671107
     },
     "rotation": 60.0
   },
@@ -14,7 +14,7 @@
         {
           "type": "named",
           "data": {
-            "name": "ScoreSpeaker"
+            "name": "ToggleIntake"
           }
         },
         {
@@ -37,15 +37,15 @@
           }
         },
         {
-          "type": "path",
+          "type": "named",
           "data": {
-            "pathName": "Score Top"
+            "name": "ToggleIntake"
           }
         },
         {
-          "type": "named",
+          "type": "path",
           "data": {
-            "name": "ScoreSpeaker"
+            "pathName": "Shoot Top From Top"
           }
         }
       ]

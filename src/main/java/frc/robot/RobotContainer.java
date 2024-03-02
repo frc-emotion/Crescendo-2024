@@ -104,7 +104,7 @@ public class RobotContainer {
         m_ClimbSubsystem.setDefaultCommand(
             new ClimbManualCommand(
                 m_ClimbSubsystem, 
-                () -> operatorController_HID.getRightY()
+                () -> -operatorController_HID.getRightY()
                 )
             );
 
@@ -167,19 +167,19 @@ public class RobotContainer {
         // cancelling on release.
         // m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
 
-        m_operatorController.a().onTrue(new InstantCommand() {
-            @Override
-            public void execute() {
-                m_PivotSubsystem.calibrate();
-            }
-        }
-        );
+        // m_operatorController.a().onTrue(new InstantCommand() {
+        //     @Override
+        //     public void execute() {
+        //         m_PivotSubsystem.calibrate();
+        //     }
+        // }
+        // );
         
         m_driverController.leftBumper().whileTrue(  
             new SlowModeSwerveCommand(
                 m_SwerveSubsystem,
-                () -> -driverController_HID.getLeftY(),
-                () -> -driverController_HID.getLeftX(),
+                () -> driverController_HID.getLeftY(),
+                () -> driverController_HID.getLeftX(),
                 () -> driverController_HID.getRightX(),
                 () -> driverController_HID.getRightTriggerAxis() > OIConstants.kDeadband
             )
@@ -188,8 +188,8 @@ public class RobotContainer {
         m_driverController.rightBumper().whileTrue(
             new TurboModeSwerveCommand(
                 m_SwerveSubsystem,
-                () -> -driverController_HID.getLeftY(),
-                () -> -driverController_HID.getLeftX(),
+                () -> driverController_HID.getLeftY(),
+                () -> driverController_HID.getLeftX(),
                 () -> driverController_HID.getRightX(),
                 () -> driverController_HID.getRightTriggerAxis() > OIConstants.kDeadband
             )
@@ -212,6 +212,23 @@ public class RobotContainer {
 
         m_operatorController.x().onTrue(
             new IntakePivotCommand(m_IntakeSubsystem)
+        );
+
+        m_operatorController.b().whileTrue(
+            new Command() {
+                @Override
+                public void execute() {
+                    m_ShooterSubsystem.setShooterRaw(-0.1);
+                    m_ShooterSubsystem.setFeederSpeed(-0.1);
+                }
+
+
+                @Override
+                public void end(boolean interrupted) {
+                    m_ShooterSubsystem.stopShooter();
+                    m_ShooterSubsystem.stopFeeder();
+                }
+            }
         );
 
         m_operatorController.leftTrigger(OIConstants.kDeadband).whileTrue(
@@ -242,6 +259,7 @@ public class RobotContainer {
         NamedCommands.registerCommand("ScoreSpeaker", new ShootSpeaker(m_ShooterSubsystem, m_IntakeSubsystem).withTimeout(AutoConstants.SCORE_SPEAKER_TIMEOUT));
         NamedCommands.registerCommand("IntakeNote", CommandContainer.intakeNote(m_IntakeSubsystem));
         NamedCommands.registerCommand("ResetPivot", CommandContainer.enRoute(m_PivotSubsystem));
+        NamedCommands.registerCommand("ToggleIntake", new IntakePivotCommand(m_IntakeSubsystem));
     }
 
     private void initializeGameShuffleboard() {
@@ -267,20 +285,26 @@ public class RobotContainer {
         intakeLayout.addBoolean("Beam Broken", () -> m_IntakeSubsystem.getBeamState()).withWidget(BuiltInWidgets.kBooleanBox);
 
             // Shooter Layout - Shows the Shooter RPM, if the Shooter has reached the target speed, and the position of the Shooter Pivot
-        ShuffleboardLayout shooterLayout = gameShuffleboardTab.getLayout("Shooter Data", BuiltInLayouts.kGrid).withProperties(Map.of("Number of columns", 2, "Number of Rows", 1)).withPosition(8, 0).withSize(5, 2);;
-        shooterLayout.addNumber(    "Shooter RPM",      () -> m_ShooterSubsystem.getShooterVelocity()).withWidget(BuiltInWidgets.kDial).withProperties(Map.of("min", 0, "max", ShooterConstants.PRESET_SPEEDS[1] + 1000));
+        ShuffleboardLayout shooterLayout = gameShuffleboardTab.getLayout("Shooter Data", BuiltInLayouts.kGrid).withProperties(Map.of("Number of columns", 4, "Number of Rows", 1)).withPosition(0, 4).withSize(6, 2);
+        shooterLayout.addNumber(    "Shooter RPM",      () -> m_ShooterSubsystem.getShooterVelocity()).withWidget(BuiltInWidgets.kDial).withProperties(Map.of("Min", 0, "Max", 5000));
         shooterLayout.addBoolean(   "Shooter At Speed", () -> m_ShooterSubsystem.isAtTarget()).withWidget(BuiltInWidgets.kBooleanBox);
+        shooterLayout.addBoolean("Line Break", () -> m_ShooterSubsystem.isProjectileFed()).withWidget(BuiltInWidgets.kBooleanBox);
         shooterLayout.addNumber(    "Pivot Position",   () -> -m_PivotSubsystem.getDegrees()).withWidget(BuiltInWidgets.kDial).withProperties(Map.of("Min", -60, "Max", 60));
+        
+        ShuffleboardLayout motorLayout = gameShuffleboardTab.getLayout("Motor Data", BuiltInLayouts.kGrid).withProperties(Map.of("Number of columns", 2, "Number of rows", 1)).withPosition(8, 3).withSize(2, 1);
+        motorLayout.addNumber("Shooter Temp", () -> m_ShooterSubsystem.getShooterTemp()).withWidget(BuiltInWidgets.kTextView);
+        motorLayout.addNumber("Intake Drive Temp", () -> m_IntakeSubsystem.getIntakeDriveTemp()).withWidget(BuiltInWidgets.kTextView);
 
             // Sets GAME to active tab
-        Shuffleboard.selectTab("GAME");
+        //Shuffleboard.selectTab("GAME");
     }
 
   public Command getAutonomousCommand() {
     // return m_SwerveSubsystem.navigateToPose(
     //   new Pose2d(2, 2, m_SwerveSubsystem.getRotation2d())
     // );
-    return autoChooser.getSelected();
+    return AutoBuilder.buildAuto("2 Note Top");
+    //return new ShootSpeaker(m_ShooterSubsystem, m_IntakeSubsystem).withTimeout(8);
   }
 
 }

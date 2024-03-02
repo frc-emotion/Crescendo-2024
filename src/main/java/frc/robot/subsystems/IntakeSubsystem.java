@@ -163,6 +163,14 @@ public class IntakeSubsystem extends SubsystemBase {
         return pivotController.getGoal().position;
     }
 
+    public double getIntakeDriveTemp() {
+        return intakeMotor.getMotorTemperature();
+    }
+
+    public double getIntakePivotTemp() {
+        return pivotMotor.getMotorTemperature();
+    }
+
     private void initShuffleboard() {
         if(!Constants.DEBUG_MODE_ACTIVE) return;
 
