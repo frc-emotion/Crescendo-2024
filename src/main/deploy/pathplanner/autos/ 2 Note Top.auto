@@ -14,11 +14,23 @@
         {
           "type": "named",
           "data": {
+            "name": "ScoreSpeaker"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 1.0
+          }
+        },
+        {
+          "type": "named",
+          "data": {
             "name": "ToggleIntake"
           }
         },
         {
-          "type": "parallel",
+          "type": "deadline",
           "data": {
             "commands": [
               {
@@ -32,6 +44,12 @@
                 "data": {
                   "name": "IntakeNote"
                 }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "RevShooter"
+                }
               }
             ]
           }
@@ -43,9 +61,28 @@
           }
         },
         {
-          "type": "path",
+          "type": "race",
           "data": {
-            "pathName": "Shoot Top From Top"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Shoot Top From Top"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "RevShooter"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ScoreSpeaker"
           }
         }
       ]

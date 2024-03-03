@@ -148,7 +148,7 @@ public class IntakeSubsystem extends SubsystemBase {
     }
 
     public void intakeReverse() {
-        intakeMotor.set(-IntakeConstants.INTAKE_MOTOR_SPEED);
+        intakeMotor.set(-IntakeConstants.INTAKE_MOTOR_SPEED * (2.0 / 3.0));
     }
 
     public void setIntake(double speed) {

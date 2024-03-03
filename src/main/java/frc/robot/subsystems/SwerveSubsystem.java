@@ -9,10 +9,12 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.kinematics.struct.SwerveModuleStateStruct;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructArrayPublisher;
 import edu.wpi.first.networktables.StructPublisher;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
@@ -125,14 +127,16 @@ public class SwerveSubsystem extends SubsystemBase {
         //PIDController thetaController = new PIDController(AutoConstants.kPThetaController, 0, 0);
         //thetaController.enableContinuousInput(-Math.PI, Math.PI);
 
-        /*
-        new Thread(() -> {
-            try {
-                Thread.sleep(1000);
-                zeroHeading();
-            } catch (Exception io) {}
-        })
-            .start(); */
+        
+        // new Thread() {
+        //     @Override
+        //     public void run() {
+        //         try {
+        //             sleep(1000);
+        //             zeroHeading();
+        //         } catch (InterruptedException e) {}
+        //     }
+        // }.start();
 
         initShuffleboard();
 
@@ -142,7 +146,10 @@ public class SwerveSubsystem extends SubsystemBase {
         driveAngularSpeedRPS = DriveConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond / toDivideBy;
         driveAngularAccelRPSS = DriveConstants.kTeleDriveMaxAngularAccelerationUnitsPerSecond / toDivideBy;
 
-        BooleanSupplier supp = () -> { return true; };
+        BooleanSupplier supp = () -> { 
+            var alliance = DriverStation.getAlliance();
+            return alliance.get() == DriverStation.Alliance.Red;
+        };
 
         AutoBuilder.configureHolonomic(
             this::getCurrentPose,
@@ -154,11 +161,29 @@ public class SwerveSubsystem extends SubsystemBase {
             this
         );
 
-        zeroHeading();
         Pathfinding.setPathfinder(new LocalADStar());
 
         robotSpeeds = new ChassisSpeeds();
         
+        new Thread(() -> {
+            try{
+                Thread.sleep(1000);
+                zeroHeading();
+            } catch (Exception io) {}
+        }).start();
+    
+        
+    }
+
+    public void setRawDriveSpeed(double speed) {
+        frontRight.setRawDriveSpeed(speed);
+        backRight.setRawDriveSpeed(speed);
+        frontLeft.setRawDriveSpeed(speed);
+        backLeft.setRawDriveSpeed(speed);
+    }
+
+    public void offsetGyro(double reading) {
+        gyro.setAngleAdjustment(reading);
     }
 
     public double[] getSpeedType() {

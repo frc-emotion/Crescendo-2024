@@ -10,16 +10,16 @@ import frc.robot.subsystems.IntakeSubsystem;
 public class IntakeDriveCommand extends Command {
 
     private IntakeSubsystem intakeSubsystem;
-    private final Supplier<Boolean> rightBumper, leftBumper;
+    private final Supplier<Boolean> forwardFunc, reverseFunc;
 
     public IntakeDriveCommand(IntakeSubsystem intake, 
-    Supplier<Boolean> rightBumper, 
-    Supplier<Boolean> leftBumper
+    Supplier<Boolean> forwardFunc, 
+    Supplier<Boolean> reverseFunc
     ){
 
         this.intakeSubsystem = intake;
-        this.rightBumper = rightBumper;
-        this.leftBumper = leftBumper;
+        this.forwardFunc = forwardFunc;
+        this.reverseFunc = reverseFunc;
         addRequirements(intake);
     }
 
@@ -39,20 +39,11 @@ public class IntakeDriveCommand extends Command {
         }
         */
 
-        //if beambreak not triggered
-        // continue with triggers
-        if(!intakeSubsystem.getBeamState()) {
-            intakeSubsystem.intakeStop();
-            return;
-        }
-
-        if(rightBumper.get()){
+        if(forwardFunc.get() && intakeSubsystem.getBeamState()){
             intakeSubsystem.intakeForward();
-        }
-        else if(leftBumper.get()){
+        } else if(reverseFunc.get()){
             intakeSubsystem.intakeReverse();
-        }
-        else {
+        } else {
             intakeSubsystem.intakeStop();
         }
     }

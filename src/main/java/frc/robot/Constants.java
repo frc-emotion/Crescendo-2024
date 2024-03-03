@@ -24,7 +24,7 @@ public final class Constants {
 
 
         // DEBUG MODE
-    public static final boolean DEBUG_MODE_ACTIVE = false;
+    public static final boolean DEBUG_MODE_ACTIVE = true;
 
 
 
@@ -107,7 +107,7 @@ public final class Constants {
         public static boolean isRobotCentric = false;
 
 
-        public static final double kTrackWidth = Units.inchesToMeters(24.0);
+        public static final double kTrackWidth = Units.inchesToMeters(24.5);
         // Distance between right and left wheels
         public static final double kWheelBase = Units.inchesToMeters(24.0);
         // Distance between front and back wheels
@@ -332,7 +332,7 @@ public final class Constants {
         public static final int CURRENT_LIMIT_SMART = 40;
 
         public static final double[] PRESET_SPEEDS = {3000, 0};
-        public static final double IDLE_SPEED = PRESET_SPEEDS[0];
+        public static final double IDLE_SPEED = 1000;
     }
 
     public static final class PivotConstants {
@@ -377,7 +377,7 @@ public final class Constants {
         public static final int MAX_CURRENT = 45;
         public static final int SMART_MAX_CURRENT = 40;
         public static final double CURRENT_SPIKE_THRESHOLD = 5.2; 
-        public static final double INTAKE_MOTOR_SPEED = 0.3;
+        public static final double INTAKE_MOTOR_SPEED = 0.2;
         public static final double INTAKE_PIVOT_SPEED = 0.3;
 
         /*
@@ -388,7 +388,7 @@ public final class Constants {
         */
 
         // Intake Pivot Constants
-        public static final double kP_PIVOT = 3;
+        public static final double kP_PIVOT = 4.7;
         public static final double kI_PIVOT = 0;
         public static final double kD_PIVOT = 0;
 
@@ -410,13 +410,10 @@ public final class Constants {
         public static final double kMaxError = 1;
 
 
-        public static final double DEPLOYED_POS = pivotDegreesToRevolutions(
-            DEPLOYED_POS_DEG
-        );
-        public static final double RETRACTED_POS = pivotDegreesToRevolutions(
-            RETRACTED_POS_DEG
-        );
-        protected static final double SHOOTER_TRANSFER_SPEED = 0.75;
+        public static final double DEPLOYED_POS = -0.32;
+        public static final double RETRACTED_POS = 0;
+
+        public static final double SHOOTER_TRANSFER_SPEED = 0.75;
 
         // -----------------------------------------
 

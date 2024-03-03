@@ -103,6 +103,10 @@ public class SwerveModuleNeo {
         turningMotor.enableVoltageCompensation(12.0);
     }
 
+    public void setRawDriveSpeed(double speed) {
+        driveMotor.set(speed);
+    }
+
     public double getDrivePosition() {
         return toMeter(toRot(driveEncoder.getPosition()));
     }
