@@ -9,12 +9,6 @@ import frc.robot.subsystems.SwerveSubsystem;
 
 public class SnapSwerveCommand extends AbstractSwerveXboxCommand {
 
-    private final PIDController thetaController = new PIDController(
-        AutoConstants.kPThetaController, 
-        AutoConstants.kIThetaController, 
-        AutoConstants.kDThetaController
-    );
-
     private int direction;
     
     public SnapSwerveCommand(
@@ -25,8 +19,6 @@ public class SnapSwerveCommand extends AbstractSwerveXboxCommand {
         int direction
      ) {
         super(swerveSubsystem, xSpdFunc, ySpdFunc, turningSpdFunc);
-
-        thetaController.enableContinuousInput(-180, 180);
         
         this.direction = direction;
     }
@@ -36,7 +28,7 @@ public class SnapSwerveCommand extends AbstractSwerveXboxCommand {
         robotSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(
             xSpeed, 
             ySpeed, 
-            thetaController.calculate(swerveSubsystem.getHeading_180(), direction), 
+            swerveSubsystem.calculateThetaPID(swerveSubsystem.getHeading_180(), direction), 
             swerveSubsystem.getRotation2d()
         );
 
@@ -45,6 +37,6 @@ public class SnapSwerveCommand extends AbstractSwerveXboxCommand {
 
     @Override
     public boolean isFinished() {
-        return thetaController.atSetpoint();
+        return swerveSubsystem.thetaPIDAtSetpoint();
     }
 }

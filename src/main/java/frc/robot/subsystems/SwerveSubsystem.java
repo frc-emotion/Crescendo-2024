@@ -121,12 +121,16 @@ public class SwerveSubsystem extends SubsystemBase {
     private StructPublisher<Rotation2d> publisher2 = NetworkTableInstance.getDefault()
         .getStructTopic("PersianRotation", Rotation2d.struct).publish();
     
+    private final PIDController thetaController;
 
     public SwerveSubsystem() {
 
         //PIDController xController = new PIDController(AutoConstants.kPXController, 0, 0);
         //PIDController yController = new PIDController(AutoConstants.kPYController, 0, 0);
         
+        thetaController = new PIDController(AutoConstants.kPThetaController, AutoConstants.kIThetaController, AutoConstants.kDThetaController);
+        thetaController.enableContinuousInput(-180, 180);
+
         // new Thread() {
         //     @Override
         //     public void run() {
@@ -159,6 +163,8 @@ public class SwerveSubsystem extends SubsystemBase {
             supp,
             this
         );
+
+       
 
         Pathfinding.setPathfinder(new LocalADStar());
 
@@ -264,7 +270,7 @@ public class SwerveSubsystem extends SubsystemBase {
     public void driveFieldRelative(ChassisSpeeds speedGiven) {
         speedGiven = ChassisSpeeds.fromFieldRelativeSpeeds(speedGiven, getRotation2d());
         setChassisSpeeds(speedGiven);
-        
+
         setModuleStates(
             DriveConstants.kDriveKinematics.toSwerveModuleStates(speedGiven)
         );
@@ -392,6 +398,14 @@ public class SwerveSubsystem extends SubsystemBase {
         );
         layout.addNumber("Velocity", () -> module.getDriveVelocity());
         layout.withSize(2, 4);
+    }
+
+    public double calculateThetaPID(double measurement, double setpoint) {
+        return thetaController.calculate(measurement, setpoint);
+    }
+
+    public boolean thetaPIDAtSetpoint() {
+        return thetaController.atSetpoint();
     }
 
     /**
