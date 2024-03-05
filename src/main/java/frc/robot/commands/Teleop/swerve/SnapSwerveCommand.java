@@ -25,6 +25,7 @@ public class SnapSwerveCommand extends AbstractSwerveXboxCommand {
     
     @Override
     public void execute() {
+        super.execute();
         robotSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(
             xSpeed, 
             ySpeed, 
