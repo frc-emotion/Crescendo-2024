@@ -80,11 +80,12 @@ public abstract class AbstractSwerveXboxCommand extends Command {
     }
 
     protected void sendSpeedsToSubsystem() {
-        //robotSpeeds = new ChassisSpeeds(xSpeed, ySpeed, turningSpeed);
         
-        swerveSubsystem.setChassisSpeeds(robotSpeeds);
-        SwerveModuleState[] moduleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(robotSpeeds);
-        swerveSubsystem.setModuleStates(moduleStates);
+        // swerveSubsystem.setChassisSpeeds(robotSpeeds);
+        // SwerveModuleState[] moduleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(robotSpeeds);
+        // swerveSubsystem.setModuleStates(moduleStates);
+        
+        swerveSubsystem.driveRobotRelative(robotSpeeds);
     }
 
     @Override

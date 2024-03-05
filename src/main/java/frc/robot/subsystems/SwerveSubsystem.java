@@ -1,6 +1,8 @@
 package frc.robot.subsystems;
 
 import com.kauailabs.navx.frc.AHRS;
+
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -124,9 +126,6 @@ public class SwerveSubsystem extends SubsystemBase {
 
         //PIDController xController = new PIDController(AutoConstants.kPXController, 0, 0);
         //PIDController yController = new PIDController(AutoConstants.kPYController, 0, 0);
-        //PIDController thetaController = new PIDController(AutoConstants.kPThetaController, 0, 0);
-        //thetaController.enableContinuousInput(-Math.PI, Math.PI);
-
         
         // new Thread() {
         //     @Override
@@ -220,6 +219,14 @@ public class SwerveSubsystem extends SubsystemBase {
         return Math.IEEEremainder(gyro.getAngle(), 360);
     }
 
+    public double getHeading_180() {
+        if(getHeading() > 180) {
+            return (getHeading() - 180) * -1; 
+        } else {
+            return getHeading();
+        }
+    }
+
     public Rotation2d getRotation2d() {
         return Rotation2d.fromDegrees(getHeading());
     }
@@ -252,6 +259,15 @@ public class SwerveSubsystem extends SubsystemBase {
             speedGiven
         );
         setModuleStates(moduleStates);
+    }
+
+    public void driveFieldRelative(ChassisSpeeds speedGiven) {
+        speedGiven = ChassisSpeeds.fromFieldRelativeSpeeds(speedGiven, getRotation2d());
+        setChassisSpeeds(speedGiven);
+        
+        setModuleStates(
+            DriveConstants.kDriveKinematics.toSwerveModuleStates(speedGiven)
+        );
     }
 
     public SwerveModulePosition[] getModulePositions() {
