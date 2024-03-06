@@ -107,16 +107,11 @@ public final class Constants {
         public static boolean isRobotCentric = false;
 
 
-        public static final double kTrackWidth = Units.inchesToMeters(24.5);
+        public static final double kTrackWidth = Units.inchesToMeters(24.0);
         // Distance between right and left wheels
         public static final double kWheelBase = Units.inchesToMeters(24.0);
         // Distance between front and back wheels
         public static final SwerveDriveKinematics kDriveKinematics = new SwerveDriveKinematics(
-            // new Translation2d(kWheelBase / 2, kTrackWidth / 2),
-            // new Translation2d(kWheelBase / 2, -kTrackWidth / 2),
-            // new Translation2d(-kWheelBase / 2, kTrackWidth / 2),
-            // new Translation2d(-kWheelBase / 2, -kTrackWidth / 2));
-
             new Translation2d(kWheelBase / 2, kTrackWidth / 2),
             new Translation2d(kWheelBase / 2, -kTrackWidth / 2),
             new Translation2d(-kWheelBase / 2, kTrackWidth / 2),
@@ -139,10 +134,10 @@ public final class Constants {
         public static final boolean kFrontRightTurningEncoderReversed = true;
         public static final boolean kBackRightTurningEncoderReversed = true;
 
-        public static final boolean kFrontLeftDriveEncoderReversed = false;
-        public static final boolean kBackLeftDriveEncoderReversed = false;
-        public static final boolean kFrontRightDriveEncoderReversed = false;
-        public static final boolean kBackRightDriveEncoderReversed = false;
+        public static final boolean kFrontLeftDriveEncoderReversed = true;
+        public static final boolean kBackLeftDriveEncoderReversed = true;
+        public static final boolean kFrontRightDriveEncoderReversed = true;
+        public static final boolean kBackRightDriveEncoderReversed = true;
 
         public static final int kFrontLeftDriveAbsoluteEncoderPort = 4;
         public static final int kBackLeftDriveAbsoluteEncoderPort = 3; //2143

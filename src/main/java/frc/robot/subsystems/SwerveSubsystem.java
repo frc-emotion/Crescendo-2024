@@ -164,8 +164,6 @@ public class SwerveSubsystem extends SubsystemBase {
             this
         );
 
-       
-
         Pathfinding.setPathfinder(new LocalADStar());
 
         robotSpeeds = new ChassisSpeeds();
@@ -234,6 +232,7 @@ public class SwerveSubsystem extends SubsystemBase {
     }
 
     public Rotation2d getRotation2d() {
+        //return gyro.getRotation2d();
         return Rotation2d.fromDegrees(getHeading());
     }
 
@@ -298,6 +297,7 @@ public class SwerveSubsystem extends SubsystemBase {
     public void periodic() { 
         // Updates with drivetrain sensors
         poseEstimator.update(getRotation2d(), getModulePositions());
+        m_field.setRobotPose(getCurrentPose());
 
         // Pair<Pose2d, Double> result = visionPoseEstimator.getEstimatedPose();
 
@@ -309,13 +309,11 @@ public class SwerveSubsystem extends SubsystemBase {
         //SmartDashboard.putNumber("Gyro Pitch", getPitch());
         //SmartDashboard.putNumber("Gyro Roll", getRoll());
 
-        //SwerveModuleState[] moduleStates = getModuleStates();
-        //Rotation2d currentRotation = getRotation2d();
+        SwerveModuleState[] moduleStates = getModuleStates();
+        Rotation2d currentRotation = getRotation2d();
 
-        //publisher.set(moduleStates);
-        //publisher2.set(currentRotation);
-
-
+        publisher.set(moduleStates);
+        publisher2.set(currentRotation);
     }
 
     public void stopModules() {
