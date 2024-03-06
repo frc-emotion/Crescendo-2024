@@ -105,7 +105,7 @@ public class SwerveSubsystem extends SubsystemBase {
 
     public final SwerveDrivePoseEstimator poseEstimator = new SwerveDrivePoseEstimator(
         DriveConstants.kDriveKinematics,
-        getRotation2d(), // Was empty pose 2d before
+        new Rotation2d(), // Was empty pose 2d before
         getModulePositions(),
         new Pose2d()
     ); // FIX add the starting pose estimate?
@@ -125,8 +125,8 @@ public class SwerveSubsystem extends SubsystemBase {
 
     public SwerveSubsystem() {
 
-        //PIDController xController = new PIDController(AutoConstants.kPXController, 0, 0);
-        //PIDController yController = new PIDController(AutoConstants.kPYController, 0, 0);
+        PIDController xController = new PIDController(AutoConstants.kPXController, 0, 0);
+        PIDController yController = new PIDController(AutoConstants.kPYController, 0, 0);
         
         thetaController = new PIDController(AutoConstants.kPThetaController, AutoConstants.kIThetaController, AutoConstants.kDThetaController);
         thetaController.enableContinuousInput(-180, 180);
@@ -296,7 +296,7 @@ public class SwerveSubsystem extends SubsystemBase {
     @Override
     public void periodic() { 
         // Updates with drivetrain sensors
-        poseEstimator.update(getRotation2d(), getModulePositions());
+        poseEstimator.update(getRotation2d().plus(Rotation2d.fromDegrees(180)), getModulePositions());
         m_field.setRobotPose(getCurrentPose());
 
         // Pair<Pose2d, Double> result = visionPoseEstimator.getEstimatedPose();
