@@ -33,7 +33,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
     private final RelativeEncoder shooterEncoder, feederEncoder;
 
-    private GenericEntry maxShooterRPM;
+    private GenericEntry ampShooterRPM;
 
     private DigitalInput breakSensor;
 
@@ -189,8 +189,8 @@ public class ShooterSubsystem extends SubsystemBase {
         return shooterMotor.getMotorTemperature();
     }
 
-    public double getMaxShooterRPM() {
-        return this.maxShooterRPM.getDouble(1.0);
+    public double getAmpShooterRPM() {
+        return this.ampShooterRPM.getDouble(1.0);
     }
 
     private void initShuffleboard() {
@@ -213,12 +213,10 @@ public class ShooterSubsystem extends SubsystemBase {
 
         persianPositions.withSize(2, 4);
 
-        this.maxShooterRPM = moduleData
-        .add("Shooter Target RPM", 1)
+        this.ampShooterRPM = moduleData
+        .add("Amp Target RPM", 1)
         .withWidget(BuiltInWidgets.kNumberSlider)
         .withProperties(Map.of("min", 0, "max", 4000))
         .getEntry();
-
-
     }
 }
