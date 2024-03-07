@@ -247,6 +247,14 @@ public class RobotContainer {
             )
         );
        }
+
+       m_operatorController.y().whileTrue(
+        new Command() {
+            public void execute() {
+                m_ShooterSubsystem.setShooterVelocity(m_ShooterSubsystem.getMaxShooterRPM());
+            }
+        }
+       );
        
         m_operatorController.povDown().or(m_operatorController.povUp()).onTrue(new InstantCommand() {
             @Override
