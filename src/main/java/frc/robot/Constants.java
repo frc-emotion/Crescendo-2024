@@ -160,9 +160,9 @@ public final class Constants {
         public static final double kFrontLeftDriveAbsoluteEncoderOffsetRad =
             (19.42 - 0.1) / 360;
         public static final double kBackLeftDriveAbsoluteEncoderOffsetRad =
-            (-35.94 - 0.2) / 360;
+            (-35.94 - 0.2 + 0.3) / 360;
         public static final double kFrontRightDriveAbsoluteEncoderOffsetRad =
-            (-89.03 - 1.5) / 360;
+            (-89.03 - 1.5 + 0.2) / 360;
         public static final double kBackRightDriveAbsoluteEncoderOffsetRad =
             (64.16 - 0.8)/ 360;
         //  public static final double kFrontLeftDriveAbsoluteEncoderOffsetRad = -Units.degreesToRadians(180 + 0.5);
@@ -211,7 +211,7 @@ public final class Constants {
             kPhysicalMaxAngularSpeedRadiansPerSecond;
 
         //change acceleration based on drive testing
-        public static final double kTeleDriveMaxAccelerationUnitsPerSecond = 3;
+        public static final double kTeleDriveMaxAccelerationUnitsPerSecond = 4;
         public static final double kTeleDriveMaxAngularAccelerationUnitsPerSecond =
             3;
 
@@ -247,7 +247,7 @@ public final class Constants {
         public static final double kPXController = 0.75;
         public static final double kPYController = 0.75;
 
-        public static final double kPThetaController = 0.8;
+        public static final double kPThetaController = 0.6;
         public static final double kIThetaController = 0;
         public static final double kDThetaController = 0;
 

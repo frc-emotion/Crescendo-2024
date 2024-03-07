@@ -22,15 +22,15 @@
           "data": {
             "commands": [
               {
-                "type": "named",
-                "data": {
-                  "name": "IntakeNote"
-                }
-              },
-              {
                 "type": "path",
                 "data": {
                   "pathName": "Pickup Top"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "IntakeNote"
                 }
               }
             ]
