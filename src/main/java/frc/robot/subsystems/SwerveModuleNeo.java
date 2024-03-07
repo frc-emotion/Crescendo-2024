@@ -87,10 +87,10 @@ public class SwerveModuleNeo {
 
         driveEncoder = driveMotor.getEncoder();
         driveEncoder.setPositionConversionFactor(
-            ModuleConstants.kTurningEncoderRot2Rad
+            ModuleConstants.kDriveEncoderRot2Meter
         );
         driveEncoder.setVelocityConversionFactor(
-            ModuleConstants.kTurningEncoderRPM2RadPerSec
+            ModuleConstants.kDriveEncoderRPM2MeterPerSec
         );
 
         turningPidController = turningMotor.getPIDController();
@@ -103,12 +103,20 @@ public class SwerveModuleNeo {
         turningMotor.enableVoltageCompensation(12.0);
     }
 
+    public double getPositionConversionFactor() {
+        return driveEncoder.getPositionConversionFactor();
+    }
+
+    public void setRawDriveSpeed(double speed) {
+        driveMotor.set(speed);
+    }
+
     public double getDrivePosition() {
-        return toMeter(toRot(driveEncoder.getPosition()));
+        return driveEncoder.getPosition();
     }
 
     public double getDriveVelocity() {
-        return toMPS(toRPM(driveEncoder.getVelocity()));
+        return driveEncoder.getVelocity();
     }
 
     public double getTurningPosition() {

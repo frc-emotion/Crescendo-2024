@@ -19,7 +19,7 @@ public class IntakeDriveAutoCommand extends InstantCommand {
 
     @Override
     public boolean isFinished() {
-        return intakeSubsystem.getBeamState();
+        return !intakeSubsystem.getBeamState();
     }
 
     @Override

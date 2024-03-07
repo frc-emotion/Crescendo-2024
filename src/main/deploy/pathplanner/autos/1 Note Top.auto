@@ -2,19 +2,25 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.53,
-      "y": 7.0
+      "x": 0.7365015087811937,
+      "y": 6.681985456994171
     },
-    "rotation": 178.81037519948612
+    "rotation": 60.0
   },
   "command": {
     "type": "sequential",
     "data": {
       "commands": [
         {
+          "type": "named",
+          "data": {
+            "name": "ScoreSpeaker"
+          }
+        },
+        {
           "type": "path",
           "data": {
-            "pathName": "TestForward"
+            "pathName": "Pickup Top"
           }
         }
       ]

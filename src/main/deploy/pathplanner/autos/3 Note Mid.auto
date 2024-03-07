@@ -5,28 +5,16 @@
       "x": 1.3826715309960145,
       "y": 5.565873600441298
     },
-    "rotation": 0
+    "rotation": 178.8766972859246
   },
   "command": {
     "type": "sequential",
     "data": {
       "commands": [
         {
-          "type": "named",
-          "data": {
-            "name": "ScoreSpeaker"
-          }
-        },
-        {
           "type": "parallel",
           "data": {
             "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "IntakeNote"
-                }
-              },
               {
                 "type": "path",
                 "data": {
@@ -43,12 +31,6 @@
           }
         },
         {
-          "type": "named",
-          "data": {
-            "name": "ScoreSpeaker"
-          }
-        },
-        {
           "type": "parallel",
           "data": {
             "commands": [
@@ -56,12 +38,6 @@
                 "type": "path",
                 "data": {
                   "pathName": "Pickup Top"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "IntakeNote"
                 }
               }
             ]
@@ -71,12 +47,6 @@
           "type": "path",
           "data": {
             "pathName": "Score Middle"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "ScoreSpeaker"
           }
         }
       ]

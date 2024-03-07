@@ -1,20 +1,14 @@
 {
   "version": 1.0,
-  "startingPose": {
-    "position": {
-      "x": 0.53,
-      "y": 7.0
-    },
-    "rotation": 178.81037519948612
-  },
+  "startingPose": null,
   "command": {
     "type": "sequential",
     "data": {
       "commands": [
         {
-          "type": "path",
+          "type": "named",
           "data": {
-            "pathName": "TestForward"
+            "name": "ScoreSpeaker"
           }
         }
       ]

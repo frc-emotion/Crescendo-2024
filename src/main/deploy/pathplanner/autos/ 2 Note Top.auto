@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.68,
-      "y": 6.74
+      "x": 0.7218158264581296,
+      "y": 6.667299774671107
     },
-    "rotation": 60.0
+    "rotation": 61.90460918221017
   },
   "command": {
     "type": "sequential",
@@ -18,7 +18,19 @@
           }
         },
         {
-          "type": "parallel",
+          "type": "wait",
+          "data": {
+            "waitTime": 1.0
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ToggleIntake"
+          }
+        },
+        {
+          "type": "deadline",
           "data": {
             "commands": [
               {
@@ -32,51 +44,39 @@
                 "data": {
                   "name": "IntakeNote"
                 }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "RevShooter"
+                }
               }
             ]
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Score Top"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "ScoreSpeaker"
+            "name": "ToggleIntake"
           }
         },
         {
-          "type": "path",
-          "data": {
-            "pathName": "Top Travel to Mid"
-          }
-        },
-        {
-          "type": "parallel",
+          "type": "race",
           "data": {
             "commands": [
               {
-                "type": "named",
+                "type": "path",
                 "data": {
-                  "name": "IntakeNote"
+                  "pathName": "Shoot Top From Top"
                 }
               },
               {
-                "type": "path",
+                "type": "named",
                 "data": {
-                  "pathName": "Pickup Mid"
+                  "name": "RevShooter"
                 }
               }
             ]
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Score Top"
           }
         },
         {

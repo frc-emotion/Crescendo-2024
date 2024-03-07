@@ -3,14 +3,19 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
+
+import java.util.Map;
+
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkPIDController;
 import com.revrobotics.SparkPIDController.AccelStrategy;
 
+import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -27,6 +32,8 @@ public class ShooterSubsystem extends SubsystemBase {
     private final SparkPIDController controller;
 
     private final RelativeEncoder shooterEncoder, feederEncoder;
+
+    private GenericEntry maxShooterRPM;
 
     private DigitalInput breakSensor;
 
@@ -96,6 +103,7 @@ public class ShooterSubsystem extends SubsystemBase {
     // }
 
     public void setShooterVelocity(double speed) {
+        targetRPM = speed;
         // if(speed == 0)  {
         //     setShooterRaw(0);
         //     return;
@@ -113,6 +121,10 @@ public class ShooterSubsystem extends SubsystemBase {
 
     public double getTargetRPM() {
         return targetRPM;
+    }
+
+    public boolean isAtTarget(double target) {
+        return Math.abs(shooterEncoder.getVelocity() - target) < ShooterConstants.kMaxOutputError;
     }
 
     public boolean isAtTarget() {
@@ -173,6 +185,14 @@ public class ShooterSubsystem extends SubsystemBase {
         return breakSensor.get();
     }
 
+    public double getShooterTemp() {
+        return shooterMotor.getMotorTemperature();
+    }
+
+    public double getMaxShooterRPM() {
+        return this.maxShooterRPM.getDouble(1.0);
+    }
+
     private void initShuffleboard() {
         if(!Constants.DEBUG_MODE_ACTIVE) return;
 
@@ -192,6 +212,13 @@ public class ShooterSubsystem extends SubsystemBase {
         persianPositions.addDouble("Feeder Velocity", () -> feederEncoder.getVelocity());
 
         persianPositions.withSize(2, 4);
+
+        this.maxShooterRPM = moduleData
+        .add("Shooter Target RPM", 1)
+        .withWidget(BuiltInWidgets.kNumberSlider)
+        .withProperties(Map.of("min", 0, "max", 4000))
+        .getEntry();
+
 
     }
 }

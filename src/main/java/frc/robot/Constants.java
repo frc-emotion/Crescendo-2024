@@ -65,8 +65,8 @@ public final class Constants {
         public static final double kWheelDiameterMeters = Units.inchesToMeters(
             4
         );
-        public static final double kDriveMotorGearRatio = 1 / 6.75;
-        public static final double kTurningMotorGearRatio = (double) 7 / 150;
+        public static final double kDriveMotorGearRatio = 1.0 / 6.75;
+        public static final double kTurningMotorGearRatio = 7.0 / 150.0;
         public static final double kDriveEncoderRot2Meter =
             kDriveMotorGearRatio * Math.PI * kWheelDiameterMeters;
         public static final double kTurningEncoderRot2Rad =
@@ -112,11 +112,6 @@ public final class Constants {
         public static final double kWheelBase = Units.inchesToMeters(24.0);
         // Distance between front and back wheels
         public static final SwerveDriveKinematics kDriveKinematics = new SwerveDriveKinematics(
-            // new Translation2d(kWheelBase / 2, kTrackWidth / 2),
-            // new Translation2d(kWheelBase / 2, -kTrackWidth / 2),
-            // new Translation2d(-kWheelBase / 2, kTrackWidth / 2),
-            // new Translation2d(-kWheelBase / 2, -kTrackWidth / 2));
-
             new Translation2d(kWheelBase / 2, kTrackWidth / 2),
             new Translation2d(kWheelBase / 2, -kTrackWidth / 2),
             new Translation2d(-kWheelBase / 2, kTrackWidth / 2),
@@ -139,10 +134,10 @@ public final class Constants {
         public static final boolean kFrontRightTurningEncoderReversed = true;
         public static final boolean kBackRightTurningEncoderReversed = true;
 
-        public static final boolean kFrontLeftDriveEncoderReversed = false;
-        public static final boolean kBackLeftDriveEncoderReversed = false;
-        public static final boolean kFrontRightDriveEncoderReversed = false;
-        public static final boolean kBackRightDriveEncoderReversed = false;
+        public static final boolean kFrontLeftDriveEncoderReversed = true;
+        public static final boolean kBackLeftDriveEncoderReversed = true;
+        public static final boolean kFrontRightDriveEncoderReversed = true;
+        public static final boolean kBackRightDriveEncoderReversed = true;
 
         public static final int kFrontLeftDriveAbsoluteEncoderPort = 4;
         public static final int kBackLeftDriveAbsoluteEncoderPort = 3; //2143
@@ -163,13 +158,13 @@ public final class Constants {
          */
 
         public static final double kFrontLeftDriveAbsoluteEncoderOffsetRad =
-            19.42 / 360;
+            (19.42 - 0.1) / 360;
         public static final double kBackLeftDriveAbsoluteEncoderOffsetRad =
-            -35.94 / 360;
+            (-35.94 - 0.2 + 0.3) / 360;
         public static final double kFrontRightDriveAbsoluteEncoderOffsetRad =
-            -89.03 / 360;
+            (-89.03 - 1.5 + 0.2) / 360;
         public static final double kBackRightDriveAbsoluteEncoderOffsetRad =
-            64.16 / 360;
+            (64.16 - 0.8)/ 360;
         //  public static final double kFrontLeftDriveAbsoluteEncoderOffsetRad = -Units.degreesToRadians(180 + 0.5);
         //  public static final double kBackLeftDriveAbsoluteEncoderOffsetRad = -Units.degreesToRadians(180 + 39.8 - 3.1);
         //  public static final double kFrontRightDriveAbsoluteEncoderOffsetRad = -Units.degreesToRadians(180 + -154.098 - 0.7);
@@ -216,7 +211,7 @@ public final class Constants {
             kPhysicalMaxAngularSpeedRadiansPerSecond;
 
         //change acceleration based on drive testing
-        public static final double kTeleDriveMaxAccelerationUnitsPerSecond = 3;
+        public static final double kTeleDriveMaxAccelerationUnitsPerSecond = 4;
         public static final double kTeleDriveMaxAngularAccelerationUnitsPerSecond =
             3;
 
@@ -249,9 +244,12 @@ public final class Constants {
             Math.PI / 4;
 
         //Change based on testing/tune PID controllers
-        public static final double kPXController = 3.1;
-        public static final double kPYController = 3.1;
-        public static final double kPThetaController = 0;
+        public static final double kPXController = 0.75;
+        public static final double kPYController = 0.75;
+
+        public static final double kPThetaController = 0.6;
+        public static final double kIThetaController = 0;
+        public static final double kDThetaController = 0;
 
         public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints( //
             kMaxAngularSpeedRadiansPerSecond,
@@ -262,7 +260,9 @@ public final class Constants {
 
         public static final double SHOOTER_SPEED_RPM = 2000.0;
 
-        public static final double SCORE_SPEAKER_TIMEOUT = 3.0;
+        public static final double SCORE_SPEAKER_TIMEOUT = 6.0;
+
+        
     }
 
     public static final class CameraConstants {
@@ -288,7 +288,9 @@ public final class Constants {
 
         public static final int CLIMB_PORT_L = 11;
         public static final int CLIMB_PORT_R = 18;
-        public static final double EXTENSION_LIMIT = 0.0;
+
+            // PID Constants (not used)
+        public static final double EXTENSION_LIMIT = 130.0;
         public static final int PID_MIN_OUTPUT = 0;
         public static final int PID_MAX_OUTPUT = 0;
         public static final int SLOT_ID = 0;
@@ -297,88 +299,104 @@ public final class Constants {
         public static final double kD = 0.0;
         public static final double MAX_ACCELERATION = 0.0;
         public static final double MAX_VELOCITY = 0.0;
+
+            // Motor Constants
         public static final int CURRENT_LIMIT = 45;
         public static final int SMART_MAX_CURRENT = 40;
+
+            // Input Deadzone
         public static final Double DEADZONE = 0.2;
-        public static final double kSpeed = 0.5;
+
+            // Raw Output Speed
+        public static final double kSpeed = 0.8;
     }
 
     public static class ShooterConstants {
 
-        // CAN IDs
+            // CAN IDs and Ports
         public static final int feederPort = 22;
         public static final int shooterPort = 21;
+        public static final int BREAK_SENSOR_PORT = 9;
 
-        // Motor Constants
-        public static final int CURRENT_LIMIT = 45;
+            // Motor Constants
+        public static final int CURRENT_LIMIT = 45; // amps
+        public static final int CURRENT_LIMIT_SMART = 40; // amps
+        public static final double GEAR_REDUCTION = 0.5;
+        
 
-        // PID Controller Constants
+            // PID Controller Constants
         public static final double kP = 0.004;
         public static final double kI = 0;
         public static final double kD = 0;
         public static final double kFeedForward = 0.00025;
-        public static final double kMaxOutput = 1;
-        public static final double kMinOutput = -1;
-        public static final double kMaxOutputError = 75;
+        public static final double kMaxOutput = 1; // raw motor output
+        public static final double kMinOutput = -1; // raw motor output
+        public static final double kMaxOutputError = 75; // rpm
 
-        // Speeds
-
+            // Speeds
         public static final double kFeedSpeed = 0.25;
         public static final double kShootSpeedRotationsPerSecond = 0;
         public static final double kMaxSpeedRotationsPerSecond = 0;
         public static final double kMaxSpeedRotationsPerSecondSquared = 0;
-        public static final int BREAK_SENSOR_PORT = 9;
-		public static final double GEAR_REDUCTION = 0.5;
-        public static final int CURRENT_LIMIT_SMART = 40;
+        public static final double[] PRESET_SPEEDS = {3000, 0}; // rpm
+        public static final double IDLE_SPEED = 1000; // rpm
 
-        public static final double[] PRESET_SPEEDS = {3000, 0};
-        public static final double IDLE_SPEED = PRESET_SPEEDS[0];
+            // For SOURCE intake
+        protected static final double SHOOTER_REVERSE_SPEED = -0.1; // raw motor output
+        protected static final double FEEDER_REVERSE_SPEED = -0.1;  // raw motor output
     }
 
     public static final class PivotConstants {
 
+            // CAN IDs and Ports
         public static final int PIVOT_PORT = 20;
+        public static final int absoluteEncoderID = 69;
 
+            // PID Constants
         public static final double PIVOT_KP = 10.0;
         public static final double PIVOT_KI = 0;
         public static final double PIVOT_KD = 4;
         public static final double PIVOT_KF = 0;
 
+            // Motor Constants
         public static final int MAX_CURRENT = 45;
         public static final int MAX_CURRENT_SMART = 40;
+         public static final double MAX_ERROR = 3;
+         public static final double GEAR_REDUCTION = 75.0;
 
+            // Raw Output Speeds
         public static final double PIVOT_TELEOP_SPEED = 0.3;
         public static final double PIVOT_AUTO_SPEED = 0.3;
         public static final double PIVOT_ZERO_SPEED = 0.1;
 
+            // Preset Positions
         public static final double PIVOT_MIN_REVOLUTION = 5;
         public static final double PIVOT_MAX_REVOLUTION = 83;
         public static final double PIVOT_THRESHOLD = 6;
         public static final double[] PIVOT_POSITIONS = { -60.0, 0 };
 
+            // Input Constants
         public static final double TRIGGER_THRESHOLD = 0.3;
-        public static final int absoluteEncoderID = 69;
 
+            // Extra Constants
         public static final double CURRENT_SPIKE_THRESHOLD = 0;
-        public static final double GEAR_REDUCTION = 75.0;
-
-        public static final double MAX_ERROR = 3;
     }
 
     public static final class IntakeConstants {
 
-        // CAN IDs and Ports
+            // CAN IDs and Ports
         public static final int INTAKE_PIVOT_PORT = 15;
         public static final int INTAKE_MOTOR_PORT = 19;
         public static final int INTAKE_PIVOT_2_PORT = 29;
         public static final int BEAM_BREAKER_PORT = 1;
 
-        // Motor Limits
+            // Motor Constants
         public static final int MAX_CURRENT = 45;
         public static final int SMART_MAX_CURRENT = 40;
         public static final double CURRENT_SPIKE_THRESHOLD = 5.2; 
-        public static final double INTAKE_MOTOR_SPEED = 0.35;
+        public static final double INTAKE_MOTOR_SPEED = 0.2;
         public static final double INTAKE_PIVOT_SPEED = 0.3;
+        public static final double GEAR_REDUCTION = 43.5;
 
         /*
         public static final double MAX_POSITION = 0;
@@ -387,14 +405,14 @@ public final class Constants {
         public static final double INTAKE_UP_POSITION = 0;
         */
 
-        // Intake Pivot Constants
-        public static final double kP_PIVOT = 3;
+            // Intake Pivot Constants
+        public static final double kP_PIVOT = 4.7;
         public static final double kI_PIVOT = 0;
         public static final double kD_PIVOT = 0;
 
-		public static final double GEAR_REDUCTION = 43.5;
+		
 
-        // Input Constants
+            // Input Constants (Unused)
         private static final double kMaxVelocityDeg = 20;
         private static final double kMaxAccelDeg = 5;
         private static final double kMaxErrorDeg = 3;
@@ -404,24 +422,21 @@ public final class Constants {
 
         //  Do not edit these constants -------------
 
-        // Actual Constants
+            // Actual Speed Constants
         public static final double kMaxVelocity = 4;
         public static final double kMaxAccel = 4;
         public static final double kMaxError = 1;
 
 
-        public static final double DEPLOYED_POS = pivotDegreesToRevolutions(
-            DEPLOYED_POS_DEG
-        );
-        public static final double RETRACTED_POS = pivotDegreesToRevolutions(
-            RETRACTED_POS_DEG
-        );
-        protected static final double SHOOTER_TRANSFER_SPEED = 0.75;
+        public static final double DEPLOYED_POS = -0.32;
+        public static final double RETRACTED_POS = 0;
+
+        public static final double SHOOTER_TRANSFER_SPEED = 0.75;
 
         // -----------------------------------------
 
         /**
-         * Converts degrees to the number of revolutions to feed as the targets for PID
+         * FIX THIS METHOD!!!!
          *
          * @param degrees   The target number of degrees
          * @return          The equivalent measurement in meters

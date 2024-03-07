@@ -15,6 +15,8 @@ import frc.robot.util.TabManager;
 import frc.robot.util.TabManager.SubsystemTab;
 import frc.robot.commands.Auto.NamedCommands.CommandContainer;
 import frc.robot.commands.Auto.NamedCommands.ShootSpeaker;
+import frc.robot.commands.Auto.SubsystemCommands.RevShooterAutoCommand;
+import frc.robot.commands.Auto.SubsystemCommands.TimeDriveAuto;
 import frc.robot.commands.Auto.SubsystemCommands.IntakeDriveAutoCommand;
 import frc.robot.commands.Teleop.*;
 import frc.robot.commands.Teleop.swerve.*;
@@ -35,6 +37,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
+import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -75,7 +81,7 @@ public class RobotContainer {
      * The container for the robot. Contains subsystems, OI devices, and commands.
      */
     public RobotContainer() {
-        autoChooser = AutoBuilder.buildAutoChooser();
+        
 
         m_SwerveSubsystem.setDefaultCommand(
             new DefaultSwerveXboxCommand(
@@ -104,7 +110,7 @@ public class RobotContainer {
         m_ClimbSubsystem.setDefaultCommand(
             new ClimbManualCommand(
                 m_ClimbSubsystem, 
-                () -> operatorController_HID.getRightY()
+                () -> -operatorController_HID.getRightY()
                 )
             );
 
@@ -134,13 +140,40 @@ public class RobotContainer {
                 () -> operatorController_HID.getRightBumper()
             )
         );
+
+        registerNamedCommands();
+
+        autoChooser = new SendableChooser<Command>();
+        configureAutoChooser();
         
         // Configure the trigger bindings
         configureBindings();
-        registerNamedCommands();
         initializeGameShuffleboard();
 
+        
         // SmartDashboard.putData("Auto Chooser", autoChooser);
+    }
+
+        // Auto Chooser Methods
+
+    private void configureAutoChooser() {
+        autoChooser.addOption("Simple Shoot", new ShootSpeaker(m_ShooterSubsystem, m_IntakeSubsystem));
+        addOption("1 Note Stationary");
+        addOption("1 Note Top");
+        addOption("1 Note Mid");
+        addOption("1 Note Bottom");
+        addOption("2 Note Top");
+        addOption("2 Note Mid");
+        addOption("Forward Test Auto");
+        addOption("Jank Test Auto");
+    }
+
+    private void addOption(String name) {
+        autoChooser.addOption(name, getAutoCommand(name));
+    }
+
+    private Command getAutoCommand(String name) {
+        return AutoBuilder.buildAuto(name);
     }
 
     /**
@@ -167,19 +200,19 @@ public class RobotContainer {
         // cancelling on release.
         // m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
 
-        m_operatorController.a().onTrue(new InstantCommand() {
-            @Override
-            public void execute() {
-                m_PivotSubsystem.calibrate();
-            }
-        }
-        );
+        // m_operatorController.a().onTrue(new InstantCommand() {
+        //     @Override
+        //     public void execute() {
+        //         m_PivotSubsystem.calibrate();
+        //     }
+        // }
+        // );
         
         m_driverController.leftBumper().whileTrue(  
             new SlowModeSwerveCommand(
                 m_SwerveSubsystem,
-                () -> -driverController_HID.getLeftY(),
-                () -> -driverController_HID.getLeftX(),
+                () -> driverController_HID.getLeftY(),
+                () -> driverController_HID.getLeftX(),
                 () -> driverController_HID.getRightX(),
                 () -> driverController_HID.getRightTriggerAxis() > OIConstants.kDeadband
             )
@@ -188,8 +221,8 @@ public class RobotContainer {
         m_driverController.rightBumper().whileTrue(
             new TurboModeSwerveCommand(
                 m_SwerveSubsystem,
-                () -> -driverController_HID.getLeftY(),
-                () -> -driverController_HID.getLeftX(),
+                () -> driverController_HID.getLeftY(),
+                () -> driverController_HID.getLeftX(),
                 () -> driverController_HID.getRightX(),
                 () -> driverController_HID.getRightTriggerAxis() > OIConstants.kDeadband
             )
@@ -202,6 +235,27 @@ public class RobotContainer {
             }
         });
 
+            // Drive Snapping Setup
+       for(int angle = 0; angle < 360; angle += 45) {
+        m_driverController.pov(angle).onTrue(
+            new SnapSwerveCommand(
+                m_SwerveSubsystem,
+                () -> driverController_HID.getLeftY(),
+                () -> driverController_HID.getLeftX(),
+                () -> driverController_HID.getRightX(),
+                angle
+            )
+        );
+       }
+
+       m_operatorController.y().whileTrue(
+        new Command() {
+            public void execute() {
+                m_ShooterSubsystem.setShooterVelocity(m_ShooterSubsystem.getMaxShooterRPM());
+            }
+        }
+       );
+       
         m_operatorController.povDown().or(m_operatorController.povUp()).onTrue(new InstantCommand() {
             @Override
             public void execute() {
@@ -212,6 +266,22 @@ public class RobotContainer {
 
         m_operatorController.x().onTrue(
             new IntakePivotCommand(m_IntakeSubsystem)
+        );
+
+        m_operatorController.b().whileTrue(
+            new Command() {
+                @Override
+                public void execute() {
+                    m_ShooterSubsystem.setShooterRaw(ShooterConstants.SHOOTER_REVERSE_SPEED);
+                    m_ShooterSubsystem.setFeederSpeed(ShooterConstants.FEEDER_REVERSE_SPEED);
+                }
+
+                @Override
+                public void end(boolean interrupted) {
+                    m_ShooterSubsystem.stopShooter();
+                    m_ShooterSubsystem.stopFeeder();
+                }
+            }
         );
 
         m_operatorController.leftTrigger(OIConstants.kDeadband).whileTrue(
@@ -239,9 +309,11 @@ public class RobotContainer {
     }
 
     private void registerNamedCommands() {
-        NamedCommands.registerCommand("ScoreSpeaker", new ShootSpeaker(m_ShooterSubsystem, m_IntakeSubsystem).withTimeout(AutoConstants.SCORE_SPEAKER_TIMEOUT));
+        NamedCommands.registerCommand("ScoreSpeaker", new ParallelRaceGroup(new ShootSpeaker(m_ShooterSubsystem, m_IntakeSubsystem), new WaitCommand(5))); //.withTimeout(AutoConstants.SCORE_SPEAKER_TIMEOUT));
         NamedCommands.registerCommand("IntakeNote", CommandContainer.intakeNote(m_IntakeSubsystem));
         NamedCommands.registerCommand("ResetPivot", CommandContainer.enRoute(m_PivotSubsystem));
+        NamedCommands.registerCommand("ToggleIntake", new IntakePivotCommand(m_IntakeSubsystem));
+        NamedCommands.registerCommand("RevShooter", new RevShooterAutoCommand(m_ShooterSubsystem));
     }
 
     private void initializeGameShuffleboard() {
@@ -252,7 +324,7 @@ public class RobotContainer {
             // Generic Data - The heading, whether or not debug mode is active, and the auto chooser.
         gameShuffleboardTab.addNumber(  "Robot Heading",    () -> m_SwerveSubsystem.getHeading()).withWidget(BuiltInWidgets.kGyro).withPosition(10, 0).withSize(3, 4);
         gameShuffleboardTab.addBoolean( "Debug Mode",       () -> Constants.DEBUG_MODE_ACTIVE).withPosition(10, 4).withSize(3, 1);
-        gameShuffleboardTab.add(        "Auto Chooser",     autoChooser).withPosition(10, 5).withSize(3, 1);
+        gameShuffleboardTab.add(        "Auto Chooser",     autoChooser).withPosition(8, 2).withSize(2, 1); 
 
             // Drive Layout - Shows which drive mode is active (Slow, Normal, Turbo)
         ShuffleboardLayout generalLayout = gameShuffleboardTab.getLayout("Drive Mode", BuiltInLayouts.kGrid).withPosition(5, 0).withProperties(Map.of("Number of columns", 4, "Number of Rows", 1)).withSize(5, 2);
@@ -267,19 +339,31 @@ public class RobotContainer {
         intakeLayout.addBoolean("Beam Broken", () -> m_IntakeSubsystem.getBeamState()).withWidget(BuiltInWidgets.kBooleanBox);
 
             // Shooter Layout - Shows the Shooter RPM, if the Shooter has reached the target speed, and the position of the Shooter Pivot
-        ShuffleboardLayout shooterLayout = gameShuffleboardTab.getLayout("Shooter Data", BuiltInLayouts.kGrid).withProperties(Map.of("Number of columns", 2, "Number of Rows", 1)).withPosition(8, 0).withSize(5, 2);;
-        shooterLayout.addNumber(    "Shooter RPM",      () -> m_ShooterSubsystem.getShooterVelocity()).withWidget(BuiltInWidgets.kDial).withProperties(Map.of("min", 0, "max", ShooterConstants.PRESET_SPEEDS[1] + 1000));
-        shooterLayout.addBoolean(   "Shooter At Speed", () -> m_ShooterSubsystem.isAtTarget()).withWidget(BuiltInWidgets.kBooleanBox);
-        shooterLayout.addNumber(    "Pivot Position",   () -> -m_PivotSubsystem.getDegrees()).withWidget(BuiltInWidgets.kDial).withProperties(Map.of("Min", -60, "Max", 60));
+        //ShuffleboardLayout shooterLayout = gameShuffleboardTab.getLayout("Shooter Data", BuiltInLayouts.kGrid).withProperties(Map.of("Number of columns", 4, "Number of Rows", 1)).withPosition(0, 4).withSize(6, 2);
+        // shooterLayout.addNumber(    "Shooter RPM",      () -> m_ShooterSubsystem.getShooterVelocity()).withWidget(BuiltInWidgets.kDial).withProperties(Map.of("Min", 0, "Max", 5000));
+        // shooterLayout.addBoolean(   "Shooter At Speed", () -> m_ShooterSubsystem.isAtTarget()).withWidget(BuiltInWidgets.kBooleanBox);
+        // shooterLayout.addBoolean("Line Break", () -> m_ShooterSubsystem.isProjectileFed()).withWidget(BuiltInWidgets.kBooleanBox);
+        // shooterLayout.addNumber(    "Pivot Position",   () -> -m_PivotSubsystem.getDegrees()).withWidget(BuiltInWidgets.kDial).withProperties(Map.of("Min", -60, "Max", 60));
+        
+        gameShuffleboardTab.addNumber(    "Shooter RPM", () -> m_ShooterSubsystem.getShooterVelocity()).withWidget(BuiltInWidgets.kGraph).withPosition(0, 3).withSize(3, 3);
+        gameShuffleboardTab.addBoolean(    "Shooter At Speed", () -> m_ShooterSubsystem.getShooterVelocity() > 3900).withPosition(3, 3).withSize(2, 2);
+        gameShuffleboardTab.addBoolean(    "Shooter Beam State", () -> m_ShooterSubsystem.isProjectileFed()).withPosition(3, 5).withSize(2, 1);
+
+        //gameShuffleboardTab.add("Robot Pose", () -> m_SwerveSubsystem.getCurrentPose()).withWidget(BuiltInWidgets.kField).withPosition(4, 6);
+        
+        ShuffleboardLayout motorLayout = gameShuffleboardTab.getLayout("Motor Data", BuiltInLayouts.kGrid).withProperties(Map.of("Number of columns", 2, "Number of rows", 1)).withPosition(8, 3).withSize(2, 1);
+        motorLayout.addNumber("Shooter Temp", () -> m_ShooterSubsystem.getShooterTemp()).withWidget(BuiltInWidgets.kTextView);
+        motorLayout.addNumber("Intake Drive Temp", () -> m_IntakeSubsystem.getIntakeDriveTemp()).withWidget(BuiltInWidgets.kTextView);
 
             // Sets GAME to active tab
-        Shuffleboard.selectTab("GAME");
+        //Shuffleboard.selectTab("GAME");
     }
 
-  public Command getAutonomousCommand() {
+  public Command getAutonomousCommand()  {
     // return m_SwerveSubsystem.navigateToPose(
     //   new Pose2d(2, 2, m_SwerveSubsystem.getRotation2d())
     // );
+    //return autoChooser.getSelected();
     return autoChooser.getSelected();
   }
 

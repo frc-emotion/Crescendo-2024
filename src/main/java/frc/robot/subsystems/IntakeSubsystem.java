@@ -148,7 +148,7 @@ public class IntakeSubsystem extends SubsystemBase {
     }
 
     public void intakeReverse() {
-        intakeMotor.set(-IntakeConstants.INTAKE_MOTOR_SPEED);
+        intakeMotor.set(-IntakeConstants.INTAKE_MOTOR_SPEED * (2.0 / 3.0));
     }
 
     public void setIntake(double speed) {
@@ -161,6 +161,14 @@ public class IntakeSubsystem extends SubsystemBase {
 
     public double getGoal() {
         return pivotController.getGoal().position;
+    }
+
+    public double getIntakeDriveTemp() {
+        return intakeMotor.getMotorTemperature();
+    }
+
+    public double getIntakePivotTemp() {
+        return pivotMotor.getMotorTemperature();
     }
 
     private void initShuffleboard() {

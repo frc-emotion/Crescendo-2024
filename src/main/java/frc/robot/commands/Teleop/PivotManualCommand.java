@@ -58,6 +58,8 @@ public class PivotManualCommand extends Command {
         double output = yJoystick.get();
         if(Math.abs(output) > OIConstants.PIVOT_DEADZONE) {
             pivotSubsystem.setSpeed(Math.signum(output) * PivotConstants.PIVOT_TELEOP_SPEED);
+        } else {
+            pivotSubsystem.stop();
         }
 
         // if (dPadDown.get()) { // If dpad down is pressed, sets to automatic mode and changes to the next lowest preset as target

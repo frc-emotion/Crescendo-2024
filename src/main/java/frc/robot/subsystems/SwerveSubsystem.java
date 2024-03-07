@@ -1,6 +1,8 @@
 package frc.robot.subsystems;
 
 import com.kauailabs.navx.frc.AHRS;
+
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -9,10 +11,12 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.kinematics.struct.SwerveModuleStateStruct;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructArrayPublisher;
 import edu.wpi.first.networktables.StructPublisher;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
@@ -37,6 +41,7 @@ import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.pathfinding.LocalADStar;
 import com.pathplanner.lib.pathfinding.Pathfinding;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
+import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
 
 /**
@@ -101,7 +106,7 @@ public class SwerveSubsystem extends SubsystemBase {
 
     public final SwerveDrivePoseEstimator poseEstimator = new SwerveDrivePoseEstimator(
         DriveConstants.kDriveKinematics,
-        getRotation2d(), // Was empty pose 2d before
+        new Rotation2d(), // Was empty pose 2d before
         getModulePositions(),
         new Pose2d()
     ); // FIX add the starting pose estimate?
@@ -117,22 +122,25 @@ public class SwerveSubsystem extends SubsystemBase {
     private StructPublisher<Rotation2d> publisher2 = NetworkTableInstance.getDefault()
         .getStructTopic("PersianRotation", Rotation2d.struct).publish();
     
+    private final PIDController thetaController;
 
     public SwerveSubsystem() {
 
-        //PIDController xController = new PIDController(AutoConstants.kPXController, 0, 0);
-        //PIDController yController = new PIDController(AutoConstants.kPYController, 0, 0);
-        //PIDController thetaController = new PIDController(AutoConstants.kPThetaController, 0, 0);
-        //thetaController.enableContinuousInput(-Math.PI, Math.PI);
+        PIDController xController = new PIDController(AutoConstants.kPXController, 0, 0);
+        PIDController yController = new PIDController(AutoConstants.kPYController, 0, 0);
+        
+        thetaController = new PIDController(AutoConstants.kPThetaController, AutoConstants.kIThetaController, AutoConstants.kDThetaController);
+        thetaController.enableContinuousInput(-180, 180);
 
-        /*
-        new Thread(() -> {
-            try {
-                Thread.sleep(1000);
-                zeroHeading();
-            } catch (Exception io) {}
-        })
-            .start(); */
+        // new Thread() {
+        //     @Override
+        //     public void run() {
+        //         try {
+        //             sleep(1000);
+        //             zeroHeading();
+        //         } catch (InterruptedException e) {}
+        //     }
+        // }.start();
 
         initShuffleboard();
 
@@ -142,20 +150,50 @@ public class SwerveSubsystem extends SubsystemBase {
         driveAngularSpeedRPS = DriveConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond / toDivideBy;
         driveAngularAccelRPSS = DriveConstants.kTeleDriveMaxAngularAccelerationUnitsPerSecond / toDivideBy;
 
-        BooleanSupplier supp = () -> { return true; };
+        BooleanSupplier supp = () -> { 
+            var alliance = DriverStation.getAlliance();
+            return alliance.get() == DriverStation.Alliance.Red;
+        };
 
         AutoBuilder.configureHolonomic(
             this::getCurrentPose,
             this::resetOdometry,
             this::getChassisSpeeds,
             this::driveRobotRelative,
-            new HolonomicPathFollowerConfig(AutoConstants.kMaxSpeedMetersPerSecond, DriveConstants.kWheelBase, new ReplanningConfig()),
+            new HolonomicPathFollowerConfig(
+                new PIDConstants(AutoConstants.kPXController),
+                new PIDConstants(AutoConstants.kPThetaController),
+                AutoConstants.kMaxSpeedMetersPerSecond, 
+                DriveConstants.kWheelBase, 
+                new ReplanningConfig()
+            ),
             supp,
             this
         );
 
         Pathfinding.setPathfinder(new LocalADStar());
+
+        robotSpeeds = new ChassisSpeeds();
         
+        new Thread(() -> {
+            try{
+                Thread.sleep(1000);
+                zeroHeading();
+            } catch (Exception io) {}
+        }).start();
+    
+        
+    }
+
+    public void setRawDriveSpeed(double speed) {
+        frontRight.setRawDriveSpeed(speed);
+        backRight.setRawDriveSpeed(speed);
+        frontLeft.setRawDriveSpeed(speed);
+        backLeft.setRawDriveSpeed(speed);
+    }
+
+    public void offsetGyro(double reading) {
+        gyro.setAngleAdjustment(reading);
     }
 
     public double[] getSpeedType() {
@@ -192,7 +230,16 @@ public class SwerveSubsystem extends SubsystemBase {
         return Math.IEEEremainder(gyro.getAngle(), 360);
     }
 
+    public double getHeading_180() {
+        if(getHeading() > 180) {
+            return (getHeading() - 180) * -1; 
+        } else {
+            return getHeading();
+        }
+    }
+
     public Rotation2d getRotation2d() {
+        //return gyro.getRotation2d();
         return Rotation2d.fromDegrees(getHeading());
     }
 
@@ -226,6 +273,15 @@ public class SwerveSubsystem extends SubsystemBase {
         setModuleStates(moduleStates);
     }
 
+    public void driveFieldRelative(ChassisSpeeds speedGiven) {
+        speedGiven = ChassisSpeeds.fromFieldRelativeSpeeds(speedGiven, getRotation2d());
+        setChassisSpeeds(speedGiven);
+
+        setModuleStates(
+            DriveConstants.kDriveKinematics.toSwerveModuleStates(speedGiven)
+        );
+    }
+
     public SwerveModulePosition[] getModulePositions() {
         return new SwerveModulePosition[] {
                 frontLeft.getPosition(),
@@ -248,6 +304,7 @@ public class SwerveSubsystem extends SubsystemBase {
     public void periodic() { 
         // Updates with drivetrain sensors
         poseEstimator.update(getRotation2d(), getModulePositions());
+        m_field.setRobotPose(getCurrentPose());
 
         // Pair<Pose2d, Double> result = visionPoseEstimator.getEstimatedPose();
 
@@ -259,13 +316,11 @@ public class SwerveSubsystem extends SubsystemBase {
         //SmartDashboard.putNumber("Gyro Pitch", getPitch());
         //SmartDashboard.putNumber("Gyro Roll", getRoll());
 
-        //SwerveModuleState[] moduleStates = getModuleStates();
-        //Rotation2d currentRotation = getRotation2d();
+        SwerveModuleState[] moduleStates = getModuleStates();
+        Rotation2d currentRotation = getRotation2d();
 
-        //publisher.set(moduleStates);
-        //publisher2.set(currentRotation);
-
-
+        publisher.set(moduleStates);
+        publisher2.set(currentRotation);
     }
 
     public void stopModules() {
@@ -348,6 +403,14 @@ public class SwerveSubsystem extends SubsystemBase {
         );
         layout.addNumber("Velocity", () -> module.getDriveVelocity());
         layout.withSize(2, 4);
+    }
+
+    public double calculateThetaPID(double measurement, double setpoint) {
+        return thetaController.calculate(measurement, setpoint);
+    }
+
+    public boolean thetaPIDAtSetpoint() {
+        return thetaController.atSetpoint();
     }
 
     /**
