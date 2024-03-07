@@ -41,6 +41,7 @@ import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.pathfinding.LocalADStar;
 import com.pathplanner.lib.pathfinding.Pathfinding;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
+import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
 
 /**
@@ -159,7 +160,13 @@ public class SwerveSubsystem extends SubsystemBase {
             this::resetOdometry,
             this::getChassisSpeeds,
             this::driveRobotRelative,
-            new HolonomicPathFollowerConfig(AutoConstants.kMaxSpeedMetersPerSecond, DriveConstants.kWheelBase, new ReplanningConfig()),
+            new HolonomicPathFollowerConfig(
+                new PIDConstants(AutoConstants.kPXController),
+                new PIDConstants(AutoConstants.kPThetaController),
+                AutoConstants.kMaxSpeedMetersPerSecond, 
+                DriveConstants.kWheelBase, 
+                new ReplanningConfig()
+            ),
             supp,
             this
         );
@@ -296,7 +303,7 @@ public class SwerveSubsystem extends SubsystemBase {
     @Override
     public void periodic() { 
         // Updates with drivetrain sensors
-        poseEstimator.update(getRotation2d().plus(Rotation2d.fromDegrees(180)), getModulePositions());
+        poseEstimator.update(getRotation2d(), getModulePositions());
         m_field.setRobotPose(getCurrentPose());
 
         // Pair<Pose2d, Double> result = visionPoseEstimator.getEstimatedPose();

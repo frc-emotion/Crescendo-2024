@@ -5,7 +5,7 @@
       "x": 1.3533001663498863,
       "y": 5.551187918118234
     },
-    "rotation": 0
+    "rotation": 180.0
   },
   "command": {
     "type": "sequential",
@@ -15,6 +15,12 @@
           "type": "named",
           "data": {
             "name": "ScoreSpeaker"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ToggleIntake"
           }
         },
         {
@@ -34,6 +40,12 @@
                 }
               }
             ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ToggleIntake"
           }
         },
         {

@@ -158,13 +158,13 @@ public final class Constants {
          */
 
         public static final double kFrontLeftDriveAbsoluteEncoderOffsetRad =
-            19.42 / 360;
+            (19.42 - 0.1) / 360;
         public static final double kBackLeftDriveAbsoluteEncoderOffsetRad =
-            -35.94 / 360;
+            (-35.94 - 0.2) / 360;
         public static final double kFrontRightDriveAbsoluteEncoderOffsetRad =
-            -89.03 / 360;
+            (-89.03 - 1.5) / 360;
         public static final double kBackRightDriveAbsoluteEncoderOffsetRad =
-            64.16 / 360;
+            (64.16 - 0.8)/ 360;
         //  public static final double kFrontLeftDriveAbsoluteEncoderOffsetRad = -Units.degreesToRadians(180 + 0.5);
         //  public static final double kBackLeftDriveAbsoluteEncoderOffsetRad = -Units.degreesToRadians(180 + 39.8 - 3.1);
         //  public static final double kFrontRightDriveAbsoluteEncoderOffsetRad = -Units.degreesToRadians(180 + -154.098 - 0.7);
@@ -244,10 +244,10 @@ public final class Constants {
             Math.PI / 4;
 
         //Change based on testing/tune PID controllers
-        public static final double kPXController = 3.1;
-        public static final double kPYController = 3.1;
+        public static final double kPXController = 0.75;
+        public static final double kPYController = 0.75;
 
-        public static final double kPThetaController = 0;
+        public static final double kPThetaController = 0.8;
         public static final double kIThetaController = 0;
         public static final double kDThetaController = 0;
 
