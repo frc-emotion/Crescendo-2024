@@ -380,6 +380,9 @@ public final class Constants {
 
             // Extra Constants
         public static final double CURRENT_SPIKE_THRESHOLD = 0;
+        
+        //Setpoints
+        public static final double kHANDOFF_ANGLE = -60.0;
     }
 
     public static final class IntakeConstants {
@@ -409,6 +412,8 @@ public final class Constants {
         public static final double kP_PIVOT = 4.7;
         public static final double kI_PIVOT = 0;
         public static final double kD_PIVOT = 0;
+
+        
 
 		
 

@@ -9,19 +9,27 @@ public class IntakePivotCommand extends Command {
 
     private IntakeSubsystem intakeSubsystem;
 
+
     public IntakePivotCommand(IntakeSubsystem intake){
 
         this.intakeSubsystem = intake;
-        addRequirements(intake);
+        addRequirements(intake); 
     }
+
 
     @Override
     public void initialize() {
-        if(intakeSubsystem.isDown()) {
+        if(intakeSubsystem.isUp()) {
             intakeSubsystem.setGoal(-0.32); 
         } else {
             intakeSubsystem.setGoal(0);
         }
+        // if(shouldBeDown) {
+        //     intakeSubsystem.setGoal(-0.32);
+        // }
+        // else {
+        //     intakeSubsystem.setGoal(0);
+        // }
     }
 
     @Override

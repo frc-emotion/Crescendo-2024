@@ -132,6 +132,10 @@ public class PivotSubsystem extends SubsystemBase {
         return getRev();
     }
 
+    public boolean isHandoffOk() {
+        return this.getDegrees() == PivotConstants.kHANDOFF_ANGLE;
+    }
+
     public void stop() {
         pivotMotor.set(0);
     }

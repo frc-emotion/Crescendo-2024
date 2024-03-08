@@ -271,37 +271,58 @@ public class RobotContainer {
         m_operatorController
         // .x()
         .povUp()
-        .onTrue(
+        .whileTrue(
             new SequentialCommandGroup(
-                new Command() {
-                    @Override
-                    public void initialize() {
-                        m_IntakeSubsystem.setGoal(0);
-                    }
+                // new Command() {
+                //     @Override
+                //     public void initialize() {
+                //         m_IntakeSubsystem.setGoal(-0.32);
+                //     }
 
-                    @Override
-                    public void execute() {
-                        m_IntakeSubsystem.travelToSetpoint();
-                    }
-                },
-                new WaitCommand(0.25)
+                //     @Override
+                //     public void execute() {
+                //         m_IntakeSubsystem.travelToSetpoint();
+                //     }
+
+                //     @Override
+                //     public void end(boolean interrupted) {
+                //         m_IntakeSubsystem.toggleState();
+                //         m_IntakeSubsystem.pivotStop();
+                //     }
+
+                //     @Override
+                //     public boolean isFinished(){
+                //         return m_IntakeSubsystem.hasReachedSetpoint();
+                //     }
+                // }, 
+                new IntakePivotCommand(m_IntakeSubsystem).onlyIf(() -> m_IntakeSubsystem.isUp()),
+                new IntakeDriveAutoCommand(m_IntakeSubsystem)
             )
         )
-        .whileTrue(
-            new IntakeDriveAutoCommand(m_IntakeSubsystem)
-        )
         .onFalse(
-            new Command() {
-                @Override
-                public void initialize() {
-                    m_IntakeSubsystem.setGoal(0);
-                }
+            // new Command() {
+            //     @Override
+            //     public void initialize() {
+            //         m_IntakeSubsystem.setGoal(0);
+            //     }
 
-                @Override
-                public void execute() {
-                    m_IntakeSubsystem.travelToSetpoint();
-                }
-            } 
+            //     @Override
+            //     public void execute() {
+            //         m_IntakeSubsystem.travelToSetpoint();
+            //     }
+
+            //     @Override
+            //     public void end(boolean interrupted) {
+            //         m_IntakeSubsystem.toggleState();
+            //         m_IntakeSubsystem.pivotStop();
+            //     }
+
+            //     @Override
+            //     public boolean isFinished(){
+            //         return m_IntakeSubsystem.hasReachedSetpoint();
+            //     }
+            // } 
+            new IntakePivotCommand(m_IntakeSubsystem).onlyIf(()-> !m_IntakeSubsystem.isUp())
         );
 
 
@@ -372,7 +393,7 @@ public class RobotContainer {
 
             // Intake Layout - Shows the deployed state of the intake and if the beam sensor is detecting something
         ShuffleboardLayout intakeLayout = gameShuffleboardTab.getLayout("Intake Data", BuiltInLayouts.kGrid).withProperties(Map.of("Number of columns", 2, "Number of Rows", 1)).withPosition(0, 0).withSize(5, 2);
-        intakeLayout.addBoolean("Intake Down", () -> !m_IntakeSubsystem.isDown()).withWidget(BuiltInWidgets.kBooleanBox);
+        intakeLayout.addBoolean("Intake Down", () -> !m_IntakeSubsystem.isUp()).withWidget(BuiltInWidgets.kBooleanBox);
         intakeLayout.addBoolean("Beam Broken", () -> m_IntakeSubsystem.getBeamState()).withWidget(BuiltInWidgets.kBooleanBox);
 
             // Shooter Layout - Shows the Shooter RPM, if the Shooter has reached the target speed, and the position of the Shooter Pivot

@@ -89,7 +89,7 @@ public class IntakeSubsystem extends SubsystemBase {
         down = !down;
     }
 
-    public boolean isDown() {
+    public boolean isUp() {
         return down;
     }
 
@@ -186,7 +186,7 @@ public class IntakeSubsystem extends SubsystemBase {
         persianPositions.addNumber("Pivot Position Degrees", this::getDegrees);
         persianPositions.addBoolean("Beam Break", () -> getBeamState());
         persianPositions.addBoolean("At Setpoint", this::hasReachedSetpoint);
-        persianPositions.addBoolean("Is Down", this::isDown);
+        persianPositions.addBoolean("Is Down", this::isUp);
         persianPositions.addDouble("Current Goal", this::getGoal);
 
         //persianPositions.addDouble("Current", () -> pivotMotor.getOutputCurrent());
