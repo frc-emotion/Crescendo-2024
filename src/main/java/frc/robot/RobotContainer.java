@@ -268,6 +268,43 @@ public class RobotContainer {
             new IntakePivotCommand(m_IntakeSubsystem)
         );
 
+        m_operatorController
+        // .x()
+        .povUp()
+        .onTrue(
+            new SequentialCommandGroup(
+                new Command() {
+                    @Override
+                    public void initialize() {
+                        m_IntakeSubsystem.setGoal(0);
+                    }
+
+                    @Override
+                    public void execute() {
+                        m_IntakeSubsystem.travelToSetpoint();
+                    }
+                },
+                new WaitCommand(0.25)
+            )
+        )
+        .whileTrue(
+            new IntakeDriveAutoCommand(m_IntakeSubsystem)
+        )
+        .onFalse(
+            new Command() {
+                @Override
+                public void initialize() {
+                    m_IntakeSubsystem.setGoal(0);
+                }
+
+                @Override
+                public void execute() {
+                    m_IntakeSubsystem.travelToSetpoint();
+                }
+            } 
+        );
+
+
         m_operatorController.b().whileTrue(
             new Command() {
                 @Override
