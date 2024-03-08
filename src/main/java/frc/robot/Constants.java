@@ -326,7 +326,7 @@ public final class Constants {
 
             // PID Controller Constants
         public static final double kP = 0.004;
-        public static final double kI = 0;
+        public static final double kI = 0.1;
         public static final double kD = 0;
         public static final double kFeedForward = 0.00025;
         public static final double kMaxOutput = 1; // raw motor output
@@ -397,7 +397,7 @@ public final class Constants {
         public static final int MAX_CURRENT = 45;
         public static final int SMART_MAX_CURRENT = 40;
         public static final double CURRENT_SPIKE_THRESHOLD = 5.2; 
-        public static final double INTAKE_MOTOR_SPEED = 0.2;
+        public static final double INTAKE_MOTOR_SPEED = 0.3;
         public static final double INTAKE_PIVOT_SPEED = 0.3;
         public static final double GEAR_REDUCTION = 43.5;
 
@@ -436,7 +436,7 @@ public final class Constants {
         public static final double DEPLOYED_POS = -0.32;
         public static final double RETRACTED_POS = 0;
 
-        public static final double SHOOTER_TRANSFER_SPEED = 0.75;
+        public static final double SHOOTER_TRANSFER_SPEED = 0.5;
 
         // -----------------------------------------
 

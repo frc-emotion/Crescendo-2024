@@ -1,6 +1,7 @@
 package frc.robot.commands.Teleop;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -30,6 +31,12 @@ public class ShooterManualCommand extends Command {
     }
 
     @Override
+    public void initialize() {
+        super.initialize();
+        this.shooterSubsystem.updatePID();
+    }
+
+    @Override
     public void execute() {
         if (shooterSupplier.get()) {
             /*
@@ -55,7 +62,7 @@ public class ShooterManualCommand extends Command {
         }
 
         if(feederSupplier.get()) {
-            shooterSubsystem.setFeederSpeed(0.1);
+            shooterSubsystem.setFeederSpeed(IntakeConstants.INTAKE_MOTOR_SPEED);
         } else {
             shooterSubsystem.stopFeeder();
         }

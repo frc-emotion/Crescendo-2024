@@ -39,6 +39,10 @@ public class ShooterSubsystem extends SubsystemBase {
 
     private double targetRPM;
 
+    private double kI = ShooterConstants.kI;
+    private double kD = ShooterConstants.kD; 
+    private double kP = ShooterConstants.kP;
+
     public ShooterSubsystem() {
         shooterMotor =
             new CANSparkMax(ShooterConstants.shooterPort, MotorType.kBrushless);
@@ -60,11 +64,18 @@ public class ShooterSubsystem extends SubsystemBase {
         
         feederEncoder = feederMotor.getEncoder();
 
+        this.kI = ShooterConstants.kI;
+        this.kD = ShooterConstants.kD; 
+        this.kP = ShooterConstants.kP;
+
         // Set up PID Controller constants
         controller = shooterMotor.getPIDController();
-        controller.setP(ShooterConstants.kP);
-        controller.setI(ShooterConstants.kI);
-        controller.setD(ShooterConstants.kD);
+        // controller.setP(ShooterConstants.kP);
+        controller.setP(this.kP);
+        // controller.setI(ShooterConstants.kI);
+        controller.setI(this.kI);
+        // controller.setD(ShooterConstants.kD);
+        controller.setD(this.kD);
         controller.setFF(ShooterConstants.kFeedForward);
 
         //controller.setFeedbackDevice(shooterEncoder);
@@ -101,6 +112,12 @@ public class ShooterSubsystem extends SubsystemBase {
     // public void periodic() {
     //     SmartDashboard.putBoolean("Is Note Fed?", isProjectileFed());
     // }
+
+    public void updatePID() {
+        this.controller.setI(this.kI);
+        this.controller.setD(this.kD);
+        this.controller.setP(this.kP);
+    }
 
     public void setShooterVelocity(double speed) {
         targetRPM = speed;
@@ -218,5 +235,21 @@ public class ShooterSubsystem extends SubsystemBase {
         .withWidget(BuiltInWidgets.kNumberSlider)
         .withProperties(Map.of("min", 0, "max", 4000))
         .getEntry();
+
+        this.kI = moduleData
+        .add("kI", kI)
+        .getEntry()
+        .getDouble(kI);
+
+        this.kD = moduleData
+        .add("kD", kD)
+        .getEntry()
+        .getDouble(kD);
+
+        this.kP = moduleData
+        .add("kP", kP)
+        .getEntry()
+        .getDouble(kP);
+    
     }
 }

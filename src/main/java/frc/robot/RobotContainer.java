@@ -347,7 +347,8 @@ public class RobotContainer {
                 @Override
                 public void execute() {
                     m_IntakeSubsystem.setIntake(IntakeConstants.SHOOTER_TRANSFER_SPEED);
-                    m_ShooterSubsystem.setFeederSpeed(ShooterConstants.kFeedSpeed);
+                    // m_ShooterSubsystem.setFeederSpeed(ShooterConstants.kFeedSpeed);
+                    m_ShooterSubsystem.setFeederSpeed(IntakeConstants.SHOOTER_TRANSFER_SPEED);
                 }
 
                 @Override
