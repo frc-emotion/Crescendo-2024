@@ -133,7 +133,7 @@ public class PivotSubsystem extends SubsystemBase {
     }
 
     public boolean isHandoffOk() {
-        return this.getDegrees() == PivotConstants.kHANDOFF_ANGLE;
+        return this.getDegrees() - PivotConstants.kHANDOFF_ANGLE <= PivotConstants.kMAX_ANGLE_ERROR;
     }
 
     public void stop() {
@@ -149,6 +149,10 @@ public class PivotSubsystem extends SubsystemBase {
         //     target = Constants.PivotConstants.PIVOT_MAX_REVOLUTION;
         // }
         pivotPID.setReference(target, ControlType.kPosition);
+    }
+
+    public void goToHandoff(){
+        this.setRev(PivotConstants.kHANDOFF_ANGLE);
     }
 
     public boolean isAtTarget() {

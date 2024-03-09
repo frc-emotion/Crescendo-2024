@@ -33,15 +33,13 @@ public class ShooterSubsystem extends SubsystemBase {
 
     private final RelativeEncoder shooterEncoder, feederEncoder;
 
-    private GenericEntry ampShooterRPM;
+    private GenericEntry ampRPMEntry;
 
     private DigitalInput breakSensor;
 
     private double targetRPM;
 
-    private double kI = ShooterConstants.kI;
-    private double kD = ShooterConstants.kD; 
-    private double kP = ShooterConstants.kP;
+    private GenericEntry kIEntry, kDEntry, kPEntry;
 
     public ShooterSubsystem() {
         shooterMotor =
@@ -64,18 +62,11 @@ public class ShooterSubsystem extends SubsystemBase {
         
         feederEncoder = feederMotor.getEncoder();
 
-        this.kI = ShooterConstants.kI;
-        this.kD = ShooterConstants.kD; 
-        this.kP = ShooterConstants.kP;
-
         // Set up PID Controller constants
         controller = shooterMotor.getPIDController();
-        // controller.setP(ShooterConstants.kP);
-        controller.setP(this.kP);
-        // controller.setI(ShooterConstants.kI);
-        controller.setI(this.kI);
-        // controller.setD(ShooterConstants.kD);
-        controller.setD(this.kD);
+        controller.setP(ShooterConstants.kP);
+        controller.setI(ShooterConstants.kI);
+        controller.setD(ShooterConstants.kD);
         controller.setFF(ShooterConstants.kFeedForward);
 
         //controller.setFeedbackDevice(shooterEncoder);
@@ -114,9 +105,9 @@ public class ShooterSubsystem extends SubsystemBase {
     // }
 
     public void updatePID() {
-        this.controller.setI(this.kI);
-        this.controller.setD(this.kD);
-        this.controller.setP(this.kP);
+        this.controller.setI(this.kIEntry.getDouble(ShooterConstants.kI));
+        this.controller.setD(this.kDEntry.getDouble(ShooterConstants.kD));
+        this.controller.setP(this.kPEntry.getDouble(ShooterConstants.kP));
     }
 
     public void setShooterVelocity(double speed) {
@@ -206,8 +197,8 @@ public class ShooterSubsystem extends SubsystemBase {
         return shooterMotor.getMotorTemperature();
     }
 
-    public double getAmpShooterRPM() {
-        return this.ampShooterRPM.getDouble(1.0);
+    public double getAmpRPM() {
+        return this.ampRPMEntry.getDouble(1.0);
     }
 
     private void initShuffleboard() {
@@ -230,26 +221,23 @@ public class ShooterSubsystem extends SubsystemBase {
 
         persianPositions.withSize(2, 4);
 
-        this.ampShooterRPM = moduleData
-        .add("Amp Target RPM", 1)
-        .withWidget(BuiltInWidgets.kNumberSlider)
-        .withProperties(Map.of("min", 0, "max", 4000))
+        this.ampRPMEntry = moduleData
+        .add("Amp Target RPM", 1250)
+        // .withWidget(BuiltInWidgets.kNumberSlider)
+        // .withProperties(Map.of("min", 0, "max", 4000))
         .getEntry();
 
-        this.kI = moduleData
-        .add("kI", kI)
-        .getEntry()
-        .getDouble(kI);
+        this.kIEntry = moduleData
+        .add("kI", ShooterConstants.kI)
+        .getEntry();
 
-        this.kD = moduleData
-        .add("kD", kD)
-        .getEntry()
-        .getDouble(kD);
+        this.kDEntry = moduleData
+        .add("kD", ShooterConstants.kD)
+        .getEntry();
 
-        this.kP = moduleData
-        .add("kP", kP)
-        .getEntry()
-        .getDouble(kP);
+        this.kPEntry = moduleData
+        .add("kP", ShooterConstants.kP)
+        .getEntry();
     
     }
 }

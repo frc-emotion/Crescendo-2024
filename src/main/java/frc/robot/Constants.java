@@ -381,8 +381,9 @@ public final class Constants {
             // Extra Constants
         public static final double CURRENT_SPIKE_THRESHOLD = 0;
         
-        //Setpoints
+        //Handoff
         public static final double kHANDOFF_ANGLE = -60.0;
+        public static final double kMAX_ANGLE_ERROR  = 1.0;
     }
 
     public static final class IntakeConstants {

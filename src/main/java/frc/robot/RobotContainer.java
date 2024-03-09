@@ -251,12 +251,14 @@ public class RobotContainer {
        m_operatorController.y().whileTrue(
         new Command() {
             public void execute() {
-                m_ShooterSubsystem.setShooterVelocity(m_ShooterSubsystem.getAmpShooterRPM());
+                m_ShooterSubsystem.setShooterVelocity(m_ShooterSubsystem.getAmpRPM());
             }
         }
        );
        
-        m_operatorController.povDown().or(m_operatorController.povUp()).onTrue(new InstantCommand() {
+        m_operatorController.povDown()
+        // .or(m_operatorController.povUp())
+        .onTrue(new InstantCommand() {
             @Override
             public void execute() {
                 int index = m_PivotSubsystem.getIndex();
@@ -273,58 +275,59 @@ public class RobotContainer {
         .povUp()
         .whileTrue(
             new SequentialCommandGroup(
-                // new Command() {
-                //     @Override
-                //     public void initialize() {
-                //         m_IntakeSubsystem.setGoal(-0.32);
-                //     }
-
-                //     @Override
-                //     public void execute() {
-                //         m_IntakeSubsystem.travelToSetpoint();
-                //     }
-
-                //     @Override
-                //     public void end(boolean interrupted) {
-                //         m_IntakeSubsystem.toggleState();
-                //         m_IntakeSubsystem.pivotStop();
-                //     }
-
-                //     @Override
-                //     public boolean isFinished(){
-                //         return m_IntakeSubsystem.hasReachedSetpoint();
-                //     }
-                // }, 
-                new IntakePivotCommand(m_IntakeSubsystem).onlyIf(() -> m_IntakeSubsystem.isUp()),
+                new IntakePivotCommand(m_IntakeSubsystem).onlyIf(() -> m_IntakeSubsystem.isUp()), //should we change this to .andThen() instead of sequential command group?
                 new IntakeDriveAutoCommand(m_IntakeSubsystem)
             )
         )
-        .onFalse(
-            // new Command() {
-            //     @Override
-            //     public void initialize() {
-            //         m_IntakeSubsystem.setGoal(0);
-            //     }
+        // .onFalse(
+        //     new IntakePivotCommand(m_IntakeSubsystem).onlyIf(()-> !m_IntakeSubsystem.isUp())
+        // );
+        .whileFalse(
+            // new SequentialCommandGroup(
+                new IntakePivotCommand(m_IntakeSubsystem).onlyIf(()->!m_IntakeSubsystem.isUp())
+                .alongWith(
+                    new Command() {
+                        @Override
+                        public void execute() {
+                            m_PivotSubsystem.goToHandoff();
+                        }
 
-            //     @Override
-            //     public void execute() {
-            //         m_IntakeSubsystem.travelToSetpoint();
-            //     }
+                        @Override
+                        public boolean isFinished() {
+                            return m_PivotSubsystem.isAtTarget();
+                        }
 
-            //     @Override
-            //     public void end(boolean interrupted) {
-            //         m_IntakeSubsystem.toggleState();
-            //         m_IntakeSubsystem.pivotStop();
-            //     }
+                        @Override
+                        public void end(boolean interrupted) {
+                            m_PivotSubsystem.stop();
+                        }
+                    }
+                    .onlyIf(()->!m_PivotSubsystem.isHandoffOk())
+                )
+                .andThen(
+                    new Command() {
+                        @Override
+                        public void execute() {
+                            m_IntakeSubsystem.setIntake(IntakeConstants.SHOOTER_TRANSFER_SPEED);
+                            // m_ShooterSubsystem.setFeederSpeed(ShooterConstants.kFeedSpeed);
+                            m_ShooterSubsystem.setFeederSpeed(IntakeConstants.SHOOTER_TRANSFER_SPEED);
+                        }
+        
+                        @Override
+                        public void end(boolean interrupted) {
+                            m_IntakeSubsystem.intakeStop();
+                            m_ShooterSubsystem.stopFeeder();
+                        }
 
-            //     @Override
-            //     public boolean isFinished(){
-            //         return m_IntakeSubsystem.hasReachedSetpoint();
-            //     }
-            // } 
-            new IntakePivotCommand(m_IntakeSubsystem).onlyIf(()-> !m_IntakeSubsystem.isUp())
+                        @Override
+                        public boolean isFinished() {
+                            return m_ShooterSubsystem.isProjectileFed();
+                        }
+                    }
+                    .onlyIf(()-> m_PivotSubsystem.isHandoffOk() && m_IntakeSubsystem.isUp())
+                )
+            // )
         );
-
 
         m_operatorController.b().whileTrue(
             new Command() {

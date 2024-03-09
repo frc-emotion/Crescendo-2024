@@ -32,7 +32,6 @@ public class ShooterManualCommand extends Command {
 
     @Override
     public void initialize() {
-        super.initialize();
         this.shooterSubsystem.updatePID();
     }
 
@@ -94,6 +93,7 @@ public class ShooterManualCommand extends Command {
 
     @Override
     public void end(boolean interrupted) {
+        super.end(interrupted);
         shooterSubsystem.stopFeeder();
         shooterSubsystem.stopShooter();
     }
