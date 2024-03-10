@@ -2,7 +2,6 @@ package frc.robot.commands.Teleop;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.ClimbConstants;
-import frc.robot.Constants.OIConstants;
 import frc.robot.subsystems.ClimbSubsystem;
 import java.util.function.Supplier;
 
@@ -16,7 +15,7 @@ public class ClimbManualCommand extends Command {
 
     private final ClimbSubsystem climbSubsystem;
     private Supplier<Double> input;
-    private double coefficient = 10;
+    //private double coefficient = 10;
 
     /**
      * Create a new instance of ClimbXboxCommand
@@ -34,26 +33,28 @@ public class ClimbManualCommand extends Command {
     @Override
     public void execute() {
         /*
-        if (input.get() > OIConstants.CLIMB_DEADZONE) {
-            // // move up
-            // climbSubsystem.setPosition(
-            //     climbSubsystem.getPosition() + (coefficient * input.get())
-            // );
-            climbSubsystem.rawClimbUp();
-        } else if (input.get() < -OIConstants.CLIMB_DEADZONE) {
-            // move down
-            climbSubsystem.setPosition(
-                climbSubsystem.getPosition() - (coefficient * input.get())
-            );
-        }*/
+         * if (input.get() > OIConstants.CLIMB_DEADZONE) {
+         * // // move up
+         * // climbSubsystem.setPosition(
+         * // climbSubsystem.getPosition() + (coefficient * input.get())
+         * // );
+         * climbSubsystem.rawClimbUp();
+         * } else if (input.get() < -OIConstants.CLIMB_DEADZONE) {
+         * // move down
+         * climbSubsystem.setPosition(
+         * climbSubsystem.getPosition() - (coefficient * input.get())
+         * );
+         * }
+         */
         if (input.get() < -ClimbConstants.DEADZONE && climbSubsystem.getPosition() > 0) {
             climbSubsystem.setRawSpeed(-ClimbConstants.kSpeed);
-        } else if(input.get() > ClimbConstants.DEADZONE && climbSubsystem.getPosition() < ClimbConstants.EXTENSION_LIMIT) {
+        } else if (input.get() > ClimbConstants.DEADZONE
+                && climbSubsystem.getPosition() < ClimbConstants.EXTENSION_LIMIT) {
             climbSubsystem.setRawSpeed(ClimbConstants.kSpeed);
         } else {
             climbSubsystem.stop();
         }
-        
+
         // climbSubsystem.setPosition(input.get());
     }
 

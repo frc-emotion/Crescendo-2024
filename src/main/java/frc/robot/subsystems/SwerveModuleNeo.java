@@ -31,25 +31,24 @@ public class SwerveModuleNeo {
     private MagnetSensorConfigs magnetConfiguration;
 
     private final CANcoder absoluteEncoder;
-    private final boolean absoluteEncoderReversed;
+    //private final boolean absoluteEncoderReversed;
     private final double absoluteEncoderOffsetRad;
 
     private double resetIteration = 0;
-    private double referenceAngleRadians = 0;
+    //private double referenceAngleRadians = 0;
 
     private final int ENCODER_RESET_ITERATIONS = 500;
 
     public SwerveModuleNeo(
-        int driveMotorId,
-        int turningMotorId,
-        boolean driveMotorReversed,
-        boolean turningMotorReversed,
-        int absoluteEncoderId,
-        double absoluteEncoderOffset,
-        boolean absoluteEncoderReversed
-    ) {
+            int driveMotorId,
+            int turningMotorId,
+            boolean driveMotorReversed,
+            boolean turningMotorReversed,
+            int absoluteEncoderId,
+            double absoluteEncoderOffset,
+            boolean absoluteEncoderReversed) {
         this.absoluteEncoderOffsetRad = absoluteEncoderOffset;
-        this.absoluteEncoderReversed = absoluteEncoderReversed;
+        //this.absoluteEncoderReversed = absoluteEncoderReversed;
 
         magnetConfiguration = new MagnetSensorConfigs();
 
@@ -60,7 +59,6 @@ public class SwerveModuleNeo {
         absoluteEncoder = new CANcoder(absoluteEncoderId);
         absoluteEncoder.getConfigurator().apply(magnetConfiguration);
         absoluteEncoder.getPosition().setUpdateFrequency(absoluteEncoder.getPosition().getAppliedUpdateFrequency() / 4);
-
 
         driveMotor = new CANSparkMax(driveMotorId, MotorType.kBrushless);
 
@@ -78,19 +76,15 @@ public class SwerveModuleNeo {
 
         turningEncoder = turningMotor.getEncoder();
         turningEncoder.setPositionConversionFactor(
-            ModuleConstants.kTurningEncoderRot2Rad
-        );
+                ModuleConstants.kTurningEncoderRot2Rad);
         turningEncoder.setVelocityConversionFactor(
-            ModuleConstants.kTurningEncoderRPM2RadPerSec
-        );
+                ModuleConstants.kTurningEncoderRPM2RadPerSec);
 
         driveEncoder = driveMotor.getEncoder();
         driveEncoder.setPositionConversionFactor(
-            ModuleConstants.kDriveEncoderRot2Meter
-        );
+                ModuleConstants.kDriveEncoderRot2Meter);
         driveEncoder.setVelocityConversionFactor(
-            ModuleConstants.kDriveEncoderRPM2MeterPerSec
-        );
+                ModuleConstants.kDriveEncoderRPM2MeterPerSec);
 
         turningPidController = turningMotor.getPIDController();
 
@@ -132,9 +126,8 @@ public class SwerveModuleNeo {
 
     public SwerveModulePosition getPosition() {
         return new SwerveModulePosition(
-            getDrivePosition(),
-            new Rotation2d(getTurningPosition())
-        );
+                getDrivePosition(),
+                new Rotation2d(getTurningPosition()));
     }
 
     public void setReferenceAngle(double referenceAngleRadians) {
@@ -143,7 +136,8 @@ public class SwerveModuleNeo {
         if (getTurningVelocity() < Math.toRadians(0.5)) {
             if (++resetIteration >= ENCODER_RESET_ITERATIONS) {
                 resetIteration = 0;
-                double absoluteAngle = Units.degreesToRadians(getAbsolutePostion());//absoluteEncoder.getAbsolutePosition().getValueAsDouble() * 2.0 * Math.PI;
+                double absoluteAngle = Units.degreesToRadians(getAbsolutePostion());// absoluteEncoder.getAbsolutePosition().getValueAsDouble()
+                                                                                    // * 2.0 * Math.PI;
                 turningEncoder.setPosition(absoluteAngle);
                 currentAngleRadians = absoluteAngle;
             }
@@ -156,10 +150,9 @@ public class SwerveModuleNeo {
             currentAngleRadiansMod += 2.0 * Math.PI;
         }
 
-        double adjustedReferenceAngleRadians =
-            referenceAngleRadians +
-            currentAngleRadians -
-            currentAngleRadiansMod;
+        double adjustedReferenceAngleRadians = referenceAngleRadians +
+                currentAngleRadians -
+                currentAngleRadiansMod;
 
         if (referenceAngleRadians - currentAngleRadiansMod > Math.PI) {
             adjustedReferenceAngleRadians -= 2.0 * Math.PI;
@@ -167,20 +160,18 @@ public class SwerveModuleNeo {
             adjustedReferenceAngleRadians += 2.0 * Math.PI;
         }
 
-        this.referenceAngleRadians = referenceAngleRadians;
+        //this.referenceAngleRadians = referenceAngleRadians;
 
         turningPidController.setReference(
-            adjustedReferenceAngleRadians,
-            CANSparkMax.ControlType.kPosition
-        );
+                adjustedReferenceAngleRadians,
+                CANSparkMax.ControlType.kPosition);
     }
 
     public void setSpeed(SwerveModuleState state, boolean isOpenLoop) {
         if (isOpenLoop) {
             driveMotor.set(
-                state.speedMetersPerSecond /
-                DriveConstants.kPhysicalMaxSpeedMetersPerSecond
-            );
+                    state.speedMetersPerSecond /
+                            DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
         } else {
             // double velocity = MPSToFalcon(state.speedMetersPerSecond,
             // (((ModuleConstants.kWheelDiameterMeters / 2)) * 2 * Math.PI), 1 /
@@ -198,15 +189,13 @@ public class SwerveModuleNeo {
     public void resetEncoders() {
         driveEncoder.setPosition(0);
         turningEncoder.setPosition(
-            Units.degreesToRadians(getAbsolutePostion())
-        );
+                Units.degreesToRadians(getAbsolutePostion()));
     }
 
     public SwerveModuleState getState() {
         return new SwerveModuleState(
-            getDriveVelocity(),
-            new Rotation2d(getTurningPosition())
-        );
+                getDriveVelocity(),
+                new Rotation2d(getTurningPosition()));
     }
 
     /**
@@ -238,31 +227,32 @@ public class SwerveModuleNeo {
     }
 
     // Unit Conversion Methods
-    private double toRot(double ticks) {
-        return ticks / 2048;
-    }
-
-    private double toRPM(double ticks_per_time) {
-        return (ticks_per_time / 2048) * 600;
-    }
-
-    private double toMeter(double rot) {
-        return rot * (ModuleConstants.kDriveEncoderRot2Meter);
-    }
-
-    private double toMPS(double rpm) {
-        return rpm * (ModuleConstants.kDriveEncoderRPM2MeterPerSec);
-    }
-
-    // public static double RPMToFalcon(double RPM, double gearRatio) {
-    //     double motorRPM = RPM * gearRatio;
-    //     double sensorCounts = motorRPM * (2048.0 / 600.0);
-    //     return sensorCounts;
+    // private double toRot(double ticks) {
+    //     return ticks / 2048;
     // }
 
-    // public static double MPSToFalcon(double velocity, double circumference, double gearRatio) {
-    //     double wheelRPM = ((velocity * 60) / circumference);
-    //     double wheelVelocity = RPMToFalcon(wheelRPM, gearRatio);
-    //     return wheelVelocity;
+    // private double toRPM(double ticks_per_time) {
+    //     return (ticks_per_time / 2048) * 600;
+    // }
+
+    // private double toMeter(double rot) {
+    //     return rot * (ModuleConstants.kDriveEncoderRot2Meter);
+    // }
+
+    // private double toMPS(double rpm) {
+    //     return rpm * (ModuleConstants.kDriveEncoderRPM2MeterPerSec);
+    // }
+
+    // public static double RPMToFalcon(double RPM, double gearRatio) {
+    // double motorRPM = RPM * gearRatio;
+    // double sensorCounts = motorRPM * (2048.0 / 600.0);
+    // return sensorCounts;
+    // }
+
+    // public static double MPSToFalcon(double velocity, double circumference,
+    // double gearRatio) {
+    // double wheelRPM = ((velocity * 60) / circumference);
+    // double wheelVelocity = RPMToFalcon(wheelRPM, gearRatio);
+    // return wheelVelocity;
     // }
 }

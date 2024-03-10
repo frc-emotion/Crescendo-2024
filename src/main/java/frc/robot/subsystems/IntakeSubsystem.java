@@ -27,14 +27,14 @@ public class IntakeSubsystem extends SubsystemBase {
 
     private final DigitalInput breakSensor;
 
-    //private final SparkPIDController pivotController;
+    // private final SparkPIDController pivotController;
     private final ProfiledPIDController pivotController;
 
     public boolean down;
-    
+
     public IntakeSubsystem() {
 
-        down = true; 
+        down = true;
 
         pivotMotor = new CANSparkMax(IntakeConstants.INTAKE_PIVOT_PORT, MotorType.kBrushless);
         pivotMotor2 = new CANSparkMax(IntakeConstants.INTAKE_PIVOT_2_PORT, MotorType.kBrushless);
@@ -43,7 +43,7 @@ public class IntakeSubsystem extends SubsystemBase {
         intakeMotor.setSmartCurrentLimit(IntakeConstants.SMART_MAX_CURRENT);
         intakeMotor.setSecondaryCurrentLimit(IntakeConstants.MAX_CURRENT);
         intakeMotor.setIdleMode(IdleMode.kBrake);
- 
+
         pivotMotor.setSmartCurrentLimit(IntakeConstants.SMART_MAX_CURRENT);
         pivotMotor.setSecondaryCurrentLimit(IntakeConstants.MAX_CURRENT);
         pivotMotor.setIdleMode(IdleMode.kBrake);
@@ -55,24 +55,23 @@ public class IntakeSubsystem extends SubsystemBase {
         pivotMotor2.follow(pivotMotor, true);
 
         pivotController = new ProfiledPIDController(
-            IntakeConstants.kP_PIVOT, 
-            IntakeConstants.kI_PIVOT, 
-            IntakeConstants.kD_PIVOT, 
-            new TrapezoidProfile.Constraints(IntakeConstants.kMaxVelocity, IntakeConstants.kMaxAccel)
-        );
-        //pivotController.setTolerance(IntakeConstants.kMaxError);
+                IntakeConstants.kP_PIVOT,
+                IntakeConstants.kI_PIVOT,
+                IntakeConstants.kD_PIVOT,
+                new TrapezoidProfile.Constraints(IntakeConstants.kMaxVelocity, IntakeConstants.kMaxAccel));
+        // pivotController.setTolerance(IntakeConstants.kMaxError);
 
         breakSensor = new DigitalInput(IntakeConstants.BEAM_BREAKER_PORT);
-        
-        
+
         // pivotController.setP(IntakeConstants.kP_PIVOT);
         // pivotController.setI(IntakeConstants.kI_PIVOT);
         // pivotController.setD(IntakeConstants.kD_PIVOT);
-        // pivotController.setOutputRange(IntakeConstants.MIN_POSITION, IntakeConstants.MAX_POSITION);
+        // pivotController.setOutputRange(IntakeConstants.MIN_POSITION,
+        // IntakeConstants.MAX_POSITION);
 
         pivotEncoder = pivotMotor.getEncoder();
         pivotEncoder.setPositionConversionFactor(1.0 / IntakeConstants.GEAR_REDUCTION);
-    
+
         pivotEncoder2 = pivotMotor2.getEncoder();
         pivotEncoder2.setPositionConversionFactor(1.0 / IntakeConstants.GEAR_REDUCTION);
 
@@ -81,7 +80,7 @@ public class IntakeSubsystem extends SubsystemBase {
         initShuffleboard();
     }
 
-    public void toggleState(){
+    public void toggleState() {
         down = !down;
     }
 
@@ -89,7 +88,7 @@ public class IntakeSubsystem extends SubsystemBase {
         return down;
     }
 
-    public boolean checkCurrentSpike(){
+    public boolean checkCurrentSpike() {
         return pivotMotor.getOutputCurrent() > IntakeConstants.CURRENT_SPIKE_THRESHOLD;
 
     }
@@ -102,7 +101,7 @@ public class IntakeSubsystem extends SubsystemBase {
         return (pivotEncoder.getPosition() / IntakeConstants.GEAR_REDUCTION) * 360.0;
     }
 
-    public void pivotStop(){
+    public void pivotStop() {
         pivotMotor.set(0);
     }
 
@@ -121,7 +120,6 @@ public class IntakeSubsystem extends SubsystemBase {
     public boolean getBeamState() {
         return breakSensor.get();
     }
-
 
     // TESTING ---------------------------------------------
 
@@ -168,11 +166,12 @@ public class IntakeSubsystem extends SubsystemBase {
     }
 
     private void initShuffleboard() {
-        if(!Constants.DEBUG_MODE_ACTIVE) return;
+        if (!Constants.DEBUG_MODE_ACTIVE)
+            return;
 
         ShuffleboardTab moduleData = TabManager
-            .getInstance()
-            .accessTab(SubsystemTab.INTAKE);
+                .getInstance()
+                .accessTab(SubsystemTab.INTAKE);
         ShuffleboardLayout persianPositions = moduleData.getLayout("Persian Positions", BuiltInLayouts.kList);
 
         persianPositions.addNumber("Intake Motor Position", () -> driveEncoder.getPosition());
@@ -185,7 +184,7 @@ public class IntakeSubsystem extends SubsystemBase {
         persianPositions.addBoolean("Is Down", this::isUp);
         persianPositions.addDouble("Current Goal", this::getGoal);
 
-        //persianPositions.addDouble("Current", () -> pivotMotor.getOutputCurrent());
+        // persianPositions.addDouble("Current", () -> pivotMotor.getOutputCurrent());
 
         persianPositions.withSize(2, 4);
 

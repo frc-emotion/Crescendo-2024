@@ -4,7 +4,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.subsystems.ShooterSubsystem;
 
-public class ShooterFeederAutoCommand extends Command{
+public class ShooterFeederAutoCommand extends Command {
     private ShooterSubsystem shooterSubsystem;
 
     public ShooterFeederAutoCommand(ShooterSubsystem shooterSubsystem) {

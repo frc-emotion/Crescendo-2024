@@ -3,8 +3,6 @@ package frc.robot.commands.Teleop;
 import java.util.function.Supplier;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants;
-import frc.robot.Constants.IntakeConstants;
 import frc.robot.subsystems.IntakeSubsystem;
 
 public class IntakeDriveCommand extends Command {
@@ -12,10 +10,9 @@ public class IntakeDriveCommand extends Command {
     private IntakeSubsystem intakeSubsystem;
     private final Supplier<Boolean> forwardFunc, reverseFunc;
 
-    public IntakeDriveCommand(IntakeSubsystem intake, 
-    Supplier<Boolean> forwardFunc, 
-    Supplier<Boolean> reverseFunc
-    ){
+    public IntakeDriveCommand(IntakeSubsystem intake,
+            Supplier<Boolean> forwardFunc,
+            Supplier<Boolean> reverseFunc) {
 
         this.intakeSubsystem = intake;
         this.forwardFunc = forwardFunc;
@@ -30,18 +27,18 @@ public class IntakeDriveCommand extends Command {
     @Override
     public void execute() {
         /*
-        if (leftAxis.get() > Constants.OIConstants.INTAKE_DEADZONE) {
-            intakeSubsystem.revSimplePivot();
-        } else if (rightAxis.get() > Constants.OIConstants.INTAKE_DEADZONE) {
-            intakeSubsystem.simplePivot();
-        } else {
-            intakeSubsystem.pivotStop();
-        }
-        */
+         * if (leftAxis.get() > Constants.OIConstants.INTAKE_DEADZONE) {
+         * intakeSubsystem.revSimplePivot();
+         * } else if (rightAxis.get() > Constants.OIConstants.INTAKE_DEADZONE) {
+         * intakeSubsystem.simplePivot();
+         * } else {
+         * intakeSubsystem.pivotStop();
+         * }
+         */
 
-        if(forwardFunc.get() && intakeSubsystem.getBeamState()){
+        if (forwardFunc.get() && intakeSubsystem.getBeamState()) {
             intakeSubsystem.intakeForward();
-        } else if(reverseFunc.get()){
+        } else if (reverseFunc.get()) {
             intakeSubsystem.intakeReverse();
         } else {
             intakeSubsystem.intakeStop();
@@ -54,7 +51,7 @@ public class IntakeDriveCommand extends Command {
     }
 
     @Override
-    public boolean isFinished(){
+    public boolean isFinished() {
         return false;
     }
 }

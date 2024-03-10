@@ -1,6 +1,5 @@
 package frc.robot.subsystems;
 
-
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
@@ -76,7 +75,6 @@ public class VisionSubsystem extends SubsystemBase {
 
         initShuffleboard();
     }
-
 
     public void updateEstimator() {
         poseEstimator.update(swerveSubsystem.getRotation2d(), swerveSubsystem.getModulePositions());
@@ -240,47 +238,45 @@ public class VisionSubsystem extends SubsystemBase {
 
     public void updateVision5() {
         LimelightHelpers.PoseEstimate botPose = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight");
-    
-    
+
         // invalid LL data
         if (botPose.pose.getX() == 0.0) {
-        return;
+            return;
         }
 
         // distance from current pose to vision estimated pose
         double poseDifference = poseEstimator.getEstimatedPosition().getTranslation()
-            .getDistance(botPose.pose.getTranslation());
+                .getDistance(botPose.pose.getTranslation());
         // https://docs.limelightvision.io/docs/docs-limelight/pipeline-apriltag/apriltag-robot-localization#using-wpilibs-pose-estimator
         if (getNumTags() > 0) {
-        double xyStds;
-        double degStds;
-        // multiple targets detected
-        if (getNumTags() >= 2) {
-            xyStds = 0.5;
-            degStds = 6;
-        }
-        // 1 target with large area and close to estimated pose
-        else if (botPose.avgTagArea > 0.8 && poseDifference < 0.5) {
-            xyStds = 1.0;
-            degStds = 12;
-        }
-        // 1 target farther away and estimated pose is close
-        else if (botPose.avgTagArea > 0.1 && poseDifference < 0.3) {
-            xyStds = 2.0;
-            degStds = 30;
-        }
-        // conditions don't match to add a vision measurement
-        else {
-            return;
-        }
+            double xyStds;
+            double degStds;
+            // multiple targets detected
+            if (getNumTags() >= 2) {
+                xyStds = 0.5;
+                degStds = 6;
+            }
+            // 1 target with large area and close to estimated pose
+            else if (botPose.avgTagArea > 0.8 && poseDifference < 0.5) {
+                xyStds = 1.0;
+                degStds = 12;
+            }
+            // 1 target farther away and estimated pose is close
+            else if (botPose.avgTagArea > 0.1 && poseDifference < 0.3) {
+                xyStds = 2.0;
+                degStds = 30;
+            }
+            // conditions don't match to add a vision measurement
+            else {
+                return;
+            }
 
-        poseEstimator.setVisionMeasurementStdDevs(
-            VecBuilder.fill(xyStds, xyStds, Units.degreesToRadians(degStds)));
-        poseEstimator.addVisionMeasurement(botPose.pose,
-            Timer.getFPGATimestamp() - botPose.latency);
+            poseEstimator.setVisionMeasurementStdDevs(
+                    VecBuilder.fill(xyStds, xyStds, Units.degreesToRadians(degStds)));
+            poseEstimator.addVisionMeasurement(botPose.pose,
+                    Timer.getFPGATimestamp() - botPose.latency);
         }
     }
-
 
     // SHUFFLEBOARD
 
@@ -328,5 +324,5 @@ public class VisionSubsystem extends SubsystemBase {
         visionData.add("Snap Odometry to Vision+Odometry", new InstantCommand(() -> snapOdometry()));
         visionData.addString("Current Mode", () -> getVisionType().toString());
     }
-  
+
 }

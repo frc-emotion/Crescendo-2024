@@ -7,19 +7,13 @@ package frc.robot;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.numbers.N1;
-import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj2.command.Command;
-
-import java.util.HashMap;
 
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
-import edu.wpi.first.math.VecBuilder;
-import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.geometry.Pose2d;
 
 /**
@@ -82,7 +76,6 @@ public final class Constants {
         public static final double drivekV = 0;
         public static final double drivekA = 0;
     }
-     
 
     public static final class DriveConstants {
         public static enum DriveMode {
@@ -311,9 +304,9 @@ public final class Constants {
         public static final double[] PRESET_SPEEDS = { 3000, 0 }; // rpm
         public static final double IDLE_SPEED = 1000; // rpm
 
-            // For SOURCE intake
+        // For SOURCE intake
         protected static final double SHOOTER_REVERSE_SPEED = -0.2; // raw motor output
-        protected static final double FEEDER_REVERSE_SPEED = -0.1;  // raw motor output
+        protected static final double FEEDER_REVERSE_SPEED = -0.1; // raw motor output
     }
 
     public static final class PivotConstants {
@@ -385,12 +378,12 @@ public final class Constants {
         public static final double kD_PIVOT = 0;
 
         // Input Constants (Unused)
-        private static final double kMaxVelocityDeg = 20;
-        private static final double kMaxAccelDeg = 5;
-        private static final double kMaxErrorDeg = 3;
+        // private static final double kMaxVelocityDeg = 20;
+        // private static final double kMaxAccelDeg = 5;
+        // private static final double kMaxErrorDeg = 3;
 
-        private static final double DEPLOYED_POS_DEG = -13.5;
-        private static final double RETRACTED_POS_DEG = 0;
+        // private static final double DEPLOYED_POS_DEG = -13.5;
+        // private static final double RETRACTED_POS_DEG = 0;
 
         // Do not edit these constants -------------
 
@@ -407,19 +400,19 @@ public final class Constants {
         // -----------------------------------------
 
         /**
-         * FIX THIS METHOD!!!!
+         * // TODO: FIX THIS METHOD!!!!
          *
          * @param degrees The target number of degrees
          * @return The equivalent measurement in meters
          */
-        private static double pivotDegreesToRevolutions(double degrees) {
-            return (degrees / 360.0) / GEAR_REDUCTION;
-        }
+        // private static double pivotDegreesToRevolutions(double degrees) {
+        //     return (degrees / 360.0) / GEAR_REDUCTION;
+        // }
     }
 
     public static final class VisionConstants {
         public static boolean VISION_DEBUG_MODE = true;
-        
+
         public static final Matrix<N3, N1> kTestStdDevs = VecBuilder.fill(0.2, 0.2, 1);
         public static final Matrix<N3, N1> kSingleTagStdDevs = VecBuilder.fill(4, 4, 8);
         public static final Matrix<N3, N1> kMultiTagStdDevs = VecBuilder.fill(0.5, 0.5, 1);

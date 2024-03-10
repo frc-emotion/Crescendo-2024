@@ -1,8 +1,8 @@
 package frc.robot.util;
 
-import java.util.Queue;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.function.BooleanSupplier;
+// import java.util.Queue;
+// import java.util.concurrent.ArrayBlockingQueue;
+// import java.util.function.BooleanSupplier;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathConstraints;
@@ -44,14 +44,13 @@ public class AutoManager {
                 this.visionSubsystem::resetOdometry,
                 this.swerveSubsystem::getChassisSpeeds,
                 this.swerveSubsystem::driveRobotRelative,
-                
+
                 new HolonomicPathFollowerConfig(
                         new PIDConstants(AutoConstants.kPXController),
                         new PIDConstants(AutoConstants.kPThetaController),
                         AutoConstants.kMaxSpeedMetersPerSecond,
                         DriveConstants.kWheelBase,
-                        new ReplanningConfig()
-                ),
+                        new ReplanningConfig()),
                 () -> DriverStation.getAlliance().get() == DriverStation.Alliance.Red,
                 swerveSubsystem);
 
@@ -59,13 +58,12 @@ public class AutoManager {
     }
 
     public static AutoManager getInstance() {
-        if(autoManagerInstance == null) {
+        if (autoManagerInstance == null) {
             autoManagerInstance = new AutoManager(RobotContainer.m_VisionSubsystem, RobotContainer.m_SwerveSubsystem);
         }
-        return autoManagerInstance;     
+        return autoManagerInstance;
     }
 
-    
     public Command getAutoCommand(String name) {
         return AutoBuilder.buildAuto(name);
     }
