@@ -62,7 +62,7 @@ public class RobotContainer {
     public static final PivotSubsystem m_PivotSubsystem = new PivotSubsystem();
     public static final VisionSubsystem m_VisionSubsystem = new VisionSubsystem(m_SwerveSubsystem);
 
-    public static final AutoManager autoManager = new AutoManager(m_VisionSubsystem, m_SwerveSubsystem);
+   private final AutoManager autoManager;
 
     // Replace with CommandPS4Controller or CommandJoystick if needed
     private final CommandXboxController m_driverController = new CommandXboxController(
@@ -83,7 +83,7 @@ public class RobotContainer {
      * The container for the robot. Contains subsystems, OI devices, and commands.
      */
     public RobotContainer() {
-        
+        autoManager = AutoManager.getInstance();
 
         m_SwerveSubsystem.setDefaultCommand(
             new DefaultSwerveXboxCommand(

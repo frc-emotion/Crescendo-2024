@@ -72,6 +72,7 @@ public class VisionSubsystem extends SubsystemBase {
         visionType.addOption("Preset STD", VisionTypes.PRESET_STD);
         visionType.addOption("Custom STD", VisionTypes.CUSTOM_STD);
         visionType.addOption("Calculations Based Vision", VisionTypes.CRAZY_MATH);
+        visionType.addOption("Limelight Docs Vision", VisionTypes.LLDOCS);
 
         initShuffleboard();
     }
@@ -108,10 +109,6 @@ public class VisionSubsystem extends SubsystemBase {
                 swerveSubsystem.getRotation2d(),
                 swerveSubsystem.getModulePositions(),
                 pose);
-    }
-
-    public double getDifference() {
-        return getCurrentPose().getTranslation().getDistance(getCurrentOdoPose().getTranslation());
     }
 
     public boolean tagDetected() {
@@ -239,7 +236,49 @@ public class VisionSubsystem extends SubsystemBase {
         } else {
             SmartDashboard.putBoolean("PoseUpdate", false);
         }
-        updateField();
+    }
+
+    public void updateVision5() {
+        LimelightHelpers.PoseEstimate botPose = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight");
+    
+    
+        // invalid LL data
+        if (botPose.pose.getX() == 0.0) {
+        return;
+        }
+
+        // distance from current pose to vision estimated pose
+        double poseDifference = poseEstimator.getEstimatedPosition().getTranslation()
+            .getDistance(botPose.pose.getTranslation());
+        // https://docs.limelightvision.io/docs/docs-limelight/pipeline-apriltag/apriltag-robot-localization#using-wpilibs-pose-estimator
+        if (getNumTags() > 0) {
+        double xyStds;
+        double degStds;
+        // multiple targets detected
+        if (getNumTags() >= 2) {
+            xyStds = 0.5;
+            degStds = 6;
+        }
+        // 1 target with large area and close to estimated pose
+        else if (botPose.avgTagArea > 0.8 && poseDifference < 0.5) {
+            xyStds = 1.0;
+            degStds = 12;
+        }
+        // 1 target farther away and estimated pose is close
+        else if (botPose.avgTagArea > 0.1 && poseDifference < 0.3) {
+            xyStds = 2.0;
+            degStds = 30;
+        }
+        // conditions don't match to add a vision measurement
+        else {
+            return;
+        }
+
+        poseEstimator.setVisionMeasurementStdDevs(
+            VecBuilder.fill(xyStds, xyStds, Units.degreesToRadians(degStds)));
+        poseEstimator.addVisionMeasurement(botPose.pose,
+            Timer.getFPGATimestamp() - botPose.latency);
+        }
     }
 
 
@@ -266,6 +305,10 @@ public class VisionSubsystem extends SubsystemBase {
         resetOdometry(getCurrentPose());
     }
 
+    public double getDifference() {
+        return getCurrentPose().getTranslation().getDistance(getVisionPose().pose.getTranslation());
+    }
+
     public void updateNetworkTable() {
         posePublisher.set(poseEstimator.getEstimatedPosition());
         posePublisher2.set(poseOdometryEstimator.getPoseMeters());
@@ -281,7 +324,7 @@ public class VisionSubsystem extends SubsystemBase {
         visionData.add("Odometry Only Field", m_field2).withWidget(BuiltInWidgets.kField);
         visionData.add("Num Tags", getNumTags());
         visionData.add("Tag Dist", getAvgTagDist());
-        visionData.add("Difference btw Odometry and Vision", getDifference());
+        visionData.add("Difference btw Current Pose and New Vision Estimate", getDifference());
         visionData.add("Snap Odometry to Vision+Odometry", new InstantCommand(() -> snapOdometry()));
         visionData.addString("Current Mode", () -> getVisionType().toString());
     }

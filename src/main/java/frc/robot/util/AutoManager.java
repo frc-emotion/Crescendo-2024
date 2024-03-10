@@ -13,6 +13,7 @@ import com.pathplanner.lib.util.ReplanningConfig;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.RobotContainer;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.subsystems.SwerveSubsystem;
@@ -22,6 +23,8 @@ public class AutoManager {
 
     private VisionSubsystem visionSubsystem;
     private SwerveSubsystem swerveSubsystem;
+
+    private static AutoManager autoManagerInstance;
 
     private static final PathConstraints kPathConstraints = new PathConstraints(
             AutoConstants.kMaxSpeedMetersPerSecond,
@@ -45,12 +48,19 @@ public class AutoManager {
                         new PIDConstants(AutoConstants.kPThetaController),
                         AutoConstants.kMaxSpeedMetersPerSecond,
                         DriveConstants.kWheelBase,
-                        new ReplanningConfig()),
-
+                        new ReplanningConfig()
+                ),
                 () -> DriverStation.getAlliance().get() == DriverStation.Alliance.Red,
                 swerveSubsystem);
 
         Pathfinding.setPathfinder(new LocalADStar());
+    }
+
+    public static AutoManager getInstance() {
+        if(autoManagerInstance == null) {
+            autoManagerInstance = new AutoManager(RobotContainer.m_VisionSubsystem, RobotContainer.m_SwerveSubsystem);
+        }
+        return autoManagerInstance; 
     }
 
     

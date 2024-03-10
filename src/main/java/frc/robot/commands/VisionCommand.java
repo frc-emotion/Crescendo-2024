@@ -37,6 +37,9 @@ public class VisionCommand extends Command {
             case CRAZY_MATH:
                 visionSubsystem.updateVision4();
                 break;
+            case LLDOCS:
+                visionSubsystem.updateVision5();
+                break;
             default:
                 break;
         }
