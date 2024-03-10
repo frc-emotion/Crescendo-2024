@@ -42,6 +42,8 @@ public class ShooterSubsystem extends SubsystemBase {
         shooterMotor.setSecondaryCurrentLimit(ShooterConstants.CURRENT_LIMIT);
         shooterMotor.setIdleMode(IdleMode.kCoast);
 
+        shooterMotor.enableVoltageCompensation(10);
+
         feederMotor =
             new CANSparkMax(ShooterConstants.feederPort, MotorType.kBrushless);
 
@@ -51,6 +53,8 @@ public class ShooterSubsystem extends SubsystemBase {
         feederMotor.setInverted(true);
 
         shooterEncoder = shooterMotor.getEncoder();
+        shooterEncoder.setMeasurementPeriod(16);
+        shooterEncoder.setAverageDepth(2);
         //shooterEncoder.setVelocityConversionFactor(2);
         
         feederEncoder = feederMotor.getEncoder();
