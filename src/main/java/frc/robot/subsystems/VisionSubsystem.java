@@ -283,6 +283,7 @@ public class VisionSubsystem extends SubsystemBase {
         visionData.add("Tag Dist", getAvgTagDist());
         visionData.add("Difference btw Odometry and Vision", getDifference());
         visionData.add("Snap Odometry to Vision+Odometry", new InstantCommand(() -> snapOdometry()));
+        visionData.addString("Current Mode", () -> getVisionType().toString());
     }
   
 }
