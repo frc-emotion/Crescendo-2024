@@ -110,6 +110,10 @@ public class VisionSubsystem extends SubsystemBase {
                 pose);
     }
 
+    public double getDifference() {
+        return getCurrentPose().getTranslation().getDistance(getCurrentOdoPose().getTranslation());
+    }
+
     public boolean tagDetected() {
         return LimelightHelpers.getTV("limelight");
     }
@@ -277,6 +281,7 @@ public class VisionSubsystem extends SubsystemBase {
         visionData.add("Odometry Only Field", m_field2).withWidget(BuiltInWidgets.kField);
         visionData.add("Num Tags", getNumTags());
         visionData.add("Tag Dist", getAvgTagDist());
+        visionData.add("Difference btw Odometry and Vision", getDifference());
         visionData.add("Snap Odometry to Vision+Odometry", new InstantCommand(() -> snapOdometry()));
     }
   
