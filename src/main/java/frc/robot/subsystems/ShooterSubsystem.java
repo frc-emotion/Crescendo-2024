@@ -42,7 +42,7 @@ public class ShooterSubsystem extends SubsystemBase {
         shooterMotor.setSecondaryCurrentLimit(ShooterConstants.CURRENT_LIMIT);
         shooterMotor.setIdleMode(IdleMode.kCoast);
 
-        shooterMotor.enableVoltageCompensation(10);
+        shooterMotor.enableVoltageCompensation(8);
 
         feederMotor =
             new CANSparkMax(ShooterConstants.feederPort, MotorType.kBrushless);

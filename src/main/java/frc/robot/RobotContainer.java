@@ -13,7 +13,7 @@ import frc.robot.subsystems.*;
 import frc.robot.util.AutoManager;
 import frc.robot.util.TabManager;
 import frc.robot.util.TabManager.SubsystemTab;
-import frc.robot.commands.VisionCommand;
+import frc.robot.commands.vision.VisionCommand;
 import frc.robot.commands.Auto.NamedCommands.CommandContainer;
 import frc.robot.commands.Auto.NamedCommands.ShootSpeaker;
 import frc.robot.commands.Auto.SubsystemCommands.RevShooterAutoCommand;

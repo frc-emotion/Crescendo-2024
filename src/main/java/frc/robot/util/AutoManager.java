@@ -1,5 +1,7 @@
 package frc.robot.util;
 
+import java.util.Queue;
+import java.util.concurrent.ArrayBlockingQueue;
 import java.util.function.BooleanSupplier;
 
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -60,7 +62,7 @@ public class AutoManager {
         if(autoManagerInstance == null) {
             autoManagerInstance = new AutoManager(RobotContainer.m_VisionSubsystem, RobotContainer.m_SwerveSubsystem);
         }
-        return autoManagerInstance; 
+        return autoManagerInstance;     
     }
 
     
