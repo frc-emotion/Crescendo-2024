@@ -61,36 +61,36 @@ public class TabManager {
         }
     }
 
-    public GenericEntry addWidget(
-        ShuffleboardTab tab,
-        BuiltInWidgets widgetType,
-        String name,
-        Object defaultValue,
-        int[] position,
-        int[] size
-    ) {
-        return tab
-            .add(name, defaultValue)
-            .withPosition(position[0], position[1])
-            .withSize(size[0], size[1])
-            .withWidget(widgetType)
-            .getEntry();
-    }
+    // public GenericEntry addWidget(
+    //     ShuffleboardTab tab,
+    //     BuiltInWidgets widgetType,
+    //     String name,
+    //     Object defaultValue,
+    //     int[] position,
+    //     int[] size
+    // ) {
+    //     return tab
+    //         .add(name, defaultValue)
+    //         .withPosition(position[0], position[1])
+    //         .withSize(size[0], size[1])
+    //         .withWidget(widgetType)
+    //         .getEntry();
+    // }
 
-    public ComplexWidget addFieldWidget(
-        ShuffleboardTab tab,
-        BuiltInWidgets widgetType,
-        String name,
-        Field2d defaultValue,
-        int[] position,
-        int[] size
-    ) {
-        return tab
-            .add(name, defaultValue)
-            .withPosition(position[0], position[1])
-            .withSize(size[0], size[1])
-            .withWidget(widgetType);
-    }
+    // public ComplexWidget addFieldWidget(
+    //     ShuffleboardTab tab,
+    //     BuiltInWidgets widgetType,
+    //     String name,
+    //     Field2d defaultValue,
+    //     int[] position,
+    //     int[] size
+    // ) {
+    //     return tab
+    //         .add(name, defaultValue)
+    //         .withPosition(position[0], position[1])
+    //         .withSize(size[0], size[1])
+    //         .withWidget(widgetType);
+    // }
 
     /** Puts all NT Data into a wpilog */
     public void logDriveOdometry(boolean beginLog) {

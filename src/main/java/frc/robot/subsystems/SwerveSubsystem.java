@@ -3,7 +3,6 @@ package frc.robot.subsystems;
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -11,7 +10,6 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.math.kinematics.struct.SwerveModuleStateStruct;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructArrayPublisher;
@@ -19,12 +17,8 @@ import edu.wpi.first.networktables.StructPublisher;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
-import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import edu.wpi.first.wpilibj.smartdashboard.Field2d;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -49,13 +43,6 @@ import com.pathplanner.lib.util.ReplanningConfig;
  * Holds gyro and odometry methods
  */
 public class SwerveSubsystem extends SubsystemBase {
-
-    private static final PathConstraints kPathConstraints = new PathConstraints(
-        AutoConstants.kMaxSpeedMetersPerSecond, 
-        AutoConstants.kMaxAccelerationMetersPerSecondSquared, 
-        AutoConstants.kMaxAngularSpeedRadiansPerSecond, 
-        AutoConstants.kMaxAngularAccelerationRadiansPerSecondSquared
-    );
 
     private final SwerveModuleNeo frontLeft = new SwerveModuleNeo(
         DriveConstants.kFrontLeftDriveMotorPort,
@@ -102,19 +89,9 @@ public class SwerveSubsystem extends SubsystemBase {
     private double toDivideBy;
     private double driveSpeedMPS, driveAccelMPSS, driveAngularSpeedRPS, driveAngularAccelRPSS;
 
-    // private final PoseEstimator visionPoseEstimator = new PoseEstimator();
-
-    public final SwerveDrivePoseEstimator poseEstimator = new SwerveDrivePoseEstimator(
-        DriveConstants.kDriveKinematics,
-        new Rotation2d(), // Was empty pose 2d before
-        getModulePositions(),
-        new Pose2d()
-    ); // FIX add the starting pose estimate?
-
     private ChassisSpeeds robotSpeeds;
 
     private ShuffleboardLayout frontLeftData, frontRightData, backLeftData, backRightData, sensorData;
-    private Field2d m_field;
 
     private StructArrayPublisher<SwerveModuleState> publisher = NetworkTableInstance.getDefault()
         .getStructArrayTopic("PersianSwerveState", SwerveModuleState.struct).publish();
@@ -149,29 +126,6 @@ public class SwerveSubsystem extends SubsystemBase {
         driveAccelMPSS = DriveConstants.kTeleDriveMaxAccelerationUnitsPerSecond / toDivideBy;
         driveAngularSpeedRPS = DriveConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond / toDivideBy;
         driveAngularAccelRPSS = DriveConstants.kTeleDriveMaxAngularAccelerationUnitsPerSecond / toDivideBy;
-
-        BooleanSupplier supp = () -> { 
-            var alliance = DriverStation.getAlliance();
-            return alliance.get() == DriverStation.Alliance.Red;
-        };
-
-        AutoBuilder.configureHolonomic(
-            this::getCurrentPose,
-            this::resetOdometry,
-            this::getChassisSpeeds,
-            this::driveRobotRelative,
-            new HolonomicPathFollowerConfig(
-                new PIDConstants(AutoConstants.kPXController),
-                new PIDConstants(AutoConstants.kPThetaController),
-                AutoConstants.kMaxSpeedMetersPerSecond, 
-                DriveConstants.kWheelBase, 
-                new ReplanningConfig()
-            ),
-            supp,
-            this
-        );
-
-        Pathfinding.setPathfinder(new LocalADStar());
 
         robotSpeeds = new ChassisSpeeds();
         
@@ -243,19 +197,6 @@ public class SwerveSubsystem extends SubsystemBase {
         return Rotation2d.fromDegrees(getHeading());
     }
 
-    public Pose2d getCurrentPose() {
-        return poseEstimator.getEstimatedPosition();
-    }
-
-    // Resets current pose to a specified pose.
-    public void resetOdometry(Pose2d pose) {
-        poseEstimator.resetPosition(
-            getRotation2d(),
-            getModulePositions(),
-            pose
-        );
-    }
-
     public ChassisSpeeds getChassisSpeeds() {
         return robotSpeeds;
     }
@@ -302,16 +243,7 @@ public class SwerveSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() { 
-        // Updates with drivetrain sensors
-        poseEstimator.update(getRotation2d(), getModulePositions());
-        m_field.setRobotPose(getCurrentPose());
 
-        // Pair<Pose2d, Double> result = visionPoseEstimator.getEstimatedPose();
-
-        // Adds vision
-        // poseEstimator.addVisionMeasurement(result.getFirst(), result.getSecond());
-
-        // m_field.setRobotPose(getCurrentPose());
         //SmartDashboard.putNumber("Gyro Reading", getHeading());
         //SmartDashboard.putNumber("Gyro Pitch", getPitch());
         //SmartDashboard.putNumber("Gyro Roll", getRoll());
@@ -377,19 +309,7 @@ public class SwerveSubsystem extends SubsystemBase {
         sensorData.addNumber("Gyro Heading", () -> getHeading());
         sensorData.addNumber("Gyro Pitch", () -> getPitch());
         sensorData.addNumber("Gyro Roll", () -> getRoll());
-
-        m_field = new Field2d();
-
-        TabManager
-            .getInstance()
-            .addFieldWidget(
-                TabManager.getInstance().accessTab(SubsystemTab.AUTON),
-                BuiltInWidgets.kField,
-                "Pose",
-                m_field,
-                new int[] { 0, 0 },
-                new int[] { 6, 4 }
-            );
+        
     }
 
     private void fillList(SwerveModuleNeo module, ShuffleboardLayout layout) {
@@ -413,52 +333,4 @@ public class SwerveSubsystem extends SubsystemBase {
         return thetaController.atSetpoint();
     }
 
-    /**
-     * Creates a new Command to pathfind to a certain pose using
-     * only the target pose.
-     * 
-     * @param pose  The target pose
-     * @return      The new command to reach the target pose
-     */
-    public Command navigateToPose(Pose2d pose) {
-        return AutoBuilder.pathfindToPose(
-            pose, 
-           kPathConstraints
-        );
-    }
-
-    /**
-     * Creates a new Command to pathfind to a certain pose using
-     * the target pose and end velocity.
-     * 
-     * @param pose          The target pose
-     * @param endVelocity   The end velocity
-     * @return              The new command to reach the target pose
-     */
-    public Command navigateToPose(Pose2d pose, double endVelocity) {
-        return AutoBuilder.pathfindToPose(
-            pose, 
-           kPathConstraints,
-           endVelocity
-        );
-    }
-
-    /**
-     * Creates a new Command to pathfind to a certain pose using
-     * the target pose, end velocity, and the distance the robot
-     * should travel before turning to the target pose's heading.
-     * 
-     * @param pose                  The target pose
-     * @param endVelocity           The end velocity
-     * @param rotationDelayDistance The distance the robot should travel before turning
-     * @return                      The new Command to reach the target pose
-     */
-    public Command navigateToPose(Pose2d pose, double endVelocity, double rotationDelayDistance) {
-        return AutoBuilder.pathfindToPose(
-            pose, 
-           kPathConstraints,
-           endVelocity,
-           rotationDelayDistance
-        );
-    }
 }

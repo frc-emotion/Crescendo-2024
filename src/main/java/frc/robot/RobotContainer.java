@@ -4,24 +4,23 @@
 
 package frc.robot;
 
-import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.Constants.DriveConstants.DriveMode;
 import frc.robot.subsystems.*;
+import frc.robot.util.AutoManager;
 import frc.robot.util.TabManager;
 import frc.robot.util.TabManager.SubsystemTab;
+import frc.robot.commands.VisionCommand;
 import frc.robot.commands.Auto.NamedCommands.CommandContainer;
 import frc.robot.commands.Auto.NamedCommands.ShootSpeaker;
 import frc.robot.commands.Auto.SubsystemCommands.RevShooterAutoCommand;
-import frc.robot.commands.Auto.SubsystemCommands.TimeDriveAuto;
 import frc.robot.commands.Auto.SubsystemCommands.IntakeDriveAutoCommand;
 import frc.robot.commands.Teleop.*;
 import frc.robot.commands.Teleop.swerve.*;
 
-import java.awt.Color;
 import java.util.Map;
 
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -30,14 +29,11 @@ import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -61,6 +57,9 @@ public class RobotContainer {
     public static final IntakeSubsystem m_IntakeSubsystem = new IntakeSubsystem();
     public static final ClimbSubsystem m_ClimbSubsystem = new ClimbSubsystem();
     public static final PivotSubsystem m_PivotSubsystem = new PivotSubsystem();
+    public static final VisionSubsystem m_VisionSubsystem = new VisionSubsystem(m_SwerveSubsystem);
+
+    public static final AutoManager autoManager = new AutoManager(m_VisionSubsystem, m_SwerveSubsystem);
 
     // Replace with CommandPS4Controller or CommandJoystick if needed
     private final CommandXboxController m_driverController = new CommandXboxController(
@@ -90,12 +89,7 @@ public class RobotContainer {
                 () -> driverController_HID.getLeftX(),
                 () -> driverController_HID.getRightX(),
                 () -> driverController_HID.getRightTriggerAxis() > OIConstants.kDeadband
-                /*
-                () -> driverController_HID.getLeftBumper(),
-                () -> driverController_HID.getRightBumper(),
-                () -> m_driverController.getRightTriggerAxis(),
-                () -> driverController_HID.getLeftTriggerAxis()
-                */
+                
             )
         );
 
@@ -141,6 +135,8 @@ public class RobotContainer {
             )
         );
 
+        m_VisionSubsystem.setDefaultCommand(new VisionCommand(m_VisionSubsystem));
+
         registerNamedCommands();
 
         autoChooser = new SendableChooser<Command>();
@@ -169,11 +165,7 @@ public class RobotContainer {
     }
 
     private void addOption(String name) {
-        autoChooser.addOption(name, getAutoCommand(name));
-    }
-
-    private Command getAutoCommand(String name) {
-        return AutoBuilder.buildAuto(name);
+        autoChooser.addOption(name, autoManager.getAutoCommand(name));
     }
 
     /**
