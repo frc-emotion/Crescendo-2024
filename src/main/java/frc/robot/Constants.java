@@ -342,7 +342,7 @@ public final class Constants {
         public static final double IDLE_SPEED = 1000; // rpm
 
             // For SOURCE intake
-        protected static final double SHOOTER_REVERSE_SPEED = -0.1; // raw motor output
+        protected static final double SHOOTER_REVERSE_SPEED = -0.2; // raw motor output
         protected static final double FEEDER_REVERSE_SPEED = -0.1;  // raw motor output
     }
 
