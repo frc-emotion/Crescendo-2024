@@ -5,7 +5,7 @@
       "x": 1.3386144840268221,
       "y": 5.551187918118234
     },
-    "rotation": 0.0
+    "rotation": -179.32596310201546
   },
   "command": {
     "type": "sequential",
@@ -26,6 +26,6 @@
       ]
     }
   },
-  "folder": null,
+  "folder": "1 Note",
   "choreoAuto": false
 }

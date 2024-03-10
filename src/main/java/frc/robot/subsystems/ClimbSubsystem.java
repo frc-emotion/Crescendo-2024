@@ -1,13 +1,9 @@
 package frc.robot.subsystems;
 
-import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
-import com.revrobotics.SparkPIDController;
-import com.revrobotics.SparkPIDController.AccelStrategy;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -27,17 +23,15 @@ public class ClimbSubsystem extends SubsystemBase {
 
     private CANSparkMax climbMotorLeft, climbMotorRight;
     private RelativeEncoder leftEncoder, rightEncoder;
-    //private SparkPIDController controller;
+    // private SparkPIDController controller;
 
     /**
      * Constructs a ClimbSubsystem instance
      */
     public ClimbSubsystem() {
         // Initialize Motors
-        climbMotorLeft =
-            new CANSparkMax(ClimbConstants.CLIMB_PORT_L, MotorType.kBrushless);
-        climbMotorRight =
-            new CANSparkMax(ClimbConstants.CLIMB_PORT_R, MotorType.kBrushless);
+        climbMotorLeft = new CANSparkMax(ClimbConstants.CLIMB_PORT_L, MotorType.kBrushless);
+        climbMotorRight = new CANSparkMax(ClimbConstants.CLIMB_PORT_R, MotorType.kBrushless);
 
         // Set Current Limits
         climbMotorLeft.setSmartCurrentLimit(ClimbConstants.CURRENT_LIMIT);
@@ -54,32 +48,32 @@ public class ClimbSubsystem extends SubsystemBase {
         rightEncoder = climbMotorRight.getEncoder();
 
         // Get PID controllers
-        //controller = climbMotorLeft.getPIDController();
+        // controller = climbMotorLeft.getPIDController();
 
         // Set Climb Motor 2 to follow Climb Motor 1
-        // TODO: Test with + without, there may be a delay 
+        // TODO: Test with + without, there may be a delay
         climbMotorRight.follow(climbMotorLeft, false);
 
         // PID Stuff
         // controller.setOutputRange(
-        //     ClimbConstants.PID_MIN_OUTPUT,
-        //     ClimbConstants.PID_MAX_OUTPUT
+        // ClimbConstants.PID_MIN_OUTPUT,
+        // ClimbConstants.PID_MAX_OUTPUT
         // );
         // controller.setFeedbackDevice(leftEncoder);
         // controller.setP(ClimbConstants.kP);
         // controller.setI(ClimbConstants.kI);
         // controller.setD(ClimbConstants.kD);
         // controller.setSmartMotionAccelStrategy(
-        //     AccelStrategy.kTrapezoidal,
-        //     ClimbConstants.SLOT_ID
+        // AccelStrategy.kTrapezoidal,
+        // ClimbConstants.SLOT_ID
         // );
         // controller.setSmartMotionMaxVelocity(
-        //     ClimbConstants.MAX_VELOCITY,
-        //     ClimbConstants.SLOT_ID
+        // ClimbConstants.MAX_VELOCITY,
+        // ClimbConstants.SLOT_ID
         // );
         // controller.setSmartMotionMaxAccel(
-        //     ClimbConstants.MAX_ACCELERATION,
-        //     ClimbConstants.SLOT_ID
+        // ClimbConstants.MAX_ACCELERATION,
+        // ClimbConstants.SLOT_ID
         // );
 
         initShuffleboard();
@@ -91,15 +85,15 @@ public class ClimbSubsystem extends SubsystemBase {
      * @param pos The position to climb to
      */
     // public void setPosition(double pos) {
-    //     if (pos > ClimbConstants.EXTENSION_LIMIT) {
-    //         pos = ClimbConstants.EXTENSION_LIMIT;
-    //         DriverStation.reportWarning(
-    //             "Climb position was set above the extension limit.",
-    //             false
-    //         );
-    //     }
+    // if (pos > ClimbConstants.EXTENSION_LIMIT) {
+    // pos = ClimbConstants.EXTENSION_LIMIT;
+    // DriverStation.reportWarning(
+    // "Climb position was set above the extension limit.",
+    // false
+    // );
+    // }
 
-    //     controller.setReference(pos, ControlType.kSmartMotion);
+    // controller.setReference(pos, ControlType.kSmartMotion);
     // }
 
     /**
@@ -108,7 +102,7 @@ public class ClimbSubsystem extends SubsystemBase {
      * @return Current position from left motor encoder
      */
     // public double getPosition() {
-    //     return leftEncoder.getPosition();
+    // return leftEncoder.getPosition();
     // }
 
     /**
@@ -137,7 +131,7 @@ public class ClimbSubsystem extends SubsystemBase {
         climbMotorRight.stopMotor();
     }
 
-    /** 
+    /**
      * Resets encoders
      */
     public void reset() {
@@ -145,13 +139,13 @@ public class ClimbSubsystem extends SubsystemBase {
         rightEncoder.setPosition(0);
     }
 
-
     private void initShuffleboard() {
-        if(!Constants.DEBUG_MODE_ACTIVE) return;
+        if (!Constants.DEBUG_MODE_ACTIVE)
+            return;
 
         ShuffleboardTab moduleData = TabManager
-            .getInstance()
-            .accessTab(SubsystemTab.CLIMB);
+                .getInstance()
+                .accessTab(SubsystemTab.CLIMB);
         ShuffleboardLayout persianPositions = moduleData.getLayout("Persian Positions", BuiltInLayouts.kList);
 
         persianPositions.addNumber("Left Climb Position", () -> leftEncoder.getPosition());

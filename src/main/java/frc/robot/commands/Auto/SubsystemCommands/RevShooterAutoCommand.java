@@ -12,7 +12,6 @@ public class RevShooterAutoCommand extends Command {
         shooterSubsystem = shooter;
     }
 
-
     @Override
     public void execute() {
         shooterSubsystem.setShooterVelocity(ShooterConstants.IDLE_SPEED);
@@ -27,5 +26,5 @@ public class RevShooterAutoCommand extends Command {
     public boolean isFinished() {
         return false;
     }
-    
+
 }

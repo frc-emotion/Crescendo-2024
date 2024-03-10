@@ -1,0 +1,52 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 6.3,
+        "y": 4.2
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 6.8056434294686765,
+        "y": 4.113976955226638
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 7.831805481792781,
+        "y": 4.076661971505762
+      },
+      "prevControl": {
+        "x": 7.458655644584016,
+        "y": 4.067333225575543
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 5.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 720.0,
+    "maxAngularAcceleration": 540.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 179.34893961977056,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": "Far Notes",
+  "previewStartingState": {
+    "rotation": 180.0,
+    "velocity": 5.0
+  },
+  "useDefaultConstraints": true
+}

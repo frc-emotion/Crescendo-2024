@@ -2,54 +2,66 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.68,
-      "y": 4.3
+      "x": 1.3763132980811417,
+      "y": 5.513288844759509
     },
-    "rotation": -60.0
+    "rotation": -178.33971763101718
   },
   "command": {
     "type": "sequential",
     "data": {
       "commands": [
         {
-          "type": "path",
+          "type": "named",
           "data": {
-            "pathName": "Bottom Travel to Mid"
+            "name": "ScoreSpeaker"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Pickup Bottom"
+            "pathName": "Travel Out Mid"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Score Bottom"
+            "pathName": "Pickup Mid Far"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Bottom Travel to Mid"
+            "pathName": "Travel Back Mid"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Pickup Mid"
+            "pathName": "Score Middle"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Score Bottom"
+            "pathName": "Travel Out Top"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Pickup Top Far"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Travel Back Top"
           }
         }
       ]
     }
   },
-  "folder": null,
+  "folder": "Travel Auto",
   "choreoAuto": false
 }

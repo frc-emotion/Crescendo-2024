@@ -4,9 +4,7 @@ import frc.robot.Constants;
 import frc.robot.Constants.PivotConstants;
 import frc.robot.util.TabManager;
 import frc.robot.util.TabManager.SubsystemTab;
-import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -22,7 +20,7 @@ public class PivotSubsystem extends SubsystemBase {
     private CANSparkMax pivotMotor;
     private SparkPIDController pivotPID;
     private RelativeEncoder relativeEncoder;
-    
+
     private int index = 0;
 
     private boolean calibration = false;
@@ -53,14 +51,15 @@ public class PivotSubsystem extends SubsystemBase {
     }
 
     private void initShuffleboard() {
-        if(!Constants.DEBUG_MODE_ACTIVE) return;
+        if (!Constants.DEBUG_MODE_ACTIVE)
+            return;
 
         ShuffleboardTab tab = TabManager.getInstance().accessTab(SubsystemTab.PIVOT);
         ShuffleboardLayout layout = tab.getLayout("Persian Positions", BuiltInLayouts.kList);
 
         layout.addDouble("Pivot Position Revolutions", this::getRev);
         layout.addDouble("Pivot Position Degrees", this::getDegrees);
-        //layout.addDouble("Pivot Current", this::getCurrent);
+        // layout.addDouble("Pivot Current", this::getCurrent);
         layout.addDouble("Pivot Preset Index", this::getIndex);
         layout.addNumber("Current Preset", this::getPreset);
 
@@ -113,9 +112,9 @@ public class PivotSubsystem extends SubsystemBase {
 
     public void endCalibrate() {
         calibration = false;
-        
+
         pivotMotor.set(0.0);
-        
+
         relativeEncoder.setPosition(0);
     }
 
@@ -132,6 +131,10 @@ public class PivotSubsystem extends SubsystemBase {
         return getRev();
     }
 
+    public boolean isHandoffOk() {
+        return this.getDegrees() - PivotConstants.kHANDOFF_ANGLE <= PivotConstants.kMAX_ANGLE_ERROR;
+    }
+
     public void stop() {
         pivotMotor.set(0);
     }
@@ -139,12 +142,16 @@ public class PivotSubsystem extends SubsystemBase {
     public void setRev(double target) {
         // double target = rev;
         // if (rev < Constants.PivotConstants.PIVOT_MIN_REVOLUTION) {
-        //     target = 0;
+        // target = 0;
         // }
         // if (rev > Constants.PivotConstants.PIVOT_MAX_REVOLUTION) {
-        //     target = Constants.PivotConstants.PIVOT_MAX_REVOLUTION;
+        // target = Constants.PivotConstants.PIVOT_MAX_REVOLUTION;
         // }
         pivotPID.setReference(target, ControlType.kPosition);
+    }
+
+    public void goToHandoff() {
+        this.setRev(PivotConstants.kHANDOFF_ANGLE);
     }
 
     public boolean isAtTarget() {

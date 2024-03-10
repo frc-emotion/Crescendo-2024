@@ -1,9 +1,7 @@
 package frc.robot.commands.Teleop.swerve;
 
 import edu.wpi.first.math.filter.SlewRateLimiter;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
@@ -23,33 +21,27 @@ public abstract class AbstractSwerveXboxCommand extends Command {
     protected double xSpeed, ySpeed, turningSpeed;
 
     public AbstractSwerveXboxCommand(
-        SwerveSubsystem swerveSubsystem,
-        Supplier<Double> xSpdFunc,
-        Supplier<Double> ySpdFunc,
-        Supplier<Double> turningSpdFunc
-        //Supplier<Boolean> fieldOrientedFunc
-        //Supplier<Boolean> slowModeFunc,
-        //Supplier<Boolean> turboModeFunc,
-        //Supplier<Double> hardLeft,
-        //Supplier<Double> hardRight
+            SwerveSubsystem swerveSubsystem,
+            Supplier<Double> xSpdFunc,
+            Supplier<Double> ySpdFunc,
+            Supplier<Double> turningSpdFunc
+    // Supplier<Boolean> fieldOrientedFunc
+    // Supplier<Boolean> slowModeFunc,
+    // Supplier<Boolean> turboModeFunc,
+    // Supplier<Double> hardLeft,
+    // Supplier<Double> hardRight
     ) {
         this.swerveSubsystem = swerveSubsystem;
         this.xSpdFunc = xSpdFunc;
         this.ySpdFunc = ySpdFunc;
         this.turningSpdFunc = turningSpdFunc;
 
-        this.xLimiter =
-            new SlewRateLimiter(
-                DriveConstants.kTeleDriveMaxAccelerationUnitsPerSecond
-            );
-        this.yLimiter =
-            new SlewRateLimiter(
-                DriveConstants.kTeleDriveMaxAccelerationUnitsPerSecond
-            );
-        this.turningLimiter =
-            new SlewRateLimiter(
-                DriveConstants.kTeleDriveMaxAngularAccelerationUnitsPerSecond
-            );
+        this.xLimiter = new SlewRateLimiter(
+                DriveConstants.kTeleDriveMaxAccelerationUnitsPerSecond);
+        this.yLimiter = new SlewRateLimiter(
+                DriveConstants.kTeleDriveMaxAccelerationUnitsPerSecond);
+        this.turningLimiter = new SlewRateLimiter(
+                DriveConstants.kTeleDriveMaxAngularAccelerationUnitsPerSecond);
 
         robotSpeeds = new ChassisSpeeds();
 
@@ -62,7 +54,7 @@ public abstract class AbstractSwerveXboxCommand extends Command {
         xSpeed = xSpdFunc.get();
         ySpeed = ySpdFunc.get();
         turningSpeed = turningSpdFunc.get();
-        
+
         speeds = swerveSubsystem.getSpeedType();
 
         currentTranslationalSpeed = speeds[0];
@@ -76,15 +68,17 @@ public abstract class AbstractSwerveXboxCommand extends Command {
         xSpeed = xLimiter.calculate(xSpeed) * currentTranslationalSpeed;
         ySpeed = yLimiter.calculate(ySpeed) * currentTranslationalSpeed;
         turningSpeed = turningLimiter.calculate(turningSpeed) * currentAngularSpeed;
-        robotSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, turningSpeed, swerveSubsystem.getRotation2d());
+        robotSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, turningSpeed,
+                swerveSubsystem.getRotation2d());
     }
 
     protected void sendSpeedsToSubsystem() {
-        
+
         // swerveSubsystem.setChassisSpeeds(robotSpeeds);
-        // SwerveModuleState[] moduleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(robotSpeeds);
+        // SwerveModuleState[] moduleStates =
+        // DriveConstants.kDriveKinematics.toSwerveModuleStates(robotSpeeds);
         // swerveSubsystem.setModuleStates(moduleStates);
-        
+
         swerveSubsystem.driveRobotRelative(robotSpeeds);
     }
 

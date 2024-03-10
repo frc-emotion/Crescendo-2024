@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.68,
-      "y": 6.74
+      "x": 0.6924444618120014,
+      "y": 6.681985456994171
     },
-    "rotation": 60.0
+    "rotation": -118.13253074970507
   },
   "command": {
     "type": "sequential",
@@ -88,6 +88,6 @@
       ]
     }
   },
-  "folder": null,
+  "folder": "3 Note",
   "choreoAuto": false
 }
