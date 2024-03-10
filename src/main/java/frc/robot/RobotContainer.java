@@ -17,7 +17,10 @@ import frc.robot.commands.VisionCommand;
 import frc.robot.commands.Auto.NamedCommands.CommandContainer;
 import frc.robot.commands.Auto.NamedCommands.ShootSpeaker;
 import frc.robot.commands.Auto.SubsystemCommands.RevShooterAutoCommand;
+import frc.robot.commands.Auto.SubsystemCommands.TimeDriveAuto;
+import frc.robot.commands.Auto.SubsystemCommands.HandoffAutoCommand;
 import frc.robot.commands.Auto.SubsystemCommands.IntakeDriveAutoCommand;
+import frc.robot.commands.Auto.SubsystemCommands.ResetPivotAutoCommand;
 import frc.robot.commands.Teleop.*;
 import frc.robot.commands.Teleop.swerve.*;
 
@@ -278,44 +281,10 @@ public class RobotContainer {
             // new SequentialCommandGroup(
                 new IntakePivotCommand(m_IntakeSubsystem).onlyIf(()->!m_IntakeSubsystem.isUp())
                 .alongWith(
-                    new Command() {
-                        @Override
-                        public void execute() {
-                            m_PivotSubsystem.goToHandoff();
-                        }
-
-                        @Override
-                        public boolean isFinished() {
-                            return m_PivotSubsystem.isAtTarget();
-                        }
-
-                        @Override
-                        public void end(boolean interrupted) {
-                            m_PivotSubsystem.stop();
-                        }
-                    }
-                    .onlyIf(()->!m_PivotSubsystem.isHandoffOk())
+                    new ResetPivotAutoCommand(m_PivotSubsystem).onlyIf(() -> !m_PivotSubsystem.isHandoffOk())
                 )
                 .andThen(
-                    new Command() {
-                        @Override
-                        public void execute() {
-                            m_IntakeSubsystem.setIntake(IntakeConstants.SHOOTER_TRANSFER_SPEED);
-                            // m_ShooterSubsystem.setFeederSpeed(ShooterConstants.kFeedSpeed);
-                            m_ShooterSubsystem.setFeederSpeed(IntakeConstants.SHOOTER_TRANSFER_SPEED);
-                        }
-        
-                        @Override
-                        public void end(boolean interrupted) {
-                            m_IntakeSubsystem.intakeStop();
-                            m_ShooterSubsystem.stopFeeder();
-                        }
-
-                        @Override
-                        public boolean isFinished() {
-                            return m_ShooterSubsystem.isProjectileFed();
-                        }
-                    }
+                    new HandoffAutoCommand(m_IntakeSubsystem, m_ShooterSubsystem)
                     .onlyIf(()-> m_PivotSubsystem.isHandoffOk() && m_IntakeSubsystem.isUp())
                 )
             // )

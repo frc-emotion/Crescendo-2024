@@ -5,7 +5,7 @@
       "x": 0.7218158264581296,
       "y": 6.667299774671107
     },
-    "rotation": 61.90460918221017
+    "rotation": -118.0091767080138
   },
   "command": {
     "type": "sequential",
@@ -20,7 +20,7 @@
         {
           "type": "wait",
           "data": {
-            "waitTime": 1.0
+            "waitTime": 0.5
           }
         },
         {
@@ -88,6 +88,6 @@
       ]
     }
   },
-  "folder": null,
+  "folder": "2 Note",
   "choreoAuto": false
 }

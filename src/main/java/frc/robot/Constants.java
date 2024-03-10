@@ -311,9 +311,9 @@ public final class Constants {
         public static final double[] PRESET_SPEEDS = { 3000, 0 }; // rpm
         public static final double IDLE_SPEED = 1000; // rpm
 
-        // For SOURCE intake
-        protected static final double SHOOTER_REVERSE_SPEED = -0.1; // raw motor output
-        protected static final double FEEDER_REVERSE_SPEED = -0.1; // raw motor output
+            // For SOURCE intake
+        protected static final double SHOOTER_REVERSE_SPEED = -0.2; // raw motor output
+        protected static final double FEEDER_REVERSE_SPEED = -0.1;  // raw motor output
     }
 
     public static final class PivotConstants {
