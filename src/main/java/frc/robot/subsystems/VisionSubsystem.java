@@ -275,9 +275,10 @@ public class VisionSubsystem extends SubsystemBase {
 
         visionData.add("Odometry + Vision Field", m_field).withWidget(BuiltInWidgets.kField);
         visionData.add("Odometry Only Field", m_field2).withWidget(BuiltInWidgets.kField);
-        visionData.add("Num Tags", getNumTags());
-        visionData.add("Tag Dist", getAvgTagDist());
+        visionData.addNumber("Num Tags", () -> getNumTags());
+        visionData.addNumber("Tag Dist", () -> getAvgTagDist());
         visionData.add("Snap Odometry to Vision+Odometry", new InstantCommand(() -> snapOdometry()));
+        visionData.addString("Current Mode", () -> getVisionType().toString());
     }
   
 }
