@@ -13,7 +13,7 @@ import frc.robot.subsystems.*;
 import frc.robot.util.AutoManager;
 import frc.robot.util.TabManager;
 import frc.robot.util.TabManager.SubsystemTab;
-import frc.robot.commands.vision.VisionCommand;
+import frc.robot.commands.vision.MonitorVision;
 import frc.robot.commands.Auto.NamedCommands.CommandContainer;
 import frc.robot.commands.Auto.NamedCommands.ShootSpeaker;
 import frc.robot.commands.Auto.SubsystemCommands.RevShooterAutoCommand;
@@ -73,7 +73,7 @@ public class RobotContainer {
 
     private final XboxController operatorController_HID = m_operatorController.getHID();
 
-    private final SendableChooser<Command> autoChooser;
+    private final SendableChooser<Command> autoChooser = new SendableChooser<Command>();;
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -126,11 +126,9 @@ public class RobotContainer {
                         () -> operatorController_HID.getLeftBumper(),
                         () -> operatorController_HID.getRightBumper()));
 
-        m_VisionSubsystem.setDefaultCommand(new VisionCommand(m_VisionSubsystem));
+        m_VisionSubsystem.setDefaultCommand(new MonitorVision(m_VisionSubsystem));
 
         registerNamedCommands();
-
-        autoChooser = new SendableChooser<Command>();
         configureAutoChooser();
 
         // Configure the trigger bindings
@@ -245,7 +243,6 @@ public class RobotContainer {
                 new IntakePivotCommand(m_IntakeSubsystem));
 
         m_operatorController
-                // .x()
                 .povUp()
                 .whileTrue(
                         new SequentialCommandGroup(

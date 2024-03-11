@@ -25,6 +25,8 @@ public class PivotSubsystem extends SubsystemBase {
 
     private boolean calibration = false;
 
+    private boolean turretMode = false;
+
     public PivotSubsystem() {
 
         pivotMotor = new CANSparkMax(Constants.PivotConstants.PIVOT_PORT, MotorType.kBrushless);
@@ -48,6 +50,14 @@ public class PivotSubsystem extends SubsystemBase {
         resetPosition(-60.0);
 
         initShuffleboard();
+    }
+
+    public boolean turretMode() {
+        return turretMode;
+    }
+
+    public void toggleTurret() {
+        turretMode = !turretMode;
     }
 
     private void initShuffleboard() {
