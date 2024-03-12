@@ -129,7 +129,7 @@ public class PivotSubsystem extends SubsystemBase {
     }
 
     public double getDegrees() {
-        return getRev() * kCONVERSION_FACTOR;
+        return getRev() / kCONVERSION_FACTOR;
     }
 
     public boolean isHandoffOk() {
@@ -148,7 +148,7 @@ public class PivotSubsystem extends SubsystemBase {
         // if (rev > Constants.PivotConstants.PIVOT_MAX_REVOLUTION) {
         //     target = Constants.PivotConstants.PIVOT_MAX_REVOLUTION;
         // }
-        pivotPID.setReference(target / kCONVERSION_FACTOR, ControlType.kPosition);
+        pivotPID.setReference(target * kCONVERSION_FACTOR, ControlType.kPosition);
     }
 
     public void goToHandoff(){

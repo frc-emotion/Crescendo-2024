@@ -43,7 +43,11 @@
     "rotateFast": false
   },
   "reversed": false,
+<<<<<<< HEAD:src/main/deploy/pathplanner/paths/Pickup 2nd Far.path
   "folder": "Far Notes",
+=======
+  "folder": null,
+>>>>>>> a8112b73a5a49fe5eb1590776b83c2c1f0b29ccb:src/main/deploy/pathplanner/paths/Bottom Travel to Mid.path
   "previewStartingState": {
     "rotation": 0,
     "velocity": 0
