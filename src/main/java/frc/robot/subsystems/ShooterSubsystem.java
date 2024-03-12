@@ -219,7 +219,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
         this.ampRPMEntry = moduleData
                 .add("Amp Target RPM", ShooterConstants.AmpRPM)
-                // .withWidget(BuiltInWidgets.kNumberSlider)
+                // .wget(BuiltInWidgets.kNumberSlider)
                 // .withProperties(Map.of("min", 0, "max", 4000))
                 .getEntry();
 

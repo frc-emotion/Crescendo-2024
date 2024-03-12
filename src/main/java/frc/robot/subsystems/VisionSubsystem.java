@@ -48,17 +48,9 @@ public class VisionSubsystem extends SubsystemBase {
     private final RectanglePoseArea fieldBoundary = new RectanglePoseArea(new Translation2d(0, 0),
             new Translation2d(16.541, 8.211));
 
-    public final SwerveDrivePoseEstimator poseEstimator = new SwerveDrivePoseEstimator(
-            DriveConstants.kDriveKinematics,
-            new Rotation2d(),
-            swerveSubsystem.getModulePositions(),
-            new Pose2d());
+    public final SwerveDrivePoseEstimator poseEstimator;
 
-    public final SwerveDriveOdometry poseOdometryEstimator = new SwerveDriveOdometry(
-            DriveConstants.kDriveKinematics,
-            new Rotation2d(),
-            swerveSubsystem.getModulePositions(),
-            new Pose2d());
+    public final SwerveDriveOdometry poseOdometryEstimator;
 
     private VisionTypes methodToUse = VisionTypes.NO_VISION;
 
@@ -71,6 +63,18 @@ public class VisionSubsystem extends SubsystemBase {
         visionType.addOption("Preset STD", VisionTypes.PRESET_STD);
         visionType.addOption("Custom STD", VisionTypes.CUSTOM_STD);
         visionType.addOption("Calculations Based Vision", VisionTypes.CRAZY_MATH);
+
+        this.poseEstimator = new SwerveDrivePoseEstimator(
+                DriveConstants.kDriveKinematics,
+                new Rotation2d(),
+                swerveSubsystem.getModulePositions(),
+                new Pose2d());
+
+        this.poseOdometryEstimator = new SwerveDriveOdometry(
+                DriveConstants.kDriveKinematics,
+                new Rotation2d(),
+                swerveSubsystem.getModulePositions(),
+                new Pose2d());
 
         initShuffleboard();
     }
@@ -276,6 +280,8 @@ public class VisionSubsystem extends SubsystemBase {
         visionData.addNumber("Tag Dist", () -> getAvgTagDist());
         visionData.add("Snap Odometry to Vision+Odometry", new InstantCommand(() -> snapOdometry()));
         visionData.addString("Current Mode", () -> getVisionType().toString());
+
+        visionData.add("Vision Chooser", visionType);
     }
 
 }
