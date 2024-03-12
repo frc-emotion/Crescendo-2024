@@ -6,7 +6,7 @@ import frc.robot.subsystems.IntakeSubsystem;
 
 public class IntakeDriveAutoCommand extends InstantCommand {
     private IntakeSubsystem intakeSubsystem;
-    
+
     public IntakeDriveAutoCommand(IntakeSubsystem intakeSubsystem) {
         this.intakeSubsystem = intakeSubsystem;
         addRequirements(intakeSubsystem);

@@ -40,7 +40,7 @@ public class AutoManager {
                 this.visionSubsystem::resetOdometry,
                 this.swerveSubsystem::getChassisSpeeds,
                 this.swerveSubsystem::driveRobotRelative,
-                
+
                 new HolonomicPathFollowerConfig(
                         new PIDConstants(AutoConstants.kPXController),
                         new PIDConstants(AutoConstants.kPThetaController),
@@ -54,7 +54,6 @@ public class AutoManager {
         Pathfinding.setPathfinder(new LocalADStar());
     }
 
-    
     public Command getAutoCommand(String name) {
         return AutoBuilder.buildAuto(name);
     }

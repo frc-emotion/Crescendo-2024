@@ -34,26 +34,28 @@ public class ClimbManualCommand extends Command {
     @Override
     public void execute() {
         /*
-        if (input.get() > OIConstants.CLIMB_DEADZONE) {
-            // // move up
-            // climbSubsystem.setPosition(
-            //     climbSubsystem.getPosition() + (coefficient * input.get())
-            // );
-            climbSubsystem.rawClimbUp();
-        } else if (input.get() < -OIConstants.CLIMB_DEADZONE) {
-            // move down
-            climbSubsystem.setPosition(
-                climbSubsystem.getPosition() - (coefficient * input.get())
-            );
-        }*/
+         * if (input.get() > OIConstants.CLIMB_DEADZONE) {
+         * // // move up
+         * // climbSubsystem.setPosition(
+         * // climbSubsystem.getPosition() + (coefficient * input.get())
+         * // );
+         * climbSubsystem.rawClimbUp();
+         * } else if (input.get() < -OIConstants.CLIMB_DEADZONE) {
+         * // move down
+         * climbSubsystem.setPosition(
+         * climbSubsystem.getPosition() - (coefficient * input.get())
+         * );
+         * }
+         */
         if (input.get() < -ClimbConstants.DEADZONE && climbSubsystem.getPosition() > 0) {
             climbSubsystem.setRawSpeed(-ClimbConstants.kSpeed);
-        } else if(input.get() > ClimbConstants.DEADZONE && climbSubsystem.getPosition() < ClimbConstants.EXTENSION_LIMIT) {
+        } else if (input.get() > ClimbConstants.DEADZONE
+                && climbSubsystem.getPosition() < ClimbConstants.EXTENSION_LIMIT) {
             climbSubsystem.setRawSpeed(ClimbConstants.kSpeed);
         } else {
             climbSubsystem.stop();
         }
-        
+
         // climbSubsystem.setPosition(input.get());
     }
 

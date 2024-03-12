@@ -10,28 +10,26 @@ import frc.robot.subsystems.SwerveSubsystem;
 public class SnapSwerveCommand extends AbstractSwerveXboxCommand {
 
     private int direction;
-    
+
     public SnapSwerveCommand(
-        SwerveSubsystem swerveSubsystem,
-        Supplier<Double> xSpdFunc,
-        Supplier<Double> ySpdFunc,
-        Supplier<Double> turningSpdFunc,
-        int direction
-     ) {
+            SwerveSubsystem swerveSubsystem,
+            Supplier<Double> xSpdFunc,
+            Supplier<Double> ySpdFunc,
+            Supplier<Double> turningSpdFunc,
+            int direction) {
         super(swerveSubsystem, xSpdFunc, ySpdFunc, turningSpdFunc);
-        
+
         this.direction = direction;
     }
-    
+
     @Override
     public void execute() {
         super.execute();
         robotSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(
-            xSpeed, 
-            ySpeed, 
-            swerveSubsystem.calculateThetaPID(swerveSubsystem.getHeading_180(), direction), 
-            swerveSubsystem.getRotation2d()
-        );
+                xSpeed,
+                ySpeed,
+                swerveSubsystem.calculateThetaPID(swerveSubsystem.getHeading_180(), direction),
+                swerveSubsystem.getRotation2d());
 
         sendSpeedsToSubsystem();
     }

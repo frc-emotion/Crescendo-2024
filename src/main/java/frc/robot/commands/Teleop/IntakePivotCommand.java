@@ -1,6 +1,5 @@
 package frc.robot.commands.Teleop;
 
-
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -9,40 +8,38 @@ public class IntakePivotCommand extends Command {
 
     private IntakeSubsystem intakeSubsystem;
 
-
-    public IntakePivotCommand(IntakeSubsystem intake){
+    public IntakePivotCommand(IntakeSubsystem intake) {
 
         this.intakeSubsystem = intake;
-        addRequirements(intake); 
+        addRequirements(intake);
     }
-
 
     @Override
     public void initialize() {
-        if(intakeSubsystem.isUp()) {
-            intakeSubsystem.setGoal(-0.32); 
+        if (intakeSubsystem.isUp()) {
+            intakeSubsystem.setGoal(-0.32);
         } else {
             intakeSubsystem.setGoal(0);
         }
         // if(shouldBeDown) {
-        //     intakeSubsystem.setGoal(-0.32);
+        // intakeSubsystem.setGoal(-0.32);
         // }
         // else {
-        //     intakeSubsystem.setGoal(0);
+        // intakeSubsystem.setGoal(0);
         // }
     }
 
     @Override
     public void execute() {
         // if (leftAxis.get() > Constants.OIConstants.INTAKE_DEADZONE) {
-        //     intakeSubsystem.revSimplePivot();
+        // intakeSubsystem.revSimplePivot();
         // } else if (rightAxis.get() > Constants.OIConstants.INTAKE_DEADZONE) {
-        //     intakeSubsystem.simplePivot();
+        // intakeSubsystem.simplePivot();
         // }
         // if(intakeSubsystem.isDown()){
-        //     intakeSubsystem.revSimplePivot();
+        // intakeSubsystem.revSimplePivot();
         // } else {
-        //     intakeSubsystem.simplePivot();
+        // intakeSubsystem.simplePivot();
         // }
 
         intakeSubsystem.travelToSetpoint();
@@ -55,7 +52,7 @@ public class IntakePivotCommand extends Command {
     }
 
     @Override
-    public boolean isFinished(){
+    public boolean isFinished() {
         return intakeSubsystem.hasReachedSetpoint();
     }
 }

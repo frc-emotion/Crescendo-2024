@@ -15,12 +15,11 @@ import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 
 public class CommandContainer {
-    
+
     public static Command intakeNote(IntakeSubsystem intakeSubsystem) {
         return new SequentialCommandGroup(
-            new IntakeDriveAutoCommand(intakeSubsystem),
-            new WaitCommand(1)
-        );
+                new IntakeDriveAutoCommand(intakeSubsystem),
+                new WaitCommand(1));
     }
 
     public static Command enRoute(PivotSubsystem pivot) {

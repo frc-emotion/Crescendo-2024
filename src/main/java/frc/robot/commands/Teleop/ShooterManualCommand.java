@@ -17,10 +17,9 @@ public class ShooterManualCommand extends Command {
     private boolean hasIndexed;
 
     public ShooterManualCommand(
-        Supplier<Boolean> feederSupplier,
-        Supplier<Boolean> shooterSupplier,
-        ShooterSubsystem shooterSubsystem
-    ) {
+            Supplier<Boolean> feederSupplier,
+            Supplier<Boolean> shooterSupplier,
+            ShooterSubsystem shooterSubsystem) {
         this.feederSupplier = feederSupplier;
         this.shooterSupplier = shooterSupplier;
         this.shooterSubsystem = shooterSubsystem;
@@ -39,49 +38,48 @@ public class ShooterManualCommand extends Command {
     public void execute() {
         if (shooterSupplier.get()) {
             /*
-            if(feederState) {
-                shooterSubsystem.setFeederSpeed(
-                    ShooterConstants.kFeedSpeed
-                );
-                if(hasIndexed) {
-                    hasIndexed = false;
-                }
-            } else {
-                shooterSubsystem.stopShooter();
-            }
-            feederState = !feederState;
-            */
-            
-            shooterSubsystem.setShooterVelocity(4000); //default speed is 4000, amp is 1250
-            //shooterSubsystem.setShooterRaw(0.3);
-            
+             * if(feederState) {
+             * shooterSubsystem.setFeederSpeed(
+             * ShooterConstants.kFeedSpeed
+             * );
+             * if(hasIndexed) {
+             * hasIndexed = false;
+             * }
+             * } else {
+             * shooterSubsystem.stopShooter();
+             * }
+             * feederState = !feederState;
+             */
+
+            shooterSubsystem.setShooterVelocity(4000); // default speed is 4000, amp is 1250
+            // shooterSubsystem.setShooterRaw(0.3);
+
         } else {
             shooterSubsystem.setShooterRaw(0);
-            //shooterSubsystem.setShooterVelocity(0);
+            // shooterSubsystem.setShooterVelocity(0);
         }
 
-        if(feederSupplier.get()) {
+        if (feederSupplier.get()) {
             shooterSubsystem.setFeederSpeed(IntakeConstants.INTAKE_MOTOR_SPEED);
         } else {
             shooterSubsystem.stopFeeder();
         }
 
         /*
-            // Stops the shooter once indexed
-        if(shooterSubsystem.isProjectileFed() && !hasIndexed) {
-            shooterSubsystem.stopFeeder();
-            hasIndexed = true;
-            try {
-                wait(100);
-            } catch(InterruptedException iex) {
-                end(true);
-            }
-        }
-        */
-
+         * // Stops the shooter once indexed
+         * if(shooterSubsystem.isProjectileFed() && !hasIndexed) {
+         * shooterSubsystem.stopFeeder();
+         * hasIndexed = true;
+         * try {
+         * wait(100);
+         * } catch(InterruptedException iex) {
+         * end(true);
+         * }
+         * }
+         */
 
         // if (feederSupplier.get() > OIConstants.SHOOTER_DEADZONE) {
-        //     shooterSubsystem.setFeederSpeed(ShooterConstants.kShootSpeedRotationsPerSecond);
+        // shooterSubsystem.setFeederSpeed(ShooterConstants.kShootSpeedRotationsPerSecond);
         // } else {
         // }
     }

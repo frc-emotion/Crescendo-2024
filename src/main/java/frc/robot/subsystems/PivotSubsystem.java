@@ -20,7 +20,7 @@ public class PivotSubsystem extends SubsystemBase {
     private CANSparkMax pivotMotor;
     private SparkPIDController pivotPID;
     private RelativeEncoder relativeEncoder;
-    
+
     private int index = 0;
 
     private boolean calibration = false;
@@ -44,21 +44,23 @@ public class PivotSubsystem extends SubsystemBase {
 
         relativeEncoder = pivotMotor.getEncoder();
 
-        // relativeEncoder.setPositionConversionFactor((-1.0 / PivotConstants.GEAR_REDUCTION) * 360);
+        // relativeEncoder.setPositionConversionFactor((-1.0 /
+        // PivotConstants.GEAR_REDUCTION) * 360);
         resetPosition(-60.0 * PivotConstants.kConversionFactor);
 
         initShuffleboard();
     }
 
     private void initShuffleboard() {
-        if(!Constants.DEBUG_MODE_ACTIVE) return;
+        if (!Constants.DEBUG_MODE_ACTIVE)
+            return;
 
         ShuffleboardTab tab = TabManager.getInstance().accessTab(SubsystemTab.PIVOT);
         ShuffleboardLayout layout = tab.getLayout("Persian Positions", BuiltInLayouts.kList);
 
         layout.addDouble("Pivot Position Revolutions", this::getRev);
         layout.addDouble("Pivot Position Degrees", this::getDegrees);
-        //layout.addDouble("Pivot Current", this::getCurrent);
+        // layout.addDouble("Pivot Current", this::getCurrent);
         layout.addDouble("Pivot Preset Index", this::getIndex);
         layout.addNumber("Current Preset", this::getPreset);
 
@@ -132,15 +134,15 @@ public class PivotSubsystem extends SubsystemBase {
     public void setRev(double target) {
         // double target = rev;
         // if (rev < Constants.PivotConstants.PIVOT_MIN_REVOLUTION) {
-        //     target = 0;
+        // target = 0;
         // }
         // if (rev > Constants.PivotConstants.PIVOT_MAX_REVOLUTION) {
-        //     target = Constants.PivotConstants.PIVOT_MAX_REVOLUTION;
+        // target = Constants.PivotConstants.PIVOT_MAX_REVOLUTION;
         // }
         pivotPID.setReference(target / PivotConstants.kConversionFactor, ControlType.kPosition);
     }
 
-    public void goToHandoff(){
+    public void goToHandoff() {
         this.setRev(PivotConstants.kHANDOFF_ANGLE);
     }
 

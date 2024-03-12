@@ -35,8 +35,7 @@ public class ShooterSubsystem extends SubsystemBase {
     private GenericEntry kIEntry, kDEntry, kPEntry;
 
     public ShooterSubsystem() {
-        shooterMotor =
-            new CANSparkMax(ShooterConstants.shooterPort, MotorType.kBrushless);
+        shooterMotor = new CANSparkMax(ShooterConstants.shooterPort, MotorType.kBrushless);
 
         shooterMotor.setSmartCurrentLimit(ShooterConstants.CURRENT_LIMIT_SMART);
         shooterMotor.setSecondaryCurrentLimit(ShooterConstants.CURRENT_LIMIT);
@@ -44,8 +43,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
         shooterMotor.enableVoltageCompensation(10);
 
-        feederMotor =
-            new CANSparkMax(ShooterConstants.feederPort, MotorType.kBrushless);
+        feederMotor = new CANSparkMax(ShooterConstants.feederPort, MotorType.kBrushless);
 
         feederMotor.setSmartCurrentLimit(ShooterConstants.CURRENT_LIMIT_SMART);
         feederMotor.setSecondaryCurrentLimit(ShooterConstants.CURRENT_LIMIT);
@@ -55,8 +53,8 @@ public class ShooterSubsystem extends SubsystemBase {
         shooterEncoder = shooterMotor.getEncoder();
         shooterEncoder.setMeasurementPeriod(16);
         shooterEncoder.setAverageDepth(2);
-        //shooterEncoder.setVelocityConversionFactor(2);
-        
+        // shooterEncoder.setVelocityConversionFactor(2);
+
         feederEncoder = feederMotor.getEncoder();
 
         // Set up PID Controller constants
@@ -66,28 +64,28 @@ public class ShooterSubsystem extends SubsystemBase {
         controller.setD(ShooterConstants.kD);
         controller.setFF(ShooterConstants.kFeedForward);
 
-        //controller.setFeedbackDevice(shooterEncoder);
+        // controller.setFeedbackDevice(shooterEncoder);
 
         // Setup PID output limits
         // controller.setOutputRange(
-        //     ShooterConstants.kMinOutput,
-        //     ShooterConstants.kMaxOutput
+        // ShooterConstants.kMinOutput,
+        // ShooterConstants.kMaxOutput
         // );
         /*
-        controller.setSmartMotionAccelStrategy(AccelStrategy.kTrapezoidal, 0);
-        controller.setSmartMotionMaxVelocity(
-            ShooterConstants.kMaxSpeedRotationsPerSecond * 60,
-            0
-        );
-        controller.setSmartMotionMaxAccel(
-            ShooterConstants.kMaxSpeedRotationsPerSecondSquared * 60,
-            0
-        );
-        controller.setSmartMotionAllowedClosedLoopError(
-            ShooterConstants.kMaxOutputError,
-            0
-        );
-        */
+         * controller.setSmartMotionAccelStrategy(AccelStrategy.kTrapezoidal, 0);
+         * controller.setSmartMotionMaxVelocity(
+         * ShooterConstants.kMaxSpeedRotationsPerSecond * 60,
+         * 0
+         * );
+         * controller.setSmartMotionMaxAccel(
+         * ShooterConstants.kMaxSpeedRotationsPerSecondSquared * 60,
+         * 0
+         * );
+         * controller.setSmartMotionAllowedClosedLoopError(
+         * ShooterConstants.kMaxOutputError,
+         * 0
+         * );
+         */
 
         breakSensor = new DigitalInput(ShooterConstants.BREAK_SENSOR_PORT);
 
@@ -98,7 +96,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
     // @Override
     // public void periodic() {
-    //     SmartDashboard.putBoolean("Is Note Fed?", isProjectileFed());
+    // SmartDashboard.putBoolean("Is Note Fed?", isProjectileFed());
     // }
 
     public void updatePID() {
@@ -109,9 +107,9 @@ public class ShooterSubsystem extends SubsystemBase {
 
     public void setShooterVelocity(double speed) {
         targetRPM = speed;
-        // if(speed == 0)  {
-        //     setShooterRaw(0);
-        //     return;
+        // if(speed == 0) {
+        // setShooterRaw(0);
+        // return;
         // }
         controller.setReference(speed / 2, ControlType.kVelocity);
     }
@@ -168,13 +166,13 @@ public class ShooterSubsystem extends SubsystemBase {
      */
     public void setFeederSpeed(double speed) {
         // Clamps the value on [-1, 1]
-        //speed = Math.max(-1, Math.min(1, speed));
+        // speed = Math.max(-1, Math.min(1, speed));
 
         feederMotor.set(speed);
     }
 
     public void setShooterRaw(double speed) {
-        //speed = Math.max(-1, Math.min(1, speed));
+        // speed = Math.max(-1, Math.min(1, speed));
 
         shooterMotor.set(speed);
     }
@@ -199,16 +197,17 @@ public class ShooterSubsystem extends SubsystemBase {
     }
 
     private void initShuffleboard() {
-        if(!Constants.DEBUG_MODE_ACTIVE) return;
+        if (!Constants.DEBUG_MODE_ACTIVE)
+            return;
 
         ShuffleboardTab moduleData = TabManager
-            .getInstance()
-            .accessTab(SubsystemTab.SHOOTER);
+                .getInstance()
+                .accessTab(SubsystemTab.SHOOTER);
 
         ShuffleboardLayout persianPositions = moduleData.getLayout("Persian Positions", BuiltInLayouts.kList);
 
         persianPositions.addBoolean("Line Breaker", this::isProjectileFed);
-         persianPositions.addBoolean("At Target Speed", this::isAtTarget);
+        persianPositions.addBoolean("At Target Speed", this::isAtTarget);
 
         persianPositions.addDouble("Shooter Velocity", this::getShooterVelocity);
 
@@ -219,22 +218,22 @@ public class ShooterSubsystem extends SubsystemBase {
         persianPositions.withSize(2, 4);
 
         this.ampRPMEntry = moduleData
-        .add("Amp Target RPM", ShooterConstants.AmpRPM)
-        // .withWidget(BuiltInWidgets.kNumberSlider)
-        // .withProperties(Map.of("min", 0, "max", 4000))
-        .getEntry();
+                .add("Amp Target RPM", ShooterConstants.AmpRPM)
+                // .withWidget(BuiltInWidgets.kNumberSlider)
+                // .withProperties(Map.of("min", 0, "max", 4000))
+                .getEntry();
 
         this.kIEntry = moduleData
-        .add("kI", ShooterConstants.kI)
-        .getEntry();
+                .add("kI", ShooterConstants.kI)
+                .getEntry();
 
         this.kDEntry = moduleData
-        .add("kD", ShooterConstants.kD)
-        .getEntry();
+                .add("kD", ShooterConstants.kD)
+                .getEntry();
 
         this.kPEntry = moduleData
-        .add("kP", ShooterConstants.kP)
-        .getEntry();
-    
+                .add("kP", ShooterConstants.kP)
+                .getEntry();
+
     }
 }

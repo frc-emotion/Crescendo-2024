@@ -6,7 +6,7 @@ import frc.robot.subsystems.PivotSubsystem;
 public class PivotAutoCommand extends Command {
     private final PivotSubsystem pivotSubsystem;
     private int targetPreset;
-    
+
     public PivotAutoCommand(PivotSubsystem pivotSubsystem, int targetPreset) {
         this.pivotSubsystem = pivotSubsystem;
         this.targetPreset = targetPreset;
@@ -15,9 +15,9 @@ public class PivotAutoCommand extends Command {
 
     public PivotAutoCommand(PivotSubsystem pivotSubsystem, double targetAngle) {
         this.pivotSubsystem = pivotSubsystem;
-        
+
     }
-    
+
     @Override
     public void initialize() {
         pivotSubsystem.setIndex(targetPreset);
@@ -26,7 +26,7 @@ public class PivotAutoCommand extends Command {
     @Override
     public void execute() {
         pivotSubsystem.goToPreset();
-    
+
     }
 
     @Override

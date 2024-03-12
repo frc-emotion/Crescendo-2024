@@ -1,6 +1,5 @@
 package frc.robot.subsystems;
 
-
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
@@ -75,7 +74,6 @@ public class VisionSubsystem extends SubsystemBase {
 
         initShuffleboard();
     }
-
 
     public void updateEstimator() {
         poseEstimator.update(swerveSubsystem.getRotation2d(), swerveSubsystem.getModulePositions());
@@ -238,7 +236,6 @@ public class VisionSubsystem extends SubsystemBase {
         updateField();
     }
 
-
     // SHUFFLEBOARD
 
     public void updateField() {
@@ -280,5 +277,5 @@ public class VisionSubsystem extends SubsystemBase {
         visionData.add("Snap Odometry to Vision+Odometry", new InstantCommand(() -> snapOdometry()));
         visionData.addString("Current Mode", () -> getVisionType().toString());
     }
-  
+
 }
