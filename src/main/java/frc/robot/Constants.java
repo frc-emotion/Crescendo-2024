@@ -325,21 +325,22 @@ public final class Constants {
         
 
             // PID Controller Constants
-        public static final double kP = 0.004;
-        public static final double kI = 0.1;
-        public static final double kD = 0;
+        public static final double kP = 0.003;
+        public static final double kI = 0;
+        public static final double kD = 12;
         public static final double kFeedForward = 0.00025;
         public static final double kMaxOutput = 1; // raw motor output
         public static final double kMinOutput = -1; // raw motor output
         public static final double kMaxOutputError = 75; // rpm
 
             // Speeds
-        public static final double kFeedSpeed = 0.25;
+        public static final double kFeedSpeed = 0.35;
         public static final double kShootSpeedRotationsPerSecond = 0;
         public static final double kMaxSpeedRotationsPerSecond = 0;
         public static final double kMaxSpeedRotationsPerSecondSquared = 0;
         public static final double[] PRESET_SPEEDS = {3000, 0}; // rpm
         public static final double IDLE_SPEED = 1000; // rpm
+        public static final double AmpRPM = 1000;
 
             // For SOURCE intake
         protected static final double SHOOTER_REVERSE_SPEED = -0.1; // raw motor output
@@ -383,7 +384,7 @@ public final class Constants {
         
         //Handoff
         public static final double kHANDOFF_ANGLE = -60.0;
-        public static final double kMAX_ANGLE_ERROR  = 1.0;
+        public static final double kMAX_ANGLE_ERROR  = 3.0;
     }
 
     public static final class IntakeConstants {

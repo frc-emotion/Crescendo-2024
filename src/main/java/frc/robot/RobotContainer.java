@@ -18,6 +18,7 @@ import frc.robot.commands.Auto.NamedCommands.ShootSpeaker;
 import frc.robot.commands.Auto.SubsystemCommands.RevShooterAutoCommand;
 import frc.robot.commands.Auto.SubsystemCommands.TimeDriveAuto;
 import frc.robot.commands.Auto.SubsystemCommands.IntakeDriveAutoCommand;
+import frc.robot.commands.Auto.SubsystemCommands.PivotAutoCommand;
 import frc.robot.commands.Teleop.*;
 import frc.robot.commands.Teleop.swerve.*;
 
@@ -101,7 +102,7 @@ public class RobotContainer {
 
          m_ShooterSubsystem.setDefaultCommand(
              new ShooterManualCommand(
-                 () -> operatorController_HID.getAButton(),
+                 () -> operatorController_HID.getLeftTriggerAxis() > OIConstants.kDeadband,
                  () -> operatorController_HID.getRightTriggerAxis() > OIConstants.kDeadband,
                  m_ShooterSubsystem
              )
@@ -136,8 +137,8 @@ public class RobotContainer {
         m_IntakeSubsystem.setDefaultCommand(
             new IntakeDriveCommand(
                 m_IntakeSubsystem,
-                () -> operatorController_HID.getLeftBumper(),
-                () -> operatorController_HID.getRightBumper()
+                () -> false, //previous r bumper
+                () -> operatorController_HID.getLeftBumper()
             )
         );
 
@@ -248,7 +249,7 @@ public class RobotContainer {
         );
        }
 
-       m_operatorController.y().whileTrue(
+       m_operatorController.rightBumper().whileTrue(
         new Command() {
             public void execute() {
                 m_ShooterSubsystem.setShooterVelocity(m_ShooterSubsystem.getAmpRPM());
@@ -266,13 +267,13 @@ public class RobotContainer {
             }
         });
 
-        m_operatorController.x().onTrue(
-            new IntakePivotCommand(m_IntakeSubsystem)
-        );
+        // m_operatorController.x().onTrue(
+        //     new IntakePivotCommand(m_IntakeSubsystem)
+        // );
 
         m_operatorController
-        // .x()
-        .povUp()
+        .x()
+        // .povUp()
         .whileTrue(
             new SequentialCommandGroup(
                 new IntakePivotCommand(m_IntakeSubsystem).onlyIf(() -> m_IntakeSubsystem.isUp()), //should we change this to .andThen() instead of sequential command group?
@@ -281,7 +282,7 @@ public class RobotContainer {
         )
         // .onFalse(
         //     new IntakePivotCommand(m_IntakeSubsystem).onlyIf(()-> !m_IntakeSubsystem.isUp())
-        // );
+        // )
         .whileFalse(
             // new SequentialCommandGroup(
                 new IntakePivotCommand(m_IntakeSubsystem).onlyIf(()->!m_IntakeSubsystem.isUp())
@@ -294,7 +295,7 @@ public class RobotContainer {
 
                         @Override
                         public boolean isFinished() {
-                            return m_PivotSubsystem.isAtTarget();
+                            return m_PivotSubsystem.isHandoffOk();
                         }
 
                         @Override
@@ -303,6 +304,7 @@ public class RobotContainer {
                         }
                     }
                     .onlyIf(()->!m_PivotSubsystem.isHandoffOk())
+                    .withTimeout(3.5)
                 )
                 .andThen(
                     new Command() {
@@ -324,9 +326,14 @@ public class RobotContainer {
                             return m_ShooterSubsystem.isProjectileFed();
                         }
                     }
-                    .onlyIf(()-> m_PivotSubsystem.isHandoffOk() && m_IntakeSubsystem.isUp())
+                    .onlyIf(()-> m_PivotSubsystem.isHandoffOk())
+                    .withTimeout(2.0)
                 )
-            // )
+            // ) 
+        );
+
+        m_operatorController.povDown().onTrue(
+            new PivotAutoCommand(m_PivotSubsystem, 1)
         );
 
         m_operatorController.b().whileTrue(
@@ -345,7 +352,7 @@ public class RobotContainer {
             }
         );
 
-        m_operatorController.leftTrigger(OIConstants.kDeadband).whileTrue(
+        m_operatorController.a().whileTrue(
             new Command() {
                 @Override
                 public void execute() {

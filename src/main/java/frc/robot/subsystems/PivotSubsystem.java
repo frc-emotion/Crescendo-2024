@@ -46,11 +46,13 @@ public class PivotSubsystem extends SubsystemBase {
 
         relativeEncoder = pivotMotor.getEncoder();
 
-        relativeEncoder.setPositionConversionFactor((-1.0 / PivotConstants.GEAR_REDUCTION) * 360);
+        // relativeEncoder.setPositionConversionFactor((-1.0 / PivotConstants.GEAR_REDUCTION) * 360);
         resetPosition(-60.0);
 
         initShuffleboard();
     }
+
+    private double kCONVERSION_FACTOR = (-1.0 / PivotConstants.GEAR_REDUCTION) * 360;
 
     private void initShuffleboard() {
         if(!Constants.DEBUG_MODE_ACTIVE) return;
@@ -124,16 +126,16 @@ public class PivotSubsystem extends SubsystemBase {
         pivotMotor.set(-0.2);
     }
 
-    public double getRev() {
+    private double getRev() {
         return relativeEncoder.getPosition();
     }
 
     public double getDegrees() {
-        return getRev();
+        return getRev() * kCONVERSION_FACTOR;
     }
 
     public boolean isHandoffOk() {
-        return this.getDegrees() - PivotConstants.kHANDOFF_ANGLE <= PivotConstants.kMAX_ANGLE_ERROR;
+        return Math.abs(this.getDegrees() - PivotConstants.kHANDOFF_ANGLE) <= PivotConstants.kMAX_ANGLE_ERROR;
     }
 
     public void stop() {
@@ -148,7 +150,7 @@ public class PivotSubsystem extends SubsystemBase {
         // if (rev > Constants.PivotConstants.PIVOT_MAX_REVOLUTION) {
         //     target = Constants.PivotConstants.PIVOT_MAX_REVOLUTION;
         // }
-        pivotPID.setReference(target, ControlType.kPosition);
+        pivotPID.setReference(target / kCONVERSION_FACTOR, ControlType.kPosition);
     }
 
     public void goToHandoff(){
@@ -156,7 +158,7 @@ public class PivotSubsystem extends SubsystemBase {
     }
 
     public boolean isAtTarget() {
-        return Math.abs(relativeEncoder.getVelocity() - getPreset()) < PivotConstants.MAX_ERROR;
+        return Math.abs(this.getDegrees() - this.getPreset()) <= PivotConstants.kMAX_ANGLE_ERROR;
     }
 
 }
