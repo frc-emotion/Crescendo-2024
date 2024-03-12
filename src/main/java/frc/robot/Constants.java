@@ -334,6 +334,7 @@ public final class Constants {
         public static final int MAX_CURRENT_SMART = 40;
         public static final double MAX_ERROR = 3;
         public static final double GEAR_REDUCTION = 75.0;
+        public static final double kConversionFactor = (-1.0 / PivotConstants.GEAR_REDUCTION) * 360;
 
         // Raw Output Speeds
         public static final double PIVOT_TELEOP_SPEED = 0.3;
