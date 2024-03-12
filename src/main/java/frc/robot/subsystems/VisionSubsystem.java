@@ -48,17 +48,9 @@ public class VisionSubsystem extends SubsystemBase {
     private final RectanglePoseArea fieldBoundary = new RectanglePoseArea(new Translation2d(0, 0),
             new Translation2d(16.541, 8.211));
 
-    public final SwerveDrivePoseEstimator poseEstimator = new SwerveDrivePoseEstimator(
-            DriveConstants.kDriveKinematics,
-            new Rotation2d(),
-            swerveSubsystem.getModulePositions(),
-            new Pose2d());
+    public final SwerveDrivePoseEstimator poseEstimator;
 
-    public final SwerveDriveOdometry poseOdometryEstimator = new SwerveDriveOdometry(
-            DriveConstants.kDriveKinematics,
-            new Rotation2d(),
-            swerveSubsystem.getModulePositions(),
-            new Pose2d());
+    public final SwerveDriveOdometry poseOdometryEstimator;
 
     private VisionTypes methodToUse = VisionTypes.NO_VISION;
 
@@ -73,10 +65,22 @@ public class VisionSubsystem extends SubsystemBase {
         visionType.addOption("Calculations Based Vision", VisionTypes.CRAZY_MATH);
         visionType.addOption("Limelight Docs Vision", VisionTypes.LLDOCS);
 
+        this.poseEstimator = new SwerveDrivePoseEstimator(
+            DriveConstants.kDriveKinematics,
+            new Rotation2d(),
+            swerveSubsystem.getModulePositions(),
+            new Pose2d());
+
+        this.poseOdometryEstimator = new SwerveDriveOdometry(
+            DriveConstants.kDriveKinematics,
+            new Rotation2d(),
+            swerveSubsystem.getModulePositions(),
+            new Pose2d());
+
         initShuffleboard();
     }
 
-    public void updateEstimator() {
+    public void updateOdometry() {
         poseEstimator.update(swerveSubsystem.getRotation2d(), swerveSubsystem.getModulePositions());
         poseOdometryEstimator.update(swerveSubsystem.getRotation2d(), swerveSubsystem.getModulePositions()); // testing
     }
