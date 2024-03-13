@@ -46,7 +46,7 @@ public class PivotSubsystem extends SubsystemBase {
 
         // relativeEncoder.setPositionConversionFactor((-1.0 /
         // PivotConstants.GEAR_REDUCTION) * 360);
-        resetPosition(-60.0 * PivotConstants.kConversionFactor);
+        resetPosition(60.0);
 
         initShuffleboard();
     }
@@ -68,7 +68,7 @@ public class PivotSubsystem extends SubsystemBase {
     }
 
     public void resetPosition(double offset) {
-        relativeEncoder.setPosition(offset);
+        relativeEncoder.setPosition(offset / PivotConstants.kConversionFactor);
     }
 
     public int getIndex() {
@@ -116,11 +116,11 @@ public class PivotSubsystem extends SubsystemBase {
     }
 
     private double getRev() {
-        return relativeEncoder.getPosition();
+        return relativeEncoder.getPosition() * PivotConstants.kConversionFactor / 360.0;
     }
 
     public double getDegrees() {
-        return getRev() * PivotConstants.kConversionFactor;
+        return relativeEncoder.getPosition() * PivotConstants.kConversionFactor;
     }
 
     public boolean isHandoffOk() {

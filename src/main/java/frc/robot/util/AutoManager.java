@@ -37,7 +37,7 @@ public class AutoManager {
 
         AutoBuilder.configureHolonomic(
                 this.visionSubsystem::getCurrentPose, // If this has issues switch to odometry only based pose
-                this.visionSubsystem::resetOdometry,
+                this.visionSubsystem::resetPoseEstimator,
                 this.swerveSubsystem::getChassisSpeeds,
                 this.swerveSubsystem::driveRobotRelative,
 

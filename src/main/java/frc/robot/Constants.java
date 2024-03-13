@@ -82,6 +82,7 @@ public final class Constants {
         public static final double drivekV = 0;
         public static final double drivekA = 0;
     }
+     
 
     public static final class DriveConstants {
         public static enum DriveMode {
@@ -229,10 +230,10 @@ public final class Constants {
         public static final double kMaxAngularAccelerationRadiansPerSecondSquared = Math.PI / 4;
 
         // Change based on testing/tune PID controllers
-        public static final double kPXController = 0.75;
+        public static final double kPXController = 1.25;
         public static final double kPYController = 0.75;
 
-        public static final double kPThetaController = 0.6;
+        public static final double kPThetaController = 0.13;
         public static final double kIThetaController = 0;
         public static final double kDThetaController = 0;
 
@@ -293,7 +294,7 @@ public final class Constants {
         public static final int CURRENT_LIMIT_SMART = 40; // amps
         public static final double GEAR_REDUCTION = 0.5;
 
-        // PID Controller Constants
+            // PID Controller Constants
         public static final double kP = 0.003;
         public static final double kI = 0;
         public static final double kD = 12;
@@ -302,7 +303,7 @@ public final class Constants {
         public static final double kMinOutput = -1; // raw motor output
         public static final double kMaxOutputError = 75; // rpm
 
-        // Speeds
+            // Speeds
         public static final double kFeedSpeed = 0.35;
         public static final double kShootSpeedRotationsPerSecond = 0;
         public static final double kMaxSpeedRotationsPerSecond = 0;
@@ -311,9 +312,9 @@ public final class Constants {
         public static final double IDLE_SPEED = 1000; // rpm
         public static final double AmpRPM = 1000;
 
-        // For SOURCE intake
+            // For SOURCE intake
         protected static final double SHOOTER_REVERSE_SPEED = -0.2; // raw motor output
-        protected static final double FEEDER_REVERSE_SPEED = -0.1; // raw motor output
+        protected static final double FEEDER_REVERSE_SPEED = -0.1;  // raw motor output
     }
 
     public static final class PivotConstants {
@@ -344,7 +345,7 @@ public final class Constants {
         public static final double PIVOT_MIN_REVOLUTION = 5;
         public static final double PIVOT_MAX_REVOLUTION = 83;
         public static final double PIVOT_THRESHOLD = 6;
-        public static final double[] PIVOT_POSITIONS = { -60.0, 0 };
+        public static final double[] PIVOT_POSITIONS = { 60.0, 0 };
 
         // Input Constants
         public static final double TRIGGER_THRESHOLD = 0.3;
@@ -353,8 +354,8 @@ public final class Constants {
         public static final double CURRENT_SPIKE_THRESHOLD = 0;
 
         // Handoff
-        public static final double kHANDOFF_ANGLE = -60.0;
-        public static final double kMAX_ANGLE_ERROR = 3.0;
+        public static final double kHANDOFF_ANGLE = 60.0;
+        public static final double kMAX_ANGLE_ERROR  = 1.5;
     }
 
     public static final class IntakeConstants {
@@ -420,7 +421,7 @@ public final class Constants {
 
     public static final class VisionConstants {
         public static boolean VISION_DEBUG_MODE = true;
-
+        
         public static final Matrix<N3, N1> kTestStdDevs = VecBuilder.fill(0.2, 0.2, 1);
         public static final Matrix<N3, N1> kSingleTagStdDevs = VecBuilder.fill(4, 4, 8);
         public static final Matrix<N3, N1> kMultiTagStdDevs = VecBuilder.fill(0.5, 0.5, 1);
