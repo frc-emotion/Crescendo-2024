@@ -5,5 +5,6 @@ public enum VisionTypes {
     TORPEDO,
     PRESET_STD,
     CUSTOM_STD,
-    CRAZY_MATH
+    CRAZY_MATH,
+    LLDOCS
 }

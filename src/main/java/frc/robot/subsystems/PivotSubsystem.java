@@ -25,6 +25,8 @@ public class PivotSubsystem extends SubsystemBase {
 
     private boolean calibration = false;
 
+    private boolean turretMode = false;
+
     public PivotSubsystem() {
 
         pivotMotor = new CANSparkMax(Constants.PivotConstants.PIVOT_PORT, MotorType.kBrushless);
@@ -44,11 +46,18 @@ public class PivotSubsystem extends SubsystemBase {
 
         relativeEncoder = pivotMotor.getEncoder();
 
-        // relativeEncoder.setPositionConversionFactor((-1.0 /
-        // PivotConstants.GEAR_REDUCTION) * 360);
-        resetPosition(60.0);
+        relativeEncoder.setPositionConversionFactor((-1.0 / PivotConstants.GEAR_REDUCTION) * 360);
+        resetPosition(-60.0);
 
         initShuffleboard();
+    }
+
+    public boolean turretMode() {
+        return turretMode;
+    }
+
+    public void toggleTurret() {
+        turretMode = !turretMode;
     }
 
     private void initShuffleboard() {
@@ -68,7 +77,7 @@ public class PivotSubsystem extends SubsystemBase {
     }
 
     public void resetPosition(double offset) {
-        relativeEncoder.setPosition(offset / PivotConstants.kConversionFactor);
+        relativeEncoder.setPosition(offset);
     }
 
     public int getIndex() {
@@ -111,20 +120,29 @@ public class PivotSubsystem extends SubsystemBase {
         return calibration;
     }
 
-    public void calibrate() {
+    public void endCalibrate() {
+        calibration = false;
+
+        pivotMotor.set(0.0);
+
         relativeEncoder.setPosition(0);
     }
 
-    private double getRev() {
-        return relativeEncoder.getPosition() * PivotConstants.kConversionFactor / 360.0;
+    public void calibrate() {
+        calibration = true;
+        pivotMotor.set(-0.2);
+    }
+
+    public double getRev() {
+        return relativeEncoder.getPosition();
     }
 
     public double getDegrees() {
-        return relativeEncoder.getPosition() * PivotConstants.kConversionFactor;
+        return getRev();
     }
 
     public boolean isHandoffOk() {
-        return Math.abs(this.getDegrees() - PivotConstants.kHANDOFF_ANGLE) <= PivotConstants.kMAX_ANGLE_ERROR;
+        return this.getDegrees() - PivotConstants.kHANDOFF_ANGLE <= PivotConstants.kMAX_ANGLE_ERROR;
     }
 
     public void stop() {
@@ -139,7 +157,7 @@ public class PivotSubsystem extends SubsystemBase {
         // if (rev > Constants.PivotConstants.PIVOT_MAX_REVOLUTION) {
         // target = Constants.PivotConstants.PIVOT_MAX_REVOLUTION;
         // }
-        pivotPID.setReference(target / PivotConstants.kConversionFactor, ControlType.kPosition);
+        pivotPID.setReference(target, ControlType.kPosition);
     }
 
     public void goToHandoff() {
@@ -147,7 +165,7 @@ public class PivotSubsystem extends SubsystemBase {
     }
 
     public boolean isAtTarget() {
-        return Math.abs(this.getDegrees() - this.getPreset()) <= PivotConstants.kMAX_ANGLE_ERROR;
+        return Math.abs(relativeEncoder.getVelocity() - getPreset()) < PivotConstants.MAX_ERROR;
     }
 
 }
