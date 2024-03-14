@@ -5,10 +5,11 @@ import frc.robot.subsystems.VisionSubsystem;
 
 public class MonitorVision extends Command {
 
-    private final VisionSubsystem visionSubsystem;
+    protected final VisionSubsystem visionSubsystem;
 
     public MonitorVision(VisionSubsystem visionSubsystem) {
         this.visionSubsystem = visionSubsystem;
+        addRequirements(visionSubsystem);
     }
 
     @Override

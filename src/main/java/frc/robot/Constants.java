@@ -253,6 +253,10 @@ public final class Constants {
 
         public static final Pose2d SCORE_SPEAKER_POSE = new Pose2d();
 
+        public static final double SPEAKER_TAG_HEIGHT = 1.324;
+        public static final double SPEAKER_MOUTH_HEIGHT = 2.21;
+        public static final int PIVOT_HEIGHT = 0;
+
     }
 
     public static final class ClimbConstants {
@@ -332,7 +336,7 @@ public final class Constants {
         // Motor Constants
         public static final int MAX_CURRENT = 45;
         public static final int MAX_CURRENT_SMART = 40;
-        public static final double MAX_ERROR = 3;
+        public static final double MAX_ERROR = 1.5;
         public static final double GEAR_REDUCTION = 75.0;
         public static final double kConversionFactor = (-1.0 / PivotConstants.GEAR_REDUCTION) * 360;
 
