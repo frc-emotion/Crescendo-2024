@@ -21,6 +21,7 @@ public class AmpAlign extends MonitorVision {
 
     @Override
     public void execute() {
+        
         super.execute();
     }
 

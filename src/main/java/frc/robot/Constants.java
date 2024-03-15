@@ -21,6 +21,8 @@ import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation3d;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
@@ -243,7 +245,7 @@ public final class Constants {
 
         public static final double INTAKE_TIMEOUT = 0;
 
-        public static final double SHOOTER_SPEED_RPM = 2000.0;
+        
 
         public static final double SCORE_SPEAKER_TIMEOUT = 6.0;
 
@@ -309,16 +311,14 @@ public final class Constants {
 
             // Speeds
         public static final double kFeedSpeed = 0.35;
-        public static final double kShootSpeedRotationsPerSecond = 0;
-        public static final double kMaxSpeedRotationsPerSecond = 0;
-        public static final double kMaxSpeedRotationsPerSecondSquared = 0;
+        public static final double SHOOTER_SPEED_RPM = 3000.0;
         public static final double[] PRESET_SPEEDS = { 3000, 0 }; // rpm
         public static final double IDLE_SPEED = 1000; // rpm
         public static final double AmpRPM = 1000;
 
             // For SOURCE intake
-        protected static final double SHOOTER_REVERSE_SPEED = -0.2; // raw motor output
-        protected static final double FEEDER_REVERSE_SPEED = -0.1;  // raw motor output
+        protected static final double SHOOTER_REVERSE_SPEED = -0.3; // raw motor output
+        protected static final double FEEDER_REVERSE_SPEED = -0.2;  // raw motor output
     }
 
     public static final class PivotConstants {
@@ -405,7 +405,7 @@ public final class Constants {
         public static final double kMaxAccel = 4;
         public static final double kMaxError = 1;
 
-        public static final double DEPLOYED_POS = -0.32;
+        public static final double DEPLOYED_POS = -0.305;
         public static final double RETRACTED_POS = 0;
 
         public static final double SHOOTER_TRANSFER_SPEED = 0.5;
@@ -424,6 +424,7 @@ public final class Constants {
     }
 
     public static final class VisionConstants {
+        public static double FIELD_LENGTH = 16.541;
         public static boolean VISION_DEBUG_MODE = true;
         
         public static final Matrix<N3, N1> kTestStdDevs = VecBuilder.fill(0.2, 0.2, 1);
@@ -431,7 +432,10 @@ public final class Constants {
         public static final Matrix<N3, N1> kMultiTagStdDevs = VecBuilder.fill(0.5, 0.5, 1);
 
         public static final double TAG_DETECTION_THRESHOLD = Units.feetToMeters(15);
-
+        
+        // Thank you super nurds for constnats very nice (nice spelling)
+        public static final Translation2d BLUE_SPEAKER_CENTER = new Translation2d(0.457 / 2, 5.557034);
+        public static final Translation2d RED_SPEAKER_CENTER = new Translation2d(FIELD_LENGTH - (0.457 / 2), 5.557034);
     }
 
 }

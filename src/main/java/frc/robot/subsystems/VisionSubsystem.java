@@ -23,6 +23,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.util.LimelightHelpers;
+import frc.robot.util.LimelightHelpers.LimelightTarget_Fiducial;
 import frc.robot.util.LimelightHelpers.PoseEstimate;
 import frc.robot.util.RectanglePoseArea;
 import frc.robot.util.TabManager;
@@ -117,12 +118,38 @@ public class VisionSubsystem extends SubsystemBase {
         return LimelightHelpers.getTV("limelight");
     }
 
+    
+
     public int getNumTags() {
         return getVisionPose().tagCount;
     }
 
     public double getAvgTagDist() {
         return getVisionPose().avgTagDist;
+    }
+
+    public LimelightTarget_Fiducial[] getTagFiducial() {
+        return LimelightHelpers.getLatestResults("limelight").targetingResults.targets_Fiducials;
+    }
+
+    public double[] getTagIDs() {
+        var fiducials = getTagFiducial();
+        double[] ids = new double[fiducials.length];
+        for(int i = 0; i < ids.length; i++) {
+            ids[i] = fiducials[i].fiducialID;
+        }
+        return ids;
+    }
+
+    public boolean isIdDetected(double targetID) {
+        for(double id : getTagIDs()) {
+            if(targetID == id) return true;
+        }
+        return false;
+    }
+
+    public double getDistanceTo(Translation2d location) {
+        return getCurrentPose().getTranslation().getDistance(location);
     }
 
     // VISION UPDATING - VERSIONS 1-4
@@ -327,6 +354,7 @@ public class VisionSubsystem extends SubsystemBase {
         visionData.addNumber("Difference btw Current Pose and New Vision Estimate", () -> getDifference());
         visionData.add("Snap Odometry to Vision+Odometry", new InstantCommand(() -> snapOdometry()));
         visionData.addString("Current Mode", () -> getVisionType().toString());
+        visionData.add("Vision Method", visionType);
     }
 
 }
