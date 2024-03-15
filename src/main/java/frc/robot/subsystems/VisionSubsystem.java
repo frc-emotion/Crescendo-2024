@@ -152,6 +152,10 @@ public class VisionSubsystem extends SubsystemBase {
         return getCurrentPose().getTranslation().getDistance(location);
     }
 
+    public double getTX() {
+        return LimelightHelpers.getTX("limelight");
+    }
+
     // VISION UPDATING - VERSIONS 1-4
 
     // LimelightLib-given constants for Std Devs

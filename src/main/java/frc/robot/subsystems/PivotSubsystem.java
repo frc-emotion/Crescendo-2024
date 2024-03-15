@@ -157,4 +157,8 @@ public class PivotSubsystem extends SubsystemBase {
         return Math.abs(getDegrees() - getPreset()) < PivotConstants.MAX_ERROR;
     }
 
+    public boolean isAtTarget(double degrees) {
+        return Math.abs(getDegrees() - getPreset()) < PivotConstants.MAX_ERROR;
+    }
+
 }

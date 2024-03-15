@@ -29,7 +29,7 @@ public class SpeakerTurret extends MonitorVision {
 
     @Override
     public boolean isFinished() {
-        return !pivotSubsystem.turretMode();
+        return pivotSubsystem.isAtTarget(calculateAngle());
     }
 
     @Override
@@ -37,7 +37,7 @@ public class SpeakerTurret extends MonitorVision {
         pivotSubsystem.stop();
     }
 
-    public double calculateAngle() {
+    private double calculateAngle() {
         return Math.atan((AutoConstants.SPEAKER_MOUTH_HEIGHT - AutoConstants.PIVOT_HEIGHT) / visionSubsystem.getDistanceTo(VisionConstants.BLUE_SPEAKER_CENTER));
     }
 
