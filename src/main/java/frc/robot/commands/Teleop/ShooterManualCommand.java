@@ -1,6 +1,9 @@
 package frc.robot.commands.Teleop;
 
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Robot;
+import frc.robot.RobotContainer;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.ShooterConstants;
@@ -57,6 +60,14 @@ public class ShooterManualCommand extends Command {
         } else {
             shooterSubsystem.setShooterRaw(0);
             // shooterSubsystem.setShooterVelocity(0);
+        }
+
+        if(shooterSubsystem.isAtTarget(ShooterConstants.SHOOTER_SPEED_RPM) && shooterSubsystem.isProjectileFed()) {
+            RobotContainer.operatorController_HID.setRumble(RumbleType.kBothRumble, 1);
+        } else if(shooterSubsystem.isAtTarget(ShooterConstants.SHOOTER_SPEED_RPM)) {
+            RobotContainer.operatorController_HID.setRumble(RumbleType.kBothRumble, 0.25);
+        } else {
+            RobotContainer.operatorController_HID.setRumble(RumbleType.kBothRumble, 0);
         }
 
         if (feederSupplier.get()) {

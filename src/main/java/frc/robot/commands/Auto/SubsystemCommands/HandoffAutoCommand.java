@@ -20,12 +20,14 @@ public class HandoffAutoCommand extends Command {
         intakeSubsystem.setIntake(IntakeConstants.SHOOTER_TRANSFER_SPEED);
         // m_ShooterSubsystem.setFeederSpeed(ShooterConstants.kFeedSpeed);
         shooterSubsystem.setFeederSpeed(IntakeConstants.SHOOTER_TRANSFER_SPEED);
+        shooterSubsystem.setShooterVelocity(shooterSubsystem.getShooterVelocity());
     }
 
     @Override
     public void end(boolean interrupted) {
         intakeSubsystem.intakeStop();
         shooterSubsystem.stopFeeder();
+        shooterSubsystem.stopShooter();
     }
 
     @Override
