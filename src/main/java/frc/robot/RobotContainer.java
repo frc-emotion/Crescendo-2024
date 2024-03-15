@@ -66,17 +66,17 @@ public class RobotContainer {
     public static final AutoManager autoManager = new AutoManager(m_VisionSubsystem, m_SwerveSubsystem);
 
     // Replace with CommandPS4Controller or CommandJoystick if needed
-    private final CommandXboxController m_driverController = new CommandXboxController(
+    public static final CommandXboxController m_driverController = new CommandXboxController(
         OIConstants.kDriverControllerPort
     );
 
-    private final XboxController driverController_HID = m_driverController.getHID();
+    public static final XboxController driverController_HID = m_driverController.getHID();
 
-    private final CommandXboxController m_operatorController = new CommandXboxController(
+    public static final CommandXboxController m_operatorController = new CommandXboxController(
         OIConstants.kOperatorControllerPort
     );
 
-    private final XboxController operatorController_HID = m_operatorController.getHID();
+    public static final XboxController operatorController_HID = m_operatorController.getHID();
 
     private final SendableChooser<Command> autoChooser;
     
