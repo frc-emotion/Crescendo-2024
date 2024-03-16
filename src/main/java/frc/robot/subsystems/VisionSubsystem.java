@@ -112,6 +112,8 @@ public class VisionSubsystem extends SubsystemBase {
                 swerveSubsystem.getRotation2d(),
                 swerveSubsystem.getModulePositions(),
                 pose);
+
+        resetOdometry(pose);
     }
 
     public boolean tagDetected() {

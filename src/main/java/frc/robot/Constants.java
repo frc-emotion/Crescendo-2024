@@ -207,9 +207,10 @@ public final class Constants {
         public static final double MAX_LEVEL_VELOCITY = 0.1; // FIX mps
         public static final double MAX_LEVEL_ACCELERATION = 0.3; // Fix with testing
         public static final double THRESHOLD = Units.degreesToRadians(3);
-        public static final double KPLevel = 5;
-        public static final double KDLevel = 0.3;
-        public static final double KILevel = 0;
+
+        public static final double kPThetaController = 0.001;
+        public static final double kIThetaController = 0.00;
+        public static final double kDThetaController = 0.00;
     }
 
     public static class AutoConstants {
@@ -228,7 +229,7 @@ public final class Constants {
         public static final double kPXController = 1.25;
         public static final double kPYController = 0.75;
 
-        public static final double kPThetaController = 0.13;
+        public static final double kPThetaController = 1.4;
         public static final double kIThetaController = 0;
         public static final double kDThetaController = 0;
 
@@ -361,7 +362,7 @@ public final class Constants {
         public static final int INTAKE_PIVOT_PORT = 15;
         public static final int INTAKE_MOTOR_PORT = 19;
         public static final int INTAKE_PIVOT_2_PORT = 29;
-        public static final int BEAM_BREAKER_PORT = 1;
+        public static final int BEAM_BREAKER_PORT = 8;
 
         // Motor Constants
         public static final int MAX_CURRENT = 45;

@@ -83,7 +83,7 @@ public class RobotContainer {
      * The container for the robot. Contains subsystems, OI devices, and commands.
      */
     public RobotContainer() {
-        autoManager = AutoManager.getInstance();
+        autoManager = new AutoManager(m_VisionSubsystem, m_SwerveSubsystem);
 
         m_SwerveSubsystem.setDefaultCommand(
                 new DefaultSwerveXboxCommand(
