@@ -23,6 +23,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.util.LimelightHelpers;
+import frc.robot.util.LimelightHelpers.LimelightTarget_Fiducial;
 import frc.robot.util.LimelightHelpers.PoseEstimate;
 import frc.robot.util.RectanglePoseArea;
 import frc.robot.util.TabManager;
@@ -48,17 +49,9 @@ public class VisionSubsystem extends SubsystemBase {
     private final RectanglePoseArea fieldBoundary = new RectanglePoseArea(new Translation2d(0, 0),
             new Translation2d(16.541, 8.211));
 
-    public final SwerveDrivePoseEstimator poseEstimator = new SwerveDrivePoseEstimator(
-            DriveConstants.kDriveKinematics,
-            new Rotation2d(),
-            swerveSubsystem.getModulePositions(),
-            new Pose2d());
+    public final SwerveDrivePoseEstimator poseEstimator;
 
-    public final SwerveDriveOdometry poseOdometryEstimator = new SwerveDriveOdometry(
-            DriveConstants.kDriveKinematics,
-            new Rotation2d(),
-            swerveSubsystem.getModulePositions(),
-            new Pose2d());
+    public final SwerveDriveOdometry poseOdometryEstimator;
 
     private VisionTypes methodToUse = VisionTypes.NO_VISION;
 
@@ -72,6 +65,18 @@ public class VisionSubsystem extends SubsystemBase {
         visionType.addOption("Custom STD", VisionTypes.CUSTOM_STD);
         visionType.addOption("Calculations Based Vision", VisionTypes.CRAZY_MATH);
         visionType.addOption("Limelight Docs Vision", VisionTypes.LLDOCS);
+
+        this.poseEstimator = new SwerveDrivePoseEstimator(
+            DriveConstants.kDriveKinematics,
+            new Rotation2d(),
+            swerveSubsystem.getModulePositions(),
+            new Pose2d());
+
+        this.poseOdometryEstimator = new SwerveDriveOdometry(
+            DriveConstants.kDriveKinematics,
+            new Rotation2d(),
+            swerveSubsystem.getModulePositions(),
+            new Pose2d());
 
         initShuffleboard();
     }
@@ -113,12 +118,42 @@ public class VisionSubsystem extends SubsystemBase {
         return LimelightHelpers.getTV("limelight");
     }
 
+    
+
     public int getNumTags() {
         return getVisionPose().tagCount;
     }
 
     public double getAvgTagDist() {
         return getVisionPose().avgTagDist;
+    }
+
+    public LimelightTarget_Fiducial[] getTagFiducial() {
+        return LimelightHelpers.getLatestResults("limelight").targetingResults.targets_Fiducials;
+    }
+
+    public double[] getTagIDs() {
+        var fiducials = getTagFiducial();
+        double[] ids = new double[fiducials.length];
+        for(int i = 0; i < ids.length; i++) {
+            ids[i] = fiducials[i].fiducialID;
+        }
+        return ids;
+    }
+
+    public boolean isIdDetected(double targetID) {
+        for(double id : getTagIDs()) {
+            if(targetID == id) return true;
+        }
+        return false;
+    }
+
+    public double getDistanceTo(Translation2d location) {
+        return getCurrentPose().getTranslation().getDistance(location);
+    }
+
+    public double getTX() {
+        return LimelightHelpers.getTX("limelight");
     }
 
     // VISION UPDATING - VERSIONS 1-4
@@ -323,6 +358,7 @@ public class VisionSubsystem extends SubsystemBase {
         visionData.addNumber("Difference btw Current Pose and New Vision Estimate", () -> getDifference());
         visionData.add("Snap Odometry to Vision+Odometry", new InstantCommand(() -> snapOdometry()));
         visionData.addString("Current Mode", () -> getVisionType().toString());
+        visionData.add("Vision Method", visionType);
     }
 
 }

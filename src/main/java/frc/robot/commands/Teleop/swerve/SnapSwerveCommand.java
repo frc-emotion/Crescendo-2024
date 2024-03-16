@@ -7,7 +7,7 @@ import frc.robot.subsystems.SwerveSubsystem;
 
 public class SnapSwerveCommand extends AbstractSwerveXboxCommand {
 
-    private int direction;
+    protected int direction;
 
     public SnapSwerveCommand(
             SwerveSubsystem swerveSubsystem,

@@ -15,6 +15,8 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation3d;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
@@ -223,10 +225,10 @@ public final class Constants {
         public static final double kMaxAngularAccelerationRadiansPerSecondSquared = Math.PI / 4;
 
         // Change based on testing/tune PID controllers
-        public static final double kPXController = 0.75;
+        public static final double kPXController = 1.25;
         public static final double kPYController = 0.75;
 
-        public static final double kPThetaController = 0.6;
+        public static final double kPThetaController = 0.13;
         public static final double kIThetaController = 0;
         public static final double kDThetaController = 0;
 
@@ -236,7 +238,7 @@ public final class Constants {
 
         public static final double INTAKE_TIMEOUT = 0;
 
-        public static final double SHOOTER_SPEED_RPM = 2000.0;
+        
 
         public static final double SCORE_SPEAKER_TIMEOUT = 6.0;
 
@@ -245,6 +247,10 @@ public final class Constants {
         };
 
         public static final Pose2d SCORE_SPEAKER_POSE = new Pose2d();
+
+        public static final double SPEAKER_TAG_HEIGHT = 1.324;
+        public static final double SPEAKER_MOUTH_HEIGHT = 2.21;
+        public static final int PIVOT_HEIGHT = 0;
 
     }
 
@@ -287,26 +293,25 @@ public final class Constants {
         public static final int CURRENT_LIMIT_SMART = 40; // amps
         public static final double GEAR_REDUCTION = 0.5;
 
-        // PID Controller Constants
-        public static final double kP = 0.004;
+            // PID Controller Constants
+        public static final double kP = 0.003;
         public static final double kI = 0;
-        public static final double kD = 0.001;
+        public static final double kD = 12;
         public static final double kFeedForward = 0.00025;
         public static final double kMaxOutput = 1; // raw motor output
         public static final double kMinOutput = -1; // raw motor output
         public static final double kMaxOutputError = 75; // rpm
 
-        // Speeds
-        public static final double kFeedSpeed = 0.25;
-        public static final double kShootSpeedRotationsPerSecond = 0;
-        public static final double kMaxSpeedRotationsPerSecond = 0;
-        public static final double kMaxSpeedRotationsPerSecondSquared = 0;
+            // Speeds
+        public static final double kFeedSpeed = 0.35;
+        public static final double SHOOTER_SPEED_RPM = 3000.0;
         public static final double[] PRESET_SPEEDS = { 3000, 0 }; // rpm
         public static final double IDLE_SPEED = 1000; // rpm
+        public static final double AmpRPM = 1000;
 
-        // For SOURCE intake
-        protected static final double SHOOTER_REVERSE_SPEED = -0.2; // raw motor output
-        protected static final double FEEDER_REVERSE_SPEED = -0.1; // raw motor output
+            // For SOURCE intake
+        protected static final double SHOOTER_REVERSE_SPEED = -0.3; // raw motor output
+        protected static final double FEEDER_REVERSE_SPEED = -0.2;  // raw motor output
     }
 
     public static final class PivotConstants {
@@ -324,8 +329,9 @@ public final class Constants {
         // Motor Constants
         public static final int MAX_CURRENT = 45;
         public static final int MAX_CURRENT_SMART = 40;
-        public static final double MAX_ERROR = 3;
+        public static final double MAX_ERROR = 1.5;
         public static final double GEAR_REDUCTION = 75.0;
+        public static final double kConversionFactor = (-1.0 / PivotConstants.GEAR_REDUCTION) * 360;
 
         // Raw Output Speeds
         public static final double PIVOT_TELEOP_SPEED = 0.3;
@@ -336,7 +342,7 @@ public final class Constants {
         public static final double PIVOT_MIN_REVOLUTION = 5;
         public static final double PIVOT_MAX_REVOLUTION = 83;
         public static final double PIVOT_THRESHOLD = 6;
-        public static final double[] PIVOT_POSITIONS = { -60.0, 0 };
+        public static final double[] PIVOT_POSITIONS = { 60.0, 0 };
 
         // Input Constants
         public static final double TRIGGER_THRESHOLD = 0.3;
@@ -345,8 +351,8 @@ public final class Constants {
         public static final double CURRENT_SPIKE_THRESHOLD = 0;
 
         // Handoff
-        public static final double kHANDOFF_ANGLE = -60.0;
-        public static final double kMAX_ANGLE_ERROR = 1.0;
+        public static final double kHANDOFF_ANGLE = 60.0;
+        public static final double kMAX_ANGLE_ERROR  = 1.5;
     }
 
     public static final class IntakeConstants {
@@ -392,7 +398,7 @@ public final class Constants {
         public static final double kMaxAccel = 4;
         public static final double kMaxError = 1;
 
-        public static final double DEPLOYED_POS = -0.32;
+        public static final double DEPLOYED_POS = -0.305;
         public static final double RETRACTED_POS = 0;
 
         public static final double SHOOTER_TRANSFER_SPEED = 0.5;
@@ -411,6 +417,7 @@ public final class Constants {
     }
 
     public static final class VisionConstants {
+        public static double FIELD_LENGTH = 16.541;
         public static boolean VISION_DEBUG_MODE = true;
 
         public static final Matrix<N3, N1> kTestStdDevs = VecBuilder.fill(0.2, 0.2, 1);
@@ -418,7 +425,10 @@ public final class Constants {
         public static final Matrix<N3, N1> kMultiTagStdDevs = VecBuilder.fill(0.5, 0.5, 1);
 
         public static final double TAG_DETECTION_THRESHOLD = Units.feetToMeters(15);
-
+        
+        // Thank you super nurds for constnats very nice (nice spelling)
+        public static final Translation2d BLUE_SPEAKER_CENTER = new Translation2d(0.457 / 2, 5.557034);
+        public static final Translation2d RED_SPEAKER_CENTER = new Translation2d(FIELD_LENGTH - (0.457 / 2), 5.557034);
     }
 
 }

@@ -185,7 +185,7 @@ public class ShooterSubsystem extends SubsystemBase {
     }
 
     public boolean isProjectileFed() {
-        return breakSensor.get();
+        return !breakSensor.get();
     }
 
     public double getShooterTemp() {
@@ -206,7 +206,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
         ShuffleboardLayout persianPositions = moduleData.getLayout("Persian Positions", BuiltInLayouts.kList);
 
-        persianPositions.addBoolean("Line Breaker", () -> breakSensor.get());
+        persianPositions.addBoolean("Line Breaker", this::isProjectileFed);
         persianPositions.addBoolean("At Target Speed", this::isAtTarget);
 
         persianPositions.addDouble("Shooter Velocity", this::getShooterVelocity);
@@ -218,8 +218,8 @@ public class ShooterSubsystem extends SubsystemBase {
         persianPositions.withSize(2, 4);
 
         this.ampRPMEntry = moduleData
-                .add("Amp Target RPM", 1250)
-                // .withWidget(BuiltInWidgets.kNumberSlider)
+                .add("Amp Target RPM", ShooterConstants.AmpRPM)
+                // .wget(BuiltInWidgets.kNumberSlider)
                 // .withProperties(Map.of("min", 0, "max", 4000))
                 .getEntry();
 
