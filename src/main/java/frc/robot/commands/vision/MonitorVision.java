@@ -24,17 +24,8 @@ public class MonitorVision extends Command {
         switch (visionSubsystem.getSelectedType()) {
             case NO_VISION:
                 break;
-            case TORPEDO:
-                visionSubsystem.updateVision3();
-                break;
-            case PRESET_STD:
-                visionSubsystem.updateVision1();
-                break;
             case CUSTOM_STD:
                 visionSubsystem.updateVision2();
-                break;
-            case CRAZY_MATH:
-                visionSubsystem.updateVision4();
                 break;
             case LLDOCS:
                 visionSubsystem.updateVision5();

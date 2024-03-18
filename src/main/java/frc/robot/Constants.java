@@ -15,7 +15,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Pose3d ;
 import edu.wpi.first.math.geometry.Rotation3d;
 
 /**
@@ -40,16 +40,6 @@ public final class Constants {
 
         public static final int kDriverControllerPort = 0;
         public static final int kOperatorControllerPort = 1;
-
-        // Change to match driver button map
-        public static final int kDriverYAxis = 1;
-
-        public static final int kDriverXAxis = 0;
-        public static final int kDriverRotAxis = 4;
-        public static final int kDriverFieldOrientedButtonIdx = XboxController.Button.kA.value;
-        public static final int kDriverZeroHeadingButtonIdx = XboxController.Button.kB.value;
-        public static final int kDriverSlowButtonIdx = XboxController.Button.kLeftBumper.value;
-        public static final int kDriverTurboButtonIdx = XboxController.Button.kRightBumper.value;
 
         public static final double kDeadband = 0.15;
 
