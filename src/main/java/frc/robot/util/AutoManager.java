@@ -15,7 +15,7 @@ import com.pathplanner.lib.util.ReplanningConfig;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.RobotContainer;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.subsystems.SwerveSubsystem;
@@ -40,8 +40,8 @@ public class AutoManager {
         this.swerveSubsystem = swerveSubsystem;
 
         AutoBuilder.configureHolonomic(
-                this.visionSubsystem::getCurrentPose, // If this has issues switch to odometry only based pose
-                this.visionSubsystem::resetOdometry,
+                this.visionSubsystem::getCurrentOdoPose, // If this has issues switch to odometry only based pose
+                this.visionSubsystem::resetPoseEstimator,
                 this.swerveSubsystem::getChassisSpeeds,
                 this.swerveSubsystem::driveRobotRelative,
 
@@ -55,13 +55,6 @@ public class AutoManager {
                 swerveSubsystem);
 
         Pathfinding.setPathfinder(new LocalADStar());
-    }
-
-    public static AutoManager getInstance() {
-        if (autoManagerInstance == null) {
-            autoManagerInstance = new AutoManager(RobotContainer.m_VisionSubsystem, RobotContainer.m_SwerveSubsystem);
-        }
-        return autoManagerInstance;
     }
 
     public Command getAutoCommand(String name) {

@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import org.opencv.core.Mat;
+
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.math.controller.PIDController;
@@ -10,6 +12,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructArrayPublisher;
 import edu.wpi.first.networktables.StructPublisher;
@@ -22,6 +25,7 @@ import frc.robot.Constants;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
+import frc.robot.Constants.ShooterConstants;
 import frc.robot.util.TabManager;
 import frc.robot.util.TabManager.SubsystemTab;
 
@@ -83,16 +87,29 @@ public class SwerveSubsystem extends SubsystemBase {
     private StructPublisher<Rotation2d> publisher2 = NetworkTableInstance.getDefault()
             .getStructTopic("PersianRotation", Rotation2d.struct).publish();
 
-    private final PIDController thetaController;
+    private final PIDController autoThetaController, teleopThetaController;
+
+    private GenericEntry kIEntry, kDEntry, kPEntry;
 
     public SwerveSubsystem() {
 
-        // PIDController xController = new PIDController(AutoConstants.kPXController, 0, 0);
-        // PIDController yController = new PIDController(AutoConstants.kPYController, 0, 0);
+        // PIDController xController = new PIDController(AutoConstants.kPXController, 0,
+        // 0);
+        // PIDController yController = new PIDController(AutoConstants.kPYController, 0,
+        // 0);
 
-        thetaController = new PIDController(AutoConstants.kPThetaController, AutoConstants.kIThetaController,
+        autoThetaController = new PIDController(AutoConstants.kPThetaController, AutoConstants.kIThetaController,
                 AutoConstants.kDThetaController);
-        thetaController.enableContinuousInput(-180, 180);
+        autoThetaController.enableContinuousInput(-180, 180);
+
+        teleopThetaController = new PIDController(
+            DriveConstants.kPThetaController, 
+            DriveConstants.kIThetaController, 
+            DriveConstants.kDThetaController
+            );
+        
+        teleopThetaController.enableContinuousInput(-180, 180);
+        teleopThetaController.setTolerance(20, 180);
 
         // new Thread() {
         // @Override
@@ -122,6 +139,12 @@ public class SwerveSubsystem extends SubsystemBase {
             }
         }).start();
 
+    }
+
+    public void updatePID() {
+        this.teleopThetaController.setI(this.kIEntry.getDouble(ShooterConstants.kI));
+        this.teleopThetaController.setD(this.kDEntry.getDouble(ShooterConstants.kD));
+        this.teleopThetaController.setP(this.kPEntry.getDouble(ShooterConstants.kP));
     }
 
     public void setRawDriveSpeed(double speed) {
@@ -284,6 +307,12 @@ public class SwerveSubsystem extends SubsystemBase {
         fillList(backLeft, backLeftData);
         fillList(backRight, backRightData);
 
+        this.kPEntry = moduleData.add("kP", DriveConstants.kPThetaController).getEntry();
+
+        this.kIEntry = moduleData.add("kI", DriveConstants.kIThetaController).getEntry();
+
+        this.kDEntry = moduleData.add("kD", DriveConstants.kDThetaController).getEntry();
+
         sensorData = moduleData.getLayout("Gyro Data", BuiltInLayouts.kList);
         sensorData.addNumber("Gyro Heading", () -> getHeading());
         sensorData.addNumber("Gyro Pitch", () -> getPitch());
@@ -302,12 +331,20 @@ public class SwerveSubsystem extends SubsystemBase {
         layout.withSize(2, 4);
     }
 
-    public double calculateThetaPID(double measurement, double setpoint) {
-        return thetaController.calculate(measurement, setpoint);
+    public double calculateThetaPID(double measurement, double setpoint, boolean auto) {
+        if (auto) {
+            return autoThetaController.calculate(measurement, setpoint);
+        }
+        return teleopThetaController.calculate(measurement, setpoint);
+ 
+        
     }
 
-    public boolean thetaPIDAtSetpoint() {
-        return thetaController.atSetpoint();
+    public boolean thetaPIDAtSetpoint(boolean auto) {
+        if (auto) {
+            return autoThetaController.atSetpoint();
+        }
+        return teleopThetaController.atSetpoint();
     }
 
 }

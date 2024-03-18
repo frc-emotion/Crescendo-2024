@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
+import edu.wpi.first.math.filter.MedianFilter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -23,6 +24,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.util.LimelightHelpers;
+import frc.robot.util.LimelightHelpers.LimelightTarget_Fiducial;
 import frc.robot.util.LimelightHelpers.PoseEstimate;
 import frc.robot.util.RectanglePoseArea;
 import frc.robot.util.TabManager;
@@ -59,10 +61,10 @@ public class VisionSubsystem extends SubsystemBase {
         this.swerveSubsystem = swerveSubsystem;
 
         visionType.setDefaultOption("NO VISION (why would you want this?)", VisionTypes.NO_VISION);
-        visionType.addOption("Torpedo Vision", VisionTypes.TORPEDO);
-        visionType.addOption("Preset STD", VisionTypes.PRESET_STD);
+        // visionType.addOption("Torpedo Vision", VisionTypes.TORPEDO);
+        // visionType.addOption("Preset STD", VisionTypes.PRESET_STD);
         visionType.addOption("Custom STD", VisionTypes.CUSTOM_STD);
-        visionType.addOption("Calculations Based Vision", VisionTypes.CRAZY_MATH);
+        // visionType.addOption("Calculations Based Vision", VisionTypes.CRAZY_MATH);
         visionType.addOption("Limelight Docs Vision", VisionTypes.LLDOCS);
 
         this.poseEstimator = new SwerveDrivePoseEstimator(
@@ -111,6 +113,8 @@ public class VisionSubsystem extends SubsystemBase {
                 swerveSubsystem.getRotation2d(),
                 swerveSubsystem.getModulePositions(),
                 pose);
+
+        resetOdometry(pose);
     }
 
     public boolean tagDetected() {
@@ -125,20 +129,48 @@ public class VisionSubsystem extends SubsystemBase {
         return getVisionPose().avgTagDist;
     }
 
+    public LimelightTarget_Fiducial[] getTagFiducial() {
+        return LimelightHelpers.getLatestResults("limelight").targetingResults.targets_Fiducials;
+    }
+
+    public double[] getTagIDs() {
+        var fiducials = getTagFiducial();
+        double[] ids = new double[fiducials.length];
+        for(int i = 0; i < ids.length; i++) {
+            ids[i] = fiducials[i].fiducialID;
+        }
+        return ids;
+    }
+
+    public boolean isIdDetected(double targetID) {
+        for(double id : getTagIDs()) {
+            if(targetID == id) return true;
+        }
+        return false;
+    }
+
+    public double getDistanceTo(Translation2d location) {
+        return getCurrentPose().getTranslation().getDistance(location);
+    }
+
+    public double getTX() {
+        return LimelightHelpers.getTX("limelight");
+    }
+
     // VISION UPDATING - VERSIONS 1-4
 
     // LimelightLib-given constants for Std Devs
-    public void updateVision1() {
-        PoseEstimate poseEstimate = getVisionPose();
+    // public void updateVision1() {
+    //     PoseEstimate poseEstimate = getVisionPose();
 
-        if (poseEstimate.tagCount >= 2) {
+    //     if (poseEstimate.tagCount >= 2) {
 
-            poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(0.7, 0.7, 999999999)); // documentation defaults,
-                                                                                             // change?
-            poseEstimator.addVisionMeasurement(poseEstimate.pose, poseEstimate.timestampSeconds);
-        }
+    //         poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(0.7, 0.7, 999999999)); // documentation defaults,
+    //                                                                                          // change?
+    //         poseEstimator.addVisionMeasurement(poseEstimate.pose, poseEstimate.timestampSeconds);
+    //     }
 
-    }
+    // }
 
     // distant dependant formula for Std Devs
     public void updateVision2() {
@@ -154,11 +186,13 @@ public class VisionSubsystem extends SubsystemBase {
         int numTags = estimatedPose.tagCount;
         double avgDist = estimatedPose.avgTagDist;
 
-        var estStdDevs = VecBuilder.fill(4, 4, 8); // kSingleTagDevs
+        // var estStdDevs = VecBuilder.fill(4, 4, 8); // kSingleTagDevs
+        var estStdDevs = VecBuilder.fill(5, 5, 9);
 
         // Decrease std devs if multiple targets are visible
         if (numTags > 1) {
-            estStdDevs = VecBuilder.fill(0.5, 0.5, 1); // kMultiTagDevs
+            //estStdDevs = VecBuilder.fill(0.5, 0.5, 1); // kMultiTagDevs
+            estStdDevs = VecBuilder.fill(1, 1, 2);
         }
         // Increase std devs based on (average) distance
         if (numTags == 1 && avgDist > 4) {
@@ -166,78 +200,10 @@ public class VisionSubsystem extends SubsystemBase {
         }
         // Increase std devs based on (average) distance
         else {
-            estStdDevs = estStdDevs.times(1 + (avgDist * avgDist / 30));
+            // estStdDevs = estStdDevs.times(1 + (avgDist * avgDist / 30));
+            estStdDevs = estStdDevs.times((1 + (avgDist * avgDist / 30)) * 0.80);
         }
         return estStdDevs;
-    }
-
-    // old torpedo code that worked
-    public void updateVision3() {
-        LimelightHelpers.Results results = LimelightHelpers.getLatestResults("limelight").targetingResults;
-
-        if (!(results.botpose[0] == 0 && results.botpose[1] == 1) && tagDetected()) {
-            // Error saying that was not visible so i made the method toPose2D public, not
-            // sure if that breaks anything or matters
-            Pose2d estPose = LimelightHelpers.toPose2D(results.botpose_wpiblue);
-            poseEstimator.addVisionMeasurement(estPose,
-                    Timer.getFPGATimestamp() - (results.latency_capture / 1000.0) - (results.latency_pipeline / 1000.0),
-                    VecBuilder.fill(4, 4, 8));
-        }
-
-    }
-
-    // Team 6391-inspired conditionals to set Std Dev scenarios
-    public void updateVision4() {
-        double confidence = 0;
-        // If we don't update confidence then we don't send the measurement
-        // this number is used as the x and y Std Dev
-
-        boolean trust = false;
-
-        LimelightHelpers.PoseEstimate limelightMeasurement = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight");
-        int tagCount = limelightMeasurement.tagCount;
-        double tagDist = limelightMeasurement.avgTagDist;
-        Pose2d pose = limelightMeasurement.pose;
-
-        // No tag found so check no further or pose not within field boundary
-        if (tagCount >= 1 && fieldBoundary.isPoseWithinArea(pose)) {
-            // Excluding different measurements that are absolute showstoppers even with
-            // full trust
-            if (tagDist < Constants.VisionConstants.TAG_DETECTION_THRESHOLD
-                    && swerveSubsystem.getChassisSpeeds().omegaRadiansPerSecond < Math.PI) {
-                // Reasons to blindly trust as much as odometry
-                if (trust || DriverStation.isDisabled() ||
-                        (tagCount >= 2 && tagDist < Units.feetToMeters(10))) {
-                    confidence = 0.2;
-                    trust = false;
-                } else {
-                    // High trust level anything less than this we shouldn't bother with
-                    double compareDistance = pose.getTranslation().getDistance(getCurrentPose().getTranslation());
-                    if (compareDistance < 0.5 ||
-                            (tagCount >= 2 && tagDist < Units.feetToMeters(20)) ||
-                            (tagCount == 1 && tagDist < Units.feetToMeters(10))) {
-                        double tagDistance = Units.metersToFeet(tagDist);
-                        // Double the distance for solo tag
-                        if (tagCount == 1) {
-                            tagDistance = tagDistance * 2;
-                        }
-                        // Add up to .2 confidence depending on how far away
-                        confidence = 0.7 + (tagDistance / 10);
-                    }
-                }
-            }
-        }
-
-        if (confidence > 0) {
-            SmartDashboard.putBoolean("PoseUpdate", true);
-            SmartDashboard.putNumber("LLConfidence", confidence);
-            poseEstimator.addVisionMeasurement(
-                    limelightMeasurement.pose,
-                    limelightMeasurement.timestampSeconds,
-                    VecBuilder.fill(confidence, confidence, 99));
-        } else {
-            SmartDashboard.putBoolean("PoseUpdate", false);
-        }
     }
 
     public void updateVision5() {
@@ -305,6 +271,10 @@ public class VisionSubsystem extends SubsystemBase {
         resetOdometry(getCurrentPose());
     }
 
+    public void snapVisionOdo() {
+        resetOdometry(getCurrentOdoPose());
+    }
+
     public double getDifference() {
         return getCurrentPose().getTranslation().getDistance(getVisionPose().pose.getTranslation());
     }
@@ -326,7 +296,9 @@ public class VisionSubsystem extends SubsystemBase {
         visionData.addNumber("Tag Dist", () -> getAvgTagDist());
         visionData.addNumber("Difference btw Current Pose and New Vision Estimate", () -> getDifference());
         visionData.add("Snap Odometry to Vision+Odometry", new InstantCommand(() -> snapOdometry()));
+        visionData.add("Snap Vision+Odometry to Odometry", new InstantCommand(() -> snapVisionOdo()));
         visionData.addString("Current Mode", () -> getVisionType().toString());
+        visionData.add("Vision Method", visionType);
     }
 
 }

@@ -49,7 +49,11 @@
     "rotateFast": false
   },
   "reversed": false,
+<<<<<<< HEAD
   "folder": "Score",
+=======
+  "folder": null,
+>>>>>>> a8112b73a5a49fe5eb1590776b83c2c1f0b29ccb
   "previewStartingState": {
     "rotation": 177.4917295301347,
     "velocity": 0

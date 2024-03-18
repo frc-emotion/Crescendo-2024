@@ -7,7 +7,7 @@ import frc.robot.subsystems.SwerveSubsystem;
 
 public class SnapSwerveCommand extends AbstractSwerveXboxCommand {
 
-    private int direction;
+    protected int direction;
 
     public SnapSwerveCommand(
             SwerveSubsystem swerveSubsystem,
@@ -21,19 +21,25 @@ public class SnapSwerveCommand extends AbstractSwerveXboxCommand {
     }
 
     @Override
+    public void initialize() {
+        swerveSubsystem.updatePID();
+    }
+
+    @Override
     public void execute() {
         super.execute();
         robotSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(
                 xSpeed,
                 ySpeed,
-                swerveSubsystem.calculateThetaPID(swerveSubsystem.getHeading_180(), direction),
+                swerveSubsystem.calculateThetaPID(swerveSubsystem.getHeading(), direction, false),
                 swerveSubsystem.getRotation2d());
 
         sendSpeedsToSubsystem();
+        //System.out.println(robotSpeeds.omegaRadiansPerSecond);
     }
 
     @Override
     public boolean isFinished() {
-        return swerveSubsystem.thetaPIDAtSetpoint();
+        return swerveSubsystem.thetaPIDAtSetpoint(false);
     }
 }
