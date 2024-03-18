@@ -19,7 +19,7 @@ public class MonitorVision extends Command {
 
     @Override
     public void execute() {
-        visionSubsystem.updateEstimator();
+        visionSubsystem.updateOdometry();
 
         switch (visionSubsystem.getSelectedType()) {
             case NO_VISION:
