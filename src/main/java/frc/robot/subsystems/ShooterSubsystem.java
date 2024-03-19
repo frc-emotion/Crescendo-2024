@@ -3,11 +3,9 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
-
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkPIDController;
-
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
@@ -35,7 +33,8 @@ public class ShooterSubsystem extends SubsystemBase {
     private GenericEntry kIEntry, kDEntry, kPEntry;
 
     public ShooterSubsystem() {
-        shooterMotor = new CANSparkMax(ShooterConstants.shooterPort, MotorType.kBrushless);
+        shooterMotor =
+            new CANSparkMax(ShooterConstants.shooterPort, MotorType.kBrushless);
 
         shooterMotor.setSmartCurrentLimit(ShooterConstants.CURRENT_LIMIT_SMART);
         shooterMotor.setSecondaryCurrentLimit(ShooterConstants.CURRENT_LIMIT);
@@ -43,7 +42,8 @@ public class ShooterSubsystem extends SubsystemBase {
 
         shooterMotor.enableVoltageCompensation(8);
 
-        feederMotor = new CANSparkMax(ShooterConstants.feederPort, MotorType.kBrushless);
+        feederMotor =
+            new CANSparkMax(ShooterConstants.feederPort, MotorType.kBrushless);
 
         feederMotor.setSmartCurrentLimit(ShooterConstants.CURRENT_LIMIT_SMART);
         feederMotor.setSecondaryCurrentLimit(ShooterConstants.CURRENT_LIMIT);
@@ -127,11 +127,17 @@ public class ShooterSubsystem extends SubsystemBase {
     }
 
     public boolean isAtTarget(double target) {
-        return Math.abs(shooterEncoder.getVelocity() - target) < ShooterConstants.kMaxOutputError;
+        return (
+            Math.abs(shooterEncoder.getVelocity() - target) <
+            ShooterConstants.kMaxOutputError
+        );
     }
 
     public boolean isAtTarget() {
-        return Math.abs(shooterEncoder.getVelocity() - targetRPM) < ShooterConstants.kMaxOutputError;
+        return (
+            Math.abs(shooterEncoder.getVelocity() - targetRPM) <
+            ShooterConstants.kMaxOutputError
+        );
     }
 
     /**
@@ -197,43 +203,52 @@ public class ShooterSubsystem extends SubsystemBase {
     }
 
     private void initShuffleboard() {
-        if (!Constants.DEBUG_MODE_ACTIVE)
-            return;
+        if (!Constants.DEBUG_MODE_ACTIVE) return;
 
         ShuffleboardTab moduleData = TabManager
-                .getInstance()
-                .accessTab(SubsystemTab.SHOOTER);
+            .getInstance()
+            .accessTab(SubsystemTab.SHOOTER);
 
-        ShuffleboardLayout persianPositions = moduleData.getLayout("Persian Positions", BuiltInLayouts.kList);
+        ShuffleboardLayout persianPositions = moduleData.getLayout(
+            "Persian Positions",
+            BuiltInLayouts.kList
+        );
 
         persianPositions.addBoolean("Line Breaker", this::isProjectileFed);
         persianPositions.addBoolean("At Target Speed", this::isAtTarget);
 
-        persianPositions.addDouble("Shooter Velocity", this::getShooterVelocity);
+        persianPositions.addDouble(
+            "Shooter Velocity",
+            this::getShooterVelocity
+        );
 
-        persianPositions.addDouble("Feeder Position", () -> feederEncoder.getPosition());
+        persianPositions.addDouble(
+            "Feeder Position",
+            () -> feederEncoder.getPosition()
+        );
 
-        persianPositions.addDouble("Feeder Velocity", () -> feederEncoder.getVelocity());
+        persianPositions.addDouble(
+            "Feeder Velocity",
+            () -> feederEncoder.getVelocity()
+        );
 
         persianPositions.withSize(2, 4);
 
-        this.ampRPMEntry = moduleData
+        this.ampRPMEntry =
+            moduleData
                 .add("Amp Target RPM", ShooterConstants.AmpRPM)
                 // .wget(BuiltInWidgets.kNumberSlider)
                 // .withProperties(Map.of("min", 0, "max", 4000))
                 .getEntry();
 
-        this.kIEntry = moduleData
-                .add("kI", ShooterConstants.kI)
-                .getEntry();
+        this.kIEntry = moduleData.add("kI", ShooterConstants.kI).getEntry();
 
-        this.kDEntry = moduleData
-                .add("kD", ShooterConstants.kD)
-                .getEntry();
+        this.kDEntry = moduleData.add("kD", ShooterConstants.kD).getEntry();
 
-        this.kPEntry = moduleData
-                .add("kP", ShooterConstants.kP)
-                .getEntry();
+        this.kPEntry = moduleData.add("kP", ShooterConstants.kP).getEntry();
+    }
 
+    public boolean getBreakSensorValue() {
+        return breakSensor.get();
     }
 }
