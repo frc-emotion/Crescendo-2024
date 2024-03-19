@@ -18,23 +18,20 @@ public class ShootSpeaker extends Command {
 
     @Override
     public void initialize() {
-        DriverStation.reportWarning("Auto Shoot started", false);
         // shooterSubsystem.setTargetRPM(ShooterConstants.kShootSpeedRotationsPerSecond);
     }
 
     @Override
     public void execute() {
-        DriverStation.reportWarning("Auto Shooting", false);
         shooterSubsystem.setShooterVelocity(4000);
         if (shooterSubsystem.getShooterVelocity() > 3750) {
-            shooterSubsystem.setFeederSpeed(0.2);
-            intakeSubsystem.setIntake(IntakeConstants.SHOOTER_TRANSFER_SPEED);
+            shooterSubsystem.setFeederSpeed(IntakeConstants.SHOOTER_TRANSFER_SPEED);
+            //intakeSubsystem.setIntake(IntakeConstants.SHOOTER_TRANSFER_SPEED);
         }
     }
 
     @Override
     public void end(boolean interrupted) {
-        DriverStation.reportWarning("Auto Shoot Ended", false);
         shooterSubsystem.stopShooter();
         shooterSubsystem.stopFeeder();
     }

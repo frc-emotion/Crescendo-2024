@@ -15,7 +15,7 @@ public class CommandContainer {
     public static Command intakeNote(IntakeSubsystem intakeSubsystem) {
         return new SequentialCommandGroup(
                 new IntakeDriveAutoCommand(intakeSubsystem),
-                new WaitCommand(1));
+                new WaitCommand(0.25));
     }
 
     public static Command enRoute(PivotSubsystem pivot) {

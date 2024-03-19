@@ -14,7 +14,7 @@ public class RevShooterAutoCommand extends Command {
 
     @Override
     public void execute() {
-        shooterSubsystem.setShooterVelocity(ShooterConstants.IDLE_SPEED);
+        shooterSubsystem.setShooterVelocity(ShooterConstants.SHOOTER_SPEED_RPM);
     }
 
     @Override

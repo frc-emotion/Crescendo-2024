@@ -348,6 +348,7 @@ public class RobotContainer {
         NamedCommands.registerCommand("ResetPivot", CommandContainer.enRoute(m_PivotSubsystem));
         NamedCommands.registerCommand("ToggleIntake", new IntakePivotCommand(m_IntakeSubsystem));
         NamedCommands.registerCommand("RevShooter", new RevShooterAutoCommand(m_ShooterSubsystem));
+        NamedCommands.registerCommand("AutoHandoff", new HandoffAutoCommand(m_IntakeSubsystem, m_ShooterSubsystem));
     }
 
     private void initializeGameShuffleboard() {
