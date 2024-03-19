@@ -223,8 +223,9 @@ public class SwerveSubsystem extends SubsystemBase {
     }
 
     public void driveFieldRelative(ChassisSpeeds speedGiven) {
-        speedGiven = ChassisSpeeds.fromFieldRelativeSpeeds(speedGiven, getRotation2d());
         setChassisSpeeds(speedGiven);
+
+        speedGiven = ChassisSpeeds.fromFieldRelativeSpeeds(speedGiven, getRotation2d());
 
         setModuleStates(
                 DriveConstants.kDriveKinematics.toSwerveModuleStates(speedGiven));

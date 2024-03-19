@@ -39,6 +39,22 @@
         "x": 2.6309545284564635,
         "y": 4.380755007279346
       },
+      "nextControl": {
+        "x": 2.6309545284564635,
+        "y": 4.430654386559121
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 0.53,
+        "y": 4.4057046969192335
+      },
+      "prevControl": {
+        "x": -0.4072852009979606,
+        "y": 4.4057046969192335
+      },
       "nextControl": null,
       "isLocked": false,
       "linkedName": null
@@ -48,7 +64,12 @@
     {
       "waypointRelativePos": 0.9,
       "rotationDegrees": 180.0,
-      "rotateFast": true
+      "rotateFast": false
+    },
+    {
+      "waypointRelativePos": 1.0499999999999998,
+      "rotationDegrees": -90.0,
+      "rotateFast": false
     }
   ],
   "constraintZones": [],
@@ -56,13 +77,13 @@
   "globalConstraints": {
     "maxVelocity": 2.0,
     "maxAcceleration": 5.0,
-    "maxAngularVelocity": 540.0,
-    "maxAngularAcceleration": 720.0
+    "maxAngularVelocity": 1080.0,
+    "maxAngularAcceleration": 1080.0
   },
   "goalEndState": {
     "velocity": 0.5,
     "rotation": -90.0,
-    "rotateFast": true
+    "rotateFast": false
   },
   "reversed": false,
   "folder": "Tests",
