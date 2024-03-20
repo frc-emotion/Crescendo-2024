@@ -60,9 +60,9 @@ public class ShooterManualCommand extends Command {
             // shooterSubsystem.setShooterVelocity(0);
         }
 
-        if(shooterSubsystem.isAtTarget(ShooterConstants.SHOOTER_SPEED_RPM) && shooterSubsystem.isProjectileFed()) {
-            RobotContainer.operatorController_HID.setRumble(RumbleType.kBothRumble, 1);
-        } else if(shooterSubsystem.isAtTarget(ShooterConstants.SHOOTER_SPEED_RPM)) {
+        if(shooterSubsystem.getShooterVelocity() > 2700 && shooterSubsystem.isProjectileFed()) {
+            RobotContainer.operatorController_HID.setRumble(RumbleType.kBothRumble, 0.5);
+        } else if(shooterSubsystem.getShooterVelocity() > 2700) {
             RobotContainer.operatorController_HID.setRumble(RumbleType.kBothRumble, 0.25);
         } else {
             RobotContainer.operatorController_HID.setRumble(RumbleType.kBothRumble, 0);

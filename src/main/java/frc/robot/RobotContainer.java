@@ -343,7 +343,7 @@ public class RobotContainer {
 
     private void registerNamedCommands() {
         NamedCommands.registerCommand("ScoreSpeaker",
-                new ParallelRaceGroup(new ShootSpeaker(m_ShooterSubsystem, m_IntakeSubsystem), new WaitCommand(5))); // .withTimeout(AutoConstants.SCORE_SPEAKER_TIMEOUT));
+                new ParallelRaceGroup(new ShootSpeaker(m_ShooterSubsystem, m_IntakeSubsystem), new WaitCommand(3.5))); // .withTimeout(AutoConstants.SCORE_SPEAKER_TIMEOUT));
         NamedCommands.registerCommand("IntakeNote", CommandContainer.intakeNote(m_IntakeSubsystem));
         NamedCommands.registerCommand("ResetPivot", CommandContainer.enRoute(m_PivotSubsystem));
         NamedCommands.registerCommand("ToggleIntake", new IntakePivotCommand(m_IntakeSubsystem));

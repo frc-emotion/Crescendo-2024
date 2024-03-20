@@ -2,6 +2,7 @@ package frc.robot.commands.Auto.SubsystemCommands;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.IntakeConstants;
+import frc.robot.Constants.ShooterConstants;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 
@@ -20,7 +21,7 @@ public class HandoffAutoCommand extends Command {
         intakeSubsystem.setIntake(IntakeConstants.SHOOTER_TRANSFER_SPEED);
         // m_ShooterSubsystem.setFeederSpeed(ShooterConstants.kFeedSpeed);
         shooterSubsystem.setFeederSpeed(IntakeConstants.SHOOTER_TRANSFER_SPEED);
-        shooterSubsystem.setShooterVelocity(shooterSubsystem.getShooterVelocity());
+        shooterSubsystem.setShooterVelocity(ShooterConstants.SHOOTER_SPEED_RPM);
     }
 
     @Override

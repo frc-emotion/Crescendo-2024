@@ -206,7 +206,7 @@ public final class Constants {
     public static class AutoConstants {
 
         // Chane all values based on testing
-        public static final double kMaxSpeedMetersPerSecond = DriveConstants.kPhysicalMaxSpeedMetersPerSecond / 4;
+        public static final double kMaxSpeedMetersPerSecond = 5.00;
 
         public static final double kMaxAngularSpeedRadiansPerSecond = //
                 DriveConstants.kPhysicalMaxAngularSpeedRadiansPerSecond / 10;
@@ -219,8 +219,8 @@ public final class Constants {
         public static final double kPXController = 1.25;
         public static final double kPYController = 0.75;
 
-        public static final double kPThetaController = 0.8;
-        public static final double kIThetaController = 0;
+        public static final double kPThetaController = 0.13;
+        public static final double kIThetaController = 0.045;
         public static final double kDThetaController = 0;
 
         public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints( //

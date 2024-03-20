@@ -12,7 +12,19 @@
     "data": {
       "commands": [
         {
-          "type": "parallel",
+          "type": "named",
+          "data": {
+            "name": "ScoreSpeaker"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ToggleIntake"
+          }
+        },
+        {
+          "type": "deadline",
           "data": {
             "commands": [
               {
@@ -20,14 +32,26 @@
                 "data": {
                   "pathName": "Pickup Mid"
                 }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "IntakeNote"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "RevShooter"
+                }
               }
             ]
           }
         },
         {
-          "type": "path",
+          "type": "named",
           "data": {
-            "pathName": "Score Middle"
+            "name": "ToggleIntake"
           }
         },
         {
@@ -37,22 +61,84 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Pickup Top"
+                  "pathName": "Score Middle"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "AutoHandoff"
                 }
               }
             ]
           }
         },
         {
-          "type": "path",
+          "type": "named",
           "data": {
-            "pathName": "Score Middle"
+            "name": "ScoreSpeaker"
           }
         },
         {
-          "type": "path",
+          "type": "named",
           "data": {
-            "pathName": "travel mid"
+            "name": "ToggleIntake"
+          }
+        },
+        {
+          "type": "deadline",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Pickup Top"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "IntakeNote"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "RevShooter"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ToggleIntake"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Score Middle"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "AutoHandoff"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ScoreSpeaker"
           }
         }
       ]
