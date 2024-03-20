@@ -24,7 +24,7 @@ public class SpeakerTurret extends MonitorVision {
 
     @Override
     public void execute() {
-        super.execute();
+        //super.execute();
         pivotSubsystem.setRev(calculateAngle());
     }
 
