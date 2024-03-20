@@ -1,5 +1,6 @@
 package frc.robot.commands.vision;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.VisionConstants;
@@ -37,8 +38,16 @@ public class SpeakerTurret extends MonitorVision {
         pivotSubsystem.stop();
     }
 
+    /**
+     * Gives the inverse tangent of the height from the pivot to about the middle of the speaker's mouth divided by the distance to the speaker.
+     * Checks for team in order to determine the correct position. Uses Translation2D constants for speaker position.
+     * 
+     * @return The target angle for the pivot.
+     */
     private double calculateAngle() {
-        return Math.atan((AutoConstants.SPEAKER_MOUTH_HEIGHT - AutoConstants.PIVOT_HEIGHT) / visionSubsystem.getDistanceTo(VisionConstants.BLUE_SPEAKER_CENTER));
+        return 60.0 - Math.atan((AutoConstants.SPEAKER_MOUTH_HEIGHT - AutoConstants.PIVOT_HEIGHT) / visionSubsystem.getOdoDistanceTo(
+            (DriverStation.getAlliance().get() == DriverStation.Alliance.Red) ? VisionConstants.RED_SPEAKER_CENTER : VisionConstants.BLUE_SPEAKER_CENTER
+        ));
     }
 
 }

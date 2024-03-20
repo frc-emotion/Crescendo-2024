@@ -149,7 +149,7 @@ public class RobotContainer {
     // Auto Chooser Methods
 
     private void configureAutoChooser() {
-        autoChooser.addOption("Simple Shoot", new ShootSpeaker(m_ShooterSubsystem, m_IntakeSubsystem));
+        autoChooser.addOption("Simple Shoot", new ShootSpeaker(m_ShooterSubsystem));
         addOption("1 Note Stationary");
         addOption("1 Note Top");
         addOption("1 Note Mid");
@@ -283,24 +283,25 @@ public class RobotContainer {
             // new SequentialCommandGroup(
                 new IntakePivotCommand(m_IntakeSubsystem).onlyIf(()->!m_IntakeSubsystem.isUp())
                 .alongWith(
-                    new Command() {
-                        @Override
-                        public void execute() {
-                            m_PivotSubsystem.goToHandoff();
-                        }
+                    CommandContainer.resetPivot(m_PivotSubsystem)
+                    // new Command() {
+                    //     @Override
+                    //     public void execute() {
+                    //         m_PivotSubsystem.goToHandoff();
+                    //     }
 
-                        @Override
-                        public boolean isFinished() {
-                            return m_PivotSubsystem.isHandoffOk();
-                        }
+                    //     @Override
+                    //     public boolean isFinished() {
+                    //         return m_PivotSubsystem.isHandoffOk();
+                    //     }
 
-                        @Override
-                        public void end(boolean interrupted) {
-                            m_PivotSubsystem.stop();
-                        }
-                    }
-                    .onlyIf(()->!m_PivotSubsystem.isHandoffOk())
-                    .withTimeout(3.5)
+                    //     @Override
+                    //     public void end(boolean interrupted) {
+                    //         m_PivotSubsystem.stop();
+                    //     }
+                    // }
+                    // .onlyIf(()->!m_PivotSubsystem.isHandoffOk())
+                    // .withTimeout(3.5)
                 )
                 .andThen(
                     new HandoffAutoCommand(m_IntakeSubsystem, m_ShooterSubsystem)
@@ -343,12 +344,13 @@ public class RobotContainer {
 
     private void registerNamedCommands() {
         NamedCommands.registerCommand("ScoreSpeaker",
-                new ParallelRaceGroup(new ShootSpeaker(m_ShooterSubsystem, m_IntakeSubsystem), new WaitCommand(3.5))); // .withTimeout(AutoConstants.SCORE_SPEAKER_TIMEOUT));
+                new ParallelRaceGroup(new ShootSpeaker(m_ShooterSubsystem), new WaitCommand(3.5))); // .withTimeout(AutoConstants.SCORE_SPEAKER_TIMEOUT));
         NamedCommands.registerCommand("IntakeNote", CommandContainer.intakeNote(m_IntakeSubsystem));
-        NamedCommands.registerCommand("ResetPivot", CommandContainer.enRoute(m_PivotSubsystem));
+        NamedCommands.registerCommand("ResetPivot", CommandContainer.resetPivot(m_PivotSubsystem));
         NamedCommands.registerCommand("ToggleIntake", new IntakePivotCommand(m_IntakeSubsystem));
         NamedCommands.registerCommand("RevShooter", new RevShooterAutoCommand(m_ShooterSubsystem));
-        NamedCommands.registerCommand("AutoHandoff", new HandoffAutoCommand(m_IntakeSubsystem, m_ShooterSubsystem));
+        NamedCommands.registerCommand("AutoHandoff", CommandContainer.getHandoffCommand(m_IntakeSubsystem, m_ShooterSubsystem));
+        NamedCommands.registerCommand("PrepPivot", new SpeakerTurret(m_VisionSubsystem, m_PivotSubsystem));
     }
 
     private void initializeGameShuffleboard() {

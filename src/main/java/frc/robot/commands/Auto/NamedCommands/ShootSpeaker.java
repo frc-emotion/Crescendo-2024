@@ -8,11 +8,9 @@ import frc.robot.subsystems.ShooterSubsystem;
 
 public class ShootSpeaker extends Command {
     private ShooterSubsystem shooterSubsystem;
-    private IntakeSubsystem intakeSubsystem;
 
-    public ShootSpeaker(ShooterSubsystem shooterSubsystem, IntakeSubsystem intakeSubsystem) {
+    public ShootSpeaker(ShooterSubsystem shooterSubsystem) {
         this.shooterSubsystem = shooterSubsystem;
-        this.intakeSubsystem = intakeSubsystem;
         addRequirements(shooterSubsystem);
     }
 
@@ -23,10 +21,9 @@ public class ShootSpeaker extends Command {
 
     @Override
     public void execute() {
-        shooterSubsystem.setShooterVelocity(4000);
-        if (shooterSubsystem.getShooterVelocity() > 3750) {
+        shooterSubsystem.setShooterVelocity(3000);
+        if (shooterSubsystem.getShooterVelocity() > 2700) {
             shooterSubsystem.setFeederSpeed(IntakeConstants.SHOOTER_TRANSFER_SPEED);
-            //intakeSubsystem.setIntake(IntakeConstants.SHOOTER_TRANSFER_SPEED);
         }
     }
 

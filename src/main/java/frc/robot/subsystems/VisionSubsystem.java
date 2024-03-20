@@ -153,6 +153,16 @@ public class VisionSubsystem extends SubsystemBase {
         return getCurrentPose().getTranslation().getDistance(location);
     }
 
+    /**
+     * Finds the distance from the robot to a certain location on the field. Uses the robot odometry (no vision) to determine distance.
+     * 
+     * @param location  The location to check the distance to.
+     * @return  The distance to the location.
+     */
+    public double getOdoDistanceTo(Translation2d location) {
+        return getCurrentOdoPose().getTranslation().getDistance(location);
+    }
+
     public double getTX() {
         return LimelightHelpers.getTX("limelight");
     }

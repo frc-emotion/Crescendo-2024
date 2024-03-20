@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.7218158264581296,
-      "y": 6.667299774671107
+      "x": 0.7365015087811937,
+      "y": 6.681985456994171
     },
-    "rotation": -118.0091767080138
+    "rotation": -120.34324888423957
   },
   "command": {
     "type": "sequential",
@@ -18,15 +18,22 @@
           }
         },
         {
-          "type": "wait",
+          "type": "parallel",
           "data": {
-            "waitTime": 0.5
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "ToggleIntake"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Prep Top"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "ToggleIntake"
+                }
+              }
+            ]
           }
         },
         {
@@ -44,45 +51,40 @@
                 "data": {
                   "name": "IntakeNote"
                 }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "RevShooter"
-                }
               }
             ]
           }
         },
         {
-          "type": "named",
-          "data": {
-            "name": "ToggleIntake"
-          }
-        },
-        {
-          "type": "race",
+          "type": "parallel",
           "data": {
             "commands": [
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Shoot Top From Top"
+                  "pathName": "Score Top From Top"
                 }
               },
               {
-                "type": "named",
+                "type": "sequential",
                 "data": {
-                  "name": "RevShooter"
+                  "commands": [
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "ToggleIntake"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "AutoHandoff"
+                      }
+                    }
+                  ]
                 }
               }
             ]
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "ScoreSpeaker"
           }
         }
       ]

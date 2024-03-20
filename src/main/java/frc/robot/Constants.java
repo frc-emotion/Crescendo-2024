@@ -241,7 +241,7 @@ public final class Constants {
 
         public static final double SPEAKER_TAG_HEIGHT = 1.324;
         public static final double SPEAKER_MOUTH_HEIGHT = 2.21;
-        public static final int PIVOT_HEIGHT = 0;
+        public static final double PIVOT_HEIGHT = 0.371; // meters
 
     }
 
@@ -291,7 +291,7 @@ public final class Constants {
         public static final double kFeedForward = 0.00025;
         public static final double kMaxOutput = 1; // raw motor output
         public static final double kMinOutput = -1; // raw motor output
-        public static final double kMaxOutputError = 75; // rpm
+        public static final double kMaxOutputError = 150; // rpm
 
             // Speeds
         public static final double kFeedSpeed = 0.35;
@@ -301,8 +301,8 @@ public final class Constants {
         public static final double AmpRPM = 1000;
 
             // For SOURCE intake
-        protected static final double SHOOTER_REVERSE_SPEED = -0.3; // raw motor output
-        protected static final double FEEDER_REVERSE_SPEED = -0.2;  // raw motor output
+        protected static final double SHOOTER_REVERSE_SPEED = -0.25; // raw motor output
+        protected static final double FEEDER_REVERSE_SPEED = -0.175;  // raw motor output
     }
 
     public static final class PivotConstants {
@@ -392,7 +392,7 @@ public final class Constants {
         public static final double DEPLOYED_POS = -0.305;
         public static final double RETRACTED_POS = 0;
 
-        public static final double SHOOTER_TRANSFER_SPEED = 0.5;
+        public static final double SHOOTER_TRANSFER_SPEED = 0.4;
 
         // -----------------------------------------
 
