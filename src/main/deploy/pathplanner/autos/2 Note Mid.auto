@@ -43,15 +43,35 @@
           }
         },
         {
-          "type": "named",
+          "type": "parallel",
           "data": {
-            "name": "ToggleIntake"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Score Middle"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Score Middle"
+                }
+              },
+              {
+                "type": "sequential",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "ToggleIntake"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "AutoHandoff"
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
           }
         },
         {

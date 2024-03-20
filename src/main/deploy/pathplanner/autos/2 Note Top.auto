@@ -18,19 +18,32 @@
           }
         },
         {
-          "type": "parallel",
+          "type": "deadline",
           "data": {
             "commands": [
               {
-                "type": "path",
+                "type": "parallel",
                 "data": {
-                  "pathName": "Prep Top"
+                  "commands": [
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "Prep Top"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "ToggleIntake"
+                      }
+                    }
+                  ]
                 }
               },
               {
                 "type": "named",
                 "data": {
-                  "name": "ToggleIntake"
+                  "name": "RevShooter"
                 }
               }
             ]
@@ -50,6 +63,12 @@
                 "type": "named",
                 "data": {
                   "name": "IntakeNote"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "RevShooter"
                 }
               }
             ]
@@ -85,6 +104,12 @@
                 }
               }
             ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ScoreSpeaker"
           }
         }
       ]
