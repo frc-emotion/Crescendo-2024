@@ -285,9 +285,9 @@ public final class Constants {
         public static final double GEAR_REDUCTION = 0.5;
 
             // PID Controller Constants
-        public static final double kP = 0.003;
+        public static final double kP = 0.001;
         public static final double kI = 0;
-        public static final double kD = 12;
+        public static final double kD = 0;
         public static final double kFeedForward = 0.00025;
         public static final double kMaxOutput = 1; // raw motor output
         public static final double kMinOutput = -1; // raw motor output
