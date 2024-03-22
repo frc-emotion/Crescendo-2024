@@ -1,0 +1,31 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 0.7071301441350655,
+      "y": 6.681985456994171
+    },
+    "rotation": -120.0
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Travel Out Top"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Run Over Notes Top"
+          }
+        }
+      ]
+    }
+  },
+  "folder": "Travel Auto",
+  "choreoAuto": false
+}
