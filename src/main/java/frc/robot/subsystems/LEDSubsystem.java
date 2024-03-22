@@ -22,6 +22,14 @@ public class LEDSubsystem extends SubsystemBase {
     public LEDSubsystem() {
         m_led = new AddressableLED(PWM_PORT);
         m_ledBuffer = new AddressableLEDBuffer(NUM_LEDS);
+        m_led.setLength(m_ledBuffer.getLength());
+
+        for (int i = 0; i < NUM_LEDS; i++) {
+            m_ledBuffer.setRGB(i, 0, 0, 0); // off
+        }
+
+        m_led.setData(m_ledBuffer);
+        m_led.start();
     }
 
     public void setRGB(int r, int g, int b) {
