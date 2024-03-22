@@ -303,6 +303,7 @@ public final class Constants {
             // For SOURCE intake
         protected static final double SHOOTER_REVERSE_SPEED = -0.25; // raw motor output
         protected static final double FEEDER_REVERSE_SPEED = -0.175;  // raw motor output
+		public static final double MIN_SHOOT_SPEED = 2725;
     }
 
     public static final class PivotConstants {

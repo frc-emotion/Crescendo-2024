@@ -150,18 +150,22 @@ public class RobotContainer {
 
     private void configureAutoChooser() {
         autoChooser.addOption("Simple Shoot", new ShootSpeaker(m_ShooterSubsystem));
-        addOption("1 Note Stationary");
+        // addOption("1 Note Stationary");
         addOption("1 Note Top");
-        addOption("1 Note Mid");
+        // addOption("1 Note Mid");
         addOption("1 Note Bottom");
         addOption("2 Note Top");
         addOption("2 Note Mid");
+        addOption("2 Note Bottom");
         addOption("3 Note Mid");
-        addOption("Forward Test Auto");
-        addOption("Jank Test Auto");
-        addOption("Turn Test Auto");
-        addOption("Strafe Test Auto");
-
+        // addOption("Forward Test Auto");
+        // addOption("Jank Test Auto");
+        // addOption("Turn Test Auto");
+        // addOption("Strafe Test Auto");
+        addOption("3 Note Top");
+        addOption("3 Note Bottom");
+        addOption("Note Push Top");
+        addOption("Note Push Bottom");
         
     }
 
