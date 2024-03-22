@@ -100,9 +100,11 @@ public class ShooterSubsystem extends SubsystemBase {
     // }
 
     public void updatePID() {
-        this.controller.setI(this.kIEntry.getDouble(ShooterConstants.kI));
-        this.controller.setD(this.kDEntry.getDouble(ShooterConstants.kD));
-        this.controller.setP(this.kPEntry.getDouble(ShooterConstants.kP));
+        if (Constants.DEBUG_MODE_ACTIVE) {
+            this.controller.setI(this.kIEntry.getDouble(ShooterConstants.kI));
+            this.controller.setD(this.kDEntry.getDouble(ShooterConstants.kD));
+            this.controller.setP(this.kPEntry.getDouble(ShooterConstants.kP));
+        }
     }
 
     public void setShooterVelocity(double speed) {
