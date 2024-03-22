@@ -37,16 +37,15 @@ public class CommandContainer {
 
     public static Command fullToggleIntake(IntakeSubsystem intakeSubsystem, ShooterSubsystem shooterSubsystem) {
         return new SequentialCommandGroup(
-            new IntakePivotCommand(intakeSubsystem),
-            new HandoffAutoCommand(intakeSubsystem, shooterSubsystem).withTimeout(2).onlyIf(() -> !intakeSubsystem.getBeamState())
-        );
+                new IntakePivotCommand(intakeSubsystem),
+                new HandoffAutoCommand(intakeSubsystem, shooterSubsystem, true).withTimeout(2)
+                        .onlyIf(() -> !intakeSubsystem.getBeamState()));
     }
 
     public static Command getHandoffCommand(IntakeSubsystem intakeSubsystem, ShooterSubsystem shooterSubsystem) {
-        return new HandoffAutoCommand(intakeSubsystem, shooterSubsystem)
-            .withTimeout(2)
-            .onlyIf(
-                () -> !intakeSubsystem.getBeamState() && !shooterSubsystem.isProjectileFed()
-            );
+        return new HandoffAutoCommand(intakeSubsystem, shooterSubsystem, true)
+                .withTimeout(2)
+                .onlyIf(
+                        () -> !intakeSubsystem.getBeamState() && !shooterSubsystem.isProjectileFed());
     }
 }

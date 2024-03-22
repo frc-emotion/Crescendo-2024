@@ -65,19 +65,16 @@ public class RobotContainer {
 
     // Replace with CommandPS4Controller or CommandJoystick if needed
     public static final CommandXboxController m_driverController = new CommandXboxController(
-        OIConstants.kDriverControllerPort
-    );
+            OIConstants.kDriverControllerPort);
 
     public static final XboxController driverController_HID = m_driverController.getHID();
 
     public static final CommandXboxController m_operatorController = new CommandXboxController(
-        OIConstants.kOperatorControllerPort
-    );
+            OIConstants.kOperatorControllerPort);
 
     public static final XboxController operatorController_HID = m_operatorController.getHID();
 
     private final SendableChooser<Command> autoChooser = new SendableChooser<Command>();
-    
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -95,13 +92,11 @@ public class RobotContainer {
 
                 ));
 
-         m_ShooterSubsystem.setDefaultCommand(
-             new ShooterManualCommand(
-                 () -> operatorController_HID.getLeftTriggerAxis() > OIConstants.kDeadband,
-                 () -> operatorController_HID.getRightTriggerAxis() > OIConstants.kDeadband,
-                 m_ShooterSubsystem
-             )
-        );
+        m_ShooterSubsystem.setDefaultCommand(
+                new ShooterManualCommand(
+                        () -> operatorController_HID.getLeftTriggerAxis() > OIConstants.kDeadband,
+                        () -> operatorController_HID.getRightTriggerAxis() > OIConstants.kDeadband,
+                        m_ShooterSubsystem));
 
         m_ClimbSubsystem.setDefaultCommand(
                 new ClimbManualCommand(
@@ -127,12 +122,10 @@ public class RobotContainer {
         // );
 
         m_IntakeSubsystem.setDefaultCommand(
-            new IntakeDriveCommand(
-                m_IntakeSubsystem,
-                () -> false, //previous r bumper
-                () -> operatorController_HID.getLeftBumper()
-            )
-        );
+                new IntakeDriveCommand(
+                        m_IntakeSubsystem,
+                        () -> false, // previous r bumper
+                        () -> operatorController_HID.getLeftBumper()));
 
         m_VisionSubsystem.setDefaultCommand(new MonitorVision(m_VisionSubsystem));
 
@@ -166,7 +159,7 @@ public class RobotContainer {
         addOption("3 Note Bottom");
         addOption("Note Push Top");
         addOption("Note Push Bottom");
-        
+
     }
 
     private void addOption(String name) {
@@ -208,20 +201,18 @@ public class RobotContainer {
         // }
         // }
         // );
-        
+
         // m_driverController.y().toggleOnTrue(
-        //     new SpeakerTurret(m_VisionSubsystem, m_PivotSubsystem)
+        // new SpeakerTurret(m_VisionSubsystem, m_PivotSubsystem)
         // );
 
-        m_driverController.leftBumper().whileTrue(  
-            new SlowModeSwerveCommand(
-                m_SwerveSubsystem,
-                () -> driverController_HID.getLeftY(),
-                () -> driverController_HID.getLeftX(),
-                () -> driverController_HID.getRightX(),
-                () -> driverController_HID.getRightTriggerAxis() > OIConstants.kDeadband
-            )
-        );
+        m_driverController.leftBumper().whileTrue(
+                new SlowModeSwerveCommand(
+                        m_SwerveSubsystem,
+                        () -> driverController_HID.getLeftY(),
+                        () -> driverController_HID.getLeftX(),
+                        () -> driverController_HID.getRightX(),
+                        () -> driverController_HID.getRightTriggerAxis() > OIConstants.kDeadband));
 
         m_driverController.rightBumper().whileTrue(
                 new TurboModeSwerveCommand(
@@ -249,14 +240,13 @@ public class RobotContainer {
                             angle));
         }
 
-       m_operatorController.rightBumper().whileTrue(
-        new Command() {
-            public void execute() {
-                m_ShooterSubsystem.setShooterVelocity(m_ShooterSubsystem.getAmpRPM());
-            }
-        }
-       );
-       
+        m_operatorController.rightBumper().whileTrue(
+                new Command() {
+                    public void execute() {
+                        m_ShooterSubsystem.setShooterVelocity(m_ShooterSubsystem.getAmpRPM());
+                    }
+                });
+
         m_operatorController.povDown()
                 // .or(m_operatorController.povUp())
                 .onTrue(new InstantCommand() {
@@ -268,56 +258,63 @@ public class RobotContainer {
                 });
 
         // m_operatorController.x().onTrue(
-        //     new IntakePivotCommand(m_IntakeSubsystem)
+        // new IntakePivotCommand(m_IntakeSubsystem)
         // );
 
         m_operatorController
-        .x()
-        // .povUp()
-        .whileTrue(
-            new SequentialCommandGroup(
-                new IntakePivotCommand(m_IntakeSubsystem).onlyIf(() -> m_IntakeSubsystem.isUp()), //should we change this to .andThen() instead of sequential command group?
-                new IntakeDriveAutoCommand(m_IntakeSubsystem)
-            )
-        )
-        // .onFalse(
-        //     new IntakePivotCommand(m_IntakeSubsystem).onlyIf(()-> !m_IntakeSubsystem.isUp())
-        // )
-        .whileFalse(
-            // new SequentialCommandGroup(
-                new IntakePivotCommand(m_IntakeSubsystem).onlyIf(()->!m_IntakeSubsystem.isUp())
-                .alongWith(
-                    CommandContainer.resetPivot(m_PivotSubsystem)
-                    // new Command() {
-                    //     @Override
-                    //     public void execute() {
-                    //         m_PivotSubsystem.goToHandoff();
-                    //     }
+                .x()
+                // .povUp()
+                .whileTrue(
+                        new SequentialCommandGroup(
+                                new IntakePivotCommand(m_IntakeSubsystem).onlyIf(() -> m_IntakeSubsystem.isUp()), // should
+                                                                                                                  // we
+                                                                                                                  // change
+                                                                                                                  // this
+                                                                                                                  // to
+                                                                                                                  // .andThen()
+                                                                                                                  // instead
+                                                                                                                  // of
+                                                                                                                  // sequential
+                                                                                                                  // command
+                                                                                                                  // group?
+                                new IntakeDriveAutoCommand(m_IntakeSubsystem)))
+                // .onFalse(
+                // new IntakePivotCommand(m_IntakeSubsystem).onlyIf(()->
+                // !m_IntakeSubsystem.isUp())
+                // )
+                .whileFalse(
+                        // new SequentialCommandGroup(
+                        new IntakePivotCommand(m_IntakeSubsystem).onlyIf(() -> !m_IntakeSubsystem.isUp())
+                                .alongWith(
+                                        CommandContainer.resetPivot(m_PivotSubsystem)
+                                // new Command() {
+                                // @Override
+                                // public void execute() {
+                                // m_PivotSubsystem.goToHandoff();
+                                // }
 
-                    //     @Override
-                    //     public boolean isFinished() {
-                    //         return m_PivotSubsystem.isHandoffOk();
-                    //     }
+                                // @Override
+                                // public boolean isFinished() {
+                                // return m_PivotSubsystem.isHandoffOk();
+                                // }
 
-                    //     @Override
-                    //     public void end(boolean interrupted) {
-                    //         m_PivotSubsystem.stop();
-                    //     }
-                    // }
-                    // .onlyIf(()->!m_PivotSubsystem.isHandoffOk())
-                    // .withTimeout(3.5)
-                )
-                .andThen(
-                    new HandoffAutoCommand(m_IntakeSubsystem, m_ShooterSubsystem)
-                    .onlyIf(()-> m_PivotSubsystem.isHandoffOk())
-                    .withTimeout(2.0)
-                )
-            // ) 
-        );
+                                // @Override
+                                // public void end(boolean interrupted) {
+                                // m_PivotSubsystem.stop();
+                                // }
+                                // }
+                                // .onlyIf(()->!m_PivotSubsystem.isHandoffOk())
+                                // .withTimeout(3.5)
+                                )
+                                .andThen(
+                                        new HandoffAutoCommand(m_IntakeSubsystem, m_ShooterSubsystem, false)
+                                                .onlyIf(() -> m_PivotSubsystem.isHandoffOk())
+                                                .withTimeout(2.0))
+                // )
+                );
 
         m_operatorController.povDown().onTrue(
-            new PivotAutoCommand(m_PivotSubsystem, 1)
-        );
+                new PivotAutoCommand(m_PivotSubsystem, 1));
 
         m_operatorController.b().whileTrue(
                 new Command() {
@@ -335,9 +332,8 @@ public class RobotContainer {
                 });
 
         m_operatorController.a().whileTrue(
-            new HandoffAutoCommand(m_IntakeSubsystem, m_ShooterSubsystem)
-        );
-        
+                new HandoffAutoCommand(m_IntakeSubsystem, m_ShooterSubsystem, false));
+
         m_operatorController.start().onTrue(new InstantCommand() {
             @Override
             public void execute() {
@@ -353,7 +349,8 @@ public class RobotContainer {
         NamedCommands.registerCommand("ResetPivot", CommandContainer.resetPivot(m_PivotSubsystem));
         NamedCommands.registerCommand("ToggleIntake", new IntakePivotCommand(m_IntakeSubsystem));
         NamedCommands.registerCommand("RevShooter", new RevShooterAutoCommand(m_ShooterSubsystem));
-        NamedCommands.registerCommand("AutoHandoff", CommandContainer.getHandoffCommand(m_IntakeSubsystem, m_ShooterSubsystem));
+        NamedCommands.registerCommand("AutoHandoff",
+                CommandContainer.getHandoffCommand(m_IntakeSubsystem, m_ShooterSubsystem));
         NamedCommands.registerCommand("PrepPivot", new SpeakerTurret(m_VisionSubsystem, m_PivotSubsystem));
     }
 
