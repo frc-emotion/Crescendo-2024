@@ -33,7 +33,7 @@ import edu.wpi.first.math.geometry.Rotation3d;
 public final class Constants {
 
     // DEBUG MODE
-    public static final boolean DEBUG_MODE_ACTIVE = true;
+    public static final boolean DEBUG_MODE_ACTIVE = false;
 
     // Add all Driver/Teleop Controller here
     public static final class OIConstants {
@@ -303,7 +303,7 @@ public final class Constants {
             // For SOURCE intake
         protected static final double SHOOTER_REVERSE_SPEED = -0.25; // raw motor output
         protected static final double FEEDER_REVERSE_SPEED = -0.175;  // raw motor output
-		public static final double MIN_SHOOT_SPEED = 2725;
+		public static final double MIN_SHOOT_SPEED = 2750;
     }
 
     public static final class PivotConstants {
@@ -394,6 +394,7 @@ public final class Constants {
         public static final double RETRACTED_POS = 0;
 
         public static final double SHOOTER_TRANSFER_SPEED = 0.4;
+        public static final double AUTO_SHOOTER_TRANSFER_SPEED = 0.5;
 
         // -----------------------------------------
 

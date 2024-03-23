@@ -195,7 +195,12 @@ public class ShooterSubsystem extends SubsystemBase {
     }
 
     public double getAmpRPM() {
-        return this.ampRPMEntry.getDouble(1.0);
+        if(Constants.DEBUG_MODE_ACTIVE) {
+            return this.ampRPMEntry.getDouble(1.0);
+        } else {
+            return ShooterConstants.AmpRPM;
+        }
+        
     }
 
     private void initShuffleboard() {

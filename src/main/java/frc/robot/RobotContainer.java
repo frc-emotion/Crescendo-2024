@@ -28,6 +28,7 @@ import java.util.Map;
 
 import com.pathplanner.lib.auto.NamedCommands;
 
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
@@ -150,15 +151,19 @@ public class RobotContainer {
         addOption("2 Note Top");
         addOption("2 Note Mid");
         addOption("2 Note Bottom");
-        addOption("3 Note Mid");
+        addOption("3 Note Mid Top");
+        addOption("3 Note Mid Bottom");
         // addOption("Forward Test Auto");
         // addOption("Jank Test Auto");
         // addOption("Turn Test Auto");
         // addOption("Strafe Test Auto");
-        addOption("3 Note Top");
-        addOption("3 Note Bottom");
-        addOption("Note Push Top");
-        addOption("Note Push Bottom");
+        // addOption("3 Note Top");
+        addOption("3 Note Top Travel");
+        addOption("3 Note Bottom Travel");
+        // addOption("Note Push Top");
+        // addOption("Note Push Bottom");   
+        addOption("Note Push");
+        addOption("4 Note Auto");
 
     }
 
@@ -242,9 +247,14 @@ public class RobotContainer {
 
         m_operatorController.rightBumper().whileTrue(
                 new Command() {
-                    public void execute() {
-                        m_ShooterSubsystem.setShooterVelocity(m_ShooterSubsystem.getAmpRPM());
-                    }
+                        public void execute() {
+                                m_ShooterSubsystem.setShooterVelocity(m_ShooterSubsystem.getAmpRPM());
+                                if(m_ShooterSubsystem.getShooterVelocity() > 750) {
+                                        operatorController_HID.setRumble(RumbleType.kBothRumble, 0.25);
+                                } else {
+                                        operatorController_HID.setRumble(RumbleType.kBothRumble, 0);
+                                }
+                        }
                 });
 
         m_operatorController.povDown()

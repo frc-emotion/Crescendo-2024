@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 6.3726291836145315,
-        "y": 0.7767196356310516
+        "x": 0.6777587794889373,
+        "y": 4.376333332273105
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.754986934631404,
-        "y": 0.7767196356310516
+        "x": 1.444462614952627,
+        "y": 3.467385290934966
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 8.07199696591174,
+        "x": 4.914005170476094,
         "y": 0.7767196356310516
       },
       "prevControl": {
-        "x": 7.562186631222577,
-        "y": 0.7342354410736217
+        "x": 2.4027534932321317,
+        "y": 0.7326625886618595
       },
       "nextControl": null,
       "isLocked": false,
@@ -38,15 +38,15 @@
     "maxAngularAcceleration": 540.0
   },
   "goalEndState": {
-    "velocity": 0,
+    "velocity": 4.0,
     "rotation": 180.0,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "Far Notes",
+  "folder": "Travelling",
   "previewStartingState": {
-    "rotation": 180.0,
-    "velocity": 5.0
+    "rotation": 119.69072651201682,
+    "velocity": 0.0
   },
   "useDefaultConstraints": true
 }

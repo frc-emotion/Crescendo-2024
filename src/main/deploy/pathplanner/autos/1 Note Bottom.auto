@@ -5,7 +5,7 @@
       "x": 0.6777587794889373,
       "y": 4.376333332273105
     },
-    "rotation": -59.5344550805401
+    "rotation": 120.0
   },
   "command": {
     "type": "sequential",
@@ -20,7 +20,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Travel Out Of Line"
+            "pathName": "Travel Out Line"
           }
         }
       ]

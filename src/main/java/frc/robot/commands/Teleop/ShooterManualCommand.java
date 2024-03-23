@@ -55,24 +55,28 @@ public class ShooterManualCommand extends Command {
             shooterSubsystem.setShooterVelocity(ShooterConstants.SHOOTER_SPEED_RPM); // default speed is 4000, amp is 1250
             // shooterSubsystem.setShooterRaw(0.3);
 
+            if(shooterSubsystem.getShooterVelocity() > 2700) {
+                RobotContainer.operatorController_HID.setRumble(RumbleType.kBothRumble, 0.5);
+            } else {
+                RobotContainer.operatorController_HID.setRumble(RumbleType.kBothRumble, 0);
+            }
+
         } else {
             shooterSubsystem.setShooterRaw(0);
             // shooterSubsystem.setShooterVelocity(0);
         }
-
-        if(shooterSubsystem.getShooterVelocity() > 2700 && shooterSubsystem.isProjectileFed()) {
-            RobotContainer.operatorController_HID.setRumble(RumbleType.kBothRumble, 0.25);
-        } else if(shooterSubsystem.getShooterVelocity() > 2700) {
-            RobotContainer.operatorController_HID.setRumble(RumbleType.kBothRumble, 0.1);
-        } else {
-            RobotContainer.operatorController_HID.setRumble(RumbleType.kBothRumble, 0);
-        }
-
+        
         if (feederSupplier.get()) {
             shooterSubsystem.setFeederSpeed(IntakeConstants.INTAKE_MOTOR_SPEED);
+
         } else {
             shooterSubsystem.stopFeeder();
         }
+
+        if(!shooterSupplier.get()) {
+                RobotContainer.operatorController_HID.setRumble(RumbleType.kBothRumble, 0);
+        }
+
 
         /*
          * // Stops the shooter once indexed
