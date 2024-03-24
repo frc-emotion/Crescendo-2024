@@ -105,7 +105,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Pickup Bottom"
+                  "pathName": "Prep Mid to Bottom"
                 }
               },
               {
@@ -136,7 +136,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Score Middle"
+                  "pathName": "Score Mid From Bottom"
                 }
               },
               {

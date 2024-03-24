@@ -33,7 +33,7 @@ import edu.wpi.first.math.geometry.Rotation3d;
 public final class Constants {
 
     // DEBUG MODE
-    public static final boolean DEBUG_MODE_ACTIVE = false;
+    public static final boolean DEBUG_MODE_ACTIVE = true;
 
     // Add all Driver/Teleop Controller here
     public static final class OIConstants {
@@ -251,7 +251,7 @@ public final class Constants {
         public static final int CLIMB_PORT_R = 18;
 
         // PID Constants (not used)
-        public static final double EXTENSION_LIMIT = 130.0;
+        public static final double EXTENSION_LIMIT = 140.0;
         public static final int PID_MIN_OUTPUT = 0;
         public static final int PID_MAX_OUTPUT = 0;
         public static final int SLOT_ID = 0;
@@ -298,7 +298,7 @@ public final class Constants {
         public static final double SHOOTER_SPEED_RPM = 3000.0;
         public static final double[] PRESET_SPEEDS = { 3000, 0 }; // rpm
         public static final double IDLE_SPEED = 1000; // rpm
-        public static final double AmpRPM = 1000;
+        public static final double AmpRPM = 1100;
 
             // For SOURCE intake
         protected static final double SHOOTER_REVERSE_SPEED = -0.25; // raw motor output

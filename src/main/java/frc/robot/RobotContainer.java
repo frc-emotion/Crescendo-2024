@@ -143,27 +143,33 @@ public class RobotContainer {
     // Auto Chooser Methods
 
     private void configureAutoChooser() {
-        autoChooser.addOption("Simple Shoot", new ShootSpeaker(m_ShooterSubsystem));
-        // addOption("1 Note Stationary");
-        addOption("1 Note Top");
+        // autoChooser.addOption("Simple Shoot", new ShootSpeaker(m_ShooterSubsystem));
+        addOption("4 Note Auto");
+        addOption("3 Note Top Travel");
+        addOption("3 Note Mid Top");
+        addOption("3 Note Mid Bottom");
+        addOption("3 Note Bottom Travel");
+        // addOption("1 Note Stationary");  
+        // addOption("1 Note Top");
         // addOption("1 Note Mid");
-        addOption("1 Note Bottom");
+        // addOption("1 Note Bottom");
         addOption("2 Note Top");
         addOption("2 Note Mid");
         addOption("2 Note Bottom");
-        addOption("3 Note Mid Top");
-        addOption("3 Note Mid Bottom");
+        addOption("2 Note Bottom Far");
+        
         // addOption("Forward Test Auto");
         // addOption("Jank Test Auto");
         // addOption("Turn Test Auto");
         // addOption("Strafe Test Auto");
         // addOption("3 Note Top");
-        addOption("3 Note Top Travel");
-        addOption("3 Note Bottom Travel");
+        
+        
         // addOption("Note Push Top");
-        // addOption("Note Push Bottom");   
-        addOption("Note Push");
-        addOption("4 Note Auto");
+        // addOption("Note Push Bottom");
+        addOption("1 Note Stationary");
+        addOption("Note Push"); 
+        
 
     }
 
@@ -249,7 +255,7 @@ public class RobotContainer {
                 new Command() {
                         public void execute() {
                                 m_ShooterSubsystem.setShooterVelocity(m_ShooterSubsystem.getAmpRPM());
-                                if(m_ShooterSubsystem.getShooterVelocity() > 750) {
+                                if(m_ShooterSubsystem.getShooterVelocity() > ShooterConstants.AmpRPM - 250) {
                                         operatorController_HID.setRumble(RumbleType.kBothRumble, 0.25);
                                 } else {
                                         operatorController_HID.setRumble(RumbleType.kBothRumble, 0);

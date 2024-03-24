@@ -55,7 +55,7 @@ public class ShooterManualCommand extends Command {
             shooterSubsystem.setShooterVelocity(ShooterConstants.SHOOTER_SPEED_RPM); // default speed is 4000, amp is 1250
             // shooterSubsystem.setShooterRaw(0.3);
 
-            if(shooterSubsystem.getShooterVelocity() > 2700) {
+            if(shooterSubsystem.getShooterVelocity() > ShooterConstants.SHOOTER_SPEED_RPM - 300) {
                 RobotContainer.operatorController_HID.setRumble(RumbleType.kBothRumble, 0.5);
             } else {
                 RobotContainer.operatorController_HID.setRumble(RumbleType.kBothRumble, 0);

@@ -5,7 +5,7 @@
       "x": 0.6859860992449257,
       "y": 4.449811808714527
     },
-    "rotation": 119.56035446468077
+    "rotation": 120.0
   },
   "command": {
     "type": "sequential",
@@ -24,7 +24,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Pickup Bottom"
+                  "pathName": "Prep Bottom"
                 }
               },
               {
