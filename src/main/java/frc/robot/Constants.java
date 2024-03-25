@@ -33,7 +33,7 @@ import edu.wpi.first.math.geometry.Rotation3d;
 public final class Constants {
 
     // DEBUG MODE
-    public static final boolean DEBUG_MODE_ACTIVE = true;
+    public static final boolean DEBUG_MODE_ACTIVE = false;
 
     // Add all Driver/Teleop Controller here
     public static final class OIConstants {
