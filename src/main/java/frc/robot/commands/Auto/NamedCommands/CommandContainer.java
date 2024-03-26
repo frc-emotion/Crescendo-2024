@@ -1,19 +1,23 @@
 package frc.robot.commands.Auto.NamedCommands;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.robot.commands.Auto.SubsystemCommands.ClimbAutoCommand;
 import frc.robot.commands.Auto.SubsystemCommands.HandoffAutoCommand;
 import frc.robot.commands.Auto.SubsystemCommands.IntakeDriveAutoCommand;
 import frc.robot.commands.Auto.SubsystemCommands.PivotAutoCommand;
 import frc.robot.commands.Auto.SubsystemCommands.ResetPivotAutoCommand;
 import frc.robot.commands.Teleop.IntakePivotCommand;
+import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.PivotSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
+import frc.robot.util.AutoManager;
 
 /**
  * Container class for most of the Commands and Command Groups used during the Autonomous period.
@@ -81,5 +85,21 @@ public class CommandContainer {
                 .withTimeout(2)
                 .onlyIf(
                         () -> !intakeSubsystem.getBeamState() && !shooterSubsystem.isProjectileFed());
+    }
+
+    /**
+     * Navigates and climbs at a specific pose
+     * @param climbSubsystem    The Climb Subsystem
+     * @param targetPose        The target pose to climb at
+     * @return  The Command Group to execute the climb.
+     */
+    public static Command getAutoClimbCommand(ClimbSubsystem climbSubsystem, Pose2d targetPose) {
+        return new SequentialCommandGroup(
+            new ParallelCommandGroup(
+                AutoManager.getInstance().navigateToPose(targetPose),
+                new ClimbAutoCommand(climbSubsystem, true)
+            ),
+            new ClimbAutoCommand(climbSubsystem, false)
+        );
     }
 }

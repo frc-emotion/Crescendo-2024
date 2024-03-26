@@ -55,7 +55,13 @@ public class AutoManager {
                         new PIDConstants(AutoConstants.kPThetaController),
                         AutoConstants.kMaxSpeedMetersPerSecond,
                         DriveConstants.kWheelBase,
-                        new ReplanningConfig()),
+                        new ReplanningConfig(
+                            AutoConstants.INITIAL_PLANNING_ENABLED,
+                            AutoConstants.DYNAMIC_PLANNING_ENABLED,
+                            AutoConstants.PLANNING_TOTAL_ERROR_THRESHOLD,
+                            AutoConstants.PLANNING_SPIKE_ERROR_THRESHOLD
+                        )
+                ),
                 () -> DriverStation.getAlliance().get() == DriverStation.Alliance.Red,
                 swerveSubsystem);
 
