@@ -242,6 +242,11 @@ public final class Constants {
         public static final double SPEAKER_MOUTH_HEIGHT = 2.21;
         public static final double PIVOT_HEIGHT = 0.371; // meters
 
+        public static final boolean INITIAL_PLANNING_ENABLED = false;
+        public static final boolean DYNAMIC_PLANNING_ENABLED = false;
+        public static final double PLANNING_TOTAL_ERROR_THRESHOLD = 0;
+        public static final double PLANNING_SPIKE_ERROR_THRESHOLD = 0;
+
     }
 
     public static final class ClimbConstants {
