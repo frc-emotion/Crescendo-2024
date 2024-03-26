@@ -10,12 +10,14 @@ import com.pathplanner.lib.pathfinding.LocalADStar;
 import com.pathplanner.lib.pathfinding.Pathfinding;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
+import com.pathplanner.lib.util.PathPlannerLogging;
 import com.pathplanner.lib.util.ReplanningConfig;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.RobotContainer;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.subsystems.SwerveSubsystem;
@@ -27,6 +29,8 @@ public class AutoManager {
     private SwerveSubsystem swerveSubsystem;
 
     private static AutoManager autoManagerInstance;
+
+    private Field2d autoField;
 
     private static final PathConstraints kPathConstraints = new PathConstraints(
             AutoConstants.kMaxSpeedMetersPerSecond,
@@ -55,6 +59,41 @@ public class AutoManager {
                 swerveSubsystem);
 
         Pathfinding.setPathfinder(new LocalADStar());
+
+        initializeCustomLogging();
+    }
+
+    public static AutoManager getInstance() {
+        if(autoManagerInstance == null) {
+            autoManagerInstance = new AutoManager(RobotContainer.m_VisionSubsystem, RobotContainer.m_SwerveSubsystem);
+        }
+        return autoManagerInstance;
+    }
+
+    private void initializeCustomLogging() {
+        autoField = new Field2d();
+
+        PathPlannerLogging.setLogActivePathCallback(
+            (poses) -> {
+                autoField.getObject("path").setPoses(poses);
+            }
+        );
+
+        PathPlannerLogging.setLogCurrentPoseCallback(
+            (pose) -> {
+                autoField.getRobotObject().setPose(pose);
+            }
+        );
+
+        PathPlannerLogging.setLogTargetPoseCallback(
+            (pose) -> {
+                autoField.getObject("targetPose").setPose(pose);
+            }
+        );
+    }
+
+    public Field2d getAutoField2d() {
+        return autoField;
     }
 
     public Command getAutoCommand(String name) {

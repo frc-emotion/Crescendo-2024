@@ -4,14 +4,17 @@ import edu.wpi.first.util.datalog.DataLog;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj2.command.Subsystem;
 
 public class TabManager {
 
     private static TabManager instance;
-    private static String[] tabNames = { "DRIVETRAIN", "VISION", "AUTON", "INTAKE", "CLIMB", "SHOOTER", "PIVOT",
-            "GAME" };
+    // private static String[] tabNames = { "DEFAULT", "DRIVETRAIN", "VISION", "AUTON", "INTAKE", "CLIMB", "SHOOTER", "PIVOT",
+    //         "GAME", "AUTO" };
+    private SubsystemTab[] tabs;
 
     public enum SubsystemTab {
+        DEFAULT,
         DRIVETRAIN,
         VISION,
         AUTON,
@@ -19,13 +22,16 @@ public class TabManager {
         CLIMB,
         SHOOTER,
         PIVOT,
-        GAME
+        GAME,
+        AUTO
     }
 
     public TabManager() {
-        for (int i = 0; i < tabNames.length; i++) {
-            Shuffleboard.getTab(tabNames[i]);
+        SubsystemTab[] tabs = SubsystemTab.class.getEnumConstants();
+        for (SubsystemTab tab : tabs) {
+            Shuffleboard.getTab(tab.name());
         }
+        this.tabs = tabs;
     }
 
     public static synchronized TabManager getInstance() {
@@ -35,27 +41,28 @@ public class TabManager {
         return instance;
     }
 
-    public ShuffleboardTab accessTab(SubsystemTab tabs) {
-        switch (tabs) {
-            case DRIVETRAIN:
-                return Shuffleboard.getTab("DRIVETRAIN");
-            case VISION:
-                return Shuffleboard.getTab("VISION");
-            case AUTON:
-                return Shuffleboard.getTab("AUTON");
-            case INTAKE:
-                return Shuffleboard.getTab("INTAKE");
-            case CLIMB:
-                return Shuffleboard.getTab("CLIMB");
-            case SHOOTER:
-                return Shuffleboard.getTab("SHOOTER");
-            case PIVOT:
-                return Shuffleboard.getTab("PIVOT");
-            case GAME:
-                return Shuffleboard.getTab("GAME");
-            default:
-                return Shuffleboard.getTab("DRIVETRAIN");
+    public ShuffleboardTab accessTab(SubsystemTab tab) {
+        return Shuffleboard.getTab(tab.name());
+    }
+
+    public SubsystemTab getSubsystemTab(String name) {
+        return SubsystemTab.valueOf(name);
+    }
+
+    public String[] getTabNames() {
+        String[] names = new String[tabs.length];
+        for(int i = 0; i < tabs.length; i++) {
+            names[i] = tabs[i].name();
         }
+        return names;
+    }
+
+    public ShuffleboardTab[] getTabs() {
+        ShuffleboardTab[] shuffleboardTabs = new ShuffleboardTab[tabs.length];
+        for(int i = 0; i < tabs.length; i++) {
+            shuffleboardTabs[i] = accessTab(tabs[i]);
+        }
+        return shuffleboardTabs;
     }
 
     // public GenericEntry addWidget(

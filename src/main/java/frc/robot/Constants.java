@@ -204,6 +204,7 @@ public final class Constants {
     }
 
     public static class AutoConstants {
+        public static final boolean PATH_LOGGING = true;
 
         // Chane all values based on testing
         public static final double kMaxSpeedMetersPerSecond = 5.00;

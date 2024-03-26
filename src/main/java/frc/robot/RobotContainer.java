@@ -1,34 +1,29 @@
 // Copyright (c) FIRST and other WPILib contributors.
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
-
 package frc.robot;
 
-import frc.robot.Constants.DriveConstants;
-import frc.robot.Constants.IntakeConstants;
-import frc.robot.Constants.OIConstants;
-import frc.robot.Constants.ShooterConstants;
-import frc.robot.Constants.DriveConstants.DriveMode;
 import frc.robot.subsystems.*;
-import frc.robot.util.AutoManager;
-import frc.robot.util.TabManager;
-import frc.robot.util.TabManager.SubsystemTab;
-import frc.robot.commands.vision.MonitorVision;
-import frc.robot.commands.Auto.NamedCommands.CommandContainer;
-import frc.robot.commands.Auto.NamedCommands.ShootSpeaker;
-import frc.robot.commands.Auto.SubsystemCommands.RevShooterAutoCommand;
-import frc.robot.commands.Auto.SubsystemCommands.HandoffAutoCommand;
-import frc.robot.commands.Auto.SubsystemCommands.IntakeDriveAutoCommand;
-import frc.robot.commands.Auto.SubsystemCommands.PivotAutoCommand;
+
+import frc.robot.commands.Auto.NamedCommands.*;
+import frc.robot.commands.Auto.SubsystemCommands.*;
 import frc.robot.commands.Teleop.*;
 import frc.robot.commands.Teleop.swerve.*;
-import frc.robot.commands.vision.SpeakerTurret;
+import frc.robot.commands.vision.*;
+
+import frc.robot.Constants.*;
+import frc.robot.Constants.DriveConstants.DriveMode;
+
+import frc.robot.util.*;
+import frc.robot.util.TabManager.SubsystemTab;
 
 import java.util.Map;
 
+import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
@@ -81,7 +76,7 @@ public class RobotContainer {
      * The container for the robot. Contains subsystems, OI devices, and commands.
      */
     public RobotContainer() {
-        autoManager = new AutoManager(m_VisionSubsystem, m_SwerveSubsystem);
+        autoManager = AutoManager.getInstance();
 
         m_SwerveSubsystem.setDefaultCommand(
                 new DefaultSwerveXboxCommand(
@@ -129,12 +124,12 @@ public class RobotContainer {
                         () -> operatorController_HID.getLeftBumper()));
 
         m_VisionSubsystem.setDefaultCommand(new MonitorVision(m_VisionSubsystem));
-
         registerNamedCommands();
         configureAutoChooser();
 
         // Configure the trigger bindings
         configureBindings();
+        initializeAutoShuffleboard();
         initializeGameShuffleboard();
 
         // SmartDashboard.putData("Auto Chooser", autoChooser);
@@ -174,7 +169,7 @@ public class RobotContainer {
     }
 
     private void addOption(String name) {
-        autoChooser.addOption(name, autoManager.getAutoCommand(name));
+        autoChooser.addOption(name, AutoBuilder.buildAuto(name));
     }
 
     private void addOption(String name, Command command) {
@@ -379,9 +374,8 @@ public class RobotContainer {
         // chooser.
         gameShuffleboardTab.addNumber("Robot Heading", () -> m_SwerveSubsystem.getHeading())
                 .withWidget(BuiltInWidgets.kGyro).withPosition(10, 0).withSize(3, 4);
-        gameShuffleboardTab.addBoolean("Debug Mode", () -> Constants.DEBUG_MODE_ACTIVE).withPosition(10, 4).withSize(3,
-                1);
-        gameShuffleboardTab.add("Auto Chooser", autoChooser).withPosition(8, 2).withSize(2, 1);
+        gameShuffleboardTab.addBoolean("Debug Mode", () -> Constants.DEBUG_MODE_ACTIVE).withPosition(10, 4).withSize(3, 1);
+        // gameShuffleboardTab.add("Auto Chooser", autoChooser).withPosition(8, 2).withSize(2, 1);
 
         // Drive Layout - Shows which drive mode is active (Slow, Normal, Turbo)
         ShuffleboardLayout generalLayout = gameShuffleboardTab.getLayout("Drive Mode", BuiltInLayouts.kGrid)
@@ -406,28 +400,12 @@ public class RobotContainer {
         intakeLayout.addBoolean("Beam Broken", () -> m_IntakeSubsystem.getBeamState())
                 .withWidget(BuiltInWidgets.kBooleanBox);
 
-        // Shooter Layout - Shows the Shooter RPM, if the Shooter has reached the target
-        // speed, and the position of the Shooter Pivot
-        // ShuffleboardLayout shooterLayout = gameShuffleboardTab.getLayout("Shooter
-        // Data", BuiltInLayouts.kGrid).withProperties(Map.of("Number of columns", 4,
-        // "Number of Rows", 1)).withPosition(0, 4).withSize(6, 2);
-        // shooterLayout.addNumber( "Shooter RPM", () ->
-        // m_ShooterSubsystem.getShooterVelocity()).withWidget(BuiltInWidgets.kDial).withProperties(Map.of("Min",
-        // 0, "Max", 5000));
-        // shooterLayout.addBoolean( "Shooter At Speed", () ->
-        // m_ShooterSubsystem.isAtTarget()).withWidget(BuiltInWidgets.kBooleanBox);
-        // shooterLayout.addBoolean("Line Break", () ->
-        // m_ShooterSubsystem.isProjectileFed()).withWidget(BuiltInWidgets.kBooleanBox);
-        // shooterLayout.addNumber( "Pivot Position", () ->
-        // -m_PivotSubsystem.getDegrees()).withWidget(BuiltInWidgets.kDial).withProperties(Map.of("Min",
-        // -60, "Max", 60));
-
         gameShuffleboardTab.addNumber("Shooter RPM", () -> m_ShooterSubsystem.getShooterVelocity())
                 .withWidget(BuiltInWidgets.kGraph).withPosition(0, 3).withSize(3, 3);
-        gameShuffleboardTab.addBoolean("Shooter At Speed", () -> m_ShooterSubsystem.getShooterVelocity() > 3900)
-                .withPosition(3, 3).withSize(2, 2);
-        gameShuffleboardTab.addBoolean("Shooter Beam State", () -> m_ShooterSubsystem.isProjectileFed())
-                .withPosition(3, 5).withSize(2, 1);
+        // gameShuffleboardTab.addBoolean("Shooter At Speed", () -> m_ShooterSubsystem.getShooterVelocity() > 3900)
+        //         .withPosition(3, 3).withSize(2, 2);
+        // gameShuffleboardTab.addBoolean("Shooter Beam State", () -> m_ShooterSubsystem.isProjectileFed())
+        //         .withPosition(3, 5).withSize(2, 1);
 
         // gameShuffleboardTab.add("Robot Pose", () ->
         // m_SwerveSubsystem.getCurrentPose()).withWidget(BuiltInWidgets.kField).withPosition(4,
@@ -444,11 +422,21 @@ public class RobotContainer {
         // Shuffleboard.selectTab("GAME");
     }
 
+    private void initializeAutoShuffleboard() {
+        ShuffleboardTab autoTab = TabManager
+                .getInstance()
+                .accessTab(SubsystemTab.AUTO);
+
+        autoTab.add(autoChooser).withSize(3, 1);
+        autoTab.add("Auto Visualizer", autoManager.getAutoField2d()).withWidget(BuiltInWidgets.kField).withSize(4, 3);
+        
+        ShuffleboardLayout matchLayout = autoTab.getLayout("Match Data", BuiltInLayouts.kGrid).withProperties(Map.of("Number of columns", 3, "Number of rows", 1, "Label Position", "TOP")).withSize(4, 1);
+        matchLayout.addString("Event Name", () -> DriverStation.getEventName());
+        matchLayout.addString("Match Type", () -> DriverStation.getMatchType().name());
+        matchLayout.addNumber("Match Number", () -> DriverStation.getMatchNumber());
+    }
+
     public Command getAutonomousCommand() {
-        // return m_SwerveSubsystem.navigateToPose(
-        // new Pose2d(2, 2, m_SwerveSubsystem.getRotation2d())
-        // );
-        // return autoChooser.getSelected();
         return autoChooser.getSelected();
     }
 
