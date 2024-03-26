@@ -43,6 +43,7 @@ public class AutoManager {
         this.visionSubsystem = visionSubsystem;
         this.swerveSubsystem = swerveSubsystem;
 
+            // Initializes AutoBuilder for swerve drive.
         AutoBuilder.configureHolonomic(
                 this.visionSubsystem::getCurrentOdoPose, // If this has issues switch to odometry only based pose
                 this.visionSubsystem::resetPoseEstimator,
@@ -58,6 +59,7 @@ public class AutoManager {
                 () -> DriverStation.getAlliance().get() == DriverStation.Alliance.Red,
                 swerveSubsystem);
 
+            // Used for PathPlanner automatic pathfinding
         Pathfinding.setPathfinder(new LocalADStar());
 
         initializeCustomLogging();
@@ -70,7 +72,12 @@ public class AutoManager {
         return autoManagerInstance;
     }
 
+    /**
+     * Adds callback triggers to update the Auto Visualizer based on the current 
+     * PathPlanner path, target pose, and current pose.
+     */
     private void initializeCustomLogging() {
+        if(AutoConstants.PATH_LOGGING)
         autoField = new Field2d();
 
         PathPlannerLogging.setLogActivePathCallback(
@@ -96,6 +103,11 @@ public class AutoManager {
         return autoField;
     }
 
+    /**
+     * Retrieves the PathPlanner Auto with a certain name. Case and whitespace sensitive.
+     * @param name  The name of the auto
+     * @return      The PathPlanner auto
+     */
     public Command getAutoCommand(String name) {
         return AutoBuilder.buildAuto(name);
     }

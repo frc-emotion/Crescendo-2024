@@ -9,6 +9,7 @@ import frc.robot.commands.Auto.NamedCommands.*;
 import frc.robot.commands.Auto.SubsystemCommands.*;
 import frc.robot.commands.Teleop.*;
 import frc.robot.commands.Teleop.swerve.*;
+import frc.robot.commands.debug.ResetGyroCommand;
 import frc.robot.commands.vision.*;
 
 import frc.robot.Constants.*;
@@ -59,17 +60,19 @@ public class RobotContainer {
 
     private final AutoManager autoManager;
 
-    // Replace with CommandPS4Controller or CommandJoystick if needed
+    // Command controllers used for Triggers
     public static final CommandXboxController m_driverController = new CommandXboxController(
             OIConstants.kDriverControllerPort);
-
-    public static final XboxController driverController_HID = m_driverController.getHID();
 
     public static final CommandXboxController m_operatorController = new CommandXboxController(
             OIConstants.kOperatorControllerPort);
 
+
+        // Initializes the controller HIDs, which are used for direct input, primarily in the Default Commands.
+    public static final XboxController driverController_HID = m_driverController.getHID();
     public static final XboxController operatorController_HID = m_operatorController.getHID();
 
+        // The Auto SendableChooser
     private final SendableChooser<Command> autoChooser = new SendableChooser<Command>();
 
     /**
@@ -135,8 +138,9 @@ public class RobotContainer {
         // SmartDashboard.putData("Auto Chooser", autoChooser);
     }
 
-    // Auto Chooser Methods
-
+    /**
+     * Adds all the choices to the AutoChooser
+     */
     private void configureAutoChooser() {
         // autoChooser.addOption("Simple Shoot", new ShootSpeaker(m_ShooterSubsystem));
         addOption("4 Note Auto");
@@ -168,10 +172,20 @@ public class RobotContainer {
 
     }
 
+    /**
+     * Adds another option to the Auto Chooser using PathPlanner's
+     * AutoBuilder to retrieve the Auto Command.
+     * @param name      The name of the PathPlanner Auto Command
+     */
     private void addOption(String name) {
         autoChooser.addOption(name, AutoBuilder.buildAuto(name));
     }
 
+    /**
+     * Adds another option to the Auto Chooser.
+     * @param name      The name to display in the Auto Chooser
+     * @param command   The Auto Command to run using this option
+     */
     private void addOption(String name, Command command) {
         autoChooser.addOption(name, command);
     }
@@ -191,27 +205,7 @@ public class RobotContainer {
      * joysticks}.
      */
     private void configureBindings() {
-        // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
-        // new Trigger(m_exampleSubsystem::exampleCondition)
-        // .onTrue(new ExampleCommand(m_exampleSubsystem));
-
-        // Schedule `exampleMethodCommand` when the Xbox controller's B button is
-        // pressed,
-        // cancelling on release.
-        // m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
-
-        // m_operatorController.a().onTrue(new InstantCommand() {
-        // @Override
-        // public void execute() {
-        // m_PivotSubsystem.calibrate();
-        // }
-        // }
-        // );
-
-        // m_driverController.y().toggleOnTrue(
-        // new SpeakerTurret(m_VisionSubsystem, m_PivotSubsystem)
-        // );
-
+                // Swerve Slow Drive Mode
         m_driverController.leftBumper().whileTrue(
                 new SlowModeSwerveCommand(
                         m_SwerveSubsystem,
@@ -220,6 +214,7 @@ public class RobotContainer {
                         () -> driverController_HID.getRightX(),
                         () -> driverController_HID.getRightTriggerAxis() > OIConstants.kDeadband));
 
+                // Swerve Turbo Drive Mode
         m_driverController.rightBumper().whileTrue(
                 new TurboModeSwerveCommand(
                         m_SwerveSubsystem,
@@ -228,6 +223,7 @@ public class RobotContainer {
                         () -> driverController_HID.getRightX(),
                         () -> driverController_HID.getRightTriggerAxis() > OIConstants.kDeadband));
 
+                // Swerve Zero Heading
         m_driverController.b().onTrue(new InstantCommand() {
             @Override
             public void execute() {
@@ -235,7 +231,7 @@ public class RobotContainer {
             }
         });
 
-        // Drive Snapping Setup
+                // Drive Snapping Setup
         for (int angle = 0; angle < 360; angle += 45) {
             m_driverController.pov(angle).onTrue(
                     new SnapSwerveCommand(
@@ -246,6 +242,7 @@ public class RobotContainer {
                             angle));
         }
 
+                // Amp Shooting
         m_operatorController.rightBumper().whileTrue(
                 new Command() {
                         public void execute() {
@@ -258,20 +255,21 @@ public class RobotContainer {
                         }
                 });
 
-        m_operatorController.povDown()
-                // .or(m_operatorController.povUp())
-                .onTrue(new InstantCommand() {
-                    @Override
-                    public void execute() {
-                        int index = m_PivotSubsystem.getIndex();
-                        m_ShooterSubsystem.setTargetRPM(ShooterConstants.PRESET_SPEEDS[index]);
-                    }
-                });
+        // m_operatorController.povDown()
+        //         // .or(m_operatorController.povUp())
+        //         .onTrue(new InstantCommand() {
+        //             @Override
+        //             public void execute() {
+        //                 int index = m_PivotSubsystem.getIndex();
+        //                 m_ShooterSubsystem.setTargetRPM(ShooterConstants.PRESET_SPEEDS[index]);
+        //             }
+        //         });
 
         // m_operatorController.x().onTrue(
         // new IntakePivotCommand(m_IntakeSubsystem)
         // );
 
+                // Intake Pivot Command
         m_operatorController
                 .x()
                 // .povUp()
@@ -324,9 +322,11 @@ public class RobotContainer {
                 // )
                 );
 
+                // Resets the Pivot to default position
         m_operatorController.povDown().onTrue(
                 new PivotAutoCommand(m_PivotSubsystem, 1));
 
+                // Direct Source Intake Mode
         m_operatorController.b().whileTrue(
                 new Command() {
                     @Override
@@ -342,9 +342,11 @@ public class RobotContainer {
                     }
                 });
 
+                // Handoff Manual Mode
         m_operatorController.a().whileTrue(
                 new HandoffAutoCommand(m_IntakeSubsystem, m_ShooterSubsystem, false));
 
+                // Climb Encoder Reset Command
         m_operatorController.start().onTrue(new InstantCommand() {
             @Override
             public void execute() {
@@ -353,10 +355,13 @@ public class RobotContainer {
         });
     }
 
+    /**
+     * Registers all the NamedCommands for use with PathPlanner.
+     */
     private void registerNamedCommands() {
         NamedCommands.registerCommand("ScoreSpeaker",
                 new ParallelRaceGroup(new ShootSpeaker(m_ShooterSubsystem), new WaitCommand(3.5))); // .withTimeout(AutoConstants.SCORE_SPEAKER_TIMEOUT));
-        NamedCommands.registerCommand("IntakeNote", CommandContainer.intakeNote(m_IntakeSubsystem));
+        NamedCommands.registerCommand("IntakeNote", new IntakeDriveAutoCommand(m_IntakeSubsystem));
         NamedCommands.registerCommand("ResetPivot", CommandContainer.resetPivot(m_PivotSubsystem));
         NamedCommands.registerCommand("ToggleIntake", new IntakePivotCommand(m_IntakeSubsystem));
         NamedCommands.registerCommand("RevShooter", new RevShooterAutoCommand(m_ShooterSubsystem));
@@ -365,6 +370,9 @@ public class RobotContainer {
         NamedCommands.registerCommand("PrepPivot", new SpeakerTurret(m_VisionSubsystem, m_PivotSubsystem));
     }
 
+    /**
+     * Sends all necessary data to the GAME tab in Shuffleboard and adds all widgets.
+     */
     private void initializeGameShuffleboard() {
         ShuffleboardTab gameShuffleboardTab = TabManager
                 .getInstance()
@@ -422,6 +430,9 @@ public class RobotContainer {
         // Shuffleboard.selectTab("GAME");
     }
 
+    /**
+     * Sends the data to the AUTO tab in Shuffleboard
+     */
     private void initializeAutoShuffleboard() {
         ShuffleboardTab autoTab = TabManager
                 .getInstance()
@@ -434,8 +445,13 @@ public class RobotContainer {
         matchLayout.addString("Event Name", () -> DriverStation.getEventName());
         matchLayout.addString("Match Type", () -> DriverStation.getMatchType().name());
         matchLayout.addNumber("Match Number", () -> DriverStation.getMatchNumber());
+        matchLayout.add("Reset Heading", ResetGyroCommand.getCommand()).withWidget(BuiltInWidgets.kCommand).withSize(2,2);
     }
 
+    /**
+     * Retrieves the selected Auto from the Auto Chooser.
+     * @return  The currently selected Auto Command
+     */
     public Command getAutonomousCommand() {
         return autoChooser.getSelected();
     }

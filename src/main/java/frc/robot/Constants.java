@@ -230,8 +230,6 @@ public final class Constants {
 
         public static final double INTAKE_TIMEOUT = 0;
 
-        
-
         public static final double SCORE_SPEAKER_TIMEOUT = 6.0;
 
         public static final Translation2d[] NOTE_POSITIONS = {
@@ -391,7 +389,7 @@ public final class Constants {
         public static final double kMaxAccel = 4;
         public static final double kMaxError = 1;
 
-        public static final double DEPLOYED_POS = -0.305;
+        public static final double DEPLOYED_POS = -0.32;
         public static final double RETRACTED_POS = 0;
 
         public static final double SHOOTER_TRANSFER_SPEED = 0.4;

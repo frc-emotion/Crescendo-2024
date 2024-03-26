@@ -10,8 +10,6 @@ import frc.robot.subsystems.ShooterSubsystem;
 public class ShootSpeaker extends Command {
     private ShooterSubsystem shooterSubsystem;
 
-    private int lastShooterSpeed;
-
     public ShootSpeaker(ShooterSubsystem shooterSubsystem) {
         this.shooterSubsystem = shooterSubsystem;
         addRequirements(shooterSubsystem);
@@ -24,11 +22,10 @@ public class ShootSpeaker extends Command {
 
     @Override
     public void execute() {
-        shooterSubsystem.setShooterVelocity(3000);
+        shooterSubsystem.setShooterVelocity(ShooterConstants.SHOOTER_SPEED_RPM);
         if (shooterSubsystem.getShooterVelocity() > ShooterConstants.MIN_SHOOT_SPEED) {
             shooterSubsystem.setFeederSpeed(IntakeConstants.SHOOTER_TRANSFER_SPEED);
         }
-        lastShooterSpeed = (int) shooterSubsystem.getShooterVelocity();
     }
 
     @Override

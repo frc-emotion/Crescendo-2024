@@ -1,8 +1,12 @@
 package frc.robot.commands.Teleop;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants.IntakeConstants;
 import frc.robot.subsystems.IntakeSubsystem;
 
+/**
+ * Toggles the current state of the intake (deployed or retracted).
+ */
 public class IntakePivotCommand extends Command {
 
     private IntakeSubsystem intakeSubsystem;
@@ -16,9 +20,9 @@ public class IntakePivotCommand extends Command {
     @Override
     public void initialize() {
         if (intakeSubsystem.isUp()) {
-            intakeSubsystem.setGoal(-0.32);
+            intakeSubsystem.setGoal(IntakeConstants.DEPLOYED_POS);
         } else {
-            intakeSubsystem.setGoal(0);
+            intakeSubsystem.setGoal(IntakeConstants.RETRACTED_POS);
         }
         // if(shouldBeDown) {
         // intakeSubsystem.setGoal(-0.32);

@@ -48,9 +48,11 @@ public abstract class AbstractSwerveXboxCommand extends Command {
         addRequirements(swerveSubsystem);
     }
 
+    /**
+     * Processes user input and limits the acceleration of the robot using slew limiters.
+     */
     @Override
     public void execute() {
-
         xSpeed = xSpdFunc.get();
         ySpeed = ySpdFunc.get();
         turningSpeed = turningSpdFunc.get();
@@ -60,18 +62,24 @@ public abstract class AbstractSwerveXboxCommand extends Command {
         currentTranslationalSpeed = speeds[0];
         currentAngularSpeed = speeds[1];
 
-        // deadBand
+            // Retrieves the user input and applies a deadzone
         xSpeed = Math.abs(xSpeed) > (OIConstants.kDeadband / 2) ? xSpeed : 0.0;
         ySpeed = Math.abs(ySpeed) > (OIConstants.kDeadband / 2) ? ySpeed : 0.0;
         turningSpeed = Math.abs(turningSpeed) > OIConstants.kDeadband ? turningSpeed : 0.0;
 
+            // Limits the translational and rotational acceleration of the robot
         xSpeed = xLimiter.calculate(xSpeed) * currentTranslationalSpeed;
         ySpeed = yLimiter.calculate(ySpeed) * currentTranslationalSpeed;
         turningSpeed = turningLimiter.calculate(turningSpeed) * currentAngularSpeed;
+
+            // Transfers the ChassisSpeeds to field-relative ChassisSpeeds
         robotSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, turningSpeed,
                 swerveSubsystem.getRotation2d());
     }
 
+    /**
+     * Sends the robot-relative ChassisSpeeds to the Swerve Subsystem.
+     */
     protected void sendSpeedsToSubsystem() {
 
         // swerveSubsystem.setChassisSpeeds(robotSpeeds);

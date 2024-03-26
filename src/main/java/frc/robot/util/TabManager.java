@@ -34,6 +34,10 @@ public class TabManager {
         this.tabs = tabs;
     }
 
+    /**
+     * Retrieves the singleton of the TabManager.
+     * @return  The instance of the TabManager.
+     */
     public static synchronized TabManager getInstance() {
         if (instance == null) {
             instance = new TabManager();
@@ -41,14 +45,30 @@ public class TabManager {
         return instance;
     }
 
+    /**
+     * Retrieves the ShuffleboardTab represented by a SubsystemTab
+     * @param tab   The SubsystemTab to be used
+     * @return      The ShuffleboardTab
+     */
     public ShuffleboardTab accessTab(SubsystemTab tab) {
         return Shuffleboard.getTab(tab.name());
     }
 
-    public SubsystemTab getSubsystemTab(String name) {
-        return SubsystemTab.valueOf(name);
+    /**
+     * Returns the SubsystemTab with the same name as given. Not case sensitive.
+     * Throws an IllegalArgumentException if no such SubsystemTab exists.
+     * @param name  The name of the tab
+     * @return      The SubystemTab with a certain name
+     * @throws IllegalArgumentException
+     */
+    public SubsystemTab getSubsystemTab(String name) throws IllegalArgumentException {
+        return SubsystemTab.valueOf(name.toUpperCase().trim());
     }
 
+    /**
+     * Retrieves all the names of every Tab.
+     * @return  All of the names of the SubystemTabs.
+     */
     public String[] getTabNames() {
         String[] names = new String[tabs.length];
         for(int i = 0; i < tabs.length; i++) {
@@ -57,6 +77,10 @@ public class TabManager {
         return names;
     }
 
+    /**
+     * Retrieves the ShuffleboardTab for every SubystemTab.
+     * @return  All the ShuffleboardTabs managed by the TabManager.
+     */
     public ShuffleboardTab[] getTabs() {
         ShuffleboardTab[] shuffleboardTabs = new ShuffleboardTab[tabs.length];
         for(int i = 0; i < tabs.length; i++) {

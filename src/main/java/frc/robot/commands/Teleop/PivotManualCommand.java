@@ -7,6 +7,9 @@ import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.PivotConstants;
 import frc.robot.subsystems.PivotSubsystem;
 
+/**
+ * Manually controls the Pivot using joystick input.
+ */
 public class PivotManualCommand extends Command {
     private final PivotSubsystem pivotSubsystem;
 

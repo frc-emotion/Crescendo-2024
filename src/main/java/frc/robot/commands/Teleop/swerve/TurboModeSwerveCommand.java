@@ -22,6 +22,9 @@ public class TurboModeSwerveCommand extends DefaultSwerveXboxCommand {
         super(swerveSubsystem, xSpdFunc, ySpdFunc, turningSpdFunc, isFieldCentricFunc);
     }
 
+    /**
+     * Sets the maximum speed and acceleration of the robot to the maximum possible speed and acceleration.
+     */
     @Override
     public void initialize() {
         DriveConstants.currentDriveMode = DriveMode.TURBO;
@@ -30,18 +33,5 @@ public class TurboModeSwerveCommand extends DefaultSwerveXboxCommand {
                 DriveConstants.kTeleDriveMaxAccelerationUnitsPerSecond,
                 DriveConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond,
                 DriveConstants.kTeleDriveMaxAngularAccelerationUnitsPerSecond);
-    }
-
-    @Override
-    public void end(boolean interrupted) {
-        if (interrupted) {
-            swerveSubsystem.stopModules();
-        }
-
-        swerveSubsystem.setMaxSpeeds(
-                DriveConstants.kTeleDriveMaxSpeedMetersPerSecond / 2,
-                DriveConstants.kTeleDriveMaxAccelerationUnitsPerSecond / 2,
-                DriveConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond / 2,
-                DriveConstants.kTeleDriveMaxAngularAccelerationUnitsPerSecond / 2);
     }
 }
