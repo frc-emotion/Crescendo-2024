@@ -127,6 +127,7 @@ public class RobotContainer {
                         () -> operatorController_HID.getLeftBumper()));
 
         m_VisionSubsystem.setDefaultCommand(new MonitorVision(m_VisionSubsystem));
+        
         registerNamedCommands();
         configureAutoChooser();
 

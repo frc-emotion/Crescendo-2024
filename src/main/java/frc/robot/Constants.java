@@ -187,8 +187,8 @@ public final class Constants {
         public static final double kTeleDriveMaxAngularSpeedRadiansPerSecond = kPhysicalMaxAngularSpeedRadiansPerSecond;
 
         // change acceleration based on drive testing
-        public static final double kTeleDriveMaxAccelerationUnitsPerSecond = 4;
-        public static final double kTeleDriveMaxAngularAccelerationUnitsPerSecond = 3;
+        public static final double kTeleDriveMaxAccelerationUnitsPerSecond = 9;
+        public static final double kTeleDriveMaxAngularAccelerationUnitsPerSecond = 6;
 
         public static final double kTeleDriveSlowAccelerationUnitsPerSecond = 1.5;
         public static final double kTeleDriveSlowAngularAccelerationUnitsPerSecond = 1.5;
