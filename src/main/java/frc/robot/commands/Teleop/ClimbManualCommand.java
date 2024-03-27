@@ -6,7 +6,7 @@ import frc.robot.subsystems.ClimbSubsystem;
 import java.util.function.Supplier;
 
 /**
- * Climb Xbox Command
+ * Manually controls the Climb Subsystem. Applies maximum and minimum values.
  *
  * @author Jason Ballinger
  * @version 2/3/2024

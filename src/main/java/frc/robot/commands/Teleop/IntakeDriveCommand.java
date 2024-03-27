@@ -5,6 +5,10 @@ import java.util.function.Supplier;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.IntakeSubsystem;
 
+/**
+ * Runs the intake manually. Teleop only version. Currently only used
+ * to reverse the intake.
+ */
 public class IntakeDriveCommand extends Command {
 
     private IntakeSubsystem intakeSubsystem;
@@ -18,10 +22,6 @@ public class IntakeDriveCommand extends Command {
         this.forwardFunc = forwardFunc;
         this.reverseFunc = reverseFunc;
         addRequirements(intake);
-    }
-
-    @Override
-    public void initialize() {
     }
 
     @Override

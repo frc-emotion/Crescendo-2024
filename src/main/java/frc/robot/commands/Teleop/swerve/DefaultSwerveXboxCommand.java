@@ -25,6 +25,9 @@ public class DefaultSwerveXboxCommand extends AbstractSwerveXboxCommand {
         this.isRobotCentricFunc = isRobotCentricFunc;
     }
 
+    /**
+     * Limits the maximum speed and acceleration of the robot to half of the maximum
+     */
     @Override
     public void initialize() {
         DriveConstants.currentDriveMode = DriveMode.NORMAL;
@@ -47,5 +50,22 @@ public class DefaultSwerveXboxCommand extends AbstractSwerveXboxCommand {
             robotSpeeds = new ChassisSpeeds(xSpeed, ySpeed, turningSpeed);
             sendSpeedsToSubsystem();
         }
+    }
+
+    /**
+     * Restores the maximum speed of the robot to the normal mode speeds. Mainly used in subclasses.
+     * Stops the drivetrain if interrupted.
+     */
+    @Override
+    public void end(boolean interrupted) {
+        if (interrupted) {
+            swerveSubsystem.stopModules();
+        }
+
+        swerveSubsystem.setMaxSpeeds(
+                DriveConstants.kTeleDriveMaxSpeedMetersPerSecond / 2,
+                DriveConstants.kTeleDriveMaxAccelerationUnitsPerSecond / 2,
+                DriveConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond / 2,
+                DriveConstants.kTeleDriveMaxAngularAccelerationUnitsPerSecond / 2);
     }
 }

@@ -33,7 +33,7 @@ import edu.wpi.first.math.geometry.Rotation3d;
 public final class Constants {
 
     // DEBUG MODE
-    public static final boolean DEBUG_MODE_ACTIVE = true;
+    public static final boolean DEBUG_MODE_ACTIVE = false;
 
     // Add all Driver/Teleop Controller here
     public static final class OIConstants {
@@ -187,8 +187,8 @@ public final class Constants {
         public static final double kTeleDriveMaxAngularSpeedRadiansPerSecond = kPhysicalMaxAngularSpeedRadiansPerSecond;
 
         // change acceleration based on drive testing
-        public static final double kTeleDriveMaxAccelerationUnitsPerSecond = 4;
-        public static final double kTeleDriveMaxAngularAccelerationUnitsPerSecond = 3;
+        public static final double kTeleDriveMaxAccelerationUnitsPerSecond = 9;
+        public static final double kTeleDriveMaxAngularAccelerationUnitsPerSecond = 6;
 
         public static final double kTeleDriveSlowAccelerationUnitsPerSecond = 1.5;
         public static final double kTeleDriveSlowAngularAccelerationUnitsPerSecond = 1.5;
@@ -204,6 +204,7 @@ public final class Constants {
     }
 
     public static class AutoConstants {
+        public static final boolean PATH_LOGGING = true;
 
         // Chane all values based on testing
         public static final double kMaxSpeedMetersPerSecond = 5.00;
@@ -229,8 +230,6 @@ public final class Constants {
 
         public static final double INTAKE_TIMEOUT = 0;
 
-        
-
         public static final double SCORE_SPEAKER_TIMEOUT = 6.0;
 
         public static final Translation2d[] NOTE_POSITIONS = {
@@ -243,6 +242,11 @@ public final class Constants {
         public static final double SPEAKER_MOUTH_HEIGHT = 2.21;
         public static final double PIVOT_HEIGHT = 0.371; // meters
 
+        public static final boolean INITIAL_PLANNING_ENABLED = false;
+        public static final boolean DYNAMIC_PLANNING_ENABLED = false;
+        public static final double PLANNING_TOTAL_ERROR_THRESHOLD = 0;
+        public static final double PLANNING_SPIKE_ERROR_THRESHOLD = 0;
+
     }
 
     public static final class ClimbConstants {
@@ -251,7 +255,7 @@ public final class Constants {
         public static final int CLIMB_PORT_R = 18;
 
         // PID Constants (not used)
-        public static final double EXTENSION_LIMIT = 130.0;
+        public static final double EXTENSION_LIMIT = 140.0;
         public static final int PID_MIN_OUTPUT = 0;
         public static final int PID_MAX_OUTPUT = 0;
         public static final int SLOT_ID = 0;
@@ -298,12 +302,12 @@ public final class Constants {
         public static final double SHOOTER_SPEED_RPM = 3000.0;
         public static final double[] PRESET_SPEEDS = { 3000, 0 }; // rpm
         public static final double IDLE_SPEED = 1000; // rpm
-        public static final double AmpRPM = 1000;
+        public static final double AmpRPM = 1100;
 
             // For SOURCE intake
         protected static final double SHOOTER_REVERSE_SPEED = -0.25; // raw motor output
         protected static final double FEEDER_REVERSE_SPEED = -0.175;  // raw motor output
-		public static final double MIN_SHOOT_SPEED = 2725;
+		public static final double MIN_SHOOT_SPEED = 2750;
     }
 
     public static final class PivotConstants {
@@ -390,10 +394,11 @@ public final class Constants {
         public static final double kMaxAccel = 4;
         public static final double kMaxError = 1;
 
-        public static final double DEPLOYED_POS = -0.305;
+        public static final double DEPLOYED_POS = -0.32;
         public static final double RETRACTED_POS = 0;
 
         public static final double SHOOTER_TRANSFER_SPEED = 0.4;
+        public static final double AUTO_SHOOTER_TRANSFER_SPEED = 0.5;
 
         // -----------------------------------------
 

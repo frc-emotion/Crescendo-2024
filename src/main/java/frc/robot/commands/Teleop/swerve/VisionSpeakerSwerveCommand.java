@@ -8,6 +8,10 @@ import frc.robot.subsystems.PivotSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 
+/**
+ * Adjusts the rotation of the robot and pivot in order to aim toward the speaker.
+ * Uses vision to aim toward the speaker AprilTag.
+ */
 public class VisionSpeakerSwerveCommand extends SnapSwerveCommand {
     private final VisionSubsystem visionSubsystem;
     private final PivotSubsystem pivotSubsystem;

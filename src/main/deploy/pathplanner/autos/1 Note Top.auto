@@ -20,7 +20,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Travel Out Top"
+            "pathName": "Travel Top to Corner"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 10.0
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Travel Out Sneak Top"
           }
         }
       ]
