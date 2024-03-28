@@ -31,6 +31,7 @@ public class PivotSubsystem extends SubsystemBase {
         pivotMotor.setIdleMode(IdleMode.kBrake);
         pivotMotor.setSmartCurrentLimit(Constants.PivotConstants.MAX_CURRENT_SMART);
         pivotMotor.setSecondaryCurrentLimit(Constants.PivotConstants.MAX_CURRENT);
+        pivotMotor.setInverted(true);
 
         pivotPID = pivotMotor.getPIDController();
 

@@ -158,10 +158,10 @@ public class RobotContainer {
         addOption("2 Note Bottom");
         addOption("2 Note Bottom Far");
         
-        // addOption("Forward Test Auto");
-        // addOption("Jank Test Auto");
-        // addOption("Turn Test Auto");
-        // addOption("Strafe Test Auto");
+        addOption("Forward Test Auto");
+        addOption("Jank Test Auto");
+        addOption("Turn Test Auto");
+        addOption("Strafe Test Auto");
         // addOption("3 Note Top");
         
         

@@ -187,8 +187,8 @@ public final class Constants {
         public static final double kTeleDriveMaxAngularSpeedRadiansPerSecond = kPhysicalMaxAngularSpeedRadiansPerSecond;
 
         // change acceleration based on drive testing
-        public static final double kTeleDriveMaxAccelerationUnitsPerSecond = 9;
-        public static final double kTeleDriveMaxAngularAccelerationUnitsPerSecond = 6;
+        public static final double kTeleDriveMaxAccelerationUnitsPerSecond = 4;
+        public static final double kTeleDriveMaxAngularAccelerationUnitsPerSecond = 3;
 
         public static final double kTeleDriveSlowAccelerationUnitsPerSecond = 1.5;
         public static final double kTeleDriveSlowAngularAccelerationUnitsPerSecond = 1.5;
@@ -217,10 +217,10 @@ public final class Constants {
         public static final double kMaxAngularAccelerationRadiansPerSecondSquared = Math.PI / 4;
 
         // Change based on testing/tune PID controllers
-        public static final double kPXController = 1.25;
+        public static final double kPXController = 3.5;
         public static final double kPYController = 0.75;
 
-        public static final double kPThetaController = 0.13;
+        public static final double kPThetaController = 0.52;
         public static final double kIThetaController = 0.045;
         public static final double kDThetaController = 0;
 
