@@ -14,7 +14,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class LEDSubsystem extends SubsystemBase {
 
     private static final int PWM_PORT = 0;
-    private static final int NUM_LEDS = 144;
+    private static final int NUM_LEDS = 72;
 
     private AddressableLED m_led;
     private AddressableLEDBuffer m_ledBuffer;
@@ -25,11 +25,17 @@ public class LEDSubsystem extends SubsystemBase {
         m_led.setLength(m_ledBuffer.getLength());
 
         for (int i = 0; i < NUM_LEDS; i++) {
-            m_ledBuffer.setRGB(i, 0, 0, 0); // off
+            m_ledBuffer.setRGB(i, 255, 255, 0); // yellow
         }
 
         m_led.setData(m_ledBuffer);
         m_led.start();
+    }
+
+    public void setHSV(int h, int s, int v) {
+        for (int i = 0; i < NUM_LEDS; i++) {
+            m_ledBuffer.setHSV(i, h, s, v);
+        }
     }
 
     public void setRGB(int r, int g, int b) {
@@ -40,11 +46,12 @@ public class LEDSubsystem extends SubsystemBase {
         m_led.setData(m_ledBuffer);
     }
 
+    public void turnOff() {
+        setRGB(0, 0, 0);
+    }
+
     public boolean isOn() {
-        for (int i = 0; i < NUM_LEDS; i++) {
-            Color c = m_ledBuffer.getLED(i);
-            if (c != Color.fromHSV(0, 0, 0)) return true;
-        }
-        return false;
+        Color c = m_ledBuffer.getLED(0);
+        return !c.equals(Color.fromHSV(0, 0, 0));
     }
 }

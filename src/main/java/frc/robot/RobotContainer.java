@@ -24,6 +24,7 @@ import frc.robot.Constants.DriveConstants.DriveMode;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.ShooterConstants;
+import frc.robot.commands.LEDCommand;
 import frc.robot.commands.Auto.NamedCommands.CommandContainer;
 import frc.robot.commands.Auto.NamedCommands.ShootSpeaker;
 import frc.robot.commands.Auto.SubsystemCommands.HandoffAutoCommand;
@@ -145,7 +146,7 @@ public class RobotContainer {
 
         m_ledSubsystem.setDefaultCommand(
             new ParallelCommandGroup(
-                new LEDTeleopCommand(
+                new LEDCommand(
                     m_ledSubsystem,
                     () -> m_IntakeSubsystem.getBreakSensorValue(),
                     () -> m_ShooterSubsystem.getBreakSensorValue()
