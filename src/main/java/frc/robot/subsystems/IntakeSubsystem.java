@@ -34,7 +34,7 @@ public class IntakeSubsystem extends SubsystemBase {
 
     public IntakeSubsystem() {
 
-        down = true;
+        down = false;
 
         pivotMotor = new CANSparkMax(IntakeConstants.INTAKE_PIVOT_PORT, MotorType.kBrushless);
         pivotMotor2 = new CANSparkMax(IntakeConstants.INTAKE_PIVOT_2_PORT, MotorType.kBrushless);
@@ -85,6 +85,10 @@ public class IntakeSubsystem extends SubsystemBase {
     }
 
     public boolean isUp() {
+        return !down;
+    }
+
+    public boolean isDown() {
         return down;
     }
 
@@ -181,7 +185,7 @@ public class IntakeSubsystem extends SubsystemBase {
         persianPositions.addNumber("Pivot Position Degrees", this::getDegrees);
         persianPositions.addBoolean("Beam Break", () -> getBeamState());
         persianPositions.addBoolean("At Setpoint", this::hasReachedSetpoint);
-        persianPositions.addBoolean("Is Down", this::isUp);
+        persianPositions.addBoolean("Is Up", this::isUp);
         persianPositions.addDouble("Current Goal", this::getGoal);
 
         // persianPositions.addDouble("Current", () -> pivotMotor.getOutputCurrent());

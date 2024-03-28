@@ -40,14 +40,15 @@ public class CommandContainer {
      * Decorates and returns ResetPivotAutoCommand with a timeout and a condition for whether or
      * not the pivot is already at the default position.
      * @param pivot The Pivot Subsystem
-     * @return  The decorated Command
+     * @return  The Command decorated as a ConditionalCommand
      */
     public static Command resetPivot(PivotSubsystem pivot) {
-        return new ResetPivotAutoCommand(pivot).withTimeout(3.5).onlyIf(() -> !pivot.isHandoffOk());
+        return new ResetPivotAutoCommand(pivot).onlyIf(() -> !pivot.isHandoffOk());
     }
 
     /**
      * Runs swerve forward for a certain period of time at 2 meters per second.
+     * 
      * @param swerveSubsystem   The Swerve Subsystem
      * @param seconds   The amount of time to drive for
      * @return  The timed drive Command
@@ -62,29 +63,101 @@ public class CommandContainer {
     }
 
     /**
-     * Retrieves the Command to toggle the intake and auto handoff.
-     * @param intakeSubsystem
-     * @param shooterSubsystem
-     * @return
+     * Retrieves the Command to toggle the intake and auto handoff. Uses the getHandoffCommand() method to retrieve the handoff Command sequence.
+     * 
+     * @param intakeSubsystem   The Intake Subsystem object to be used in the Command
+     * @param shooterSubsystem  The Shooter Subsystem object to be used in the Command
+     * @return  The SequentialCommandGroup which toggles the intake and runs the AutoHandoff sequence.
      */
-    public static SequentialCommandGroup fullToggleIntake(IntakeSubsystem intakeSubsystem, ShooterSubsystem shooterSubsystem) {
+    public static SequentialCommandGroup fullToggleIntake(IntakeSubsystem intakeSubsystem, ShooterSubsystem shooterSubsystem, PivotSubsystem pivotSubsystem) {
         return new SequentialCommandGroup(
                 new IntakePivotCommand(intakeSubsystem),
-                getHandoffCommand(intakeSubsystem, shooterSubsystem));
+                getHandoffCommandGroup(intakeSubsystem, shooterSubsystem, pivotSubsystem, false));
     }
 
     /**
-     * Retrieves the AutoHandoff command, decorated with
-     * a timeout and condition.
-     * @param intakeSubsystem   The Intake Subsystem object to be used
-     * @param shooterSubsystem  The Shooter Subystem object to be used
-     * @return  
+     * Retrieves a SequentialCommandGroup containing the required sequence in order to automatically
+     * handoff the note to the feeder mechanism.
+     * 
+     * @param intakeSubsystem   The Intake Subsystem object to be used in the Command Group
+     * @param shooterSubsystem  The Shooter Subystem object to be used in the Command Group
+     * @param pivotSubsystem    The Pivot Subsystem object to be used in the Command Group
+     * @return  The SequentialCommandGroup with the pivot reset Command and the AutoHandoff Command
+     */
+    public static SequentialCommandGroup getHandoffCommandGroup(IntakeSubsystem intakeSubsystem, ShooterSubsystem shooterSubsystem, PivotSubsystem pivotSubsystem) {
+        return new SequentialCommandGroup(
+            resetPivot(pivotSubsystem).onlyIf(() -> !pivotSubsystem.isHandoffOk()), // Check to make sure the intake shows true when retracted.
+            new HandoffAutoCommand(intakeSubsystem, shooterSubsystem, false)
+                .withTimeout(2)
+                .onlyIf(() -> !intakeSubsystem.getBeamState())
+        );
+    }
+
+    
+
+    /**
+     * Retrieves a SequentialCommandGroup containing the required sequence in order to automatically
+     * handoff the note to the feeder mechanism. Allows you to disable revving during the handoff sequence.
+     * 
+     * @param intakeSubsystem   The Intake Subsystem object to be used in the Command Group
+     * @param shooterSubsystem  The Shooter Subsystem object to be used in the Command Group
+     * @param pivotSubsystem    The Pivot Subsystem object to be used in the Command Group
+     * @param rev   Whether or not the Shooter should rev during the handoff
+     * @return  The SequentialCommandGroup with the pivot reset Command and the AutoHandoff Command
+     */
+    public static SequentialCommandGroup getHandoffCommandGroup(IntakeSubsystem intakeSubsystem, ShooterSubsystem shooterSubsystem, PivotSubsystem pivotSubsystem, boolean rev) {
+       return new SequentialCommandGroup(
+            resetPivot(pivotSubsystem).onlyIf(() -> !pivotSubsystem.isHandoffOk()), // Check to make sure the intake shows true when retracted.
+            new HandoffAutoCommand(intakeSubsystem, shooterSubsystem, rev)
+                .withTimeout(2)
+                .onlyIf(() -> !intakeSubsystem.getBeamState())
+        );
+    }
+
+    /**
+     * Retrieves a SequentialCommandGroup containing the required sequence in order to automatically
+     * handoff the note to the feeder mechanism. Does not have a timeout during the handoff period.
+     * Handoff Command will not end if the intake beam sensor does not function properly.
+     * 
+     * @param intakeSubsystem   The Intake Subsystem object to be used in the Command Group
+     * @param shooterSubsystem  The Shooter Subystem object to be used in the Command Group
+     * @param pivotSubsystem    The Pivot Subsystem object to be used in the Command Group
+     * @return  The SequentialCommandGroup with the pivot reset Command and the AutoHandoff Command
+     */
+    public static SequentialCommandGroup getAutoHandoffCommandGroup(IntakeSubsystem intakeSubsystem, ShooterSubsystem shooterSubsystem, PivotSubsystem pivotSubsystem) {
+        return new SequentialCommandGroup(
+            resetPivot(pivotSubsystem).onlyIf(() -> !pivotSubsystem.isHandoffOk()), // Check to make sure the intake shows true when retracted.
+            new HandoffAutoCommand(intakeSubsystem, shooterSubsystem, true)
+                .onlyIf(() -> !intakeSubsystem.getBeamState())
+        );
+    }
+
+    /**
+     * Retrieves the AutoHanoff Command decorated with a condition and timeout.
+     * @param intakeSubsystem   The Intake Subsystem object to be used in the Command Group
+     * @param shooterSubsystem  The Shooter Subystem object to be used in the Command Group
+     * @return  A conditional ParallelRaceGroup containing the timeout and the HanoffAuto Command
      */
     public static Command getHandoffCommand(IntakeSubsystem intakeSubsystem, ShooterSubsystem shooterSubsystem) {
+        return new HandoffAutoCommand(intakeSubsystem, shooterSubsystem, false)
+            .withTimeout(2)
+            .onlyIf(() -> !intakeSubsystem.getBeamState()
+        );
+    }
+    
+
+    /**
+     * Retrieves the AutoHanoff Command decorated with a condition and timeout.
+     * @param intakeSubsystem   The Intake Subsystem object to be used in the Command Group
+     * @param shooterSubsystem  The Shooter Subystem object to be used in the Command Group
+     * @param rev   Whether or not the Shooter should rev during the handoff
+     * @return  A conditional ParallelRaceGroup containing the timeout and the HanoffAuto Command
+     */
+    public static Command getHandoffCommand(IntakeSubsystem intakeSubsystem, ShooterSubsystem shooterSubsystem, boolean rev) {
         return new HandoffAutoCommand(intakeSubsystem, shooterSubsystem, true)
-                .withTimeout(2)
-                .onlyIf(
-                        () -> !intakeSubsystem.getBeamState() && !shooterSubsystem.isProjectileFed());
+            .withTimeout(2)
+            .onlyIf(() -> !intakeSubsystem.getBeamState()
+        );
     }
 
     /**

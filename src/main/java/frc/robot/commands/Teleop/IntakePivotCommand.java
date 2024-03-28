@@ -24,27 +24,10 @@ public class IntakePivotCommand extends Command {
         } else {
             intakeSubsystem.setGoal(IntakeConstants.RETRACTED_POS);
         }
-        // if(shouldBeDown) {
-        // intakeSubsystem.setGoal(-0.32);
-        // }
-        // else {
-        // intakeSubsystem.setGoal(0);
-        // }
     }
 
     @Override
     public void execute() {
-        // if (leftAxis.get() > Constants.OIConstants.INTAKE_DEADZONE) {
-        // intakeSubsystem.revSimplePivot();
-        // } else if (rightAxis.get() > Constants.OIConstants.INTAKE_DEADZONE) {
-        // intakeSubsystem.simplePivot();
-        // }
-        // if(intakeSubsystem.isDown()){
-        // intakeSubsystem.revSimplePivot();
-        // } else {
-        // intakeSubsystem.simplePivot();
-        // }
-
         intakeSubsystem.travelToSetpoint();
     }
 

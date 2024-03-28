@@ -288,10 +288,6 @@ public class RobotContainer {
                                                                                                                   // command
                                                                                                                   // group?
                                 new IntakeDriveAutoCommand(m_IntakeSubsystem)))
-                // .onFalse(
-                // new IntakePivotCommand(m_IntakeSubsystem).onlyIf(()->
-                // !m_IntakeSubsystem.isUp())
-                // )
                 .whileFalse(
                         // new SequentialCommandGroup(
                         new IntakePivotCommand(m_IntakeSubsystem).onlyIf(() -> !m_IntakeSubsystem.isUp())
@@ -366,8 +362,7 @@ public class RobotContainer {
         NamedCommands.registerCommand("ResetPivot", CommandContainer.resetPivot(m_PivotSubsystem));
         NamedCommands.registerCommand("ToggleIntake", new IntakePivotCommand(m_IntakeSubsystem));
         NamedCommands.registerCommand("RevShooter", new RevShooterAutoCommand(m_ShooterSubsystem));
-        NamedCommands.registerCommand("AutoHandoff",
-                CommandContainer.getHandoffCommand(m_IntakeSubsystem, m_ShooterSubsystem));
+        NamedCommands.registerCommand("AutoHandoff", CommandContainer.getAutoHandoffCommandGroup(m_IntakeSubsystem, m_ShooterSubsystem, m_PivotSubsystem));
         NamedCommands.registerCommand("PrepPivot", new SpeakerTurret(m_VisionSubsystem, m_PivotSubsystem));
     }
 

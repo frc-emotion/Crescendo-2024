@@ -106,7 +106,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Prep Mid to Top"
+                  "pathName": "Pickup Top From Mid"
                 }
               },
               {
@@ -182,7 +182,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Prep Mid to Bottom"
+                  "pathName": "Pickup Bottom From Mid"
                 }
               },
               {
