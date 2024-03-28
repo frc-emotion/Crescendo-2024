@@ -23,6 +23,8 @@ import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants;
@@ -95,6 +97,8 @@ public class SwerveSubsystem extends SubsystemBase {
 
     private GenericEntry kIEntry, kDEntry, kPEntry;
 
+    private SysIdRoutine sysIdRoutine;
+
     public SwerveSubsystem() {
 
         // PIDController xController = new PIDController(AutoConstants.kPXController, 0,
@@ -144,11 +148,13 @@ public class SwerveSubsystem extends SubsystemBase {
             )
         );
 
+        this.sysIdRoutine = sysIdRoutine;
+
         // The methods below return Command objects
-        sysIdRoutine.quasistatic(SysIdRoutine.Direction.kForward);
-        sysIdRoutine.quasistatic(SysIdRoutine.Direction.kReverse);
-        sysIdRoutine.dynamic(SysIdRoutine.Direction.kForward);
-        sysIdRoutine.dynamic(SysIdRoutine.Direction.kReverse);
+        // sysIdRoutine.quasistatic(SysIdRoutine.Direction.kForward);
+        // sysIdRoutine.quasistatic(SysIdRoutine.Direction.kReverse);
+        // sysIdRoutine.dynamic(SysIdRoutine.Direction.kForward);
+        // sysIdRoutine.dynamic(SysIdRoutine.Direction.kReverse);
 
         new Thread(() -> {
             try {
@@ -158,6 +164,21 @@ public class SwerveSubsystem extends SubsystemBase {
             }
         }).start();
 
+    }
+
+    public Command quasistaticCommand(boolean forward) {
+        if (forward) {
+            return sysIdRoutine.quasistatic(SysIdRoutine.Direction.kForward);
+        }
+        return sysIdRoutine.quasistatic(SysIdRoutine.Direction.kReverse);
+        
+    }
+
+    public Command dynamicCommand(boolean forward) {
+        if (forward) {
+            return sysIdRoutine.dynamic(SysIdRoutine.Direction.kForward);
+        }
+        return sysIdRoutine.dynamic(SysIdRoutine.Direction.kReverse);
     }
 
     private void setVoltage(double voltage) {
@@ -329,6 +350,13 @@ public class SwerveSubsystem extends SubsystemBase {
         ShuffleboardTab moduleData = TabManager
                 .getInstance()
                 .accessTab(SubsystemTab.DRIVETRAIN);
+
+        moduleData.add("Quasistatic Forward", new InstantCommand(() -> quasistaticCommand(true)));
+        moduleData.add("Quasistatic Reverse", new InstantCommand(() -> quasistaticCommand(false)));
+        
+        moduleData.add("Dynamic Forward", new InstantCommand(() -> dynamicCommand(true)));
+        moduleData.add("Dynamic Reverse", new InstantCommand(() -> dynamicCommand(false)));
+
         frontLeftData = moduleData.getLayout("Front Left", BuiltInLayouts.kList);
         frontRightData = moduleData.getLayout("Front Right", BuiltInLayouts.kList);
         backLeftData = moduleData.getLayout("Back Left", BuiltInLayouts.kList);
@@ -348,6 +376,8 @@ public class SwerveSubsystem extends SubsystemBase {
         sensorData.addNumber("Gyro Heading", () -> getHeading());
         sensorData.addNumber("Gyro Pitch", () -> getPitch());
         sensorData.addNumber("Gyro Roll", () -> getRoll());
+
+
 
     }
 
