@@ -6,6 +6,8 @@ import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.math.controller.PIDController;
 
+import static edu.wpi.first.units.Units.Volts;
+
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -16,11 +18,13 @@ import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructArrayPublisher;
 import edu.wpi.first.networktables.StructPublisher;
+import edu.wpi.first.units.Voltage;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
@@ -131,6 +135,21 @@ public class SwerveSubsystem extends SubsystemBase {
 
         robotSpeeds = new ChassisSpeeds();
 
+        var sysIdRoutine = new SysIdRoutine(
+            new SysIdRoutine.Config(),
+            new SysIdRoutine.Mechanism(
+                (volts) -> this.setVoltage(volts.in(Volts)),
+                null, // No log consumer, since data is recorded by URCL
+                this
+            )
+        );
+
+        // The methods below return Command objects
+        sysIdRoutine.quasistatic(SysIdRoutine.Direction.kForward);
+        sysIdRoutine.quasistatic(SysIdRoutine.Direction.kReverse);
+        sysIdRoutine.dynamic(SysIdRoutine.Direction.kForward);
+        sysIdRoutine.dynamic(SysIdRoutine.Direction.kReverse);
+
         new Thread(() -> {
             try {
                 Thread.sleep(1000);
@@ -139,6 +158,13 @@ public class SwerveSubsystem extends SubsystemBase {
             }
         }).start();
 
+    }
+
+    private void setVoltage(double voltage) {
+        frontLeft.setVoltage(voltage);
+        frontRight.setVoltage(voltage);
+        backLeft.setVoltage(voltage);
+        backRight.setVoltage(voltage);
     }
 
     public void updatePID() {

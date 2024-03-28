@@ -96,6 +96,10 @@ public class SwerveModuleNeo {
         turningMotor.enableVoltageCompensation(12.0);
     }
 
+    public void setVoltage(double voltage) {
+        driveMotor.setVoltage(voltage);
+    }
+
     public double getPositionConversionFactor() {
         return driveEncoder.getPositionConversionFactor();
     }
