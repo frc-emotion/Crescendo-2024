@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.LEDConstants;
 
 /**
  * LED Subsystem
@@ -19,7 +20,25 @@ public class LEDSubsystem extends SubsystemBase {
     private AddressableLED m_led;
     private AddressableLEDBuffer m_ledBuffer;
 
+    public static enum LEDStyle {
+        BLINK_RAPID,
+        BLINK_SLOW,
+        BLINK,
+        SOLID;
 
+        public static int getDelayAmount(LEDStyle style) {
+            switch(style) {
+                case BLINK_RAPID:
+                    return LEDConstants.FLASH_DELAY / 2;
+                case BLINK_SLOW:
+                    return LEDConstants.FLASH_DELAY * 2;
+                case BLINK:
+                    return LEDConstants.FLASH_DELAY;
+                default:
+                    return 0;
+            }
+        }
+    }
 
     public LEDSubsystem() {
         m_led = new AddressableLED(PWM_PORT);
@@ -34,25 +53,32 @@ public class LEDSubsystem extends SubsystemBase {
         m_led.start();
     }
 
-    public void setOrange() {
-        setRGB(255, 40, 0); // Orange
+    public void setColor(Color color) {
+        for(int i = 0; i < NUM_LEDS; i++) {
+            m_ledBuffer.setLED(i, color);
+        }
+        m_led.setData(m_ledBuffer);
     }
 
-    public void setGreen() {
-        setRGB(0, 255, 0); // Orange
-    }
+    // public void setOrange() {
+    //     setRGB(255, 40, 0); // Orange
+    // }
 
-    public void setBlue() {
-        setRGB(0, 0, 255); // Blue
-    }
+    // public void setGreen() {
+    //     setRGB(0, 255, 0); // Orange
+    // }
 
-    public void setYellow() {
-        setRGB(255, 255, 0); // Yellow
-    }
+    // public void setBlue() {
+    //     setRGB(0, 0, 255); // Blue
+    // }
 
-    public void setRed() {
-        setRGB(255, 0, 0); // Red
-    }
+    // public void setYellow() {
+    //     setRGB(255, 255, 0); // Yellow
+    // }
+
+    // public void setRed() {
+    //     setRGB(255, 0, 0); // Red
+    // }
 
     public void setHSV(int h, int s, int v) {
         for (int i = 0; i < NUM_LEDS; i++) {

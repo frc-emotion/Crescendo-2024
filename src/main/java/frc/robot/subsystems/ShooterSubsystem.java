@@ -203,7 +203,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
     public double getAmpRPM() {
         if(Constants.DEBUG_MODE_ACTIVE) {
-            return this.ampRPMEntry.getDouble(1.0);
+            return this.ampRPMEntry.getDouble(ShooterConstants.AmpRPM);
         } else {
             return ShooterConstants.AmpRPM;
         }

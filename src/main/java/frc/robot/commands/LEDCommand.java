@@ -2,28 +2,35 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants.LEDConstants;
 import frc.robot.subsystems.LEDSubsystem;
+import frc.robot.subsystems.LEDSubsystem.LEDStyle;
+
+import java.sql.Driver;
 import java.util.Optional;
 import java.util.function.Supplier;
 
 public class LEDCommand extends Command {
 
     private final LEDSubsystem ls;
-    private final Supplier<Boolean> intakeBreakSupplier;
-    private final Supplier<Boolean> shooterBreakSupplier;
+    private final Supplier<Boolean> intakeBreakSupplier, intakeDeploySupplier, shooterSupplier;
     private long timeLastBlink;
 
-    private static final long DELAY = 200;
+    private Color nextColor;
+    private LEDStyle style;
 
     public LEDCommand(
         LEDSubsystem ls,
         Supplier<Boolean> intakeBreakSupplier,
-        Supplier<Boolean> shooterBreakSupplier
+        Supplier<Boolean> intakeDeploySupplier,
+        Supplier<Boolean> shooterSupplier
     ) {
         this.ls = ls;
         this.intakeBreakSupplier = intakeBreakSupplier;
-        this.shooterBreakSupplier = shooterBreakSupplier;
+        this.intakeDeploySupplier = intakeDeploySupplier;
+        this.shooterSupplier = shooterSupplier;
         this.timeLastBlink = System.currentTimeMillis();
 
         addRequirements(ls);
@@ -31,25 +38,49 @@ public class LEDCommand extends Command {
 
     @Override
     public void execute() {
-        if (!intakeBreakSupplier.get()) {
-            if (System.currentTimeMillis() - timeLastBlink > (DELAY / 2)) {
-                if (ls.isOn()) ls.turnOff(); // off
-                else ls.setOrange(); // orange
-                timeLastBlink = System.currentTimeMillis();
+        if(DriverStation.isDisabled() || DriverStation.getAlliance() == null) {
+            nextColor = LEDConstants.DISABLED_COLOR;
+            style = LEDStyle.SOLID;
+        } else if(intakeBreakSupplier.get()) {
+            nextColor = LEDConstants.INTAKE_COLOR;
+            style = LEDStyle.SOLID;
+        } else if(intakeDeploySupplier.get()) {
+            nextColor = LEDConstants.INTAKE_COLOR;
+            style = LEDStyle.BLINK_SLOW;
+        } else if(shooterSupplier.get()) {
+            nextColor = LEDConstants.SHOOTER_COLOR;
+            style = LEDStyle.BLINK;
+        } else {
+            nextColor = DriverStation.getAlliance().get() == DriverStation.Alliance.Blue ? LEDConstants.BLUE_ALLIANCE_COLOR : LEDConstants.RED_ALLIANCE_COLOR;
+            style = LEDStyle.SOLID;
+        }
+
+        int delay = LEDStyle.getDelayAmount(style);
+
+        if(delay == 0) {
+            solid();
+        } else {
+            blinkMode(delay);
+        }
+    }
+
+    @Override
+    public boolean runsWhenDisabled() {
+        return true;
+    }
+
+    private void blinkMode(int delay) {
+        if (System.currentTimeMillis() - timeLastBlink > delay) {
+            if (ls.isOn())  {
+                ls.turnOff();
+            } else {
+                ls.setColor(nextColor);
             }
-            
-        } else if (!shooterBreakSupplier.get()) {
-            if (System.currentTimeMillis() - timeLastBlink > (DELAY / 2)) {
-                if (ls.isOn()) ls.turnOff(); // off
-                else ls.setGreen(); // green
-                timeLastBlink = System.currentTimeMillis();
-            }
-        } else if (DriverStation.isEnabled()) {
-            Optional<Alliance> ally = DriverStation.getAlliance();
-            if (ally != null) {
-                if (ally.get() == Alliance.Red) ls.setRed(); // red
-                else ls.setBlue(); // blue
-            }
-        } else ls.setYellow(); // yellow
+            timeLastBlink = System.currentTimeMillis();
+        }
+    }
+
+    private void solid() {
+        ls.setColor(nextColor);
     }
 }

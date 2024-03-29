@@ -157,16 +157,14 @@ public class RobotContainer {
                         () -> false, // previous r bumper
                         () -> operatorController_HID.getLeftBumper()));
 
-        m_ledSubsystem.setDefaultCommand(
-            new ParallelCommandGroup(
-                new LEDCommand(
-                    m_ledSubsystem,
-                    () -> m_IntakeSubsystem.getBreakSensorValue(),
-                    () -> m_ShooterSubsystem.getBreakSensorValue()
-                ),
-                new WaitCommand(1).onlyIf(() -> m_IntakeSubsystem.getBreakSensorValue() || m_ShooterSubsystem.getBreakSensorValue())
-            )
-        );
+        // m_ledSubsystem.setDefaultCommand(
+        //     new LEDCommand(
+        //         m_ledSubsystem,
+        //         m_IntakeSubsystem::getBeamState,
+        //         m_IntakeSubsystem::isDown,
+        //         m_ShooterSubsystem::isAtTarget
+        //     )
+        // );
 
         m_VisionSubsystem.setDefaultCommand(
             new MonitorVision(m_VisionSubsystem)
@@ -301,11 +299,6 @@ public class RobotContainer {
                 new Command() {
                         public void execute() {
                                 m_ShooterSubsystem.setShooterVelocity(m_ShooterSubsystem.getAmpRPM());
-                                if(m_ShooterSubsystem.getShooterVelocity() > ShooterConstants.AmpRPM - 250) {
-                                        operatorController_HID.setRumble(RumbleType.kBothRumble, 0.25);
-                                } else {
-                                        operatorController_HID.setRumble(RumbleType.kBothRumble, 0);
-                                }
                         }
                 });
 
@@ -567,6 +560,29 @@ public class RobotContainer {
      * @return  The currently selected Auto Command
      */
     public Command getAutonomousCommand() {
-        return autoChooser.getSelected();
+        return new ParallelCommandGroup(
+            autoChooser.getSelected()
+            // add led command
+        );
+    }
+
+    public Command getLEDCommand() {
+        return new LEDCommand(
+            m_ledSubsystem,
+            m_IntakeSubsystem::getBeamState,
+            m_IntakeSubsystem::isDown,
+            m_ShooterSubsystem::isAtTarget
+        );
+    }
+
+    public Command getControllerRumbleCommand() {
+        return new ControllerRumbleCommand(
+            driverController_HID,
+            operatorController_HID,
+            () -> m_IntakeSubsystem.getBeamState(),
+            () -> m_IntakeSubsystem.isDown(),
+            () -> m_ShooterSubsystem.getShooterVelocity() > m_ShooterSubsystem.getAmpRPM() - 150 && operatorController_HID.getRightBumper(),
+            () -> m_ShooterSubsystem.getShooterVelocity() > ShooterConstants.MIN_SHOOT_SPEED && operatorController_HID.getRightTriggerAxis() > OIConstants.kDeadband
+        );
     }
 }

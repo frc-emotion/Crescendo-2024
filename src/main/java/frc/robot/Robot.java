@@ -10,13 +10,11 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.Commands;
 
-import frc.robot.util.AutoManager;
+import java.sql.Driver;
 
 import org.littletonrobotics.urcl.URCL;
-
-import edu.wpi.first.wpilibj.DataLogManager;
-import edu.wpi.first.wpilibj.DriverStation;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -29,7 +27,7 @@ import edu.wpi.first.wpilibj.DriverStation;
  */
 public class Robot extends TimedRobot {
 
-    private Command m_autonomousCommand;
+    private Command m_autonomousCommand, m_ledCommand, m_controllerRumbleCommand;
 
     private RobotContainer m_robotContainer;
 
@@ -45,14 +43,15 @@ public class Robot extends TimedRobot {
         // autonomous chooser on the dashboard.
         m_robotContainer = new RobotContainer();
 
+        m_ledCommand = m_robotContainer.getLEDCommand();
+        m_controllerRumbleCommand = m_robotContainer.getControllerRumbleCommand();
+
         // Starts recording to data log
         DataLogManager.start();
         URCL.start();
 
         // Record both DS control and joystick data
         DriverStation.startDataLog(DataLogManager.getLog());
-
-        Shuffleboard.selectTab("AUTO");
     }
 
     /**
@@ -79,7 +78,19 @@ public class Robot extends TimedRobot {
 
     /** This function is called once each time the robot enters Disabled mode. */
     public void disabledInit() {
-        Shuffleboard.selectTab("GAME");
+            // Ensures that the LED Command is always running
+        if(m_ledCommand != null && !CommandScheduler.getInstance().isScheduled(m_ledCommand)) {
+            m_ledCommand.schedule();
+        } else if(m_ledCommand == null) {
+            DriverStation.reportWarning("LED Command not present (null)", false);
+        }
+
+            // Cancels the controller rumble Command when the robot is disabled
+        if(m_controllerRumbleCommand != null && CommandScheduler.getInstance().isScheduled(m_controllerRumbleCommand)) {
+            m_controllerRumbleCommand.cancel();
+        }
+
+        Shuffleboard.selectTab("AUTO");
     }
 
     @Override
@@ -95,9 +106,11 @@ public class Robot extends TimedRobot {
     public void autonomousInit() {
         m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
-        // schedule the autonomous command (example)
+            //Schedules the autonomous Command at the start of auto
         if (m_autonomousCommand != null) {
             m_autonomousCommand.schedule();
+        } else {
+            DriverStation.reportWarning("Autonomous Command not present (null)", false);
         }
     }
 
@@ -114,6 +127,15 @@ public class Robot extends TimedRobot {
         if (m_autonomousCommand != null) {
             m_autonomousCommand.cancel();
         }
+
+            // Schedules the controller rumble Command at the beginning of teleop
+        if(m_controllerRumbleCommand != null) {
+            m_controllerRumbleCommand.schedule();
+        } else {
+            DriverStation.reportWarning("Controller Rumble Command not present (null)", false);
+        }
+
+        Shuffleboard.selectTab("GAME");
     }
 
     /** This function is called periodically during operator control. */
