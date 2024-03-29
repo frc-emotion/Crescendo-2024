@@ -6,7 +6,11 @@ import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.math.controller.PIDController;
 
+import static edu.wpi.first.units.Units.Seconds;
+
 import static edu.wpi.first.units.Units.Volts;
+
+import java.util.function.Consumer;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -16,8 +20,11 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.networktables.StringPublisher;
 import edu.wpi.first.networktables.StructArrayPublisher;
 import edu.wpi.first.networktables.StructPublisher;
+import edu.wpi.first.units.Measure;
+import edu.wpi.first.units.Time;
 import edu.wpi.first.units.Voltage;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
@@ -93,6 +100,8 @@ public class SwerveSubsystem extends SubsystemBase {
     private StructPublisher<Rotation2d> publisher2 = NetworkTableInstance.getDefault()
             .getStructTopic("PersianRotation", Rotation2d.struct).publish();
 
+    // private StringPublisher publisher3 = NetworkTableInstance.getDefault().getStringTopic("SysIdData").publish();
+
     private final PIDController autoThetaController, teleopThetaController;
 
     private GenericEntry kIEntry, kDEntry, kPEntry;
@@ -129,8 +138,6 @@ public class SwerveSubsystem extends SubsystemBase {
         // }
         // }.start();
 
-        initShuffleboard();
-
         toDivideBy = OIConstants.kSpeedDivideAdjustment;
         driveSpeedMPS = DriveConstants.kTeleDriveMaxSpeedMetersPerSecond / toDivideBy;
         //driveAccelMPSS = DriveConstants.kTeleDriveMaxAccelerationUnitsPerSecond / toDivideBy;
@@ -139,16 +146,14 @@ public class SwerveSubsystem extends SubsystemBase {
 
         robotSpeeds = new ChassisSpeeds();
 
-        var sysIdRoutine = new SysIdRoutine(
-            new SysIdRoutine.Config(),
-            new SysIdRoutine.Mechanism(
-                (volts) -> this.setVoltage(volts.in(Volts)),
-                null, // No log consumer, since data is recorded by URCL
-                this
-            )
-        );
-
-        this.sysIdRoutine = sysIdRoutine;
+        // this.sysIdRoutine = new SysIdRoutine(
+        //     new SysIdRoutine.Config(Volts.of(0.5).per(Seconds.of(1.0)), Volts.of(5), Seconds.of(5), (state) -> publisher3.set(state.toString())),
+        //     new SysIdRoutine.Mechanism(
+        //         (volts) -> this.setVoltage(volts.in(Volts)),
+        //         null, // No log consumer, since data is recorded by URCL
+        //         this
+        //     )
+        // );
 
         // The methods below return Command objects
         // sysIdRoutine.quasistatic(SysIdRoutine.Direction.kForward);
@@ -164,22 +169,24 @@ public class SwerveSubsystem extends SubsystemBase {
             }
         }).start();
 
+        initShuffleboard();
+
     }
 
-    public Command quasistaticCommand(boolean forward) {
-        if (forward) {
-            return sysIdRoutine.quasistatic(SysIdRoutine.Direction.kForward);
-        }
-        return sysIdRoutine.quasistatic(SysIdRoutine.Direction.kReverse);
+    // public Command quasistaticCommand(boolean forward) {
+    //     if (forward) {
+    //         return sysIdRoutine.quasistatic(SysIdRoutine.Direction.kForward);
+    //     }
+    //     return sysIdRoutine.quasistatic(SysIdRoutine.Direction.kReverse);
         
-    }
+    // }
 
-    public Command dynamicCommand(boolean forward) {
-        if (forward) {
-            return sysIdRoutine.dynamic(SysIdRoutine.Direction.kForward);
-        }
-        return sysIdRoutine.dynamic(SysIdRoutine.Direction.kReverse);
-    }
+    // public Command dynamicCommand(boolean forward) {
+    //     if (forward) {
+    //         return sysIdRoutine.dynamic(SysIdRoutine.Direction.kForward);
+    //     }
+    //     return sysIdRoutine.dynamic(SysIdRoutine.Direction.kReverse);
+    // }
 
     private void setVoltage(double voltage) {
         frontLeft.setVoltage(voltage);
@@ -351,11 +358,10 @@ public class SwerveSubsystem extends SubsystemBase {
                 .getInstance()
                 .accessTab(SubsystemTab.DRIVETRAIN);
 
-        moduleData.add("Quasistatic Forward", new InstantCommand(() -> quasistaticCommand(true)));
-        moduleData.add("Quasistatic Reverse", new InstantCommand(() -> quasistaticCommand(false)));
-        
-        moduleData.add("Dynamic Forward", new InstantCommand(() -> dynamicCommand(true)));
-        moduleData.add("Dynamic Reverse", new InstantCommand(() -> dynamicCommand(false)));
+        // moduleData.add("Quasistatic Forward", quasistaticCommand(true));
+        // moduleData.add("Quasistatic Reverse", quasistaticCommand(false));
+        // moduleData.add("Dynamic Forward", dynamicCommand(true));
+        // moduleData.add("Dynamic Reverse", dynamicCommand(false));
 
         frontLeftData = moduleData.getLayout("Front Left", BuiltInLayouts.kList);
         frontRightData = moduleData.getLayout("Front Right", BuiltInLayouts.kList);

@@ -9,6 +9,9 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.util.AutoManager;
+
+import org.littletonrobotics.urcl.URCL;
+
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
 
@@ -41,6 +44,7 @@ public class Robot extends TimedRobot {
 
         // Starts recording to data log
         DataLogManager.start();
+        URCL.start();
 
         // Record both DS control and joystick data
         DriverStation.startDataLog(DataLogManager.getLog());

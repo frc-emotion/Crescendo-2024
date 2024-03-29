@@ -424,6 +424,8 @@ public class RobotContainer {
 
         // Sets GAME to active tab
         // Shuffleboard.selectTab("GAME");
+
+        gameShuffleboardTab.add("Pivot Angle", new SpeakerTurret(m_VisionSubsystem, m_PivotSubsystem));
     }
 
     /**

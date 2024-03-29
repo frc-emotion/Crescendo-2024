@@ -43,7 +43,7 @@ public class CommandContainer {
      * @return  The Command decorated as a ConditionalCommand
      */
     public static Command resetPivot(PivotSubsystem pivot) {
-        return new ResetPivotAutoCommand(pivot).onlyIf(() -> !pivot.isHandoffOk());
+        return new ResetPivotAutoCommand(pivot);//.onlyIf(() -> !pivot.isHandoffOk());
     }
 
     /**

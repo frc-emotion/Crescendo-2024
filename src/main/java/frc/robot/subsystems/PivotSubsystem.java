@@ -1,7 +1,9 @@
 package frc.robot.subsystems;
 
 import frc.robot.Constants;
+import frc.robot.RobotContainer;
 import frc.robot.Constants.PivotConstants;
+import frc.robot.commands.vision.SpeakerTurret;
 import frc.robot.util.TabManager;
 import frc.robot.util.TabManager.SubsystemTab;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
@@ -128,7 +130,7 @@ public class PivotSubsystem extends SubsystemBase {
     }
 
     public double getDegrees() {
-        return getRev() * PivotConstants.kConversionFactor;
+        return getRev() * 360.0;
     }
 
     public boolean isHandoffOk() {

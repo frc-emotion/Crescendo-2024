@@ -33,7 +33,7 @@ import edu.wpi.first.math.geometry.Rotation3d;
 public final class Constants {
 
     // DEBUG MODE
-    public static final boolean DEBUG_MODE_ACTIVE = false;
+    public static final boolean DEBUG_MODE_ACTIVE = true;
 
     // Add all Driver/Teleop Controller here
     public static final class OIConstants {
@@ -217,7 +217,7 @@ public final class Constants {
         public static final double kMaxAngularAccelerationRadiansPerSecondSquared = Math.PI / 4;
 
         // Change based on testing/tune PID controllers
-        public static final double kPXController = 3.5;
+        public static final double kPXController = 3.56;
         public static final double kPYController = 0.75;
 
         public static final double kPThetaController = 0.52;
