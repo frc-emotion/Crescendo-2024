@@ -31,25 +31,25 @@ public class LEDCommand extends Command {
 
     @Override
     public void execute() {
-        if (intakeBreakSupplier.get() == false) {
+        if (!intakeBreakSupplier.get()) {
             if (System.currentTimeMillis() - timeLastBlink > (DELAY / 2)) {
-                if (ls.isOn()) ls.setRGB(0, 0, 0); // off
-                else ls.setRGB(255, 40, 0); // orange
+                if (ls.isOn()) ls.turnOff(); // off
+                else ls.setOrange(); // orange
                 timeLastBlink = System.currentTimeMillis();
             }
             
-        } else if (shooterBreakSupplier.get() == false) {
+        } else if (!shooterBreakSupplier.get()) {
             if (System.currentTimeMillis() - timeLastBlink > (DELAY / 2)) {
-                if (ls.isOn()) ls.setRGB(0, 0, 0); // off
-                else ls.setRGB(0, 255, 0); // green
+                if (ls.isOn()) ls.turnOff(); // off
+                else ls.setGreen(); // green
                 timeLastBlink = System.currentTimeMillis();
             }
         } else if (DriverStation.isEnabled()) {
             Optional<Alliance> ally = DriverStation.getAlliance();
             if (ally != null) {
-                if (ally.get() == Alliance.Red) ls.setRGB(255, 0, 0); // red
-                else ls.setRGB(0, 0, 255); // blue
+                if (ally.get() == Alliance.Red) ls.setRed(); // red
+                else ls.setBlue(); // blue
             }
-        } else ls.setRGB(255, 255, 0); // yellow
+        } else ls.setYellow(); // yellow
     }
 }

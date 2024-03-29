@@ -19,6 +19,8 @@ public class LEDSubsystem extends SubsystemBase {
     private AddressableLED m_led;
     private AddressableLEDBuffer m_ledBuffer;
 
+
+
     public LEDSubsystem() {
         m_led = new AddressableLED(PWM_PORT);
         m_ledBuffer = new AddressableLEDBuffer(NUM_LEDS);
@@ -30,6 +32,26 @@ public class LEDSubsystem extends SubsystemBase {
 
         m_led.setData(m_ledBuffer);
         m_led.start();
+    }
+
+    public void setOrange() {
+        setRGB(255, 40, 0); // Orange
+    }
+
+    public void setGreen() {
+        setRGB(0, 255, 0); // Orange
+    }
+
+    public void setBlue() {
+        setRGB(0, 0, 255); // Blue
+    }
+
+    public void setYellow() {
+        setRGB(255, 255, 0); // Yellow
+    }
+
+    public void setRed() {
+        setRGB(255, 0, 0); // Red
     }
 
     public void setHSV(int h, int s, int v) {
