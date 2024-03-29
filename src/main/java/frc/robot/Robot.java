@@ -7,8 +7,16 @@ package frc.robot;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+
+import frc.robot.util.AutoManager;
+
+import org.littletonrobotics.urcl.URCL;
+
+import edu.wpi.first.wpilibj.DataLogManager;
+import edu.wpi.first.wpilibj.DriverStation;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -39,9 +47,12 @@ public class Robot extends TimedRobot {
 
         // Starts recording to data log
         DataLogManager.start();
+        URCL.start();
 
         // Record both DS control and joystick data
         DriverStation.startDataLog(DataLogManager.getLog());
+
+        Shuffleboard.selectTab("AUTO");
     }
 
     /**
@@ -67,11 +78,14 @@ public class Robot extends TimedRobot {
     }
 
     /** This function is called once each time the robot enters Disabled mode. */
-    @Override
-    public void disabledInit() {}
+    public void disabledInit() {
+        Shuffleboard.selectTab("GAME");
+    }
 
     @Override
-    public void disabledPeriodic() {}
+    public void disabledPeriodic() {
+        
+    }
 
     /**
      * This autonomous runs the autonomous command selected by your

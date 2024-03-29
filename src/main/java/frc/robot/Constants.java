@@ -204,9 +204,10 @@ public final class Constants {
     }
 
     public static class AutoConstants {
+        public static final boolean PATH_LOGGING = true;
 
         // Chane all values based on testing
-        public static final double kMaxSpeedMetersPerSecond = DriveConstants.kPhysicalMaxSpeedMetersPerSecond / 4;
+        public static final double kMaxSpeedMetersPerSecond = 5.00;
 
         public static final double kMaxAngularSpeedRadiansPerSecond = //
                 DriveConstants.kPhysicalMaxAngularSpeedRadiansPerSecond / 10;
@@ -216,11 +217,11 @@ public final class Constants {
         public static final double kMaxAngularAccelerationRadiansPerSecondSquared = Math.PI / 4;
 
         // Change based on testing/tune PID controllers
-        public static final double kPXController = 1.25;
+        public static final double kPXController = 3.56;
         public static final double kPYController = 0.75;
 
-        public static final double kPThetaController = 0.8;
-        public static final double kIThetaController = 0;
+        public static final double kPThetaController = 0.52;
+        public static final double kIThetaController = 0.045;
         public static final double kDThetaController = 0;
 
         public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints( //
@@ -228,8 +229,6 @@ public final class Constants {
                 kMaxAngularAccelerationRadiansPerSecondSquared);
 
         public static final double INTAKE_TIMEOUT = 0;
-
-        
 
         public static final double SCORE_SPEAKER_TIMEOUT = 6.0;
 
@@ -241,7 +240,12 @@ public final class Constants {
 
         public static final double SPEAKER_TAG_HEIGHT = 1.324;
         public static final double SPEAKER_MOUTH_HEIGHT = 2.21;
-        public static final int PIVOT_HEIGHT = 0;
+        public static final double PIVOT_HEIGHT = 0.371; // meters
+
+        public static final boolean INITIAL_PLANNING_ENABLED = false;
+        public static final boolean DYNAMIC_PLANNING_ENABLED = false;
+        public static final double PLANNING_TOTAL_ERROR_THRESHOLD = 0;
+        public static final double PLANNING_SPIKE_ERROR_THRESHOLD = 0;
 
     }
 
@@ -251,7 +255,7 @@ public final class Constants {
         public static final int CLIMB_PORT_R = 18;
 
         // PID Constants (not used)
-        public static final double EXTENSION_LIMIT = 130.0;
+        public static final double EXTENSION_LIMIT = 140.0;
         public static final int PID_MIN_OUTPUT = 0;
         public static final int PID_MAX_OUTPUT = 0;
         public static final int SLOT_ID = 0;
@@ -285,24 +289,25 @@ public final class Constants {
         public static final double GEAR_REDUCTION = 0.5;
 
             // PID Controller Constants
-        public static final double kP = 0.003;
+        public static final double kP = 0.001;
         public static final double kI = 0;
-        public static final double kD = 12;
+        public static final double kD = 0;
         public static final double kFeedForward = 0.00025;
         public static final double kMaxOutput = 1; // raw motor output
         public static final double kMinOutput = -1; // raw motor output
-        public static final double kMaxOutputError = 75; // rpm
+        public static final double kMaxOutputError = 150; // rpm
 
             // Speeds
         public static final double kFeedSpeed = 0.35;
         public static final double SHOOTER_SPEED_RPM = 3000.0;
         public static final double[] PRESET_SPEEDS = { 3000, 0 }; // rpm
         public static final double IDLE_SPEED = 1000; // rpm
-        public static final double AmpRPM = 1000;
+        public static final double AmpRPM = 1100;
 
             // For SOURCE intake
-        protected static final double SHOOTER_REVERSE_SPEED = -0.3; // raw motor output
-        protected static final double FEEDER_REVERSE_SPEED = -0.2;  // raw motor output
+        protected static final double SHOOTER_REVERSE_SPEED = -0.25; // raw motor output
+        protected static final double FEEDER_REVERSE_SPEED = -0.175;  // raw motor output
+		public static final double MIN_SHOOT_SPEED = 2750;
     }
 
     public static final class PivotConstants {
@@ -389,10 +394,11 @@ public final class Constants {
         public static final double kMaxAccel = 4;
         public static final double kMaxError = 1;
 
-        public static final double DEPLOYED_POS = -0.305;
+        public static final double DEPLOYED_POS = -0.32;
         public static final double RETRACTED_POS = 0;
 
-        public static final double SHOOTER_TRANSFER_SPEED = 0.5;
+        public static final double SHOOTER_TRANSFER_SPEED = 0.4;
+        public static final double AUTO_SHOOTER_TRANSFER_SPEED = 0.5;
 
         // -----------------------------------------
 

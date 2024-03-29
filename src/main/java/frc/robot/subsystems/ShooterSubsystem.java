@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+
 import frc.robot.Constants;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.util.TabManager;
@@ -100,9 +101,11 @@ public class ShooterSubsystem extends SubsystemBase {
     // }
 
     public void updatePID() {
-        this.controller.setI(this.kIEntry.getDouble(ShooterConstants.kI));
-        this.controller.setD(this.kDEntry.getDouble(ShooterConstants.kD));
-        this.controller.setP(this.kPEntry.getDouble(ShooterConstants.kP));
+        if (Constants.DEBUG_MODE_ACTIVE) {
+            this.controller.setI(this.kIEntry.getDouble(ShooterConstants.kI));
+            this.controller.setD(this.kDEntry.getDouble(ShooterConstants.kD));
+            this.controller.setP(this.kPEntry.getDouble(ShooterConstants.kP));
+        }
     }
 
     public void setShooterVelocity(double speed) {
@@ -199,7 +202,12 @@ public class ShooterSubsystem extends SubsystemBase {
     }
 
     public double getAmpRPM() {
-        return this.ampRPMEntry.getDouble(1.0);
+        if(Constants.DEBUG_MODE_ACTIVE) {
+            return this.ampRPMEntry.getDouble(1.0);
+        } else {
+            return ShooterConstants.AmpRPM;
+        }
+        
     }
 
     private void initShuffleboard() {

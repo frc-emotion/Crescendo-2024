@@ -3,16 +3,15 @@ package frc.robot.commands.Auto.NamedCommands;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.IntakeConstants;
+import frc.robot.Constants.ShooterConstants;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 
 public class ShootSpeaker extends Command {
     private ShooterSubsystem shooterSubsystem;
-    private IntakeSubsystem intakeSubsystem;
 
-    public ShootSpeaker(ShooterSubsystem shooterSubsystem, IntakeSubsystem intakeSubsystem) {
+    public ShootSpeaker(ShooterSubsystem shooterSubsystem) {
         this.shooterSubsystem = shooterSubsystem;
-        this.intakeSubsystem = intakeSubsystem;
         addRequirements(shooterSubsystem);
     }
 
@@ -23,10 +22,9 @@ public class ShootSpeaker extends Command {
 
     @Override
     public void execute() {
-        shooterSubsystem.setShooterVelocity(4000);
-        if (shooterSubsystem.getShooterVelocity() > 3750) {
+        shooterSubsystem.setShooterVelocity(ShooterConstants.SHOOTER_SPEED_RPM);
+        if (shooterSubsystem.getShooterVelocity() > ShooterConstants.MIN_SHOOT_SPEED) {
             shooterSubsystem.setFeederSpeed(IntakeConstants.SHOOTER_TRANSFER_SPEED);
-            //intakeSubsystem.setIntake(IntakeConstants.SHOOTER_TRANSFER_SPEED);
         }
     }
 
@@ -38,6 +36,6 @@ public class ShootSpeaker extends Command {
 
     @Override
     public boolean isFinished() {
-        return false;
+        return !shooterSubsystem.isProjectileFed();
     }
 }

@@ -2,7 +2,6 @@ package frc.robot.commands.Teleop;
 
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Robot;
 import frc.robot.RobotContainer;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.ShooterConstants;
@@ -55,24 +54,28 @@ public class ShooterManualCommand extends Command {
             shooterSubsystem.setShooterVelocity(ShooterConstants.SHOOTER_SPEED_RPM); // default speed is 4000, amp is 1250
             // shooterSubsystem.setShooterRaw(0.3);
 
+            if(shooterSubsystem.getShooterVelocity() > ShooterConstants.SHOOTER_SPEED_RPM - 300) {
+                RobotContainer.operatorController_HID.setRumble(RumbleType.kBothRumble, 0.5);
+            } else {
+                RobotContainer.operatorController_HID.setRumble(RumbleType.kBothRumble, 0);
+            }
+
         } else {
             shooterSubsystem.setShooterRaw(0);
             // shooterSubsystem.setShooterVelocity(0);
         }
-
-        if(shooterSubsystem.isAtTarget(ShooterConstants.SHOOTER_SPEED_RPM) && shooterSubsystem.isProjectileFed()) {
-            RobotContainer.operatorController_HID.setRumble(RumbleType.kBothRumble, 1);
-        } else if(shooterSubsystem.isAtTarget(ShooterConstants.SHOOTER_SPEED_RPM)) {
-            RobotContainer.operatorController_HID.setRumble(RumbleType.kBothRumble, 0.25);
-        } else {
-            RobotContainer.operatorController_HID.setRumble(RumbleType.kBothRumble, 0);
-        }
-
+        
         if (feederSupplier.get()) {
             shooterSubsystem.setFeederSpeed(IntakeConstants.INTAKE_MOTOR_SPEED);
+
         } else {
             shooterSubsystem.stopFeeder();
         }
+
+        if(!shooterSupplier.get()) {
+                RobotContainer.operatorController_HID.setRumble(RumbleType.kBothRumble, 0);
+        }
+
 
         /*
          * // Stops the shooter once indexed

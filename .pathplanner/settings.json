@@ -5,7 +5,8 @@
   "pathFolders": [
     "Close Notes",
     "Far Notes",
-    "Old Autos",
+    "Full Autos",
+    "Other",
     "Score",
     "Tests",
     "Travelling"
@@ -19,8 +20,8 @@
     "Travel Auto"
   ],
   "defaultMaxVel": 5.0,
-  "defaultMaxAccel": 3.0,
+  "defaultMaxAccel": 4.0,
   "defaultMaxAngVel": 720.0,
   "defaultMaxAngAccel": 540.0,
-  "maxModuleSpeed": 4.27
+  "maxModuleSpeed": 5.0
 }

@@ -10,12 +10,14 @@ import com.pathplanner.lib.pathfinding.LocalADStar;
 import com.pathplanner.lib.pathfinding.Pathfinding;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
+import com.pathplanner.lib.util.PathPlannerLogging;
 import com.pathplanner.lib.util.ReplanningConfig;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.RobotContainer;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.subsystems.SwerveSubsystem;
@@ -28,6 +30,8 @@ public class AutoManager {
 
     private static AutoManager autoManagerInstance;
 
+    private Field2d autoField;
+
     private static final PathConstraints kPathConstraints = new PathConstraints(
             AutoConstants.kMaxSpeedMetersPerSecond,
             AutoConstants.kMaxAccelerationMetersPerSecondSquared,
@@ -39,24 +43,77 @@ public class AutoManager {
         this.visionSubsystem = visionSubsystem;
         this.swerveSubsystem = swerveSubsystem;
 
+            // Initializes AutoBuilder for swerve drive.
         AutoBuilder.configureHolonomic(
                 this.visionSubsystem::getCurrentOdoPose, // If this has issues switch to odometry only based pose
                 this.visionSubsystem::resetPoseEstimator,
                 this.swerveSubsystem::getChassisSpeeds,
-                this.swerveSubsystem::driveRobotRelative,
+                this.swerveSubsystem::driveRobotRelative, 
 
                 new HolonomicPathFollowerConfig(
                         new PIDConstants(AutoConstants.kPXController),
                         new PIDConstants(AutoConstants.kPThetaController),
                         AutoConstants.kMaxSpeedMetersPerSecond,
                         DriveConstants.kWheelBase,
-                        new ReplanningConfig()),
+                        new ReplanningConfig(
+                            AutoConstants.INITIAL_PLANNING_ENABLED,
+                            AutoConstants.DYNAMIC_PLANNING_ENABLED,
+                            AutoConstants.PLANNING_TOTAL_ERROR_THRESHOLD,
+                            AutoConstants.PLANNING_SPIKE_ERROR_THRESHOLD
+                        )
+                ),
                 () -> DriverStation.getAlliance().get() == DriverStation.Alliance.Red,
                 swerveSubsystem);
 
+            // Used for PathPlanner automatic pathfinding
         Pathfinding.setPathfinder(new LocalADStar());
+
+        initializeCustomLogging();
     }
 
+    public static AutoManager getInstance() {
+        if(autoManagerInstance == null) {
+            autoManagerInstance = new AutoManager(RobotContainer.m_VisionSubsystem, RobotContainer.m_SwerveSubsystem);
+        }
+        return autoManagerInstance;
+    }
+
+    /**
+     * Adds callback triggers to update the Auto Visualizer based on the current 
+     * PathPlanner path, target pose, and current pose.
+     */
+    private void initializeCustomLogging() {
+        if(AutoConstants.PATH_LOGGING)
+        autoField = new Field2d();
+
+        PathPlannerLogging.setLogActivePathCallback(
+            (poses) -> {
+                autoField.getObject("path").setPoses(poses);
+            }
+        );
+
+        PathPlannerLogging.setLogCurrentPoseCallback(
+            (pose) -> {
+                autoField.getRobotObject().setPose(pose);
+            }
+        );
+
+        PathPlannerLogging.setLogTargetPoseCallback(
+            (pose) -> {
+                autoField.getObject("targetPose").setPose(pose);
+            }
+        );
+    }
+
+    public Field2d getAutoField2d() {
+        return autoField;
+    }
+
+    /**
+     * Retrieves the PathPlanner Auto with a certain name. Case and whitespace sensitive.
+     * @param name  The name of the auto
+     * @return      The PathPlanner auto
+     */
     public Command getAutoCommand(String name) {
         return AutoBuilder.buildAuto(name);
     }

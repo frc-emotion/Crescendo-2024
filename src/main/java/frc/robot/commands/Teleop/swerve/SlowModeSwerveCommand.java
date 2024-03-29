@@ -26,6 +26,9 @@ public class SlowModeSwerveCommand extends DefaultSwerveXboxCommand {
                 isFieldCentricFunc);
     }
 
+    /**
+     * Limits the maximum speed and acceleration to a quarter of the maximum
+     */
     @Override
     public void initialize() {
         DriveConstants.currentDriveMode = DriveMode.SLOW;
@@ -35,14 +38,4 @@ public class SlowModeSwerveCommand extends DefaultSwerveXboxCommand {
                 DriveConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond / 4,
                 DriveConstants.kTeleDriveMaxAngularAccelerationUnitsPerSecond / 4);
     }
-
-    @Override
-    public void end(boolean interrupted) {
-        swerveSubsystem.setMaxSpeeds(
-                DriveConstants.kTeleDriveMaxSpeedMetersPerSecond / 2,
-                DriveConstants.kTeleDriveMaxAccelerationUnitsPerSecond / 2,
-                DriveConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond / 2,
-                DriveConstants.kTeleDriveMaxAngularAccelerationUnitsPerSecond / 2);
-    }
-
 }

@@ -5,6 +5,10 @@ import java.util.function.Supplier;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import frc.robot.subsystems.SwerveSubsystem;
 
+/**
+ * Theoretically rotates the robot to face a certain direction.
+ * TODO: Fix overshooting
+ */
 public class SnapSwerveCommand extends AbstractSwerveXboxCommand {
 
     protected int direction;

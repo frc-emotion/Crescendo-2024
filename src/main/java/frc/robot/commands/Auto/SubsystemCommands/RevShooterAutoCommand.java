@@ -9,7 +9,8 @@ public class RevShooterAutoCommand extends Command {
     private final ShooterSubsystem shooterSubsystem;
 
     public RevShooterAutoCommand(ShooterSubsystem shooter) {
-        shooterSubsystem = shooter;
+        shooterSubsystem = shooter; 
+        addRequirements(shooter);
     }
 
     @Override

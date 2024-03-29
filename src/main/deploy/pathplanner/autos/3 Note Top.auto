@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.6924444618120014,
+      "x": 0.7365015087811937,
       "y": 6.681985456994171
     },
-    "rotation": -118.13253074970507
+    "rotation": -120.34324888423957
   },
   "command": {
     "type": "sequential",
@@ -24,6 +24,25 @@
               {
                 "type": "path",
                 "data": {
+                  "pathName": "Prep Top"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "ToggleIntake"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "deadline",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
                   "pathName": "Pickup Top"
                 }
               },
@@ -32,14 +51,46 @@
                 "data": {
                   "name": "IntakeNote"
                 }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "RevShooter"
+                }
               }
             ]
           }
         },
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "Score Top"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Score Top From Top"
+                }
+              },
+              {
+                "type": "sequential",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "ToggleIntake"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "AutoHandoff"
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
           }
         },
         {
@@ -49,9 +100,41 @@
           }
         },
         {
-          "type": "path",
+          "type": "deadline",
           "data": {
-            "pathName": "Top Travel to Mid"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Pickup Mid From Top"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "RevShooter"
+                }
+              },
+              {
+                "type": "sequential",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "ToggleIntake"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "IntakeNote"
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
           }
         },
         {
@@ -59,24 +142,31 @@
           "data": {
             "commands": [
               {
-                "type": "named",
+                "type": "path",
                 "data": {
-                  "name": "IntakeNote"
+                  "pathName": "Score Top From Top"
                 }
               },
               {
-                "type": "path",
+                "type": "sequential",
                 "data": {
-                  "pathName": "Pickup Mid"
+                  "commands": [
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "ToggleIntake"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "AutoHandoff"
+                      }
+                    }
+                  ]
                 }
               }
             ]
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Score Top"
           }
         },
         {

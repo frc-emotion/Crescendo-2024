@@ -5,7 +5,7 @@
       "x": 0.68,
       "y": 4.3
     },
-    "rotation": -60.0
+    "rotation": 120.0
   },
   "command": {
     "type": "sequential",
@@ -18,7 +18,13 @@
           }
         },
         {
-          "type": "parallel",
+          "type": "named",
+          "data": {
+            "name": "ToggleIntake"
+          }
+        },
+        {
+          "type": "deadline",
           "data": {
             "commands": [
               {
@@ -37,9 +43,35 @@
           }
         },
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": null
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Score Bottom"
+                }
+              },
+              {
+                "type": "sequential",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "ToggleIntake"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "AutoHandoff"
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
           }
         },
         {

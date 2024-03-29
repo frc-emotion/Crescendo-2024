@@ -5,7 +5,7 @@
       "x": 0.7365015087811937,
       "y": 6.681985456994171
     },
-    "rotation": 60.0
+    "rotation": -120.0
   },
   "command": {
     "type": "sequential",
@@ -20,7 +20,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Pickup Top"
+            "pathName": "Travel Top to Corner"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 10.0
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Travel Out Sneak Top"
           }
         }
       ]
