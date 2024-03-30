@@ -429,7 +429,7 @@ public final class Constants {
     }
 
     public static final class LEDConstants {
-        public static final Color INTAKE_COLOR = Color.fromHSV(9, 100, 100); // orange
+        public static final Color INTAKE_COLOR = new Color(255, 50, 0); // orange
         public static final Color SHOOTER_COLOR = Color.kGreen;
         public static final Color RED_ALLIANCE_COLOR = Color.kRed;
         public static final Color BLUE_ALLIANCE_COLOR = Color.kBlue;
