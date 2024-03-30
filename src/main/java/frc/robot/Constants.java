@@ -11,7 +11,7 @@ import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.XboxController;
-
+import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -414,7 +414,7 @@ public final class Constants {
     }
 
     public static final class VisionConstants {
-        public static double FIELD_LENGTH = 16.541;
+        public static final double FIELD_LENGTH = 16.541;
         public static boolean VISION_DEBUG_MODE = true;
 
         public static final Matrix<N3, N1> kTestStdDevs = VecBuilder.fill(0.2, 0.2, 1);
@@ -426,6 +426,16 @@ public final class Constants {
         // Thank you super nurds for constnats very nice (nice spelling)
         public static final Translation2d BLUE_SPEAKER_CENTER = new Translation2d(0.457 / 2, 5.557034);
         public static final Translation2d RED_SPEAKER_CENTER = new Translation2d(FIELD_LENGTH - (0.457 / 2), 5.557034);
+    }
+
+    public static final class LEDConstants {
+        public static final Color INTAKE_COLOR = new Color(255, 50, 0); // orange
+        public static final Color SHOOTER_COLOR = Color.kGreen;
+        public static final Color RED_ALLIANCE_COLOR = Color.kRed;
+        public static final Color BLUE_ALLIANCE_COLOR = Color.kBlue;
+        public static final Color DISABLED_COLOR = Color.kYellow;
+
+        public static final int FLASH_DELAY = 100;
     }
 
 }
