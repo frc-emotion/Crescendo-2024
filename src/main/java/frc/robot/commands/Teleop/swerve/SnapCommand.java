@@ -1,14 +1,11 @@
 package frc.robot.commands.Teleop.swerve;
 
-import java.util.function.Supplier;
-
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.SwerveSubsystem;
 
 /**
- * Theoretically rotates the robot to face a certain direction.
- * TODO: Fix overshooting
+ * Theoretically rotates the robot to face a certain direction while not moving
  */
 public class SnapCommand extends Command {
 

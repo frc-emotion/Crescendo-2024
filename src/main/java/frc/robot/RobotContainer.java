@@ -6,7 +6,6 @@ package frc.robot;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
@@ -21,38 +20,27 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.Constants.*;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.DriveConstants.DriveMode;
-import frc.robot.Constants.DriveConstants.DriveMode;
-import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.ShooterConstants;
-import frc.robot.commands.Auto.NamedCommands.*;
 import frc.robot.commands.Auto.NamedCommands.CommandContainer;
 import frc.robot.commands.Auto.NamedCommands.ShootSpeaker;
-import frc.robot.commands.Auto.SubsystemCommands.*;
 import frc.robot.commands.Auto.SubsystemCommands.HandoffAutoCommand;
 import frc.robot.commands.Auto.SubsystemCommands.IntakeDriveAutoCommand;
 import frc.robot.commands.Auto.SubsystemCommands.PivotAutoCommand;
 import frc.robot.commands.Auto.SubsystemCommands.RevShooterAutoCommand;
 import frc.robot.commands.LEDCommand;
 import frc.robot.commands.Teleop.*;
-import frc.robot.commands.Teleop.*;
-import frc.robot.commands.Teleop.swerve.*;
 import frc.robot.commands.Teleop.swerve.*;
 import frc.robot.commands.debug.ResetGyroCommand;
 import frc.robot.commands.vision.*;
 import frc.robot.commands.vision.MonitorVision;
 import frc.robot.commands.vision.SpeakerTurret;
 import frc.robot.subsystems.*;
-import frc.robot.subsystems.*;
-import frc.robot.util.*;
 import frc.robot.util.AutoManager;
 import frc.robot.util.TabManager;
 import frc.robot.util.TabManager.SubsystemTab;
-import frc.robot.util.TabManager.SubsystemTab;
-import java.util.Map;
 import java.util.Map;
 
 /**
@@ -227,6 +215,7 @@ public class RobotContainer {
      * @param name      The name to display in the Auto Chooser
      * @param command   The Auto Command to run using this option
      */
+    @SuppressWarnings("unused")
     private void addOption(String name, Command command) {
         autoChooser.addOption(name, command);
     }

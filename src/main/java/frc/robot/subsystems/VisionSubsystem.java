@@ -3,7 +3,6 @@ package frc.robot.subsystems;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
-import edu.wpi.first.math.filter.MedianFilter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -18,7 +17,6 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -30,7 +28,6 @@ import frc.robot.util.RectanglePoseArea;
 import frc.robot.util.TabManager;
 import frc.robot.util.VisionTypes;
 import frc.robot.util.TabManager.SubsystemTab;
-import edu.wpi.first.wpilibj.DriverStation;
 
 public class VisionSubsystem extends SubsystemBase {
 
@@ -47,6 +44,7 @@ public class VisionSubsystem extends SubsystemBase {
 
     private SwerveSubsystem swerveSubsystem;
 
+    @SuppressWarnings("unused")
     private final RectanglePoseArea fieldBoundary = new RectanglePoseArea(new Translation2d(0, 0),
             new Translation2d(16.541, 8.211));
 

@@ -9,7 +9,6 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.Auto.SubsystemCommands.ClimbAutoCommand;
 import frc.robot.commands.Auto.SubsystemCommands.HandoffAutoCommand;
 import frc.robot.commands.Auto.SubsystemCommands.IntakeDriveAutoCommand;
-import frc.robot.commands.Auto.SubsystemCommands.PivotAutoCommand;
 import frc.robot.commands.Auto.SubsystemCommands.ResetPivotAutoCommand;
 import frc.robot.commands.Teleop.IntakePivotCommand;
 import frc.robot.subsystems.ClimbSubsystem;

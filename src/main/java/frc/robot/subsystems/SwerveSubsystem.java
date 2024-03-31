@@ -1,16 +1,20 @@
 package frc.robot.subsystems;
 
-import org.opencv.core.Mat;
 
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.math.controller.PIDController;
 
-import static edu.wpi.first.units.Units.Seconds;
-
-import static edu.wpi.first.units.Units.Volts;
-
-import java.util.function.Consumer;
+// import static edu.wpi.first.units.Units.Seconds;
+// import static edu.wpi.first.units.Units.Volts;
+// import edu.wpi.first.units.Measure;
+// import edu.wpi.first.units.Time;
+// import edu.wpi.first.units.Voltage;
+// import java.util.function.Consumer;
+// import edu.wpi.first.networktables.StringPublisher;
+// import edu.wpi.first.wpilibj2.command.Command;
+// import edu.wpi.first.wpilibj2.command.InstantCommand;
+// import org.opencv.core.Mat;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -20,26 +24,21 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.networktables.StringPublisher;
 import edu.wpi.first.networktables.StructArrayPublisher;
 import edu.wpi.first.networktables.StructPublisher;
-import edu.wpi.first.units.Measure;
-import edu.wpi.first.units.Time;
-import edu.wpi.first.units.Voltage;
+
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
+
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+//import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.ShooterConstants;
-import frc.robot.commands.vision.Rotate;
 import frc.robot.util.TabManager;
 import frc.robot.util.TabManager.SubsystemTab;
 
@@ -107,7 +106,7 @@ public class SwerveSubsystem extends SubsystemBase {
 
     private GenericEntry kIEntry, kDEntry, kPEntry;
 
-    private SysIdRoutine sysIdRoutine;
+    //private SysIdRoutine sysIdRoutine;
 
     public SwerveSubsystem() {
 
@@ -189,6 +188,7 @@ public class SwerveSubsystem extends SubsystemBase {
     //     return sysIdRoutine.dynamic(SysIdRoutine.Direction.kReverse);
     // }
 
+    @SuppressWarnings("unused")
     private void setVoltage(double voltage) {
         frontLeft.setVoltage(voltage);
         frontRight.setVoltage(voltage);
