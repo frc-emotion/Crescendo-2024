@@ -82,6 +82,10 @@ public class VisionSubsystem extends SubsystemBase {
         initShuffleboard();
     }
 
+    public double getTheta() {
+        return getCurrentPose().getRotation().getRadians();
+    }
+
     public void updateOdometry() {
         poseEstimator.update(swerveSubsystem.getRotation2d(), swerveSubsystem.getModulePositions());
         poseOdometryEstimator.update(swerveSubsystem.getRotation2d(), swerveSubsystem.getModulePositions()); // testing

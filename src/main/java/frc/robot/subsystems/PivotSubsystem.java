@@ -48,7 +48,7 @@ public class PivotSubsystem extends SubsystemBase {
         relativeEncoder = pivotMotor.getEncoder();
 
         //relativeEncoder.setPositionConversionFactor((-1.0 / PivotConstants.GEAR_REDUCTION) * 360);
-        resetPosition(60.0);
+        resetPosition(65.0);
 
         initShuffleboard();
     }
