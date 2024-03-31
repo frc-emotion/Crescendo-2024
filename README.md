@@ -2,6 +2,12 @@
 2024 Robot Code
 
 # GitHub Codespaces Development👇👇
+Work on robot code from the web using GitHub codespaces! Here's how!
+* https://github.com/codespaces/new
+* Select this repostiory
+* Leave everything on default settings
+* Create codespace!
+
 If you are opening this project in a brand new codespaces environment... 
 * Allow for extensions to fully load in by watching the bar at the bottom of VS Code, wait for 'activating extensions' go away
 * Wait for gradle to finish downloading and installing
