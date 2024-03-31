@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import com.kauailabs.navx.frc.AHRS;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 
 // import static edu.wpi.first.units.Units.Seconds;
@@ -400,10 +401,11 @@ public class SwerveSubsystem extends SubsystemBase {
     }
 
     public double calculateThetaPID(double measurement, double setpoint, boolean auto) {
+        // Remove clamping if not working
         if (auto) {
-            return autoThetaController.calculate(measurement, 30);
+            return MathUtil.clamp(autoThetaController.calculate(measurement, 30), -540, 540);
         }
-        return teleopThetaController.calculate(measurement, 30);
+        return MathUtil.clamp(teleopThetaController.calculate(measurement, 30), -540, 540);
 
     }
 

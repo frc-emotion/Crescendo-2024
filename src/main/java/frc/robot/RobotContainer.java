@@ -261,21 +261,19 @@ public class RobotContainer {
         });
 
         // Drive Snapping Setup
-        // for (int angle = 0; angle < 360; angle += 45) {
-        // m_driverController
-        // .pov(angle)
-        // .onTrue(
-        // new SnapSwerveCommand(
-        // m_SwerveSubsystem,
-        // () -> driverController_HID.getLeftY(),
-        // () -> driverController_HID.getLeftX(),
-        // () -> driverController_HID.getRightX(),
-        // angle
-        // )
-        // );
-        // }
+        for (int angle = 0; angle < 360; angle += 45) {
+            m_driverController
+                    .pov(angle)
+                    .whileTrue(
+                            new SnapSwerveCommand(
+                                    m_SwerveSubsystem,
+                                    () -> driverController_HID.getLeftY(),
+                                    () -> driverController_HID.getLeftX(),
+                                    () -> driverController_HID.getRightX(),
+                                    angle));
+        }
 
-        m_driverController.povDown().whileTrue(new SnapCommand(m_SwerveSubsystem, 0));
+        //m_driverController.povDown().whileTrue(new SnapCommand(m_SwerveSubsystem, 0));
 
         // Amp Shooting
         m_operatorController.rightBumper().whileTrue(
