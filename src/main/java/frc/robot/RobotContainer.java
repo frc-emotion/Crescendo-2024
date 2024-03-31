@@ -288,25 +288,33 @@ public class RobotContainer {
                 }
             );
 
-        // Drive Snapping Setup
-        for (int angle = 0; angle < 360; angle += 45) {
-            m_driverController
-                .pov(angle)
-                .onTrue(
-                    new SnapSwerveCommand(
-                        m_SwerveSubsystem,
-                        () -> driverController_HID.getLeftY(),
-                        () -> driverController_HID.getLeftX(),
-                        () -> driverController_HID.getRightX(),
-                        angle
-                    )
-                );
-        }
+                // Swerve Zero Heading
+        m_driverController.b().onTrue(new InstantCommand() {
+            @Override
+            public void execute() {
+                m_SwerveSubsystem.zeroHeading();
+            }
+        });
 
-        // Amp Shooting
-        m_operatorController
-            .rightBumper()
-            .whileTrue(
+                // Drive Snapping Setup
+        // for (int angle = 0; angle < 360; angle += 45) {
+        //     m_driverController
+        //         .pov(angle)
+        //         .onTrue(
+        //             new SnapSwerveCommand(
+        //                 m_SwerveSubsystem,
+        //                 () -> driverController_HID.getLeftY(),
+        //                 () -> driverController_HID.getLeftX(),
+        //                 () -> driverController_HID.getRightX(),
+        //                 angle
+        //             )
+        //         );
+        // }
+
+        m_driverController.povDown().whileTrue(new SnapCommand(m_SwerveSubsystem, 0));
+          
+                // Amp Shooting
+        m_operatorController.rightBumper().whileTrue(
                 new Command() {
                     public void execute() {
                         m_ShooterSubsystem.setShooterVelocity(
@@ -416,28 +424,22 @@ public class RobotContainer {
                 }
             );
 
-        // Handoff Manual Mode
-        m_operatorController
-            .a()
-            .whileTrue(
-                new HandoffAutoCommand(
-                    m_IntakeSubsystem,
-                    m_ShooterSubsystem,
-                    false
-                )
-            );
+                // Handoff Manual Mode
+        m_operatorController.a().whileTrue(
+                new HandoffAutoCommand(m_IntakeSubsystem, m_ShooterSubsystem, false));
 
-        // Climb Encoder Reset Command
-        m_operatorController
-            .start()
-            .onTrue(
-                new InstantCommand() {
-                    @Override
-                    public void execute() {
-                        m_ClimbSubsystem.reset();
-                    }
-                }
-            );
+                // Climb Encoder Reset Command
+        m_operatorController.start().onTrue(new InstantCommand() {
+            @Override
+            public void execute() {
+                m_ClimbSubsystem.reset();
+            }
+        });
+
+        m_operatorController.y().whileTrue(
+            new SpeakerTurret(m_VisionSubsystem, m_PivotSubsystem)
+        );
+
     }
 
     /**
@@ -623,6 +625,8 @@ public class RobotContainer {
         ShuffleboardTab autoTab = TabManager
             .getInstance()
             .accessTab(SubsystemTab.AUTO);
+
+        autoTab.add("Angle to Speaker", new Rotate(m_VisionSubsystem, autoManager));
 
         autoTab.add(autoChooser).withSize(3, 1);
         autoTab

@@ -39,6 +39,7 @@ import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.ShooterConstants;
+import frc.robot.commands.vision.Rotate;
 import frc.robot.util.TabManager;
 import frc.robot.util.TabManager.SubsystemTab;
 
@@ -400,9 +401,9 @@ public class SwerveSubsystem extends SubsystemBase {
 
     public double calculateThetaPID(double measurement, double setpoint, boolean auto) {
         if (auto) {
-            return autoThetaController.calculate(measurement, setpoint);
+            return autoThetaController.calculate(measurement, 30);
         }
-        return teleopThetaController.calculate(measurement, setpoint);
+        return teleopThetaController.calculate(measurement, 30);
  
         
     }

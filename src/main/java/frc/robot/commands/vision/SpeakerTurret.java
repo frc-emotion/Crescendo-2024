@@ -1,5 +1,8 @@
 package frc.robot.commands.vision;
 
+import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
+import edu.wpi.first.math.interpolation.InterpolatingTreeMap;
+import edu.wpi.first.math.interpolation.InverseInterpolator;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.AutoConstants;
@@ -10,9 +13,18 @@ import frc.robot.subsystems.VisionSubsystem;
 public class SpeakerTurret extends MonitorVision {
     private PivotSubsystem pivotSubsystem;
 
+    private final static InterpolatingDoubleTreeMap shooterMap = new InterpolatingDoubleTreeMap();
+
+    static {
+        shooterMap.clear();
+        shooterMap.put(1.46, 61.9);
+     
+    }
+
     public SpeakerTurret(VisionSubsystem visionSubsystem, PivotSubsystem pivotSubsystem) {
         super(visionSubsystem);
         this.pivotSubsystem = pivotSubsystem;
+
         addRequirements(pivotSubsystem);
     }
 
@@ -25,7 +37,9 @@ public class SpeakerTurret extends MonitorVision {
     @Override
     public void execute() {
         super.execute();
-        System.out.println(calculateAngle());
+        //System.out.println(calculateAngle());
+        //System.out.println("blud");
+        System.out.println(visionSubsystem.getDistanceTo((DriverStation.getAlliance().get() == DriverStation.Alliance.Red) ? VisionConstants.RED_SPEAKER_CENTER : VisionConstants.BLUE_SPEAKER_CENTER));
         pivotSubsystem.setRev(calculateAngle());
     }
 
@@ -47,7 +61,10 @@ public class SpeakerTurret extends MonitorVision {
      * @return The target angle for the pivot.
      */
     private double calculateAngle() {
-        return Math.toDegrees(Math.atan((AutoConstants.SPEAKER_MOUTH_HEIGHT - AutoConstants.PIVOT_HEIGHT) / visionSubsystem.getDistanceTo(
+        return Math.toDegrees(
+            Math.atan(
+                (AutoConstants.SPEAKER_MOUTH_HEIGHT - AutoConstants.PIVOT_HEIGHT) 
+                / visionSubsystem.getDistanceTo(
             (DriverStation.getAlliance().get() == DriverStation.Alliance.Red) ? VisionConstants.RED_SPEAKER_CENTER : VisionConstants.BLUE_SPEAKER_CENTER
         )));
     }

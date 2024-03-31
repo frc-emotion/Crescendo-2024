@@ -239,7 +239,7 @@ public final class Constants {
         public static final Pose2d SCORE_SPEAKER_POSE = new Pose2d();
 
         public static final double SPEAKER_TAG_HEIGHT = 1.324;
-        public static final double SPEAKER_MOUTH_HEIGHT = 2.21;
+        public static final double SPEAKER_MOUTH_HEIGHT = 2.1;
         public static final double PIVOT_HEIGHT = 0.371; // meters
 
         public static final boolean INITIAL_PLANNING_ENABLED = false;
@@ -299,8 +299,8 @@ public final class Constants {
 
             // Speeds
         public static final double kFeedSpeed = 0.35;
-        public static final double SHOOTER_SPEED_RPM = 3000.0;
-        public static final double[] PRESET_SPEEDS = { 3000, 0 }; // rpm
+        public static final double SHOOTER_SPEED_RPM = 3500.0;
+        public static final double[] PRESET_SPEEDS = { 3500, 0 }; // rpm
         public static final double IDLE_SPEED = 1000; // rpm
         public static final double AmpRPM = 1100;
 
