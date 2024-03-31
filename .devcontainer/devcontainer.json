@@ -1,0 +1,24 @@
+{
+    "name": "WPILib 2024 Development",
+
+    "settings": {
+        "terminal.integrated.shell.linux":"/bin/bash"
+    },
+
+    "workspaceMount": "source=${localWorkspaceFolder},target=/root/workspace,type=bind,consistency=cached",
+    "workspaceFolder": "/root/workspace",
+    
+    "build": { "dockerfile": "Dockerfile" },
+    
+    "postCreateCommand": "cd /opt && wget 'https://github.com/wpilibsuite/vscode-wpilib/releases/download/v2024.2.1/vscode-wpilib-2024.2.1.vsix'",
+    "features": {
+    },
+    "customizations": {
+      "vscode": {
+        "extensions": ["/opt/vscode-wpilib-2024.2.1.vsix","vscjava.vscode-java-pack","vscjava.vscode-gradle", "ms-vscode.cpptools", "akamud.vscode-theme-onedark"],
+        "settings": {
+          "workbench.colorTheme": "Atom One Dark"
+        }
+      }
+    }
+  }
