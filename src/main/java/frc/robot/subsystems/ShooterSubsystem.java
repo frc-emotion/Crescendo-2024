@@ -34,8 +34,7 @@ public class ShooterSubsystem extends SubsystemBase {
     private GenericEntry kIEntry, kDEntry, kPEntry;
 
     public ShooterSubsystem() {
-        shooterMotor =
-            new CANSparkMax(ShooterConstants.shooterPort, MotorType.kBrushless);
+        shooterMotor = new CANSparkMax(ShooterConstants.shooterPort, MotorType.kBrushless);
 
         shooterMotor.setSmartCurrentLimit(ShooterConstants.CURRENT_LIMIT_SMART);
         shooterMotor.setSecondaryCurrentLimit(ShooterConstants.CURRENT_LIMIT);
@@ -43,8 +42,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
         shooterMotor.enableVoltageCompensation(8);
 
-        feederMotor =
-            new CANSparkMax(ShooterConstants.feederPort, MotorType.kBrushless);
+        feederMotor = new CANSparkMax(ShooterConstants.feederPort, MotorType.kBrushless);
 
         feederMotor.setSmartCurrentLimit(ShooterConstants.CURRENT_LIMIT_SMART);
         feederMotor.setSecondaryCurrentLimit(ShooterConstants.CURRENT_LIMIT);
@@ -130,17 +128,11 @@ public class ShooterSubsystem extends SubsystemBase {
     }
 
     public boolean isAtTarget(double target) {
-        return (
-            Math.abs(shooterEncoder.getVelocity() - target) <
-            ShooterConstants.kMaxOutputError
-        );
+        return (Math.abs(shooterEncoder.getVelocity() - target) < ShooterConstants.kMaxOutputError);
     }
 
     public boolean isAtTarget() {
-        return (
-            Math.abs(shooterEncoder.getVelocity() - targetRPM) <
-            ShooterConstants.kMaxOutputError
-        );
+        return (Math.abs(shooterEncoder.getVelocity() - targetRPM) < ShooterConstants.kMaxOutputError);
     }
 
     /**
@@ -202,48 +194,44 @@ public class ShooterSubsystem extends SubsystemBase {
     }
 
     public double getAmpRPM() {
-        if(Constants.DEBUG_MODE_ACTIVE) {
+        if (Constants.DEBUG_MODE_ACTIVE) {
             return this.ampRPMEntry.getDouble(ShooterConstants.AmpRPM);
         } else {
             return ShooterConstants.AmpRPM;
         }
-        
+
     }
 
     private void initShuffleboard() {
-        if (!Constants.DEBUG_MODE_ACTIVE) return;
+        if (!Constants.DEBUG_MODE_ACTIVE)
+            return;
 
         ShuffleboardTab moduleData = TabManager
-            .getInstance()
-            .accessTab(SubsystemTab.SHOOTER);
+                .getInstance()
+                .accessTab(SubsystemTab.SHOOTER);
 
         ShuffleboardLayout persianPositions = moduleData.getLayout(
-            "Persian Positions",
-            BuiltInLayouts.kList
-        );
+                "Persian Positions",
+                BuiltInLayouts.kList);
 
         persianPositions.addBoolean("Line Breaker", this::isProjectileFed);
         persianPositions.addBoolean("At Target Speed", this::isAtTarget);
 
         persianPositions.addDouble(
-            "Shooter Velocity",
-            this::getShooterVelocity
-        );
+                "Shooter Velocity",
+                this::getShooterVelocity);
 
         persianPositions.addDouble(
-            "Feeder Position",
-            () -> feederEncoder.getPosition()
-        );
+                "Feeder Position",
+                () -> feederEncoder.getPosition());
 
         persianPositions.addDouble(
-            "Feeder Velocity",
-            () -> feederEncoder.getVelocity()
-        );
+                "Feeder Velocity",
+                () -> feederEncoder.getVelocity());
 
         persianPositions.withSize(2, 4);
 
-        this.ampRPMEntry =
-            moduleData
+        this.ampRPMEntry = moduleData
                 .add("Amp Target RPM", ShooterConstants.AmpRPM)
                 // .wget(BuiltInWidgets.kNumberSlider)
                 // .withProperties(Map.of("min", 0, "max", 4000))

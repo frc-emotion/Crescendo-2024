@@ -27,7 +27,7 @@ public class LEDSubsystem extends SubsystemBase {
         SOLID;
 
         public static int getDelayAmount(LEDStyle style) {
-            switch(style) {
+            switch (style) {
                 case BLINK_RAPID:
                     return LEDConstants.FLASH_DELAY / 2;
                 case BLINK_SLOW:
@@ -54,30 +54,30 @@ public class LEDSubsystem extends SubsystemBase {
     }
 
     public void setColor(Color color) {
-        for(int i = 0; i < NUM_LEDS; i++) {
+        for (int i = 0; i < NUM_LEDS; i++) {
             m_ledBuffer.setLED(i, color);
         }
         m_led.setData(m_ledBuffer);
     }
 
     // public void setOrange() {
-    //     setRGB(255, 40, 0); // Orange
+    // setRGB(255, 40, 0); // Orange
     // }
 
     // public void setGreen() {
-    //     setRGB(0, 255, 0); // Orange
+    // setRGB(0, 255, 0); // Orange
     // }
 
     // public void setBlue() {
-    //     setRGB(0, 0, 255); // Blue
+    // setRGB(0, 0, 255); // Blue
     // }
 
     // public void setYellow() {
-    //     setRGB(255, 255, 0); // Yellow
+    // setRGB(255, 255, 0); // Yellow
     // }
 
     // public void setRed() {
-    //     setRGB(255, 0, 0); // Red
+    // setRGB(255, 0, 0); // Red
     // }
 
     public void setHSV(int h, int s, int v) {

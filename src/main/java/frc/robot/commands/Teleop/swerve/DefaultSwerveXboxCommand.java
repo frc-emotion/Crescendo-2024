@@ -53,7 +53,8 @@ public class DefaultSwerveXboxCommand extends AbstractSwerveXboxCommand {
     }
 
     /**
-     * Restores the maximum speed of the robot to the normal mode speeds. Mainly used in subclasses.
+     * Restores the maximum speed of the robot to the normal mode speeds. Mainly
+     * used in subclasses.
      * Stops the drivetrain if interrupted.
      */
     @Override

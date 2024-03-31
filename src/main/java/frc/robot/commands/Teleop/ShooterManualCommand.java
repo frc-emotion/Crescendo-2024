@@ -49,21 +49,21 @@ public class ShooterManualCommand extends Command {
              * feederState = !feederState;
              */
 
-            shooterSubsystem.setShooterVelocity(ShooterConstants.SHOOTER_SPEED_RPM); // default speed is 4000, amp is 1250
+            shooterSubsystem.setShooterVelocity(ShooterConstants.SHOOTER_SPEED_RPM); // default speed is 4000, amp is
+                                                                                     // 1250
             // shooterSubsystem.setShooterRaw(0.3);
 
         } else {
             shooterSubsystem.setShooterRaw(0);
             // shooterSubsystem.setShooterVelocity(0);
         }
-        
+
         if (feederSupplier.get()) {
             shooterSubsystem.setFeederSpeed(IntakeConstants.INTAKE_MOTOR_SPEED);
 
         } else {
             shooterSubsystem.stopFeeder();
         }
-
 
         /*
          * // Stops the shooter once indexed

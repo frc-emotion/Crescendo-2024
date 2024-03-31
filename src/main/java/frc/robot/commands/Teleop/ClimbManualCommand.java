@@ -15,7 +15,7 @@ public class ClimbManualCommand extends Command {
 
     private final ClimbSubsystem climbSubsystem;
     private Supplier<Double> input;
-    //private double coefficient = 10;
+    // private double coefficient = 10;
 
     /**
      * Create a new instance of ClimbXboxCommand

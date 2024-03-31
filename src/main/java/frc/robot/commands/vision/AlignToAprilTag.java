@@ -33,7 +33,7 @@ public class AlignToAprilTag extends MonitorVision {
 
     @Override
     public void end(boolean interrupted) {
-        
+
     }
 
     private boolean isAligned() {

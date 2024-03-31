@@ -66,16 +66,16 @@ public class VisionSubsystem extends SubsystemBase {
         visionType.addOption("Limelight Docs Vision", VisionTypes.LLDOCS);
 
         this.poseEstimator = new SwerveDrivePoseEstimator(
-            DriveConstants.kDriveKinematics,
-            new Rotation2d(),
-            swerveSubsystem.getModulePositions(),
-            new Pose2d());
+                DriveConstants.kDriveKinematics,
+                new Rotation2d(),
+                swerveSubsystem.getModulePositions(),
+                new Pose2d());
 
         this.poseOdometryEstimator = new SwerveDriveOdometry(
-            DriveConstants.kDriveKinematics,
-            new Rotation2d(),
-            swerveSubsystem.getModulePositions(),
-            new Pose2d());
+                DriveConstants.kDriveKinematics,
+                new Rotation2d(),
+                swerveSubsystem.getModulePositions(),
+                new Pose2d());
 
         initShuffleboard();
     }
@@ -138,15 +138,16 @@ public class VisionSubsystem extends SubsystemBase {
     public double[] getTagIDs() {
         var fiducials = getTagFiducial();
         double[] ids = new double[fiducials.length];
-        for(int i = 0; i < ids.length; i++) {
+        for (int i = 0; i < ids.length; i++) {
             ids[i] = fiducials[i].fiducialID;
         }
         return ids;
     }
 
     public boolean isIdDetected(double targetID) {
-        for(double id : getTagIDs()) {
-            if(targetID == id) return true;
+        for (double id : getTagIDs()) {
+            if (targetID == id)
+                return true;
         }
         return false;
     }
@@ -156,10 +157,11 @@ public class VisionSubsystem extends SubsystemBase {
     }
 
     /**
-     * Finds the distance from the robot to a certain location on the field. Uses the robot odometry (no vision) to determine distance.
+     * Finds the distance from the robot to a certain location on the field. Uses
+     * the robot odometry (no vision) to determine distance.
      * 
-     * @param location  The location to check the distance to.
-     * @return  The distance to the location.
+     * @param location The location to check the distance to.
+     * @return The distance to the location.
      */
     public double getOdoDistanceTo(Translation2d location) {
         return getCurrentOdoPose().getTranslation().getDistance(location);
@@ -173,14 +175,16 @@ public class VisionSubsystem extends SubsystemBase {
 
     // LimelightLib-given constants for Std Devs
     // public void updateVision1() {
-    //     PoseEstimate poseEstimate = getVisionPose();
+    // PoseEstimate poseEstimate = getVisionPose();
 
-    //     if (poseEstimate.tagCount >= 2) {
+    // if (poseEstimate.tagCount >= 2) {
 
-    //         poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(0.7, 0.7, 999999999)); // documentation defaults,
-    //                                                                                          // change?
-    //         poseEstimator.addVisionMeasurement(poseEstimate.pose, poseEstimate.timestampSeconds);
-    //     }
+    // poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(0.7, 0.7,
+    // 999999999)); // documentation defaults,
+    // // change?
+    // poseEstimator.addVisionMeasurement(poseEstimate.pose,
+    // poseEstimate.timestampSeconds);
+    // }
 
     // }
 
@@ -203,7 +207,7 @@ public class VisionSubsystem extends SubsystemBase {
 
         // Decrease std devs if multiple targets are visible
         if (numTags > 1) {
-            //estStdDevs = VecBuilder.fill(0.5, 0.5, 1); // kMultiTagDevs
+            // estStdDevs = VecBuilder.fill(0.5, 0.5, 1); // kMultiTagDevs
             estStdDevs = VecBuilder.fill(1, 1, 2);
         }
         // Increase std devs based on (average) distance

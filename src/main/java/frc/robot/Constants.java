@@ -285,7 +285,7 @@ public final class Constants {
         public static final int CURRENT_LIMIT_SMART = 40; // amps
         public static final double GEAR_REDUCTION = 0.5;
 
-            // PID Controller Constants
+        // PID Controller Constants
         public static final double kP = 0.001;
         public static final double kI = 0;
         public static final double kD = 0;
@@ -294,17 +294,17 @@ public final class Constants {
         public static final double kMinOutput = -1; // raw motor output
         public static final double kMaxOutputError = 150; // rpm
 
-            // Speeds
+        // Speeds
         public static final double kFeedSpeed = 0.35;
         public static final double SHOOTER_SPEED_RPM = 3500.0;
         public static final double[] PRESET_SPEEDS = { 3500, 0 }; // rpm
         public static final double IDLE_SPEED = 1000; // rpm
         public static final double AmpRPM = 1100;
 
-            // For SOURCE intake
+        // For SOURCE intake
         protected static final double SHOOTER_REVERSE_SPEED = -0.25; // raw motor output
-        protected static final double FEEDER_REVERSE_SPEED = -0.175;  // raw motor output
-		public static final double MIN_SHOOT_SPEED = 2750;
+        protected static final double FEEDER_REVERSE_SPEED = -0.175; // raw motor output
+        public static final double MIN_SHOOT_SPEED = 2750;
     }
 
     public static final class PivotConstants {
@@ -345,7 +345,7 @@ public final class Constants {
 
         // Handoff
         public static final double kHANDOFF_ANGLE = 60.0;
-        public static final double kMAX_ANGLE_ERROR  = 1.5;
+        public static final double kMAX_ANGLE_ERROR = 1.5;
     }
 
     public static final class IntakeConstants {
@@ -406,7 +406,7 @@ public final class Constants {
          * @return The equivalent measurement in meters
          */
         // private static double pivotDegreesToRevolutions(double degrees) {
-        //     return (degrees / 360.0) / GEAR_REDUCTION;
+        // return (degrees / 360.0) / GEAR_REDUCTION;
         // }
     }
 
@@ -419,7 +419,7 @@ public final class Constants {
         public static final Matrix<N3, N1> kMultiTagStdDevs = VecBuilder.fill(0.5, 0.5, 1);
 
         public static final double TAG_DETECTION_THRESHOLD = Units.feetToMeters(15);
-        
+
         // Thank you super nurds for constnats very nice (nice spelling)
         public static final Translation2d BLUE_SPEAKER_CENTER = new Translation2d(0.457 / 2, 5.557034);
         public static final Translation2d RED_SPEAKER_CENTER = new Translation2d(FIELD_LENGTH - (0.457 / 2), 5.557034);

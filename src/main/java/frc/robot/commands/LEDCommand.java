@@ -12,19 +12,19 @@ import java.util.function.Supplier;
 public class LEDCommand extends Command {
 
     private final LEDSubsystem ls;
-    private final Supplier<Boolean> intakeBreakSupplier, intakeDeploySupplier, shooterBreakSupplier, shooterAtTargetSupplier;
+    private final Supplier<Boolean> intakeBreakSupplier, intakeDeploySupplier, shooterBreakSupplier,
+            shooterAtTargetSupplier;
     private long timeLastBlink;
 
     private Color nextColor;
     private LEDStyle style;
 
     public LEDCommand(
-        LEDSubsystem ls,
-        Supplier<Boolean> intakeBreakSupplier,
-        Supplier<Boolean> intakeDeploySupplier,
-        Supplier<Boolean> shooterBreakSupplier,
-        Supplier<Boolean> shooterAtTargetSupplier
-    ) {
+            LEDSubsystem ls,
+            Supplier<Boolean> intakeBreakSupplier,
+            Supplier<Boolean> intakeDeploySupplier,
+            Supplier<Boolean> shooterBreakSupplier,
+            Supplier<Boolean> shooterAtTargetSupplier) {
         this.ls = ls;
         this.intakeBreakSupplier = intakeBreakSupplier;
         this.intakeDeploySupplier = intakeDeploySupplier;
@@ -38,7 +38,7 @@ public class LEDCommand extends Command {
     @Override
     public void execute() {
         System.out.println(shooterAtTargetSupplier.get());
-        
+
         if (!intakeBreakSupplier.get()) {
             nextColor = LEDConstants.INTAKE_COLOR;
             style = LEDStyle.SOLID;
@@ -51,11 +51,8 @@ public class LEDCommand extends Command {
         } else if (shooterBreakSupplier.get()) {
             nextColor = LEDConstants.SHOOTER_COLOR;
             style = LEDStyle.SOLID;
-        } else if (
-            DriverStation.isEnabled() && DriverStation.getAlliance() != null
-        ) {
-            nextColor =
-                DriverStation.getAlliance().get() == Alliance.Blue
+        } else if (DriverStation.isEnabled() && DriverStation.getAlliance() != null) {
+            nextColor = DriverStation.getAlliance().get() == Alliance.Blue
                     ? LEDConstants.BLUE_ALLIANCE_COLOR
                     : LEDConstants.RED_ALLIANCE_COLOR;
             style = LEDStyle.SOLID;

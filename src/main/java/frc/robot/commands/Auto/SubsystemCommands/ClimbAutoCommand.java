@@ -13,10 +13,10 @@ public class ClimbAutoCommand extends Command {
         shouldExtend = extend;
         addRequirements(climb);
     }
-    
+
     @Override
     public void execute() {
-        if(shouldExtend)
+        if (shouldExtend)
             climbSubsystem.setRawSpeed(ClimbConstants.kSpeed);
         else
             climbSubsystem.setRawSpeed(-ClimbConstants.kSpeed);
@@ -24,6 +24,7 @@ public class ClimbAutoCommand extends Command {
 
     @Override
     public boolean isFinished() {
-        return (climbSubsystem.getPosition() >= ClimbConstants.EXTENSION_LIMIT && shouldExtend) || (climbSubsystem.getPosition() <= 0 && !shouldExtend);
+        return (climbSubsystem.getPosition() >= ClimbConstants.EXTENSION_LIMIT && shouldExtend)
+                || (climbSubsystem.getPosition() <= 0 && !shouldExtend);
     }
 }

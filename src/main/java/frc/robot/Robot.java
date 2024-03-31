@@ -75,15 +75,16 @@ public class Robot extends TimedRobot {
 
     /** This function is called once each time the robot enters Disabled mode. */
     public void disabledInit() {
-            // Ensures that the LED Command is always running
-        if(m_ledCommand != null && !CommandScheduler.getInstance().isScheduled(m_ledCommand)) {
+        // Ensures that the LED Command is always running
+        if (m_ledCommand != null && !CommandScheduler.getInstance().isScheduled(m_ledCommand)) {
             m_ledCommand.schedule();
-        } else if(m_ledCommand == null) {
+        } else if (m_ledCommand == null) {
             DriverStation.reportWarning("LED Command not present (null)", false);
         }
 
-            // Cancels the controller rumble Command when the robot is disabled
-        if(m_controllerRumbleCommand != null && CommandScheduler.getInstance().isScheduled(m_controllerRumbleCommand)) {
+        // Cancels the controller rumble Command when the robot is disabled
+        if (m_controllerRumbleCommand != null
+                && CommandScheduler.getInstance().isScheduled(m_controllerRumbleCommand)) {
             m_controllerRumbleCommand.cancel();
         }
 
@@ -92,7 +93,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void disabledPeriodic() {
-        
+
     }
 
     /**
@@ -103,7 +104,7 @@ public class Robot extends TimedRobot {
     public void autonomousInit() {
         m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
-            //Schedules the autonomous Command at the start of auto
+        // Schedules the autonomous Command at the start of auto
         if (m_autonomousCommand != null) {
             m_autonomousCommand.schedule();
         } else {
@@ -113,7 +114,8 @@ public class Robot extends TimedRobot {
 
     /** This function is called periodically during autonomous. */
     @Override
-    public void autonomousPeriodic() {}
+    public void autonomousPeriodic() {
+    }
 
     @Override
     public void teleopInit() {
@@ -125,8 +127,8 @@ public class Robot extends TimedRobot {
             m_autonomousCommand.cancel();
         }
 
-            // Schedules the controller rumble Command at the beginning of teleop
-        if(m_controllerRumbleCommand != null) {
+        // Schedules the controller rumble Command at the beginning of teleop
+        if (m_controllerRumbleCommand != null) {
             m_controllerRumbleCommand.schedule();
         } else {
             DriverStation.reportWarning("Controller Rumble Command not present (null)", false);
@@ -137,7 +139,8 @@ public class Robot extends TimedRobot {
 
     /** This function is called periodically during operator control. */
     @Override
-    public void teleopPeriodic() {}
+    public void teleopPeriodic() {
+    }
 
     @Override
     public void testInit() {
@@ -147,13 +150,16 @@ public class Robot extends TimedRobot {
 
     /** This function is called periodically during test mode. */
     @Override
-    public void testPeriodic() {}
+    public void testPeriodic() {
+    }
 
     /** This function is called once when the robot is first started up. */
     @Override
-    public void simulationInit() {}
+    public void simulationInit() {
+    }
 
     /** This function is called periodically whilst in simulation. */
     @Override
-    public void simulationPeriodic() {}
+    public void simulationPeriodic() {
+    }
 }

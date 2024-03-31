@@ -1,6 +1,5 @@
 package frc.robot.subsystems;
 
-
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.math.controller.PIDController;
@@ -88,7 +87,7 @@ public class SwerveSubsystem extends SubsystemBase {
 
     private double toDivideBy;
     private double driveSpeedMPS, driveAngularSpeedRPS;
-    //private double driveAccelMPSS, driveAngularAccelRPSS;
+    // private double driveAccelMPSS, driveAngularAccelRPSS;
 
     private ChassisSpeeds robotSpeeds;
 
@@ -100,13 +99,14 @@ public class SwerveSubsystem extends SubsystemBase {
     private StructPublisher<Rotation2d> publisher2 = NetworkTableInstance.getDefault()
             .getStructTopic("PersianRotation", Rotation2d.struct).publish();
 
-    // private StringPublisher publisher3 = NetworkTableInstance.getDefault().getStringTopic("SysIdData").publish();
+    // private StringPublisher publisher3 =
+    // NetworkTableInstance.getDefault().getStringTopic("SysIdData").publish();
 
     private final PIDController autoThetaController, teleopThetaController;
 
     private GenericEntry kIEntry, kDEntry, kPEntry;
 
-    //private SysIdRoutine sysIdRoutine;
+    // private SysIdRoutine sysIdRoutine;
 
     public SwerveSubsystem() {
 
@@ -120,11 +120,10 @@ public class SwerveSubsystem extends SubsystemBase {
         autoThetaController.enableContinuousInput(-180, 180);
 
         teleopThetaController = new PIDController(
-            DriveConstants.kPThetaController, 
-            DriveConstants.kIThetaController, 
-            DriveConstants.kDThetaController
-            );
-        
+                DriveConstants.kPThetaController,
+                DriveConstants.kIThetaController,
+                DriveConstants.kDThetaController);
+
         teleopThetaController.enableContinuousInput(-180, 180);
         teleopThetaController.setTolerance(20, 180);
 
@@ -140,19 +139,22 @@ public class SwerveSubsystem extends SubsystemBase {
 
         toDivideBy = OIConstants.kSpeedDivideAdjustment;
         driveSpeedMPS = DriveConstants.kTeleDriveMaxSpeedMetersPerSecond / toDivideBy;
-        //driveAccelMPSS = DriveConstants.kTeleDriveMaxAccelerationUnitsPerSecond / toDivideBy;
+        // driveAccelMPSS = DriveConstants.kTeleDriveMaxAccelerationUnitsPerSecond /
+        // toDivideBy;
         driveAngularSpeedRPS = DriveConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond / toDivideBy;
-        //driveAngularAccelRPSS = DriveConstants.kTeleDriveMaxAngularAccelerationUnitsPerSecond / toDivideBy;
+        // driveAngularAccelRPSS =
+        // DriveConstants.kTeleDriveMaxAngularAccelerationUnitsPerSecond / toDivideBy;
 
         robotSpeeds = new ChassisSpeeds();
 
         // this.sysIdRoutine = new SysIdRoutine(
-        //     new SysIdRoutine.Config(Volts.of(0.5).per(Seconds.of(1.0)), Volts.of(5), Seconds.of(5), (state) -> publisher3.set(state.toString())),
-        //     new SysIdRoutine.Mechanism(
-        //         (volts) -> this.setVoltage(volts.in(Volts)),
-        //         null, // No log consumer, since data is recorded by URCL
-        //         this
-        //     )
+        // new SysIdRoutine.Config(Volts.of(0.5).per(Seconds.of(1.0)), Volts.of(5),
+        // Seconds.of(5), (state) -> publisher3.set(state.toString())),
+        // new SysIdRoutine.Mechanism(
+        // (volts) -> this.setVoltage(volts.in(Volts)),
+        // null, // No log consumer, since data is recorded by URCL
+        // this
+        // )
         // );
 
         // The methods below return Command objects
@@ -174,18 +176,18 @@ public class SwerveSubsystem extends SubsystemBase {
     }
 
     // public Command quasistaticCommand(boolean forward) {
-    //     if (forward) {
-    //         return sysIdRoutine.quasistatic(SysIdRoutine.Direction.kForward);
-    //     }
-    //     return sysIdRoutine.quasistatic(SysIdRoutine.Direction.kReverse);
-        
+    // if (forward) {
+    // return sysIdRoutine.quasistatic(SysIdRoutine.Direction.kForward);
+    // }
+    // return sysIdRoutine.quasistatic(SysIdRoutine.Direction.kReverse);
+
     // }
 
     // public Command dynamicCommand(boolean forward) {
-    //     if (forward) {
-    //         return sysIdRoutine.dynamic(SysIdRoutine.Direction.kForward);
-    //     }
-    //     return sysIdRoutine.dynamic(SysIdRoutine.Direction.kReverse);
+    // if (forward) {
+    // return sysIdRoutine.dynamic(SysIdRoutine.Direction.kForward);
+    // }
+    // return sysIdRoutine.dynamic(SysIdRoutine.Direction.kReverse);
     // }
 
     @SuppressWarnings("unused")
@@ -223,9 +225,9 @@ public class SwerveSubsystem extends SubsystemBase {
     public void setMaxSpeeds(double driveSpeedMPS, double driveAccelMPSS, double driveAngularSpeedRPS,
             double driveAngularAccelRPSS) {
         this.driveSpeedMPS = driveSpeedMPS;
-        //this.driveAccelMPSS = driveAccelMPSS;
+        // this.driveAccelMPSS = driveAccelMPSS;
         this.driveAngularSpeedRPS = driveAngularSpeedRPS;
-        //this.driveAngularAccelRPSS = driveAngularAccelRPSS;
+        // this.driveAngularAccelRPSS = driveAngularAccelRPSS;
     }
 
     public void autoGyro() {
@@ -384,8 +386,6 @@ public class SwerveSubsystem extends SubsystemBase {
         sensorData.addNumber("Gyro Pitch", () -> getPitch());
         sensorData.addNumber("Gyro Roll", () -> getRoll());
 
-
-
     }
 
     private void fillList(SwerveModuleNeo module, ShuffleboardLayout layout) {
@@ -404,8 +404,7 @@ public class SwerveSubsystem extends SubsystemBase {
             return autoThetaController.calculate(measurement, 30);
         }
         return teleopThetaController.calculate(measurement, 30);
- 
-        
+
     }
 
     public boolean thetaPIDAtSetpoint(boolean auto) {

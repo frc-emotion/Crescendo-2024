@@ -15,7 +15,7 @@ public class SpeakerTurret extends MonitorVision {
     static {
         shooterMap.clear();
         shooterMap.put(1.46, 61.9);
-     
+
     }
 
     public SpeakerTurret(VisionSubsystem visionSubsystem, PivotSubsystem pivotSubsystem) {
@@ -34,9 +34,11 @@ public class SpeakerTurret extends MonitorVision {
     @Override
     public void execute() {
         super.execute();
-        //System.out.println(calculateAngle());
-        //System.out.println("blud");
-        System.out.println(visionSubsystem.getDistanceTo((DriverStation.getAlliance().get() == DriverStation.Alliance.Red) ? VisionConstants.RED_SPEAKER_CENTER : VisionConstants.BLUE_SPEAKER_CENTER));
+        // System.out.println(calculateAngle());
+        // System.out.println("blud");
+        System.out.println(visionSubsystem.getDistanceTo(
+                (DriverStation.getAlliance().get() == DriverStation.Alliance.Red) ? VisionConstants.RED_SPEAKER_CENTER
+                        : VisionConstants.BLUE_SPEAKER_CENTER));
         pivotSubsystem.setRev(calculateAngle());
     }
 
@@ -52,18 +54,21 @@ public class SpeakerTurret extends MonitorVision {
     }
 
     /**
-     * Gives the inverse tangent of the height from the pivot to about the middle of the speaker's mouth divided by the distance to the speaker.
-     * Checks for team in order to determine the correct position. Uses Translation2D constants for speaker position.
+     * Gives the inverse tangent of the height from the pivot to about the middle of
+     * the speaker's mouth divided by the distance to the speaker.
+     * Checks for team in order to determine the correct position. Uses
+     * Translation2D constants for speaker position.
      * 
      * @return The target angle for the pivot.
      */
     private double calculateAngle() {
         return Math.toDegrees(
-            Math.atan(
-                (AutoConstants.SPEAKER_MOUTH_HEIGHT - AutoConstants.PIVOT_HEIGHT) 
-                / visionSubsystem.getDistanceTo(
-            (DriverStation.getAlliance().get() == DriverStation.Alliance.Red) ? VisionConstants.RED_SPEAKER_CENTER : VisionConstants.BLUE_SPEAKER_CENTER
-        )));
+                Math.atan(
+                        (AutoConstants.SPEAKER_MOUTH_HEIGHT - AutoConstants.PIVOT_HEIGHT)
+                                / visionSubsystem.getDistanceTo(
+                                        (DriverStation.getAlliance().get() == DriverStation.Alliance.Red)
+                                                ? VisionConstants.RED_SPEAKER_CENTER
+                                                : VisionConstants.BLUE_SPEAKER_CENTER)));
     }
 
 }

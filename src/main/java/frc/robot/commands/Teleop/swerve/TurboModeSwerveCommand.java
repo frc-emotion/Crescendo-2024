@@ -23,7 +23,8 @@ public class TurboModeSwerveCommand extends DefaultSwerveXboxCommand {
     }
 
     /**
-     * Sets the maximum speed and acceleration of the robot to the maximum possible speed and acceleration.
+     * Sets the maximum speed and acceleration of the robot to the maximum possible
+     * speed and acceleration.
      */
     @Override
     public void initialize() {

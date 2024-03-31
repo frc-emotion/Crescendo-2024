@@ -21,7 +21,7 @@ public class AmpAlign extends MonitorVision {
 
     @Override
     public void execute() {
-        
+
         super.execute();
     }
 
@@ -32,6 +32,6 @@ public class AmpAlign extends MonitorVision {
 
     @Override
     public void end(boolean interrupted) {
-        
+
     }
 }

@@ -6,8 +6,10 @@ import frc.robot.RobotContainer;
 import frc.robot.subsystems.SwerveSubsystem;
 
 /**
- * Command to reset the gyro. It is not generally recommended to run this Command 
- * except when disabled because it disables the ability to drive until the Command is complete.
+ * Command to reset the gyro. It is not generally recommended to run this
+ * Command
+ * except when disabled because it disables the ability to drive until the
+ * Command is complete.
  */
 public class ResetGyroCommand extends Command {
     private SwerveSubsystem swerve;
@@ -35,7 +37,8 @@ public class ResetGyroCommand extends Command {
 
     /**
      * Decorates the Command so it can run while disabled.
-     * @return  A WrappedCommand containing the ResetGyroCommand.
+     * 
+     * @return A WrappedCommand containing the ResetGyroCommand.
      */
     public static Command getCommand() {
         return new ResetGyroCommand(RobotContainer.m_SwerveSubsystem).ignoringDisable(true);

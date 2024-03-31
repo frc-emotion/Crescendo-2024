@@ -19,7 +19,7 @@ public class SnapCommand extends Command {
 
         this.direction = direction;
         this.swerveSubsystem = swerveSubsystem;
-        
+
         addRequirements(swerveSubsystem);
     }
 

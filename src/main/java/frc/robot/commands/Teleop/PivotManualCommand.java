@@ -16,7 +16,7 @@ public class PivotManualCommand extends Command {
     private final Supplier<Double> yJoystick;
     // private final Supplier<Boolean> leftStickButton, dPadUp, dPadDown, dPadRight;
 
-    //private boolean mode; // true = manual, false = auto
+    // private boolean mode; // true = manual, false = auto
 
     public PivotManualCommand(
             PivotSubsystem pivotSubsystem,
@@ -35,7 +35,7 @@ public class PivotManualCommand extends Command {
         this.pivotSubsystem = pivotSubsystem;
 
         addRequirements(pivotSubsystem);
-        //mode = true;
+        // mode = true;
     }
 
     @Override

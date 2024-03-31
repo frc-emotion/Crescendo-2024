@@ -9,7 +9,8 @@ import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 
 /**
- * Adjusts the rotation of the robot and pivot in order to aim toward the speaker.
+ * Adjusts the rotation of the robot and pivot in order to aim toward the
+ * speaker.
  * Uses vision to aim toward the speaker AprilTag.
  */
 public class VisionSpeakerSwerveCommand extends SnapSwerveCommand {
@@ -22,8 +23,7 @@ public class VisionSpeakerSwerveCommand extends SnapSwerveCommand {
             Supplier<Double> ySpdFunc,
             Supplier<Double> turningSpdFunc,
             VisionSubsystem visionSubsystem,
-            PivotSubsystem pivotSubsystem
-    ) {
+            PivotSubsystem pivotSubsystem) {
         super(swerveSubsystem, xSpdFunc, ySpdFunc, turningSpdFunc, 0);
         this.visionSubsystem = visionSubsystem;
         this.pivotSubsystem = pivotSubsystem;
@@ -34,7 +34,7 @@ public class VisionSpeakerSwerveCommand extends SnapSwerveCommand {
         direction = (int) (swerveSubsystem.getHeading() + visionSubsystem.getTX());
 
         double angle = calculateAngle();
-        if(!pivotSubsystem.isAtTarget(angle)) {
+        if (!pivotSubsystem.isAtTarget(angle)) {
             pivotSubsystem.setRev(angle);
         } else {
             pivotSubsystem.stop();
@@ -44,6 +44,7 @@ public class VisionSpeakerSwerveCommand extends SnapSwerveCommand {
     }
 
     private double calculateAngle() {
-        return Math.atan((AutoConstants.SPEAKER_MOUTH_HEIGHT - AutoConstants.PIVOT_HEIGHT) / visionSubsystem.getDistanceTo(VisionConstants.BLUE_SPEAKER_CENTER));
+        return Math.atan((AutoConstants.SPEAKER_MOUTH_HEIGHT - AutoConstants.PIVOT_HEIGHT)
+                / visionSubsystem.getDistanceTo(VisionConstants.BLUE_SPEAKER_CENTER));
     }
 }

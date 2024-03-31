@@ -31,11 +31,11 @@ public class SwerveModuleNeo {
     private MagnetSensorConfigs magnetConfiguration;
 
     private final CANcoder absoluteEncoder;
-    //private final boolean absoluteEncoderReversed;
+    // private final boolean absoluteEncoderReversed;
     private final double absoluteEncoderOffsetRad;
 
     private double resetIteration = 0;
-    //private double referenceAngleRadians = 0;
+    // private double referenceAngleRadians = 0;
 
     private final int ENCODER_RESET_ITERATIONS = 500;
 
@@ -48,7 +48,7 @@ public class SwerveModuleNeo {
             double absoluteEncoderOffset,
             boolean absoluteEncoderReversed) {
         this.absoluteEncoderOffsetRad = absoluteEncoderOffset;
-        //this.absoluteEncoderReversed = absoluteEncoderReversed;
+        // this.absoluteEncoderReversed = absoluteEncoderReversed;
 
         magnetConfiguration = new MagnetSensorConfigs();
 
@@ -164,7 +164,7 @@ public class SwerveModuleNeo {
             adjustedReferenceAngleRadians += 2.0 * Math.PI;
         }
 
-        //this.referenceAngleRadians = referenceAngleRadians;
+        // this.referenceAngleRadians = referenceAngleRadians;
 
         turningPidController.setReference(
                 adjustedReferenceAngleRadians,
@@ -232,19 +232,19 @@ public class SwerveModuleNeo {
 
     // Unit Conversion Methods
     // private double toRot(double ticks) {
-    //     return ticks / 2048;
+    // return ticks / 2048;
     // }
 
     // private double toRPM(double ticks_per_time) {
-    //     return (ticks_per_time / 2048) * 600;
+    // return (ticks_per_time / 2048) * 600;
     // }
 
     // private double toMeter(double rot) {
-    //     return rot * (ModuleConstants.kDriveEncoderRot2Meter);
+    // return rot * (ModuleConstants.kDriveEncoderRot2Meter);
     // }
 
     // private double toMPS(double rpm) {
-    //     return rpm * (ModuleConstants.kDriveEncoderRPM2MeterPerSec);
+    // return rpm * (ModuleConstants.kDriveEncoderRPM2MeterPerSec);
     // }
 
     // public static double RPMToFalcon(double RPM, double gearRatio) {

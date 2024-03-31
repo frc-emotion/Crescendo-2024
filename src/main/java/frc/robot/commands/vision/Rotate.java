@@ -3,16 +3,9 @@ package frc.robot.commands.vision;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
-import edu.wpi.first.math.interpolation.InterpolatingTreeMap;
-import edu.wpi.first.math.interpolation.InverseInterpolator;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.VisionConstants;
-import frc.robot.subsystems.PivotSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.util.AutoManager;
 
@@ -35,11 +28,10 @@ public class Rotate extends MonitorVision {
         super.execute();
 
         Translation2d currentPose2d = visionSubsystem.getCurrentPose().getTranslation();
-        //System.out.println(currentPose2d);
+        // System.out.println(currentPose2d);
         Rotation2d rotation2d = getTargetRotation();
-        //System.err.println(rotation2d);
+        // System.err.println(rotation2d);
 
-        
         autoManager.navigateToPose(new Pose2d(currentPose2d, rotation2d));
     }
 
@@ -70,7 +62,9 @@ public class Rotate extends MonitorVision {
         System.out.println("Y Offset" + yOffset);
         double currentTheta = visionSubsystem.getTheta();
         System.out.println("Current Theta: " + currentTheta);
-        double distance = visionSubsystem.getDistanceTo((DriverStation.getAlliance().get() == DriverStation.Alliance.Red) ? VisionConstants.RED_SPEAKER_CENTER : VisionConstants.BLUE_SPEAKER_CENTER);
+        double distance = visionSubsystem.getDistanceTo(
+                (DriverStation.getAlliance().get() == DriverStation.Alliance.Red) ? VisionConstants.RED_SPEAKER_CENTER
+                        : VisionConstants.BLUE_SPEAKER_CENTER);
         System.out.println("Distance: " + distance);
         double offsetTheta = Math.acos(yOffset / distance);
         System.out.println("Offset Theta: " + offsetTheta);
