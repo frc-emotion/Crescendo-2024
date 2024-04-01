@@ -37,8 +37,6 @@ public class LEDCommand extends Command {
 
     @Override
     public void execute() {
-        System.out.println(shooterAtTargetSupplier.get());
-
         if (!intakeBreakSupplier.get()) {
             nextColor = LEDConstants.INTAKE_COLOR;
             style = LEDStyle.SOLID;
