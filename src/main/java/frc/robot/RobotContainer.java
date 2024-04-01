@@ -28,6 +28,7 @@ import frc.robot.commands.Auto.NamedCommands.CommandContainer;
 import frc.robot.commands.Auto.NamedCommands.ShootSpeaker;
 import frc.robot.commands.Auto.SubsystemCommands.HandoffAutoCommand;
 import frc.robot.commands.Auto.SubsystemCommands.IntakeDriveAutoCommand;
+import frc.robot.commands.Auto.SubsystemCommands.LEDAutoCommand;
 import frc.robot.commands.Auto.SubsystemCommands.PivotAutoCommand;
 import frc.robot.commands.Auto.SubsystemCommands.RevShooterAutoCommand;
 import frc.robot.commands.LEDCommand;
@@ -598,8 +599,8 @@ public class RobotContainer {
      */
     public Command getAutonomousCommand() {
         return new ParallelCommandGroup(
-                autoChooser.getSelected()
-        // add led command
+                autoChooser.getSelected(),
+                new LEDAutoCommand(m_ledSubsystem)
         );
     }
 
