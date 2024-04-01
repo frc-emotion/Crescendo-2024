@@ -403,10 +403,9 @@ public class SwerveSubsystem extends SubsystemBase {
     public double calculateThetaPID(double measurement, double setpoint, boolean auto) {
         // Remove clamping if not working
         if (auto) {
-            return MathUtil.clamp(autoThetaController.calculate(measurement, 30), -540, 540);
+            return autoThetaController.calculate(-measurement, 330);
         }
-        return MathUtil.clamp(teleopThetaController.calculate(measurement, 30), -540, 540);
-
+        return teleopThetaController.calculate(-measurement, 330);
     }
 
     public boolean thetaPIDAtSetpoint(boolean auto) {

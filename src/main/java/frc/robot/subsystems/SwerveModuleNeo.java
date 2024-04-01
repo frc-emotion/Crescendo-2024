@@ -210,7 +210,7 @@ public class SwerveModuleNeo {
      */
 
     public void setDesiredState(SwerveModuleState state, boolean station) {
-        if (Math.abs(state.speedMetersPerSecond) < 0.3 && !station) {
+        if (Math.abs(state.speedMetersPerSecond) < 0.01 && !station) {
             stop();
             return;
         }
