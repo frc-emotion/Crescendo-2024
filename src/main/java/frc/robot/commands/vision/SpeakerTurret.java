@@ -8,7 +8,7 @@ import frc.robot.subsystems.PivotSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 
 public class SpeakerTurret extends MonitorVision {
-    private PivotSubsystem pivotSubsystem;
+    protected PivotSubsystem pivotSubsystem;
 
     private final static InterpolatingDoubleTreeMap shooterMap = new InterpolatingDoubleTreeMap();
 
@@ -61,7 +61,7 @@ public class SpeakerTurret extends MonitorVision {
      * 
      * @return The target angle for the pivot.
      */
-    private double calculateAngle() {
+    protected double calculateAngle() {
         return Math.toDegrees(
                 Math.atan(
                         (AutoConstants.SPEAKER_MOUTH_HEIGHT - AutoConstants.PIVOT_HEIGHT)

@@ -85,8 +85,8 @@ public class VisionSubsystem extends SubsystemBase {
     }
 
     public void updateOdometry() {
-        poseEstimator.update(swerveSubsystem.getRotation2d(), swerveSubsystem.getModulePositions());
-        poseOdometryEstimator.update(swerveSubsystem.getRotation2d(), swerveSubsystem.getModulePositions()); // testing
+        poseEstimator.update(swerveSubsystem.getRotation2d().times(-1), swerveSubsystem.getModulePositions());
+        poseOdometryEstimator.update(swerveSubsystem.getRotation2d().times(-1), swerveSubsystem.getModulePositions()); // testing
     }
 
     public Pose2d getCurrentPose() {

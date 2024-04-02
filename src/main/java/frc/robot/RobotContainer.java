@@ -26,6 +26,7 @@ import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.commands.Auto.NamedCommands.CommandContainer;
 import frc.robot.commands.Auto.NamedCommands.ShootSpeaker;
+import frc.robot.commands.Auto.SubsystemCommands.AutoSpeakerTurret;
 import frc.robot.commands.Auto.SubsystemCommands.HandoffAutoCommand;
 import frc.robot.commands.Auto.SubsystemCommands.IntakeDriveAutoCommand;
 import frc.robot.commands.Auto.SubsystemCommands.LEDAutoCommand;
@@ -330,10 +331,12 @@ public class RobotContainer {
                                 // .withTimeout(3.5)
                                 )
                                 .andThen(
-                                        new HandoffAutoCommand(
-                                                m_IntakeSubsystem,
+                                        new TeleopHandoffCommand(
+                                                () -> operatorController_HID.getRightTriggerAxis() > OIConstants.kDeadband,
                                                 m_ShooterSubsystem,
-                                                false)
+                                                m_IntakeSubsystem
+                                                
+                                        )
                                                 .onlyIf(() -> m_PivotSubsystem.isHandoffOk())
                                                 .withTimeout(2.0))
                 // )
@@ -366,7 +369,11 @@ public class RobotContainer {
 
         // Handoff Manual Mode
         m_operatorController.a().whileTrue(
-                new HandoffAutoCommand(m_IntakeSubsystem, m_ShooterSubsystem, false));
+                new TeleopHandoffCommand(
+                        () -> operatorController_HID.getRightTriggerAxis() > OIConstants.kDeadband,
+                        m_ShooterSubsystem, m_IntakeSubsystem
+                 )
+        );
 
         // Climb Encoder Reset Command
         m_operatorController.start().onTrue(new InstantCommand() {
@@ -413,7 +420,7 @@ public class RobotContainer {
                         m_PivotSubsystem));
         NamedCommands.registerCommand(
                 "PrepPivot",
-                new SpeakerTurret(m_VisionSubsystem, m_PivotSubsystem));
+                new AutoSpeakerTurret(m_VisionSubsystem, m_PivotSubsystem));
     }
 
     /**

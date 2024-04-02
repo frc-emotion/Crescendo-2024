@@ -112,7 +112,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Pickup Top"
+                  "pathName": "Pickup Top From Mid"
                 }
               },
               {
@@ -150,7 +150,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Score Far Top"
+                  "pathName": "Score Far Mid"
                 }
               },
               {
@@ -194,7 +194,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Pickup Bottom"
+                  "pathName": "Pickup Bottom From Mid"
                 }
               },
               {
@@ -226,7 +226,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Score Far Bottom"
+                  "pathName": "Score Far Mid"
                 }
               },
               {
