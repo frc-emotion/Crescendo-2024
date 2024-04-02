@@ -195,7 +195,7 @@ public final class Constants {
         public static final double MAX_LEVEL_ACCELERATION = 0.3; // Fix with testing
         public static final double THRESHOLD = Units.degreesToRadians(3);
 
-        public static final double kPThetaController = 0.001;
+        public static final double kPThetaController = 0.2;
         public static final double kIThetaController = 0.00;
         public static final double kDThetaController = 0.00;
     }

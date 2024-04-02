@@ -280,7 +280,8 @@ public class VisionSubsystem extends SubsystemBase {
     }
 
     public VisionTypes getSelectedType() {
-        return visionType.getSelected();
+        return VisionTypes.CUSTOM_STD;
+        //return visionType.getSelected();
     }
 
     public void snapOdometry() {
