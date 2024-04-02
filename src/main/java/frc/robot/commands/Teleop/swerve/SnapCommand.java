@@ -19,6 +19,7 @@ public class SnapCommand extends Command {
     private SwerveSubsystem swerveSubsystem;
     private VisionSubsystem visionSubsystem;
     private ChassisSpeeds robotSpeeds;
+    private double theta;
 
     public SnapCommand(
             SwerveSubsystem swerveSubsystem,
@@ -33,6 +34,8 @@ public class SnapCommand extends Command {
     @Override
     public void initialize() {
         swerveSubsystem.updatePID();
+
+        this.theta = getTargetRotation();
     }
 
     @Override
@@ -41,9 +44,8 @@ public class SnapCommand extends Command {
 
         //Translation2d currentPose2d = visionSubsystem.getCurrentPose().getTranslation();
         // System.out.println(currentPose2d);
-        double theta = getTargetRotation();
 
-        double velocity = swerveSubsystem.calculateThetaPID(swerveSubsystem.getHeading(), theta, false);
+        double velocity = swerveSubsystem.calculateThetaPID(swerveSubsystem.getHeading(), this.theta, false);
 
         System.out.println("Velocity: " + velocity);
 
