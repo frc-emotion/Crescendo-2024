@@ -16,6 +16,9 @@ import frc.robot.Constants.IntakeConstants;
 import frc.robot.util.TabManager;
 import frc.robot.util.TabManager.SubsystemTab;
 
+/**
+ * Intake Subsystem
+ */
 public class IntakeSubsystem extends SubsystemBase {
 
     private final CANSparkMax pivotMotor;
@@ -31,19 +34,27 @@ public class IntakeSubsystem extends SubsystemBase {
 
     public boolean down;
 
+    /**
+     * Constructs an IntakeSubsystem Instance
+     */
     public IntakeSubsystem() {
-
         down = false;
 
-        pivotMotor = new CANSparkMax(
+        pivotMotor =
+            new CANSparkMax(
                 IntakeConstants.INTAKE_PIVOT_PORT,
-                MotorType.kBrushless);
-        pivotMotor2 = new CANSparkMax(
+                MotorType.kBrushless
+            );
+        pivotMotor2 =
+            new CANSparkMax(
                 IntakeConstants.INTAKE_PIVOT_2_PORT,
-                MotorType.kBrushless);
-        intakeMotor = new CANSparkMax(
+                MotorType.kBrushless
+            );
+        intakeMotor =
+            new CANSparkMax(
                 IntakeConstants.INTAKE_MOTOR_PORT,
-                MotorType.kBrushless);
+                MotorType.kBrushless
+            );
 
         intakeMotor.setSmartCurrentLimit(IntakeConstants.SMART_MAX_CURRENT);
         intakeMotor.setSecondaryCurrentLimit(IntakeConstants.MAX_CURRENT);
@@ -59,13 +70,16 @@ public class IntakeSubsystem extends SubsystemBase {
 
         pivotMotor2.follow(pivotMotor, true);
 
-        pivotController = new ProfiledPIDController(
+        pivotController =
+            new ProfiledPIDController(
                 IntakeConstants.kP_PIVOT,
                 IntakeConstants.kI_PIVOT,
                 IntakeConstants.kD_PIVOT,
                 new TrapezoidProfile.Constraints(
-                        IntakeConstants.kMaxVelocity,
-                        IntakeConstants.kMaxAccel));
+                    IntakeConstants.kMaxVelocity,
+                    IntakeConstants.kMaxAccel
+                )
+            );
         // pivotController.setTolerance(IntakeConstants.kMaxError);
 
         breakSensor = new DigitalInput(IntakeConstants.BEAM_BREAKER_PORT);
@@ -78,58 +92,106 @@ public class IntakeSubsystem extends SubsystemBase {
 
         pivotEncoder = pivotMotor.getEncoder();
         pivotEncoder.setPositionConversionFactor(
-                1.0 / IntakeConstants.GEAR_REDUCTION);
+            1.0 / IntakeConstants.GEAR_REDUCTION
+        );
 
         pivotEncoder2 = pivotMotor2.getEncoder();
         pivotEncoder2.setPositionConversionFactor(
-                1.0 / IntakeConstants.GEAR_REDUCTION);
+            1.0 / IntakeConstants.GEAR_REDUCTION
+        );
 
         driveEncoder = intakeMotor.getEncoder();
 
         initShuffleboard();
     }
 
+    /**
+     * Toggles Intake up/down
+     */
     public void toggleState() {
         down = !down;
     }
 
+    /**
+     * Check if Intake is up
+     * @return true if Intake is up
+     */
     public boolean isUp() {
         return !down;
     }
 
-    public boolean isDown() {
+    /**
+     * Check if Intake is down
+     * @return true if Intake is down
+     */
+    public boolean isDown() { // this method seems redundant ...
         return down;
     }
 
+    /**
+     * Check if the current has spiked above the threshold
+     * @return true if current has spiked
+     */
     public boolean checkCurrentSpike() {
-        return (pivotMotor.getOutputCurrent() > IntakeConstants.CURRENT_SPIKE_THRESHOLD);
+        return (
+            pivotMotor.getOutputCurrent() >
+            IntakeConstants.CURRENT_SPIKE_THRESHOLD
+        );
     }
 
+    /**
+     * Get the current encoder position
+     * @return Pivot encoder position
+     */
     public double getPosition() {
         return pivotEncoder.getPosition();
     }
 
+    /**
+     * Get current encoder position, converted to 0-360 degrees
+     * @return Encoder position in degrees
+     */
     public double getDegrees() {
-        return ((pivotEncoder.getPosition() / IntakeConstants.GEAR_REDUCTION) *
-                360.0);
+        return (
+            (pivotEncoder.getPosition() / IntakeConstants.GEAR_REDUCTION) *
+            360.0
+        );
     }
 
+    /**
+     * Stop the pivot motor
+     */
     public void pivotStop() {
         pivotMotor.set(0);
     }
 
+    /**
+     * Set the goal position for the Pivot motor
+     * @param position Position to move pivot motor to (0 to 1)
+     */
     public void setGoal(double position) {
         pivotController.setGoal(position);
     }
 
+    /**
+     * Travel to Pivot Controller setpoint
+     */
     public void travelToSetpoint() {
         pivotMotor.set(pivotController.calculate(getPosition()));
     }
 
+    /**
+     * Check if the Pivot Motor has reached the Controller setpoint
+     * @return true if setpoint has been reached
+     */
     public boolean hasReachedSetpoint() {
         return pivotController.atGoal();
     }
 
+    /**
+     * Check if the beam sensor has been broken
+     * @return true if beam is unbroken
+     */
     public boolean getBeamState() {
         return breakSensor.get();
     }
@@ -158,47 +220,72 @@ public class IntakeSubsystem extends SubsystemBase {
         intakeMotor.set(-IntakeConstants.INTAKE_MOTOR_SPEED * (2.0 / 3.0));
     }
 
+    /**
+     * Set the intake motor's speed
+     * @param speed Intake motor speed (0 to 1)
+     */
     public void setIntake(double speed) {
         intakeMotor.set(speed);
     }
 
+    /**
+     * Stop the intake motor
+     */
     public void intakeStop() {
         intakeMotor.set(0);
     }
 
+    /**
+     * Get goal position
+     * @return Pivot controller goal position
+     */
     public double getGoal() {
         return pivotController.getGoal().position;
     }
 
+    /**
+     * Get intake motor's temperature
+     * @return Intake motor temperature in Celsius
+     */
     public double getIntakeDriveTemp() {
         return intakeMotor.getMotorTemperature();
     }
 
+    /**
+     * Get pivot motor's temperature
+     * @return Pivot motor temperature in Celsius
+     */
     public double getIntakePivotTemp() {
         return pivotMotor.getMotorTemperature();
     }
 
+    /**
+     * Initialize Intake Shuffleboard
+     */
     private void initShuffleboard() {
-        if (!Constants.DEBUG_MODE_ACTIVE)
-            return;
+        if (!Constants.DEBUG_MODE_ACTIVE) return;
 
         ShuffleboardTab moduleData = TabManager
-                .getInstance()
-                .accessTab(SubsystemTab.INTAKE);
+            .getInstance()
+            .accessTab(SubsystemTab.INTAKE);
         ShuffleboardLayout persianPositions = moduleData.getLayout(
-                "Persian Positions",
-                BuiltInLayouts.kList);
+            "Persian Positions",
+            BuiltInLayouts.kList
+        );
 
         persianPositions.addNumber(
-                "Intake Motor Position",
-                () -> driveEncoder.getPosition());
+            "Intake Motor Position",
+            () -> driveEncoder.getPosition()
+        );
 
         persianPositions.addNumber(
-                "Pivot Motor Position",
-                () -> pivotEncoder.getPosition());
+            "Pivot Motor Position",
+            () -> pivotEncoder.getPosition()
+        );
         persianPositions.addNumber(
-                "Pivot Motor 2 Position",
-                () -> pivotEncoder2.getPosition());
+            "Pivot Motor 2 Position",
+            () -> pivotEncoder2.getPosition()
+        );
         persianPositions.addNumber("Pivot Position Degrees", this::getDegrees);
         persianPositions.addBoolean("Beam Break", () -> getBeamState());
         persianPositions.addBoolean("At Setpoint", this::hasReachedSetpoint);
@@ -208,9 +295,5 @@ public class IntakeSubsystem extends SubsystemBase {
         // persianPositions.addDouble("Current", () -> pivotMotor.getOutputCurrent());
 
         persianPositions.withSize(2, 4);
-    }
-
-    public boolean getBreakSensorValue() {
-        return breakSensor.get();
     }
 }

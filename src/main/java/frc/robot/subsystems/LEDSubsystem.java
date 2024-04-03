@@ -8,9 +8,6 @@ import frc.robot.Constants.LEDConstants;
 
 /**
  * LED Subsystem
- *
- * @author Jason Ballinger
- * @version 3/19/2024
  */
 public class LEDSubsystem extends SubsystemBase {
 
@@ -40,6 +37,9 @@ public class LEDSubsystem extends SubsystemBase {
         }
     }
 
+    /**
+     * Construct a new LEDSubsystem instance
+     */
     public LEDSubsystem() {
         m_led = new AddressableLED(PWM_PORT);
         m_ledBuffer = new AddressableLEDBuffer(NUM_LEDS);
@@ -53,6 +53,10 @@ public class LEDSubsystem extends SubsystemBase {
         m_led.start();
     }
 
+    /** 
+     * Set color of LEDs using Color object
+     * @param color Color object reference for setting LED Color
+     */
     public void setColor(Color color) {
         for (int i = 0; i < NUM_LEDS; i++) {
             m_ledBuffer.setLED(i, color);
@@ -60,32 +64,24 @@ public class LEDSubsystem extends SubsystemBase {
         m_led.setData(m_ledBuffer);
     }
 
-    // public void setOrange() {
-    // setRGB(255, 40, 0); // Orange
-    // }
-
-    // public void setGreen() {
-    // setRGB(0, 255, 0); // Orange
-    // }
-
-    // public void setBlue() {
-    // setRGB(0, 0, 255); // Blue
-    // }
-
-    // public void setYellow() {
-    // setRGB(255, 255, 0); // Yellow
-    // }
-
-    // public void setRed() {
-    // setRGB(255, 0, 0); // Red
-    // }
-
+    /** 
+     * Set color of LEDs using HSV Value
+     * @param h Hue value for setting LED Color (0 to 255)
+     * @param s Saturation value for setting LED Color (0 to 255)
+     * @param v V-value for setting LED Color (0 to 255)
+    */
     public void setHSV(int h, int s, int v) {
         for (int i = 0; i < NUM_LEDS; i++) {
             m_ledBuffer.setHSV(i, h, s, v);
         }
     }
 
+    /**
+     * Set color of LEDs using RGB Value
+     * @param r Red value for setting LED Color (0 to 255)
+     * @param g Green value for setting LED Color (0 to 255)
+     * @param b Blue value for setting LED Color (0 to 255)
+     */
     public void setRGB(int r, int g, int b) {
         for (int i = 0; i < NUM_LEDS; i++) {
             m_ledBuffer.setRGB(i, r, g, b);
@@ -94,10 +90,17 @@ public class LEDSubsystem extends SubsystemBase {
         m_led.setData(m_ledBuffer);
     }
 
+    /**
+     * Turns off all LEDs
+     */
     public void turnOff() {
         setRGB(0, 0, 0);
     }
 
+    /**
+     * Checks if LEDs are on (only checks first LED)
+     * @return true if the first LED is on
+     */
     public boolean isOn() {
         Color c = m_ledBuffer.getLED(0);
         return !c.equals(Color.fromHSV(0, 0, 0));
