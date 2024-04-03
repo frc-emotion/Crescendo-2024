@@ -15,14 +15,12 @@ import frc.robot.util.TabManager.SubsystemTab;
 
 /**
  * Climb Subsystem
- *
- * @author Jason Ballinger
- * @version 2/3/2024
  */
 public class ClimbSubsystem extends SubsystemBase {
 
     private CANSparkMax climbMotorLeft, climbMotorRight;
     private RelativeEncoder leftEncoder, rightEncoder;
+
     // private SparkPIDController controller;
 
     /**
@@ -30,8 +28,10 @@ public class ClimbSubsystem extends SubsystemBase {
      */
     public ClimbSubsystem() {
         // Initialize Motors
-        climbMotorLeft = new CANSparkMax(ClimbConstants.CLIMB_PORT_L, MotorType.kBrushless);
-        climbMotorRight = new CANSparkMax(ClimbConstants.CLIMB_PORT_R, MotorType.kBrushless);
+        climbMotorLeft =
+            new CANSparkMax(ClimbConstants.CLIMB_PORT_L, MotorType.kBrushless);
+        climbMotorRight =
+            new CANSparkMax(ClimbConstants.CLIMB_PORT_R, MotorType.kBrushless);
 
         // Set Current Limits
         climbMotorLeft.setSmartCurrentLimit(ClimbConstants.CURRENT_LIMIT);
@@ -51,7 +51,6 @@ public class ClimbSubsystem extends SubsystemBase {
         // controller = climbMotorLeft.getPIDController();
 
         // Set Climb Motor 2 to follow Climb Motor 1
-        // TODO: Test with + without, there may be a delay
         climbMotorRight.follow(climbMotorLeft, false);
 
         // PID Stuff
@@ -108,7 +107,7 @@ public class ClimbSubsystem extends SubsystemBase {
     /**
      * Returns left motor current
      *
-     * @return the output current of left motor
+     * @return Output current of left motor
      */
     public double getLeftCurrent() {
         return climbMotorLeft.getOutputCurrent();
@@ -117,7 +116,7 @@ public class ClimbSubsystem extends SubsystemBase {
     /**
      * Returns right motor current
      *
-     * @return the output current of the right motor
+     * @return Output current of the right motor
      */
     public double getRightCurrent() {
         return climbMotorRight.getOutputCurrent();
@@ -139,34 +138,57 @@ public class ClimbSubsystem extends SubsystemBase {
         rightEncoder.setPosition(0);
     }
 
+    /**
+     * Initialize Climb Shuffleboard Information
+     */
     private void initShuffleboard() {
-        if (!Constants.DEBUG_MODE_ACTIVE)
-            return;
+        if (!Constants.DEBUG_MODE_ACTIVE) return;
 
         ShuffleboardTab moduleData = TabManager
-                .getInstance()
-                .accessTab(SubsystemTab.CLIMB);
-        ShuffleboardLayout persianPositions = moduleData.getLayout("Persian Positions", BuiltInLayouts.kList);
+            .getInstance()
+            .accessTab(SubsystemTab.CLIMB);
+        ShuffleboardLayout persianPositions = moduleData.getLayout(
+            "Persian Positions",
+            BuiltInLayouts.kList
+        );
 
-        persianPositions.addNumber("Left Climb Position", () -> leftEncoder.getPosition());
+        persianPositions.addNumber(
+            "Left Climb Position",
+            () -> leftEncoder.getPosition()
+        );
 
-        persianPositions.addNumber("Right Climb Position", () -> rightEncoder.getPosition());
+        persianPositions.addNumber(
+            "Right Climb Position",
+            () -> rightEncoder.getPosition()
+        );
 
-        persianPositions.addDouble("Left Climb Current", () -> climbMotorLeft.getOutputCurrent());
+        persianPositions.addDouble(
+            "Left Climb Current",
+            () -> climbMotorLeft.getOutputCurrent()
+        );
 
-        persianPositions.addDouble("Right Climb Current", () -> climbMotorRight.getOutputCurrent());
+        persianPositions.addDouble(
+            "Right Climb Current",
+            () -> climbMotorRight.getOutputCurrent()
+        );
 
         persianPositions.withSize(2, 4);
-
     }
 
+    /**
+     * Set speed of climb motors
+     * @param speed Speed to set climb motors to 0 to 1
+     */
     public void setRawSpeed(double speed) {
         climbMotorLeft.set(speed);
         climbMotorRight.set(speed);
     }
 
+    /**
+     * Get the current position of Climb from Encoder
+     * @return Climb's Encoder Position (uses right encoder)
+     */
     public double getPosition() {
         return rightEncoder.getPosition();
     }
-
 }
