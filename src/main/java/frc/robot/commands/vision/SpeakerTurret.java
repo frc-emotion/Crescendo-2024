@@ -65,7 +65,7 @@ public class SpeakerTurret extends MonitorVision {
         return Math.toDegrees(
                 Math.atan(
                         (AutoConstants.SPEAKER_MOUTH_HEIGHT - AutoConstants.PIVOT_HEIGHT)
-                                / visionSubsystem.getDistanceTo(
+                                / visionSubsystem.getOdoDistanceTo(
                                         (DriverStation.getAlliance().get() == DriverStation.Alliance.Red)
                                                 ? VisionConstants.RED_SPEAKER_CENTER
                                                 : VisionConstants.BLUE_SPEAKER_CENTER)));

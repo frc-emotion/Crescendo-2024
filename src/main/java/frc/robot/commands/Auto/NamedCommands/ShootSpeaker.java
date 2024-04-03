@@ -17,13 +17,13 @@ public class ShootSpeaker extends Command {
 
     @Override
     public void initialize() {
-        shootSpeed = ShooterConstants.SHOOTER_SPEED_RPM;
+        // shootSpeed = ShooterConstants.SHOOTER_SPEED_RPM;
     }
 
     @Override
     public void execute() {
-        shooterSubsystem.setShooterVelocity(shootSpeed);
-        if (shooterSubsystem.getShooterVelocity() > shootSpeed - 250) {
+        shooterSubsystem.setShooterVelocity(ShooterConstants.SHOOTER_SPEED_RPM);
+        if (shooterSubsystem.getShooterVelocity() > ShooterConstants.SHOOTER_SPEED_RPM - 400) {
             shooterSubsystem.setFeederSpeed(IntakeConstants.SHOOTER_TRANSFER_SPEED);
         }
     }

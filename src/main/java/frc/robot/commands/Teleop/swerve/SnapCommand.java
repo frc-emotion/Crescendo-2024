@@ -41,19 +41,16 @@ public class SnapCommand extends Command {
     @Override
     public void execute() {
         super.execute();
+        visionSubsystem.updateOdometry();
 
         //Translation2d currentPose2d = visionSubsystem.getCurrentPose().getTranslation();
         // System.out.println(currentPose2d);
 
         double velocity = swerveSubsystem.calculateThetaPID(swerveSubsystem.getHeading(), this.theta, false);
 
-        System.out.println("Velocity: " + velocity);
+        System.out.println("Setpoint: " + theta + " Velocity: " + velocity);
 
-        robotSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(
-                0,
-                0,
-                velocity,
-                swerveSubsystem.getRotation2d());
+        robotSpeeds = new ChassisSpeeds(0, 0, velocity);
 
         swerveSubsystem.driveRobotRelative(robotSpeeds);
     }

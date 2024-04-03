@@ -24,6 +24,7 @@ import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.DriveConstants.DriveMode;
 import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.ShooterConstants;
+import frc.robot.commands.LEDCommand;
 import frc.robot.commands.Auto.NamedCommands.CommandContainer;
 import frc.robot.commands.Auto.NamedCommands.ShootSpeaker;
 import frc.robot.commands.Auto.SubsystemCommands.AutoSpeakerTurret;
@@ -32,7 +33,6 @@ import frc.robot.commands.Auto.SubsystemCommands.IntakeDriveAutoCommand;
 import frc.robot.commands.Auto.SubsystemCommands.LEDAutoCommand;
 import frc.robot.commands.Auto.SubsystemCommands.PivotAutoCommand;
 import frc.robot.commands.Auto.SubsystemCommands.RevShooterAutoCommand;
-import frc.robot.commands.LEDCommand;
 import frc.robot.commands.Teleop.*;
 import frc.robot.commands.Teleop.swerve.*;
 import frc.robot.commands.debug.ResetGyroCommand;
@@ -160,6 +160,8 @@ public class RobotContainer {
     private void configureAutoChooser() {
         // autoChooser.addOption("Simple Shoot", new ShootSpeaker(m_ShooterSubsystem));
         addOption("4 Note Auto");
+        addOption("4 Note Angle Auto");
+        addOption("4 Note Angle Auto No Turn");
         addOption("3 Note Top Travel");
         addOption("3 Note Mid Top");
         addOption("3 Note Mid Bottom");
@@ -384,10 +386,12 @@ public class RobotContainer {
         });
 
         m_operatorController.y().whileTrue(
-                new ParallelCommandGroup(
-                        new SnapCommand(m_SwerveSubsystem, m_VisionSubsystem), 
-                        new SpeakerTurret(m_VisionSubsystem, m_PivotSubsystem)
-                        ));
+                new SpeakerTurret(m_VisionSubsystem, m_PivotSubsystem)
+                // new ParallelCommandGroup(
+                //         new SnapCommand(m_SwerveSubsystem, m_VisionSubsystem), 
+                //         new SpeakerTurret(m_VisionSubsystem, m_PivotSubsystem)
+                //         )
+                );
 
     }
 
@@ -595,8 +599,9 @@ public class RobotContainer {
      */
     public Command getAutonomousCommand() {
         return new ParallelCommandGroup(
-                autoChooser.getSelected(),
-                new LEDAutoCommand(m_ledSubsystem)
+                autoChooser.getSelected() != null ? autoChooser.getSelected() : new ShootSpeaker(m_ShooterSubsystem),
+                new LEDAutoCommand(m_ledSubsystem),
+                new MonitorVision(m_VisionSubsystem)
         );
     }
 

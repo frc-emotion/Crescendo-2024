@@ -7,6 +7,7 @@ import frc.robot.subsystems.VisionSubsystem;
 public class AutoSpeakerTurret extends SpeakerTurret {
     public AutoSpeakerTurret(VisionSubsystem visionSubsystem, PivotSubsystem pivotSubsystem) {
         super(visionSubsystem, pivotSubsystem);
+        
     }
 
     @Override

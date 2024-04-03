@@ -214,7 +214,7 @@ public final class Constants {
         public static final double kMaxAngularAccelerationRadiansPerSecondSquared = Math.PI / 4;
 
         // Change based on testing/tune PID controllers
-        public static final double kPXController = 3.56;
+        public static final double kPXController = 3.56 / 2.0;
         public static final double kPYController = 0.75;
 
         public static final double kPThetaController = 0.52;
@@ -305,6 +305,12 @@ public final class Constants {
         protected static final double SHOOTER_REVERSE_SPEED = -0.25; // raw motor output
         protected static final double FEEDER_REVERSE_SPEED = -0.175; // raw motor output
         public static final double MIN_SHOOT_SPEED = 2750;
+
+        public static final double FLYWHEEL_MASS = 0.117; // kg
+        public static final double FLYWHEEL_RADIUS = 0.051; // meters
+        public static final double FLYWHEEL_MOI = 0.5 * FLYWHEEL_MASS * Math.pow(FLYWHEEL_RADIUS, 2);
+        public static final double NOTE_MASS = 0.232; // kg
+        
     }
 
     public static final class PivotConstants {
