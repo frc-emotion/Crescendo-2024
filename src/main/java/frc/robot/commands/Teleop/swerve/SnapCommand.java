@@ -31,11 +31,19 @@ public class SnapCommand extends Command {
         addRequirements(swerveSubsystem);
     }
 
+    public SnapCommand(
+        SwerveSubsystem swerveSubsystem,
+        VisionSubsystem visionSubsystem,
+        double theta
+    ) {
+        this(swerveSubsystem, visionSubsystem);
+        this.theta = theta;
+    }
+
     @Override
     public void initialize() {
         swerveSubsystem.updatePID();
-
-        this.theta = getTargetRotation();
+        // this.theta = getTargetRotation();
     }
 
     @Override
@@ -48,10 +56,9 @@ public class SnapCommand extends Command {
 
         double velocity = swerveSubsystem.calculateThetaPID(swerveSubsystem.getHeading(), this.theta, false);
 
-        System.out.println("Setpoint: " + theta + " Velocity: " + velocity);
+        // System.out.println("Setpoint: " + theta + " Velocity: " + velocity);
 
         robotSpeeds = new ChassisSpeeds(0, 0, velocity);
-
         swerveSubsystem.driveRobotRelative(robotSpeeds);
     }
 
@@ -65,25 +72,26 @@ public class SnapCommand extends Command {
      * @return the target angle for robot
      */
     private double getTargetRotation() {
-        double yOffset;
+        // double yOffset;
 
-        if (DriverStation.getAlliance().get() == Alliance.Red) {
-            yOffset = VisionConstants.RED_SPEAKER_CENTER.getY() - visionSubsystem.getCurrentPose().getY();
-        } else {
-            yOffset = VisionConstants.BLUE_SPEAKER_CENTER.getY() - visionSubsystem.getCurrentPose().getY();
-        }
+        // if (DriverStation.getAlliance().get() == Alliance.Red) {
+        //     yOffset = VisionConstants.RED_SPEAKER_CENTER.getY() - visionSubsystem.getCurrentPose().getY();
+        // } else {
+        //     yOffset = VisionConstants.BLUE_SPEAKER_CENTER.getY() - visionSubsystem.getCurrentPose().getY();
+        // }
 
-        System.out.println("Y Offset" + yOffset);
-        double currentTheta = visionSubsystem.getTheta();
-        System.out.println("Current Theta: " + currentTheta);
-        double distance = visionSubsystem.getDistanceTo(
-                (DriverStation.getAlliance().get() == DriverStation.Alliance.Red) ? VisionConstants.RED_SPEAKER_CENTER
-                        : VisionConstants.BLUE_SPEAKER_CENTER);
-        System.out.println("Distance: " + distance);
-        double offsetTheta = Math.acos(yOffset / distance);
-        System.out.println("Offset Theta: " + offsetTheta);
+        // System.out.println("Y Offset" + yOffset);
+        // double currentTheta = visionSubsystem.getTheta();
+        // System.out.println("Current Theta: " + currentTheta);
+        // double distance = visionSubsystem.getDistanceTo(
+        //         (DriverStation.getAlliance().get() == DriverStation.Alliance.Red) ? VisionConstants.RED_SPEAKER_CENTER
+        //                 : VisionConstants.BLUE_SPEAKER_CENTER);
+        // System.out.println("Distance: " + distance);
+        // double offsetTheta = Math.acos(yOffset / distance);
+        // System.out.println("Offset Theta: " + offsetTheta);
 
-        System.out.println("Final Theta: " + Units.radiansToDegrees(currentTheta + offsetTheta));
-        return Units.radiansToDegrees(currentTheta + offsetTheta);
+        // System.out.println("Final Theta: " + Units.radiansToDegrees(currentTheta + offsetTheta));
+        // return Units.radiansToDegrees(currentTheta + offsetTheta);
+        return theta;
     }
 }

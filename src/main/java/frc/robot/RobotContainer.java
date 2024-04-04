@@ -21,6 +21,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.GameConstants;
 import frc.robot.Constants.DriveConstants.DriveMode;
 import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.ShooterConstants;
@@ -43,6 +44,8 @@ import frc.robot.subsystems.*;
 import frc.robot.util.AutoManager;
 import frc.robot.util.TabManager;
 import frc.robot.util.TabManager.SubsystemTab;
+
+import java.sql.Driver;
 import java.util.Map;
 
 /**
@@ -263,6 +266,18 @@ public class RobotContainer {
                 m_SwerveSubsystem.zeroHeading();
             }
         });
+
+        m_driverController.leftTrigger(OIConstants.kDeadband).whileTrue(
+                new ParallelCommandGroup(
+                        new SnapSwerveCommand(
+                                m_SwerveSubsystem,
+                                () -> driverController_HID.getLeftY(),
+                                () -> driverController_HID.getLeftX(),
+                                () -> driverController_HID.getRightX(),
+                                (int) (DriverStation.getAlliance().get() == DriverStation.Alliance.Red ? GameConstants.RED_NOTE_FEED_ANGLE : GameConstants.BLUE_NOTE_FEED_ANGLE)
+                        )
+                )
+        );
   
 
         // Amp Shooting
@@ -598,11 +613,17 @@ public class RobotContainer {
      * @return The currently selected Auto Command
      */
     public Command getAutonomousCommand() {
-        return new ParallelCommandGroup(
-                autoChooser.getSelected() != null ? autoChooser.getSelected() : new ShootSpeaker(m_ShooterSubsystem),
-                new LEDAutoCommand(m_ledSubsystem),
-                new MonitorVision(m_VisionSubsystem)
-        );
+        try {
+                return new ParallelCommandGroup(
+                        autoChooser.getSelected(),
+                        new LEDAutoCommand(m_ledSubsystem),
+                        new MonitorVision(m_VisionSubsystem)
+                );
+        } catch(Exception ex) {
+                DriverStation.reportError("Autonomous Command Scheduling Error", true);
+                return new ShootSpeaker(m_ShooterSubsystem);
+        }
+        
     }
 
     public Command getLEDCommand() {

@@ -29,10 +29,15 @@ import edu.wpi.first.math.geometry.Pose2d;
  */
 public final class Constants {
 
-    // DEBUG MODE
+    /**
+     * Controls whether or not Debug Mode is activated. If it is, each Subsystem Shuffleboard tab
+     * is supplied with most important subsystem info.
+     */
     public static final boolean DEBUG_MODE_ACTIVE = false;
 
-    // Add all Driver/Teleop Controller here
+    /**
+     * Contains controller configurations for the driver and operator
+     */
     public static final class OIConstants {
 
         public static final int kDriverControllerPort = 0;
@@ -46,6 +51,14 @@ public final class Constants {
         public static final double INTAKE_DEADZONE = 0.2;
         public static final double kPersianSpeedMultiplier = 2.0;
         public static final double kSpeedDivideAdjustment = 2.0;
+    }
+
+    /**
+     * Contains constants used during the Game
+     */
+    public static final class GameConstants {
+        public static final double RED_NOTE_FEED_ANGLE = 45; // Used to shoot notes into the amp area during teleop
+        public static final double BLUE_NOTE_FEED_ANGLE = -45; // Used to shoot notes into the amp area during teleop
     }
 
     public static final class ModuleConstants {
