@@ -57,8 +57,8 @@ public final class Constants {
      * Contains constants used during the Game
      */
     public static final class GameConstants {
-        public static final double RED_NOTE_FEED_ANGLE = 45; // Used to shoot notes into the amp area during teleop
-        public static final double BLUE_NOTE_FEED_ANGLE = -45; // Used to shoot notes into the amp area during teleop
+        public static final double RED_NOTE_FEED_ANGLE = -32; // Used to shoot notes into the amp area during teleop
+        public static final double BLUE_NOTE_FEED_ANGLE = 32; // Used to shoot notes into the amp area during teleop
     }
 
     public static final class ModuleConstants {
@@ -249,7 +249,7 @@ public final class Constants {
         public static final Pose2d SCORE_SPEAKER_POSE = new Pose2d();
 
         public static final double SPEAKER_TAG_HEIGHT = 1.324;
-        public static final double SPEAKER_MOUTH_HEIGHT = 2.1;
+        public static final double SPEAKER_MOUTH_HEIGHT = 2.083;
         public static final double PIVOT_HEIGHT = 0.371; // meters
 
         public static final boolean INITIAL_PLANNING_ENABLED = false;
@@ -312,7 +312,7 @@ public final class Constants {
         public static final double SHOOTER_SPEED_RPM = 3500.0;
         public static final double[] PRESET_SPEEDS = { 3500, 0 }; // rpm
         public static final double IDLE_SPEED = 1000; // rpm
-        public static final double AmpRPM = 1100;
+        public static final double AmpRPM = 1050;
 
         // For SOURCE intake
         protected static final double SHOOTER_REVERSE_SPEED = -0.25; // raw motor output
@@ -354,7 +354,7 @@ public final class Constants {
         public static final double PIVOT_MIN_REVOLUTION = 5;
         public static final double PIVOT_MAX_REVOLUTION = 83;
         public static final double PIVOT_THRESHOLD = 6;
-        public static final double[] PIVOT_POSITIONS = { 60.0, 0 };
+        public static final double[] PIVOT_POSITIONS = { 65.0, 0, 50.0};
 
         // Input Constants
         public static final double TRIGGER_THRESHOLD = 0.3;
@@ -413,7 +413,7 @@ public final class Constants {
         public static final double DEPLOYED_POS = -0.32;
         public static final double RETRACTED_POS = 0;
 
-        public static final double SHOOTER_TRANSFER_SPEED = 0.4;
+        public static final double SHOOTER_TRANSFER_SPEED = 0.35;
         public static final double AUTO_SHOOTER_TRANSFER_SPEED = 0.5;
 
         // -----------------------------------------

@@ -41,7 +41,7 @@ public class ControllerRumbleCommand extends Command {
 
             // If there is a note in the intake and the intake is down, both controllers
             // pulse twice, with 2 cycles of off and on. Each cycle takes 100ms.
-            if (isNoteIntake.get() && isIntakeDown.get() && !hasIntakePulsed) {
+            if (!isNoteIntake.get() && isIntakeDown.get()) {
                 rumbleDriver(0.25);
                 rumbleOp(0.25);
             } else if (isShooterAtSpeed.get()) {
@@ -53,10 +53,6 @@ public class ControllerRumbleCommand extends Command {
             } else {
                 rumbleDriver(0);
                 rumbleOp(0);
-            }
-
-            if (!isIntakeDown.get()) {
-                hasIntakePulsed = false;
             }
         }
 

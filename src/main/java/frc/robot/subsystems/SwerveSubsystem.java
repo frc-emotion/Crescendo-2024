@@ -200,9 +200,18 @@ public class SwerveSubsystem extends SubsystemBase {
     }
 
     public void updatePID() {
-        this.teleopThetaController.setI(this.kIEntry.getDouble(ShooterConstants.kI));
-        this.teleopThetaController.setD(this.kDEntry.getDouble(ShooterConstants.kD));
-        this.teleopThetaController.setP(this.kPEntry.getDouble(ShooterConstants.kP));
+        if(Constants.DEBUG_MODE_ACTIVE) {
+            this.teleopThetaController.setI(this.kIEntry.getDouble(ShooterConstants.kI));
+            this.teleopThetaController.setD(this.kDEntry.getDouble(ShooterConstants.kD));
+            this.teleopThetaController.setP(this.kPEntry.getDouble(ShooterConstants.kP));
+        } else {
+            teleopThetaController.setPID(
+                DriveConstants.kPThetaController,
+                DriveConstants.kIThetaController,
+                DriveConstants.kDThetaController
+            );
+        }
+       
     }
 
     public void setRawDriveSpeed(double speed) {
@@ -406,7 +415,7 @@ public class SwerveSubsystem extends SubsystemBase {
             return autoThetaController.calculate(-measurement, 360 - setpoint);
         }
         // return MathUtil.clamp(teleopThetaController.calculate(-measurement, 360 - setpoint), -540, 540);
-        return teleopThetaController.calculate(-measurement, 360 - setpoint);
+        return teleopThetaController.calculate(-measurement, setpoint);
 
     }
 

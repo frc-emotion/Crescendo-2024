@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.LEDConstants;
 import frc.robot.subsystems.LEDSubsystem;
 import frc.robot.subsystems.LEDSubsystem.LEDStyle;
+
 import java.util.function.Supplier;
 
 public class LEDCommand extends Command {
@@ -49,7 +50,7 @@ public class LEDCommand extends Command {
         } else if (shooterBreakSupplier.get()) {
             nextColor = LEDConstants.SHOOTER_COLOR;
             style = LEDStyle.SOLID;
-        } else if (DriverStation.isTeleopEnabled() && DriverStation.getAlliance() != null) {
+        } else if (DriverStation.getAlliance() != null) {
             nextColor = DriverStation.getAlliance().get() == Alliance.Blue
                     ? LEDConstants.BLUE_ALLIANCE_COLOR
                     : LEDConstants.RED_ALLIANCE_COLOR;

@@ -1,6 +1,7 @@
 package frc.robot.commands.Auto.SubsystemCommands;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants.PivotConstants;
 import frc.robot.subsystems.PivotSubsystem;
 
 public class ResetPivotAutoCommand extends Command {
@@ -18,7 +19,7 @@ public class ResetPivotAutoCommand extends Command {
 
     @Override
     public boolean isFinished() {
-        return pivotSubsystem.isAtTarget();
+        return pivotSubsystem.isAtTarget(60);
     }
 
     @Override

@@ -3,6 +3,8 @@ package frc.robot.commands.Teleop.swerve;
 import java.util.function.Supplier;
 
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj.DriverStation;
+import frc.robot.Constants.GameConstants;
 import frc.robot.subsystems.SwerveSubsystem;
 
 /**
@@ -35,7 +37,11 @@ public class SnapSwerveCommand extends AbstractSwerveXboxCommand {
         robotSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(
                 xSpeed,
                 ySpeed,
-                swerveSubsystem.calculateThetaPID(swerveSubsystem.getHeading(), direction, false),
+                swerveSubsystem.calculateThetaPID(
+                    swerveSubsystem.getHeading(), 
+                    (int) (DriverStation.getAlliance().get() == DriverStation.Alliance.Red ? GameConstants.RED_NOTE_FEED_ANGLE : GameConstants.BLUE_NOTE_FEED_ANGLE), 
+                    false
+                ),
                 swerveSubsystem.getRotation2d());
 
         sendSpeedsToSubsystem();

@@ -58,12 +58,12 @@ public class VisionSubsystem extends SubsystemBase {
 
         this.swerveSubsystem = swerveSubsystem;
 
-        visionType.setDefaultOption("NO VISION (why would you want this?)", VisionTypes.NO_VISION);
+        visionType.setDefaultOption("Custom STD", VisionTypes.CUSTOM_STD);
+        visionType.addOption("NO VISION", VisionTypes.NO_VISION);
         // visionType.addOption("Torpedo Vision", VisionTypes.TORPEDO);
         // visionType.addOption("Preset STD", VisionTypes.PRESET_STD);
-        visionType.addOption("Custom STD", VisionTypes.CUSTOM_STD);
         // visionType.addOption("Calculations Based Vision", VisionTypes.CRAZY_MATH);
-        visionType.addOption("Limelight Docs Vision", VisionTypes.LLDOCS);
+        // visionType.addOption("Limelight Docs Vision", VisionTypes.LLDOCS);
 
         this.poseEstimator = new SwerveDrivePoseEstimator(
                 DriveConstants.kDriveKinematics,

@@ -24,6 +24,7 @@ import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.GameConstants;
 import frc.robot.Constants.DriveConstants.DriveMode;
 import frc.robot.Constants.OIConstants;
+import frc.robot.Constants.PivotConstants;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.commands.LEDCommand;
 import frc.robot.commands.Auto.NamedCommands.CommandContainer;
@@ -114,7 +115,7 @@ public class RobotContainer {
         m_PivotSubsystem.setDefaultCommand(
                 new PivotManualCommand(
                         m_PivotSubsystem,
-                        () -> operatorController_HID.getLeftY()
+                        () -> -operatorController_HID.getLeftY()
                 // () -> operatorController_HID.getLeftStickButton()
                 // () -> operatorController_HID.getPOV() == 0,
                 // () -> operatorController_HID.getPOV() == 180,
@@ -274,8 +275,9 @@ public class RobotContainer {
                                 () -> driverController_HID.getLeftY(),
                                 () -> driverController_HID.getLeftX(),
                                 () -> driverController_HID.getRightX(),
-                                (int) (DriverStation.getAlliance().get() == DriverStation.Alliance.Red ? GameConstants.RED_NOTE_FEED_ANGLE : GameConstants.BLUE_NOTE_FEED_ANGLE)
-                        )
+                                0
+                        ),
+                        new PivotAutoCommand(m_PivotSubsystem, 2)
                 )
         );
   
@@ -348,14 +350,16 @@ public class RobotContainer {
                                 // .withTimeout(3.5)
                                 )
                                 .andThen(
-                                        new TeleopHandoffCommand(
-                                                () -> operatorController_HID.getRightTriggerAxis() > OIConstants.kDeadband,
-                                                m_ShooterSubsystem,
-                                                m_IntakeSubsystem
+                                        // new TeleopHandoffCommand(
+                                        //         () -> operatorController_HID.getRightTriggerAxis() > OIConstants.kDeadband,
+                                        //         m_ShooterSubsystem,
+                                        //         m_IntakeSubsystem
                                                 
-                                        )
-                                                .onlyIf(() -> m_PivotSubsystem.isHandoffOk())
-                                                .withTimeout(2.0))
+                                        // )
+                                        //         // .onlyIf(() -> m_PivotSubsystem.isHandoffOk())
+                                        //         .withTimeout(2.0)
+                                        new HandoffAutoCommand(m_IntakeSubsystem, m_ShooterSubsystem, false).withTimeout(2.0)
+                                )
                 // )
                 );
 
@@ -396,7 +400,7 @@ public class RobotContainer {
         m_operatorController.start().onTrue(new InstantCommand() {
             @Override
             public void execute() {
-                m_ClimbSubsystem.reset();
+                m_PivotSubsystem.resetPosition(PivotConstants.PIVOT_POSITIONS[0]);
             }
         });
 
@@ -433,10 +437,15 @@ public class RobotContainer {
                 new RevShooterAutoCommand(m_ShooterSubsystem));
         NamedCommands.registerCommand(
                 "AutoHandoff",
-                CommandContainer.getAutoHandoffCommandGroup(
-                        m_IntakeSubsystem,
-                        m_ShooterSubsystem,
-                        m_PivotSubsystem));
+                // CommandContainer.getAutoHandoffCommandGroup(
+                //         m_IntakeSubsystem,
+                //         m_ShooterSubsystem,
+                //         m_PivotSubsystem));
+                new HandoffAutoCommand(m_IntakeSubsystem, m_ShooterSubsystem, true).withTimeout(3.0));
+        NamedCommands.registerCommand(
+                "AutoHandoffNoTimeout",
+                new HandoffAutoCommand(m_IntakeSubsystem, m_ShooterSubsystem, true).onlyIf(() -> !m_IntakeSubsystem.getBeamState())
+        );
         NamedCommands.registerCommand(
                 "PrepPivot",
                 new AutoSpeakerTurret(m_VisionSubsystem, m_PivotSubsystem));
@@ -601,7 +610,7 @@ public class RobotContainer {
         matchLayout.addNumber(
                 "Match Number",
                 () -> DriverStation.getMatchNumber());
-        matchLayout
+        autoTab
                 .add("Reset Heading", ResetGyroCommand.getCommand())
                 .withWidget(BuiltInWidgets.kCommand)
                 .withSize(2, 2);
@@ -632,7 +641,9 @@ public class RobotContainer {
                 m_IntakeSubsystem::getBeamState,
                 m_IntakeSubsystem::isDown,
                 m_ShooterSubsystem::isProjectileFed,
-                () -> m_ShooterSubsystem.getShooterVelocity() > ShooterConstants.MIN_SHOOT_SPEED);
+                () -> (( m_ShooterSubsystem.getShooterVelocity() > ShooterConstants.MIN_SHOOT_SPEED))
+                        // || (driverController_HID.getRightBumper() > OIConstants.kDeadband && m_ShooterSubsystem.getShooterVelocity() > ShooterConstants.AmpRPM - 250))
+                );
     }
 
     public Command getControllerRumbleCommand() {
@@ -642,7 +653,7 @@ public class RobotContainer {
                 () -> m_IntakeSubsystem.getBeamState(),
                 () -> m_IntakeSubsystem.isDown(),
                 () -> m_ShooterSubsystem.getShooterVelocity() > m_ShooterSubsystem.getAmpRPM() -
-                        150 &&
+                        200 &&
                         operatorController_HID.getRightBumper(),
                 () -> m_ShooterSubsystem.getShooterVelocity() > ShooterConstants.MIN_SHOOT_SPEED &&
                         operatorController_HID.getRightTriggerAxis() > OIConstants.kDeadband);
