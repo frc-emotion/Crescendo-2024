@@ -141,7 +141,7 @@
                 }
               },
               {
-                "type": "parallel",
+                "type": "sequential",
                 "data": {
                   "commands": [
                     {
@@ -217,7 +217,7 @@
                     {
                       "type": "named",
                       "data": {
-                        "name": "AutoHandoffNoTimeout"
+                        "name": "IntakeNote"
                       }
                     }
                   ]
