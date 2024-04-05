@@ -410,7 +410,7 @@ public class RobotContainer {
                 //         new SnapCommand(m_SwerveSubsystem, m_VisionSubsystem), 
                 //         new SpeakerTurret(m_VisionSubsystem, m_PivotSubsystem)
                 //         )
-                        new PivotAutoCommand(m_PivotSubsystem, 2)
+                        new PivotAutoCommand(m_PivotSubsystem, 3)
                 );
 
     }
