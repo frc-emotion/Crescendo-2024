@@ -277,7 +277,7 @@ public class RobotContainer {
                                 () -> driverController_HID.getRightX(),
                                 0
                         ),
-                        new PivotAutoCommand(m_PivotSubsystem, 2)
+                        new PivotAutoCommand(m_PivotSubsystem, 1)
                 )
         );
   
@@ -405,11 +405,12 @@ public class RobotContainer {
         });
 
         m_operatorController.y().whileTrue(
-                new SpeakerTurret(m_VisionSubsystem, m_PivotSubsystem)
+                // new SpeakerTurret(m_VisionSubsystem, m_PivotSubsystem)
                 // new ParallelCommandGroup(
                 //         new SnapCommand(m_SwerveSubsystem, m_VisionSubsystem), 
                 //         new SpeakerTurret(m_VisionSubsystem, m_PivotSubsystem)
                 //         )
+                        new PivotAutoCommand(m_PivotSubsystem, 2)
                 );
 
     }
@@ -420,9 +421,7 @@ public class RobotContainer {
     private void registerNamedCommands() {
         NamedCommands.registerCommand(
                 "ScoreSpeaker",
-                new ParallelRaceGroup(
-                        new ShootSpeaker(m_ShooterSubsystem),
-                        new WaitCommand(3.5))); // .withTimeout(AutoConstants.SCORE_SPEAKER_TIMEOUT));
+                new ShootSpeaker(m_ShooterSubsystem));
         NamedCommands.registerCommand(
                 "IntakeNote",
                 new IntakeDriveAutoCommand(m_IntakeSubsystem));

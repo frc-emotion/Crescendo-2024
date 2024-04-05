@@ -13,10 +13,10 @@ public class PivotAutoCommand extends Command {
         addRequirements(pivotSubsystem);
     }
 
-    public PivotAutoCommand(PivotSubsystem pivotSubsystem, double targetAngle) {
-        this.pivotSubsystem = pivotSubsystem;
+    // public PivotAutoCommand(PivotSubsystem pivotSubsystem, double targetAngle) {
+    //     this.pivotSubsystem = pivotSubsystem;
 
-    }
+    // }
 
     @Override
     public void initialize() {
