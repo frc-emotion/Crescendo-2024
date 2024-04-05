@@ -277,7 +277,7 @@ public class RobotContainer {
                                 () -> driverController_HID.getRightX(),
                                 0
                         ),
-                        new PivotAutoCommand(m_PivotSubsystem, 1)
+                        new PivotAutoCommand(m_PivotSubsystem, 2)
                 )
         );
   
