@@ -189,6 +189,7 @@ public class RobotContainer {
         // addOption("Note Push Bottom");
         addOption("1 Note Stationary");
         addOption("Note Push");
+        addOption("Str8 Note Push Bottom");
     }
 
     /**
