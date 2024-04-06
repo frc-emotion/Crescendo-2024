@@ -6,6 +6,6 @@ public class ShooterSpeedUtility {
     }
 
     public static double getOutputVelocity(double rpm) {
-        return 1;
+        return 0;
     }
 }
