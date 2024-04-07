@@ -1,0 +1,100 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 8.328810723241988,
+        "y": 0.772915212021579
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 11.016290588362702,
+        "y": 0.772915212021579
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 8.328810723241988,
+        "y": 2.4475648380683346
+      },
+      "prevControl": {
+        "x": 7.309698764684423,
+        "y": 2.4475648380683346
+      },
+      "nextControl": {
+        "x": 9.915136347901054,
+        "y": 2.4475648380683346
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 8.328810723241988,
+        "y": 4.122214464115091
+      },
+      "prevControl": {
+        "x": 6.759165401013064,
+        "y": 4.122214464115091
+      },
+      "nextControl": {
+        "x": 9.898456045470912,
+        "y": 4.122214464115091
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 8.328810723241988,
+        "y": 5.773442417070284
+      },
+      "prevControl": {
+        "x": 7.56760634776619,
+        "y": 5.773442417070284
+      },
+      "nextControl": {
+        "x": 9.090015098717785,
+        "y": 5.773442417070284
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 8.328810723241988,
+        "y": 7.412959533479694
+      },
+      "prevControl": {
+        "x": 8.609870800340744,
+        "y": 6.967947744739997
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 4.0,
+    "maxAcceleration": 3.25,
+    "maxAngularVelocity": 720.0,
+    "maxAngularAcceleration": 540.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 0.0,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": "Far Notes",
+  "previewStartingState": {
+    "rotation": 0.0,
+    "velocity": 0.0
+  },
+  "useDefaultConstraints": true
+}

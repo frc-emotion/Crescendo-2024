@@ -1,0 +1,31 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 0.5411044202972841,
+      "y": 2.0845289051491083
+    },
+    "rotation": 180.0
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Travel Out Bottom Straight"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Run Over Notes Bottom"
+          }
+        }
+      ]
+    }
+  },
+  "folder": "Travel Auto",
+  "choreoAuto": false
+}

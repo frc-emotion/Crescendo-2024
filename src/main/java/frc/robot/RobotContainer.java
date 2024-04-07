@@ -189,6 +189,7 @@ public class RobotContainer {
         // addOption("Note Push Bottom");
         addOption("1 Note Stationary");
         addOption("Note Push");
+        addOption("Str8 Note Push Bottom");
     }
 
     /**
@@ -405,11 +406,12 @@ public class RobotContainer {
         });
 
         m_operatorController.y().whileTrue(
-                new SpeakerTurret(m_VisionSubsystem, m_PivotSubsystem)
+                // new SpeakerTurret(m_VisionSubsystem, m_PivotSubsystem)
                 // new ParallelCommandGroup(
                 //         new SnapCommand(m_SwerveSubsystem, m_VisionSubsystem), 
                 //         new SpeakerTurret(m_VisionSubsystem, m_PivotSubsystem)
                 //         )
+                        new PivotAutoCommand(m_PivotSubsystem, 3)
                 );
 
     }
@@ -420,9 +422,7 @@ public class RobotContainer {
     private void registerNamedCommands() {
         NamedCommands.registerCommand(
                 "ScoreSpeaker",
-                new ParallelRaceGroup(
-                        new ShootSpeaker(m_ShooterSubsystem),
-                        new WaitCommand(3.5))); // .withTimeout(AutoConstants.SCORE_SPEAKER_TIMEOUT));
+                new ShootSpeaker(m_ShooterSubsystem));
         NamedCommands.registerCommand(
                 "IntakeNote",
                 new IntakeDriveAutoCommand(m_IntakeSubsystem));
