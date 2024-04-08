@@ -16,20 +16,11 @@ public class ClimbIOSparkMax implements ClimbIO {
     private RelativeEncoder encoderLeft, encoderRight;
 
     public ClimbIOSparkMax() {
-        switch(Constants.ROBOT_LOGGING_MODE) {
-            case REAL:
-                climbMotorLeft =
-                    new CANSparkMax(ClimbConstants.CLIMB_PORT_L, MotorType.kBrushless);
-                climbMotorRight =
-                    new CANSparkMax(ClimbConstants.CLIMB_PORT_R, MotorType.kBrushless);
-                break;
-
-            case SIM:
-                throw new UnsupportedOperationException("Simulation mode not set up");
-            case REPLAY:
-                throw new UnsupportedOperationException("Replay mode not set up"); 
-        }
-
+        climbMotorLeft =
+            new CANSparkMax(ClimbConstants.CLIMB_PORT_L, MotorType.kBrushless);
+        climbMotorRight =
+            new CANSparkMax(ClimbConstants.CLIMB_PORT_R, MotorType.kBrushless);
+            
         climbMotorLeft.setSmartCurrentLimit(ClimbConstants.CURRENT_LIMIT);
         climbMotorLeft.setSecondaryCurrentLimit(ClimbConstants.CURRENT_LIMIT);
         climbMotorLeft.setIdleMode(IdleMode.kBrake);

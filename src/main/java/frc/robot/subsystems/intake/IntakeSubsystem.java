@@ -35,25 +35,11 @@ public class IntakeSubsystem extends SubsystemBase {
     private final IntakeIO io;
     private final IntakeIOInputs inputs = new IntakeIOInputs();
 
-    private final ProfiledPIDController pivotController;
-
     /**
      * Constructs an IntakeSubsystem Instance
      */
     public IntakeSubsystem(IntakeIO io) {
-        this.io = io;
-
-        pivotController =
-            new ProfiledPIDController(
-                kP_Pivot.get(),
-                kI_Pivot.get(),
-                kD_Pivot.get(),
-                new TrapezoidProfile.Constraints(
-                    PivotSpeed.get(),
-                    PivotAccel.get()
-                )
-            );
-        
+        this.io = io;  
         initShuffleboard();
     }
 
@@ -64,17 +50,12 @@ public class IntakeSubsystem extends SubsystemBase {
     }
 
     public void updateConstants() {
-        pivotController.setPID(
-            kP_Pivot.get(),
+        io.updateConstants(
+            kD_Pivot.get(),
             kI_Pivot.get(),
-            kD_Pivot.get()
-        );
-
-        pivotController.setConstraints(
-            new TrapezoidProfile.Constraints(
-                PivotSpeed.get(),
-                PivotAccel.get()
-            )
+            kI_Pivot.get(),
+            PivotSpeed.get(),
+            PivotAccel.get()
         );
     }
 
@@ -128,14 +109,14 @@ public class IntakeSubsystem extends SubsystemBase {
      * @param position Position to move pivot motor to (0 to 1)
      */
     public void setGoal(double position) {
-        pivotController.setGoal(position);
+        io.setPivotTarget(position);
     }
 
     /**
      * Travel to Pivot Controller setpoint
      */
     public void travelToSetpoint() {
-        io.setPivot(pivotController.calculate(getPosition()));
+        io.goToSetpoint();
     }
 
     /**
@@ -143,7 +124,7 @@ public class IntakeSubsystem extends SubsystemBase {
      * @return true if setpoint has been reached
      */
     public boolean hasReachedSetpoint() {
-        return pivotController.atGoal();
+        return inputs.atTarget;
     }
 
     /**
@@ -157,21 +138,21 @@ public class IntakeSubsystem extends SubsystemBase {
     // TESTING ---------------------------------------------
 
     public void simplePivot() {
-        io.setPivot(IntakeConstants.INTAKE_PIVOT_SPEED);
+        io.setPivotSpeed(IntakeConstants.INTAKE_PIVOT_SPEED);
     }
 
     public void revSimplePivot() {
-        io.setPivot(-IntakeConstants.INTAKE_PIVOT_SPEED);
+        io.setPivotSpeed(-IntakeConstants.INTAKE_PIVOT_SPEED);
     }
 
     // INTAKE MOTORS -------------------------------------------
 
     public void intakeForward() {
-        io.setDrive(IntakeConstants.INTAKE_MOTOR_SPEED);
+        io.setDriveSpeed(IntakeConstants.INTAKE_MOTOR_SPEED);
     }
 
     public void intakeReverse() {
-        io.setDrive(-IntakeConstants.INTAKE_MOTOR_SPEED * (2.0 / 3.0));
+        io.setDriveSpeed(-IntakeConstants.INTAKE_MOTOR_SPEED * (2.0 / 3.0));
     }
 
     /**
@@ -179,7 +160,7 @@ public class IntakeSubsystem extends SubsystemBase {
      * @param speed Intake motor speed (0 to 1)
      */
     public void setIntake(double speed) {
-        io.setDrive(speed);
+        io.setDriveSpeed(speed);
     }
 
     /**
@@ -187,7 +168,7 @@ public class IntakeSubsystem extends SubsystemBase {
      * @return Pivot controller goal position
      */
     public double getGoal() {
-        return pivotController.getGoal().position;
+        return inputs.pivotTarget;
     }
 
     /**

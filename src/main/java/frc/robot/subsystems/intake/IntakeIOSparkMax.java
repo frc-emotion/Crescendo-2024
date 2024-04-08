@@ -5,9 +5,12 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 
+import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.DigitalInput;
 import frc.robot.Constants;
 import frc.robot.Constants.IntakeConstants;
+import frc.robot.Constants.PivotConstants;
 
 public class IntakeIOSparkMax implements IntakeIO {
     private CANSparkMax pivotMotor;
@@ -18,32 +21,28 @@ public class IntakeIOSparkMax implements IntakeIO {
 
     private DigitalInput breakSensor;
 
-    private boolean isDown;
+    private final ProfiledPIDController pivotController;
+
+    private boolean isDown = false;
+    private double pivotTarget = 0;
 
     public IntakeIOSparkMax() {
-        switch (Constants.ROBOT_LOGGING_MODE) {
-            case REAL:
-                pivotMotor =
-                    new CANSparkMax(
-                        IntakeConstants.INTAKE_PIVOT_PORT,
-                        MotorType.kBrushless
-                    );
-                pivotMotor2 =
-                    new CANSparkMax(
-                        IntakeConstants.INTAKE_PIVOT_2_PORT,
-                        MotorType.kBrushless
-                    );
-                intakeMotor =
-                    new CANSparkMax(
-                        IntakeConstants.INTAKE_MOTOR_PORT,
-                        MotorType.kBrushless
-                    );
-                breakSensor = new DigitalInput(IntakeConstants.BEAM_BREAKER_PORT);
-                break;
-            case SIM, REPLAY:
-                throw new UnsupportedOperationException("Sim and Replay modes are currently unsupported");
-            
-        }
+        pivotMotor =
+            new CANSparkMax(
+                IntakeConstants.INTAKE_PIVOT_PORT,
+                MotorType.kBrushless
+            );
+        pivotMotor2 =
+            new CANSparkMax(
+                IntakeConstants.INTAKE_PIVOT_2_PORT,
+                MotorType.kBrushless
+            );
+        intakeMotor =
+            new CANSparkMax(
+                IntakeConstants.INTAKE_MOTOR_PORT,
+                MotorType.kBrushless
+            );
+        breakSensor = new DigitalInput(IntakeConstants.BEAM_BREAKER_PORT);
 
         intakeMotor.setSmartCurrentLimit(IntakeConstants.SMART_MAX_CURRENT);
         intakeMotor.setSecondaryCurrentLimit(IntakeConstants.MAX_CURRENT);
@@ -62,6 +61,16 @@ public class IntakeIOSparkMax implements IntakeIO {
         pivotEncoder = pivotMotor.getEncoder();
         pivotEncoder2 = pivotMotor2.getEncoder();
         driveEncoder = intakeMotor.getEncoder();
+
+        pivotController = new ProfiledPIDController(
+            IntakeConstants.kP_PIVOT,
+            IntakeConstants.kI_PIVOT,
+            IntakeConstants.kD_PIVOT,
+            new TrapezoidProfile.Constraints(
+                IntakeConstants.kMaxVelocity,
+                IntakeConstants.kMaxAccel
+            )
+        );
     }
 
     @Override
@@ -69,6 +78,43 @@ public class IntakeIOSparkMax implements IntakeIO {
         inputs.beamState = getBeamState();
         inputs.isDown = isDown;
         inputs.pivotPos = pivotEncoder.getPosition();
+        inputs.pivotDeg = inputs.pivotPos * IntakeConstants.GEAR_REDUCTION * 360;
+        inputs.pivotTarget = pivotController.getGoal().position;
+        inputs.atTarget = isAtTarget();
+    }
+
+    @Override
+    public void setDriveSpeed(double speed) {
+        intakeMotor.set(speed);
+    }
+
+    @Override
+    public void setPivotSpeed(double speed) {
+        pivotMotor.set(speed);
+    }
+
+    @Override
+    public void setPivotTarget(double target) {
+        pivotController.setGoal(target);
+    }
+
+    @Override
+    public void goToSetpoint() {
+        setPivotSpeed(pivotController.calculate(getPivotPos()));
+    }
+
+    @Override
+    public void updateConstants(double kP, double kI, double kD, double maxSpeed, double maxAccel) {
+        pivotController.setPID(kP, kI, kD);
+        pivotController.setConstraints(new TrapezoidProfile.Constraints(maxSpeed, maxAccel));
+    }
+
+    public boolean isAtTarget() {
+        return pivotController.atGoal();
+    }
+    
+    public double getTarget() {
+        return pivotTarget;
     }
 
     public double getPivotPos() {

@@ -2,6 +2,9 @@ package frc.robot.subsystems.pivot;
 
 import frc.robot.Constants;
 import frc.robot.Constants.PivotConstants;
+import frc.robot.Constants.RobotDataMode;
+import frc.robot.subsystems.pivot.PivotIO.PivotIOInputs;
+import frc.robot.util.SendableNumber;
 import frc.robot.util.TabManager;
 import frc.robot.util.TabManager.SubsystemTab;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
@@ -9,53 +12,33 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.RelativeEncoder;
-import com.revrobotics.SparkPIDController;
-import com.revrobotics.CANSparkBase.ControlType;
-import com.revrobotics.CANSparkBase.IdleMode;
-import com.revrobotics.CANSparkLowLevel.MotorType;
-
 /**
  * Pivot Subsystem
  */
 public class PivotSubsystem extends SubsystemBase {
-    private CANSparkMax pivotMotor;
-    private SparkPIDController pivotPID;
-    private RelativeEncoder relativeEncoder;
+    SendableNumber Pivot_kP = new SendableNumber(SubsystemTab.PIVOT, "Pivot kP", PivotConstants.PIVOT_KP); 
+    SendableNumber Pivot_kI = new SendableNumber(SubsystemTab.PIVOT, "Pivot kI", PivotConstants.PIVOT_KI);
+    SendableNumber Pivot_kD = new SendableNumber(SubsystemTab.PIVOT, "Pivot kD", PivotConstants.PIVOT_KD);
+
+
+    private PivotIO io;
+    public static final PivotIOInputs inputs = new PivotIOInputs();
 
     private int index = 0;
 
     private boolean turretMode = false;
 
+    public PivotSubsystem(PivotIO io) {
+        this.io = io;
+        resetPosition(65.0);
+        initShuffleboard();
+    }
+
     /**
      * Constructs a new Pivot Subsystem instance
      */
     public PivotSubsystem() {
-
-        pivotMotor = new CANSparkMax(Constants.PivotConstants.PIVOT_PORT, MotorType.kBrushless);
-        pivotMotor.setIdleMode(IdleMode.kBrake);
-        pivotMotor.setSmartCurrentLimit(Constants.PivotConstants.MAX_CURRENT_SMART);
-        pivotMotor.setSecondaryCurrentLimit(Constants.PivotConstants.MAX_CURRENT);
-        pivotMotor.setInverted(true);
-
-        pivotPID = pivotMotor.getPIDController();
-
-        pivotPID.setP(Constants.PivotConstants.PIVOT_KP);
-        pivotPID.setI(Constants.PivotConstants.PIVOT_KI);
-        pivotPID.setD(Constants.PivotConstants.PIVOT_KD);
-        pivotPID.setFF(Constants.PivotConstants.PIVOT_KF);
-
-        pivotPID.setOutputRange(-Constants.PivotConstants.PIVOT_AUTO_SPEED,
-                Constants.PivotConstants.PIVOT_AUTO_SPEED);
-
-        relativeEncoder = pivotMotor.getEncoder();
-
-        // relativeEncoder.setPositionConversionFactor((-1.0 /
-        // PivotConstants.GEAR_REDUCTION) * 360);
-        resetPosition(65.0);
-
-        initShuffleboard();
+        this(new PivotIOSparkMax());
     }
 
     /**
@@ -77,8 +60,7 @@ public class PivotSubsystem extends SubsystemBase {
      * Initialize Pivot Shuffleboard info
      */
     private void initShuffleboard() {
-        if (!Constants.DEBUG_MODE_ACTIVE)
-            return;
+        if (Constants.ROBOT_DATA_MODE == RobotDataMode.MATCH) return;
 
         ShuffleboardTab tab = TabManager.getInstance().accessTab(SubsystemTab.PIVOT);
         ShuffleboardLayout layout = tab.getLayout("Persian Positions", BuiltInLayouts.kList);
@@ -97,7 +79,7 @@ public class PivotSubsystem extends SubsystemBase {
      * @param offset
      */
     public void resetPosition(double offset) {
-        relativeEncoder.setPosition(offset / PivotConstants.kConversionFactor);
+        io.resetPosition(offset / PivotConstants.kConversionFactor);
     }
 
     /**
@@ -159,19 +141,11 @@ public class PivotSubsystem extends SubsystemBase {
     }
 
     /**
-     * Get Pivot motor current value
-     * @return Current supplied to Pivot motor
-     */
-    public double getCurrent() {
-        return pivotMotor.getAppliedOutput();
-    }
-
-    /**
      * Set the speed of Pivot Motor
      * @param speed Speed to set Pivot Motor (-1 to 1)
      */
     public void setSpeed(double speed) {
-        pivotMotor.set(speed);
+        io.set(speed);
     }
 
     /**
@@ -186,7 +160,7 @@ public class PivotSubsystem extends SubsystemBase {
      * @return Relative encoder position adjusted for kConversionFactor
      */
     public double getRev() {
-        return relativeEncoder.getPosition() * PivotConstants.kConversionFactor / 360;
+        return inputs.pivotPos * PivotConstants.kConversionFactor / 360;
     }
 
     /**
@@ -209,7 +183,7 @@ public class PivotSubsystem extends SubsystemBase {
      * Stop the Pivot motor
      */
     public void stop() {
-        pivotMotor.set(0);
+        io.stop();
     }
 
     /**
@@ -224,7 +198,7 @@ public class PivotSubsystem extends SubsystemBase {
         // if (rev > Constants.PivotConstants.PIVOT_MAX_REVOLUTION) {
         // target = Constants.PivotConstants.PIVOT_MAX_REVOLUTION;
         // }
-        pivotPID.setReference(target / Constants.PivotConstants.kConversionFactor, ControlType.kPosition);
+        io.setTarget(target / Constants.PivotConstants.kConversionFactor);
     }
 
     /**

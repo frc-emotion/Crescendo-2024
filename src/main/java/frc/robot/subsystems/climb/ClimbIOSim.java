@@ -20,6 +20,8 @@ public class ClimbIOSim implements ClimbIO {
             true,
             ClimbConstants.MIN_HEIGHT_METERS
         );
+
+
         
     }
 
