@@ -1,7 +1,7 @@
 package frc.robot.commands.vision;
 
-import frc.robot.subsystems.SwerveSubsystem;
-import frc.robot.subsystems.VisionSubsystem;
+import frc.robot.subsystems.other.VisionSubsystem;
+import frc.robot.subsystems.swerve.SwerveSubsystem;
 
 public class AmpAlign extends MonitorVision {
     @SuppressWarnings("unused")

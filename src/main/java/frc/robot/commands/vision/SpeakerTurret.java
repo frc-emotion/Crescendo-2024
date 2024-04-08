@@ -4,8 +4,8 @@ import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.VisionConstants;
-import frc.robot.subsystems.PivotSubsystem;
-import frc.robot.subsystems.VisionSubsystem;
+import frc.robot.subsystems.other.VisionSubsystem;
+import frc.robot.subsystems.pivot.PivotSubsystem;
 
 public class SpeakerTurret extends MonitorVision {
     protected PivotSubsystem pivotSubsystem;

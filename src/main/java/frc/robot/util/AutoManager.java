@@ -20,8 +20,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.RobotContainer;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
-import frc.robot.subsystems.SwerveSubsystem;
-import frc.robot.subsystems.VisionSubsystem;
+import frc.robot.subsystems.other.VisionSubsystem;
+import frc.robot.subsystems.swerve.SwerveSubsystem;
 
 public class AutoManager {
 

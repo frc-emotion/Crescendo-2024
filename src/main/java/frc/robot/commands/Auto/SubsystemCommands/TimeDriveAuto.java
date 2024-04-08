@@ -2,7 +2,7 @@ package frc.robot.commands.Auto.SubsystemCommands;
 
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.SwerveSubsystem;
+import frc.robot.subsystems.swerve.SwerveSubsystem;
 
 public class TimeDriveAuto extends Command {
     private final SwerveSubsystem swerveSubsystem;

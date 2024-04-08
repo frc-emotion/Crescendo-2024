@@ -5,8 +5,8 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.LEDConstants;
-import frc.robot.subsystems.LEDSubsystem;
-import frc.robot.subsystems.LEDSubsystem.LEDStyle;
+import frc.robot.subsystems.other.LEDSubsystem;
+import frc.robot.subsystems.other.LEDSubsystem.LEDStyle;
 
 public class LEDAutoCommand extends Command {
 

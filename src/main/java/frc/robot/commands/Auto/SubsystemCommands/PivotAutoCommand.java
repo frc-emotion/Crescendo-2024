@@ -1,7 +1,7 @@
 package frc.robot.commands.Auto.SubsystemCommands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.PivotSubsystem;
+import frc.robot.subsystems.pivot.PivotSubsystem;
 
 public class PivotAutoCommand extends Command {
     private final PivotSubsystem pivotSubsystem;

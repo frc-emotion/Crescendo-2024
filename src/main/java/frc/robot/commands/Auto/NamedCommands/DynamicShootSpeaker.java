@@ -3,8 +3,8 @@ package frc.robot.commands.Auto.NamedCommands;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.VisionConstants;
-import frc.robot.subsystems.ShooterSubsystem;
-import frc.robot.subsystems.VisionSubsystem;
+import frc.robot.subsystems.other.VisionSubsystem;
+import frc.robot.subsystems.shooter.ShooterSubsystem;
 
 public class DynamicShootSpeaker extends ShootSpeaker {
     protected final VisionSubsystem visionSubsystem;

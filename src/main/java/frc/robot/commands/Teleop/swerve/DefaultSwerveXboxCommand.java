@@ -5,7 +5,7 @@ import java.util.function.Supplier;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.DriveConstants.DriveMode;
-import frc.robot.subsystems.SwerveSubsystem;
+import frc.robot.subsystems.swerve.SwerveSubsystem;
 
 public class DefaultSwerveXboxCommand extends AbstractSwerveXboxCommand {
     protected final Supplier<Boolean> isRobotCentricFunc;

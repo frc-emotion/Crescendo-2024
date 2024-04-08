@@ -4,9 +4,9 @@ import java.util.function.Supplier;
 
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.VisionConstants;
-import frc.robot.subsystems.PivotSubsystem;
-import frc.robot.subsystems.SwerveSubsystem;
-import frc.robot.subsystems.VisionSubsystem;
+import frc.robot.subsystems.other.VisionSubsystem;
+import frc.robot.subsystems.pivot.PivotSubsystem;
+import frc.robot.subsystems.swerve.SwerveSubsystem;
 
 /**
  * Adjusts the rotation of the robot and pivot in order to aim toward the

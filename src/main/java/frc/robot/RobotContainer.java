@@ -15,16 +15,15 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.DriveConstants;
-import frc.robot.Constants.GameConstants;
 import frc.robot.Constants.DriveConstants.DriveMode;
 import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.PivotConstants;
+import frc.robot.Constants.RobotDataMode;
+import frc.robot.Constants.RobotLoggingMode;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.commands.LEDCommand;
 import frc.robot.commands.Auto.NamedCommands.CommandContainer;
@@ -38,15 +37,21 @@ import frc.robot.commands.Auto.SubsystemCommands.RevShooterAutoCommand;
 import frc.robot.commands.Teleop.*;
 import frc.robot.commands.Teleop.swerve.*;
 import frc.robot.commands.debug.ResetGyroCommand;
-import frc.robot.commands.vision.*;
 import frc.robot.commands.vision.MonitorVision;
 import frc.robot.commands.vision.SpeakerTurret;
-import frc.robot.subsystems.*;
+import frc.robot.subsystems.climb.ClimbIOSim;
+import frc.robot.subsystems.climb.ClimbIOSparkMax;
+import frc.robot.subsystems.climb.ClimbSubsystem;
+import frc.robot.subsystems.intake.*;
+import frc.robot.subsystems.other.LEDSubsystem;
+import frc.robot.subsystems.other.VisionSubsystem;
+import frc.robot.subsystems.pivot.PivotSubsystem;
+import frc.robot.subsystems.shooter.ShooterSubsystem;
+import frc.robot.subsystems.swerve.SwerveSubsystem;
 import frc.robot.util.AutoManager;
 import frc.robot.util.TabManager;
 import frc.robot.util.TabManager.SubsystemTab;
 
-import java.sql.Driver;
 import java.util.Map;
 
 /**
@@ -63,8 +68,16 @@ public class RobotContainer {
     // The robot's subsystems and commands are defined here...
     public static final SwerveSubsystem m_SwerveSubsystem = new SwerveSubsystem();
     public static final ShooterSubsystem m_ShooterSubsystem = new ShooterSubsystem();
-    public static final IntakeSubsystem m_IntakeSubsystem = new IntakeSubsystem();
-    public static final ClimbSubsystem m_ClimbSubsystem = new ClimbSubsystem();
+    public static final IntakeSubsystem m_IntakeSubsystem = new IntakeSubsystem(
+        Constants.ROBOT_LOGGING_MODE == RobotLoggingMode.REAL ?
+                new IntakeIOSparkMax() :
+                new IntakeIOSim()
+    );
+    public static final ClimbSubsystem m_ClimbSubsystem = new ClimbSubsystem(
+        Constants.ROBOT_LOGGING_MODE == RobotLoggingMode.REAL ?
+                new ClimbIOSparkMax() :
+                new ClimbIOSim()
+    );
     public static final PivotSubsystem m_PivotSubsystem = new PivotSubsystem();
     public static final VisionSubsystem m_VisionSubsystem = new VisionSubsystem(
             m_SwerveSubsystem);
@@ -313,7 +326,7 @@ public class RobotContainer {
                 .whileTrue(
                         new SequentialCommandGroup(
                                 new IntakePivotCommand(m_IntakeSubsystem)
-                                        .onlyIf(() -> m_IntakeSubsystem.isUp()), // should
+                                        .onlyIf(() -> !m_IntakeSubsystem.isDown()), // should
                                 // we
                                 // change
                                 // this
@@ -328,7 +341,7 @@ public class RobotContainer {
                 .whileFalse(
                         // new SequentialCommandGroup(
                         new IntakePivotCommand(m_IntakeSubsystem)
-                                .onlyIf(() -> !m_IntakeSubsystem.isUp())
+                                .onlyIf(() -> m_IntakeSubsystem.isDown())
                                 .alongWith(
                                         CommandContainer.resetPivot(m_PivotSubsystem)
                                 // new Command() {
@@ -468,10 +481,10 @@ public class RobotContainer {
                 .withWidget(BuiltInWidgets.kGyro)
                 .withPosition(10, 0)
                 .withSize(3, 4);
-        gameShuffleboardTab
-                .addBoolean("Debug Mode", () -> Constants.DEBUG_MODE_ACTIVE)
-                .withPosition(10, 4)
-                .withSize(3, 1);
+        // gameShuffleboardTab
+        //         .addBoolean("Debug Mode", () -> Constants.DEBUG_MODE_ACTIVE)
+        //         .withPosition(10, 4)
+        //         .withSize(3, 1);
         // gameShuffleboardTab.add("Auto Chooser", autoChooser).withPosition(8,
         // 2).withSize(2, 1);
 
@@ -529,7 +542,7 @@ public class RobotContainer {
                 .withPosition(0, 0)
                 .withSize(5, 2);
         intakeLayout
-                .addBoolean("Intake Down", () -> !m_IntakeSubsystem.isUp())
+                .addBoolean("Intake Down", () -> m_IntakeSubsystem.isDown())
                 .withWidget(BuiltInWidgets.kBooleanBox);
         intakeLayout
                 .addBoolean("Beam Broken", () -> m_IntakeSubsystem.getBeamState())
@@ -562,11 +575,6 @@ public class RobotContainer {
                 .addNumber(
                         "Shooter Temp",
                         () -> m_ShooterSubsystem.getShooterTemp())
-                .withWidget(BuiltInWidgets.kTextView);
-        motorLayout
-                .addNumber(
-                        "Intake Drive Temp",
-                        () -> m_IntakeSubsystem.getIntakeDriveTemp())
                 .withWidget(BuiltInWidgets.kTextView);
         // Sets GAME to active tab
         // Shuffleboard.selectTab("GAME");

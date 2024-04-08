@@ -3,7 +3,7 @@ package frc.robot.commands.debug;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.RobotContainer;
-import frc.robot.subsystems.SwerveSubsystem;
+import frc.robot.subsystems.swerve.SwerveSubsystem;
 
 /**
  * Command to reset the gyro. It is not generally recommended to run this
