@@ -1,16 +1,16 @@
 package frc.robot.subsystems.intake;
 
+import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkPIDController;
 
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.DigitalInput;
-import frc.robot.Constants;
 import frc.robot.Constants.IntakeConstants;
-import frc.robot.Constants.PivotConstants;
 
 public class IntakeIOSparkMax implements IntakeIO {
     private CANSparkMax pivotMotor;
@@ -22,9 +22,11 @@ public class IntakeIOSparkMax implements IntakeIO {
     private DigitalInput breakSensor;
 
     private final ProfiledPIDController pivotController;
+    private final SparkPIDController driveController;
 
     private boolean isDown = false;
-    private double pivotTarget = 0;
+    private double pivotTarget = 0.0;
+    private double driveTarget = 0.0;
 
     public IntakeIOSparkMax() {
         pivotMotor =
@@ -71,6 +73,13 @@ public class IntakeIOSparkMax implements IntakeIO {
                 IntakeConstants.kMaxAccel
             )
         );
+
+        driveEncoder = intakeMotor.getEncoder();
+        driveController = intakeMotor.getPIDController();
+
+        driveController.setP(IntakeConstants.kP_DRIVE);
+        driveController.setI(IntakeConstants.kI_DRIVE);
+        driveController.setD(IntakeConstants.kD_DRIVE);
     }
 
     @Override
@@ -80,16 +89,19 @@ public class IntakeIOSparkMax implements IntakeIO {
         inputs.pivotPos = pivotEncoder.getPosition();
         inputs.pivotDeg = inputs.pivotPos * IntakeConstants.GEAR_REDUCTION * 360;
         inputs.pivotTarget = pivotController.getGoal().position;
-        inputs.atTarget = isAtTarget();
+        inputs.isPivotAtTarget = isPivotAtTarget();
+        inputs.driveSpeed = getDriveSpeed();
+        inputs.targetDriveSpeed = getDriveTarget();
+        inputs.isDriveAtTarget = isDriveAtTarget();
     }
 
     @Override
-    public void setDriveSpeed(double speed) {
+    public void setDriveRaw(double speed) {
         intakeMotor.set(speed);
     }
 
     @Override
-    public void setPivotSpeed(double speed) {
+    public void setPivotRaw(double speed) {
         pivotMotor.set(speed);
     }
 
@@ -99,21 +111,39 @@ public class IntakeIOSparkMax implements IntakeIO {
     }
 
     @Override
-    public void goToSetpoint() {
-        setPivotSpeed(pivotController.calculate(getPivotPos()));
+    public void goToPivotSetpoint() {
+        setPivotRaw(pivotController.calculate(getPivotPos()));
     }
 
     @Override
-    public void updateConstants(double kP, double kI, double kD, double maxSpeed, double maxAccel) {
-        pivotController.setPID(kP, kI, kD);
-        pivotController.setConstraints(new TrapezoidProfile.Constraints(maxSpeed, maxAccel));
+    public void updateConstants(
+        double kP_Pivot, 
+        double kI_Pivot, 
+        double kD_Pivot, 
+        double maxPivotSpeed, 
+        double maxPivotAccel,
+        double kP_Drive,
+        double kI_Drive,
+        double kD_Drive
+    ) {
+        pivotController.setPID(kP_Pivot, kI_Pivot, kD_Pivot);
+        pivotController.setConstraints(new TrapezoidProfile.Constraints(maxPivotSpeed, maxPivotAccel));
+
+        driveController.setP(kP_Drive);
+        driveController.setI(kI_Drive);
+        driveController.setD(kD_Drive);
     }
 
-    public boolean isAtTarget() {
+    @Override
+    public void setDriveVelocity(double target) {
+        driveController.setReference(target, ControlType.kVelocity);
+    }
+
+    public boolean isPivotAtTarget() {
         return pivotController.atGoal();
     }
     
-    public double getTarget() {
+    public double getPivotTarget() {
         return pivotTarget;
     }
 
@@ -127,6 +157,18 @@ public class IntakeIOSparkMax implements IntakeIO {
 
     public boolean isDown() {
         return isDown;
+    }
+
+    public double getDriveTarget() {
+        return driveTarget;
+    }
+
+    public double getDriveSpeed() {
+        return driveEncoder.getVelocity();
+    }
+
+    public boolean isDriveAtTarget() {
+        return Math.abs(getDriveSpeed() - driveTarget) < IntakeConstants.MAX_DRIVE_SPEED_ERROR;
     }
 
     @Override
@@ -143,5 +185,21 @@ public class IntakeIOSparkMax implements IntakeIO {
     public void resetPivotPos(double pos) {
         pivotEncoder.setPosition(pos);
         pivotEncoder2.setPosition(pos);
+    }
+
+    @Override
+    public void stop() {
+        stopDrive();
+        stopPivot();
+    }
+
+    @Override
+    public void stopDrive() {
+        intakeMotor.set(0);
+    }
+
+    @Override
+    public void stopPivot() {
+        pivotMotor.set(0);
     }
 }

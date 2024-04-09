@@ -39,7 +39,7 @@ public class SpeakerTurret extends MonitorVision {
         // System.out.println(visionSubsystem.getDistanceTo(
         //         (DriverStation.getAlliance().get() == DriverStation.Alliance.Red) ? VisionConstants.RED_SPEAKER_CENTER
         //                 : VisionConstants.BLUE_SPEAKER_CENTER));
-        pivotSubsystem.setRev(calculateAngle());
+        pivotSubsystem.setDegrees(calculateAngle());
     }
 
     @Override

@@ -3,41 +3,34 @@ package frc.robot.commands.Auto.SubsystemCommands;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.ShooterConstants;
+import frc.robot.subsystems.feeder.FeederSubsystem;
 import frc.robot.subsystems.intake.IntakeSubsystem;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
 
 public class HandoffAutoCommand extends Command {
     private IntakeSubsystem intakeSubsystem;
-    private ShooterSubsystem shooterSubsystem;
-    private boolean rev;
+    private FeederSubsystem feederSubsystem;
 
-    public HandoffAutoCommand(IntakeSubsystem intake, ShooterSubsystem shooter, boolean rev) {
+    public HandoffAutoCommand(IntakeSubsystem intake, FeederSubsystem feeder) {
         intakeSubsystem = intake;
-        shooterSubsystem = shooter;
-        this.rev = rev;
-        addRequirements(intakeSubsystem, shooterSubsystem);
+        feederSubsystem = feeder;
+        addRequirements(intakeSubsystem, feederSubsystem);
     }
 
     @Override
     public void execute() {
-        shooterSubsystem.setFeederSpeed(IntakeConstants.SHOOTER_TRANSFER_SPEED);
-        if (rev) {
-            intakeSubsystem.setIntake(IntakeConstants.AUTO_SHOOTER_TRANSFER_SPEED);
-            shooterSubsystem.setShooterVelocity(ShooterConstants.SHOOTER_SPEED_RPM);
-        } else {
-            intakeSubsystem.setIntake(IntakeConstants.SHOOTER_TRANSFER_SPEED);
-        }
+        feederSubsystem.set(IntakeConstants.SHOOTER_TRANSFER_SPEED);
+        intakeSubsystem.setIntake(IntakeConstants.SHOOTER_TRANSFER_SPEED);
     }
 
     @Override
     public void end(boolean interrupted) {
         intakeSubsystem.stopDrive();
-        shooterSubsystem.stopFeeder();
-        shooterSubsystem.stopShooter();
+        feederSubsystem.stop();
     }
 
     @Override
     public boolean isFinished() {
-        return shooterSubsystem.isProjectileFed();
+        return feederSubsystem.getBeamState();
     }
 }

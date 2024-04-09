@@ -7,6 +7,9 @@ import frc.robot.subsystems.pivot.PivotIO.PivotIOInputs;
 import frc.robot.util.SendableNumber;
 import frc.robot.util.TabManager;
 import frc.robot.util.TabManager.SubsystemTab;
+
+import org.littletonrobotics.junction.Logger;
+
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -24,8 +27,6 @@ public class PivotSubsystem extends SubsystemBase {
     private PivotIO io;
     public static final PivotIOInputs inputs = new PivotIOInputs();
 
-    private int index = 0;
-
     private boolean turretMode = false;
 
     public PivotSubsystem(PivotIO io) {
@@ -39,6 +40,16 @@ public class PivotSubsystem extends SubsystemBase {
      */
     public PivotSubsystem() {
         this(new PivotIOSparkMax());
+    }
+
+    public void updateConstants() {
+        io.updatePID(Pivot_kP.get(), Pivot_kI.get(), Pivot_kD.get());
+    }
+
+    @Override
+    public void periodic() {
+        io.updateInputs(inputs);
+        Logger.processInputs("Pivot", inputs);
     }
 
     /**
@@ -67,9 +78,6 @@ public class PivotSubsystem extends SubsystemBase {
 
         layout.addDouble("Pivot Position Revolutions", this::getRev);
         layout.addDouble("Pivot Position Degrees", this::getDegrees);
-        // layout.addDouble("Pivot Current", this::getCurrent);
-        layout.addDouble("Pivot Preset Index", this::getIndex);
-        layout.addNumber("Current Preset", this::getPreset);
 
         layout.withSize(2, 4);
     }
@@ -80,64 +88,6 @@ public class PivotSubsystem extends SubsystemBase {
      */
     public void resetPosition(double offset) {
         io.resetPosition(offset / PivotConstants.kConversionFactor);
-    }
-
-    /**
-     * Get the current index of Pivot
-     * @return current index of Pivot
-     */
-    public int getIndex() {
-        return index;
-    }
-
-    /**
-     * Increment the index value
-     */
-    public void addIndex() {
-        if (Constants.PivotConstants.PIVOT_POSITIONS.length - 1 != index) {
-            index++;
-        }
-    }
-
-    /**
-     * Decrement the index value
-     */
-    public void subtractIndex() {
-        if (index != 0) {
-            index--;
-        }
-    }
-
-    /**
-     * Set the index value
-     * @param i Value to set index to
-     */
-    public void setIndex(int i) {
-        index = i;
-    }
-
-    /**
-     * Move Pivot to preset target value
-     */
-    public void goToPreset() {
-        setRev(getPreset());
-    }
-
-    /**
-     * Get Pivot preset target value from PivotConstants
-     * @return Pivot preset value
-     */
-    public double getPreset() {
-        return Constants.PivotConstants.PIVOT_POSITIONS[index];
-    }
-
-    /**
-     * Get Pivot preset target value from PivotConstants
-     * @param ind Index of PivotConstants value to return
-     * @return Pivot preset value from index ind
-     */
-    public double getPreset(int ind) {
-        return Constants.PivotConstants.PIVOT_POSITIONS[ind];
     }
 
     /**
@@ -171,12 +121,16 @@ public class PivotSubsystem extends SubsystemBase {
         return getRev() * 360.0;
     }
 
+    public double getAngularSpeed() {
+        return inputs.pivotAngularSpeed;
+    }
+
     /**
      * Check if the current pivot angle would allow for a successful handoff
      * @return true if successful handoff is possible
      */
     public boolean isHandoffOk() {
-        return this.getDegrees() - PivotConstants.kHANDOFF_ANGLE <= PivotConstants.kMAX_ANGLE_ERROR;
+        return isAtTarget(PivotConstants.kHANDOFF_ANGLE);
     }
 
     /**
@@ -190,14 +144,7 @@ public class PivotSubsystem extends SubsystemBase {
      * Move Pivot to provided target position
      * @param target Position to move Pivot to
      */
-    public void setRev(double target) {
-        // double target = rev;
-        // if (rev < Constants.PivotConstants.PIVOT_MIN_REVOLUTION) {
-        // target = 0;
-        // }
-        // if (rev > Constants.PivotConstants.PIVOT_MAX_REVOLUTION) {
-        // target = Constants.PivotConstants.PIVOT_MAX_REVOLUTION;
-        // }
+    public void setDegrees(double target) {
         io.setTarget(target / Constants.PivotConstants.kConversionFactor);
     }
 
@@ -205,15 +152,7 @@ public class PivotSubsystem extends SubsystemBase {
      * Move Pivot to handoff position
      */
     public void goToHandoff() {
-        this.setRev(PivotConstants.kHANDOFF_ANGLE);
-    }
-
-    /**
-     * Check if Pivot is at target position
-     * @return true if Pivot is at target position
-     */
-    public boolean isAtTarget() {
-        return Math.abs(getDegrees() - getPreset()) < PivotConstants.MAX_ERROR;
+        this.setDegrees(PivotConstants.kHANDOFF_ANGLE);
     }
 
     /**
@@ -223,6 +162,10 @@ public class PivotSubsystem extends SubsystemBase {
      */
     public boolean isAtTarget(double degrees) {
         return Math.abs(getDegrees() - degrees) < PivotConstants.MAX_ERROR;
+    }
+
+    public boolean isAtTarget() {
+        return inputs.atTargetAngle;
     }
 
 }

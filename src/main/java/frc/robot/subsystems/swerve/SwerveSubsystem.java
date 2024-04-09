@@ -2,7 +2,6 @@ package frc.robot.subsystems.swerve;
 
 import com.kauailabs.navx.frc.AHRS;
 
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 
 // import static edu.wpi.first.units.Units.Seconds;
@@ -38,7 +37,6 @@ import frc.robot.Constants;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
-import frc.robot.Constants.ShooterConstants;
 import frc.robot.util.TabManager;
 import frc.robot.util.TabManager.SubsystemTab;
 
@@ -47,42 +45,15 @@ import frc.robot.util.TabManager.SubsystemTab;
  * Holds gyro and odometry methods
  */
 public class SwerveSubsystem extends SubsystemBase {
+    // TODO: Add SendableNumnbers for all constants
 
-    private final SwerveModuleNeo frontLeft = new SwerveModuleNeo(
-            DriveConstants.kFrontLeftDriveMotorPort,
-            DriveConstants.kFrontLeftTurningMotorPort,
-            DriveConstants.kFrontLeftDriveAbsoluteEncoderReversed,
-            DriveConstants.kFrontLeftTurningEncoderReversed,
-            DriveConstants.kFrontLeftDriveAbsoluteEncoderPort,
-            DriveConstants.kFrontLeftDriveAbsoluteEncoderOffsetRad,
-            DriveConstants.kFrontLeftDriveAbsoluteEncoderReversed);
+    private final SwerveModuleNeo frontLeft;
 
-    private final SwerveModuleNeo frontRight = new SwerveModuleNeo(
-            DriveConstants.kFrontRightDriveMotorPort,
-            DriveConstants.kFrontRightTurningMotorPort,
-            DriveConstants.kFrontRightDriveAbsoluteEncoderReversed,
-            DriveConstants.kFrontRightTurningEncoderReversed,
-            DriveConstants.kFrontRightDriveAbsoluteEncoderPort,
-            DriveConstants.kFrontRightDriveAbsoluteEncoderOffsetRad,
-            DriveConstants.kFrontRightDriveAbsoluteEncoderReversed);
+    private final SwerveModuleNeo frontRight;
 
-    private final SwerveModuleNeo backLeft = new SwerveModuleNeo(
-            DriveConstants.kBackLeftDriveMotorPort,
-            DriveConstants.kBackLeftTurningMotorPort,
-            DriveConstants.kBackLeftDriveAbsoluteEncoderReversed,
-            DriveConstants.kBackLeftTurningEncoderReversed,
-            DriveConstants.kBackLeftDriveAbsoluteEncoderPort,
-            DriveConstants.kBackLeftDriveAbsoluteEncoderOffsetRad,
-            DriveConstants.kBackLeftDriveAbsoluteEncoderReversed);
+    private final SwerveModuleNeo backLeft;
 
-    private final SwerveModuleNeo backRight = new SwerveModuleNeo(
-            DriveConstants.kBackRightDriveMotorPort,
-            DriveConstants.kBackRightTurningMotorPort,
-            DriveConstants.kBackRightDriveAbsoluteEncoderReversed,
-            DriveConstants.kBackRightTurningEncoderReversed,
-            DriveConstants.kBackRightDriveAbsoluteEncoderPort,
-            DriveConstants.kBackRightDriveAbsoluteEncoderOffsetRad,
-            DriveConstants.kBackRightDriveAbsoluteEncoderReversed);
+    private final SwerveModuleNeo backRight;
 
     private AHRS gyro = new AHRS(SPI.Port.kMXP);
 
@@ -109,7 +80,11 @@ public class SwerveSubsystem extends SubsystemBase {
 
     // private SysIdRoutine sysIdRoutine;
 
-    public SwerveSubsystem() {
+    public SwerveSubsystem(SwerveModuleIO frontLeft, SwerveModuleIO frontRight, SwerveModuleIO backLeft, SwerveModuleIO backRight) {
+        this.frontLeft = new SwerveModuleNeo(frontLeft);
+        this.frontRight = new SwerveModuleNeo(frontRight);
+        this.backLeft = new SwerveModuleNeo(backLeft);
+        this.backRight = new SwerveModuleNeo(backRight);
 
         // PIDController xController = new PIDController(AutoConstants.kPXController, 0,
         // 0);
@@ -191,34 +166,8 @@ public class SwerveSubsystem extends SubsystemBase {
     // return sysIdRoutine.dynamic(SysIdRoutine.Direction.kReverse);
     // }
 
-    @SuppressWarnings("unused")
-    private void setVoltage(double voltage) {
-        frontLeft.setVoltage(voltage);
-        frontRight.setVoltage(voltage);
-        backLeft.setVoltage(voltage);
-        backRight.setVoltage(voltage);
-    }
-
     public void updatePID() {
-        if(Constants.DEBUG_MODE_ACTIVE) {
-            this.teleopThetaController.setI(this.kIEntry.getDouble(ShooterConstants.kI));
-            this.teleopThetaController.setD(this.kDEntry.getDouble(ShooterConstants.kD));
-            this.teleopThetaController.setP(this.kPEntry.getDouble(ShooterConstants.kP));
-        } else {
-            teleopThetaController.setPID(
-                DriveConstants.kPThetaController,
-                DriveConstants.kIThetaController,
-                DriveConstants.kDThetaController
-            );
-        }
        
-    }
-
-    public void setRawDriveSpeed(double speed) {
-        frontRight.setRawDriveSpeed(speed);
-        backRight.setRawDriveSpeed(speed);
-        frontLeft.setRawDriveSpeed(speed);
-        backLeft.setRawDriveSpeed(speed);
     }
 
     public void offsetGyro(double reading) {
@@ -364,7 +313,7 @@ public class SwerveSubsystem extends SubsystemBase {
     }
 
     private void initShuffleboard() {
-        if (!Constants.DEBUG_MODE_ACTIVE)
+        if (Constants.ROBOT_DATA_MODE == Constants.RobotDataMode.MATCH)
             return;
 
         ShuffleboardTab moduleData = TabManager
@@ -401,7 +350,7 @@ public class SwerveSubsystem extends SubsystemBase {
     private void fillList(SwerveModuleNeo module, ShuffleboardLayout layout) {
         layout.addNumber(
                 "Absolute Position",
-                () -> module.getAbsolutePostion());
+                () -> module.getAbsolutePosition());
         layout.addNumber(
                 "Integrated Position",
                 () -> module.getTurningPosition());

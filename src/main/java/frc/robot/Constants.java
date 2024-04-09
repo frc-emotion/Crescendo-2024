@@ -226,6 +226,9 @@ public final class Constants {
         public static final double kPThetaController = 0.2;
         public static final double kIThetaController = 0.00;
         public static final double kDThetaController = 0.00;
+        public static final double MODULE_kP = 1.0;
+        public static final double MODULE_kI = 0.0;
+        public static final double MODULE_kD = 0.1;
     }
 
     public static class AutoConstants {
@@ -321,10 +324,10 @@ public final class Constants {
         public static final double GEAR_REDUCTION = 0.5;
 
         // PID Controller Constants
-        public static final double kP = 0.001;
-        public static final double kI = 0;
-        public static final double kD = 0;
-        public static final double kFeedForward = 0.00025;
+        public static final double SHOOTER_kP = 0.001;
+        public static final double SHOOTER_kI = 0;
+        public static final double SHOOTER_kD = 0;
+        public static final double SHOOTER_kFeedForward = 0.00025;
         public static final double kMaxOutput = 1; // raw motor output
         public static final double kMinOutput = -1; // raw motor output
         public static final double kMaxOutputError = 150; // rpm
@@ -345,6 +348,12 @@ public final class Constants {
         public static final double FLYWHEEL_RADIUS = 0.051; // meters
         public static final double FLYWHEEL_MOI = 0.5 * FLYWHEEL_MASS * Math.pow(FLYWHEEL_RADIUS, 2);
         public static final double NOTE_MASS = 0.232; // kg
+        public static final double FEEDER_kP = 0;
+        public static final double FEEDER_kI = 0;
+        public static final double FEEDER_kD = 0;
+        public static final double FEEDER_kFF = 0;
+        public static final double FEEDER_MAX_ERROR = 0;
+        public static final double FEEDER_SPEED = 0;
         
     }
 
@@ -437,6 +446,12 @@ public final class Constants {
 
         public static final double SHOOTER_TRANSFER_SPEED = 0.35;
         public static final double AUTO_SHOOTER_TRANSFER_SPEED = 0.5;
+        public static final double kP_DRIVE = 0.0;
+        public static final double kI_DRIVE = 0.0;
+        public static final double kD_DRIVE = 0.0;
+        public static final double DRIVE_SPEED = 0.0;
+        public static final double MAX_DRIVE_SPEED_ERROR = 0;
+        
 
         // -----------------------------------------
 

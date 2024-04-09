@@ -23,6 +23,6 @@ public class IntakeDriveAutoCommand extends InstantCommand {
 
     @Override
     public void end(boolean interrupted) {
-        intakeSubsystem.intakeStop();
+        intakeSubsystem.stopDrive();
     }
 }

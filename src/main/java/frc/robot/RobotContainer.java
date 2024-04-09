@@ -42,11 +42,21 @@ import frc.robot.commands.vision.SpeakerTurret;
 import frc.robot.subsystems.climb.ClimbIOSim;
 import frc.robot.subsystems.climb.ClimbIOSparkMax;
 import frc.robot.subsystems.climb.ClimbSubsystem;
+import frc.robot.subsystems.feeder.FeederIOSim;
+import frc.robot.subsystems.feeder.FeederIOSparkMax;
+import frc.robot.subsystems.feeder.FeederSubsystem;
 import frc.robot.subsystems.intake.*;
 import frc.robot.subsystems.other.LEDSubsystem;
 import frc.robot.subsystems.other.VisionSubsystem;
+import frc.robot.subsystems.pivot.PivotIO;
+import frc.robot.subsystems.pivot.PivotIOSim;
+import frc.robot.subsystems.pivot.PivotIOSparkMax;
 import frc.robot.subsystems.pivot.PivotSubsystem;
+import frc.robot.subsystems.shooter.ShooterIOSim;
+import frc.robot.subsystems.shooter.ShooterIOSparkMax;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
+import frc.robot.subsystems.swerve.SwerveModuleIONeo;
+import frc.robot.subsystems.swerve.SwerveModuleNeo;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
 import frc.robot.util.AutoManager;
 import frc.robot.util.TabManager;
@@ -66,22 +76,20 @@ import java.util.Map;
 public class RobotContainer {
 
     // The robot's subsystems and commands are defined here...
-    public static final SwerveSubsystem m_SwerveSubsystem = new SwerveSubsystem();
-    public static final ShooterSubsystem m_ShooterSubsystem = new ShooterSubsystem();
-    public static final IntakeSubsystem m_IntakeSubsystem = new IntakeSubsystem(
-        Constants.ROBOT_LOGGING_MODE == RobotLoggingMode.REAL ?
-                new IntakeIOSparkMax() :
-                new IntakeIOSim()
-    );
-    public static final ClimbSubsystem m_ClimbSubsystem = new ClimbSubsystem(
-        Constants.ROBOT_LOGGING_MODE == RobotLoggingMode.REAL ?
-                new ClimbIOSparkMax() :
-                new ClimbIOSim()
-    );
-    public static final PivotSubsystem m_PivotSubsystem = new PivotSubsystem();
-    public static final VisionSubsystem m_VisionSubsystem = new VisionSubsystem(
-            m_SwerveSubsystem);
-    public static final LEDSubsystem m_ledSubsystem = new LEDSubsystem();
+    public final SwerveSubsystem m_SwerveSubsystem;
+
+    public final ShooterSubsystem m_ShooterSubsystem;
+
+    public final FeederSubsystem m_FeederSubsystem;
+
+    public final IntakeSubsystem m_IntakeSubsystem;
+
+    public final ClimbSubsystem m_ClimbSubsystem;
+
+    public final PivotSubsystem m_PivotSubsystem;
+
+    public final VisionSubsystem m_VisionSubsystem;
+    public final LEDSubsystem m_ledSubsystem = new LEDSubsystem();
 
     private final AutoManager autoManager;
 
@@ -104,7 +112,38 @@ public class RobotContainer {
      * The container for the robot. Contains subsystems, OI devices, and commands.
      */
     public RobotContainer() {
-        autoManager = AutoManager.getInstance();
+        switch(Constants.ROBOT_LOGGING_MODE) {
+                case REAL:
+                        m_SwerveSubsystem = initSwerve();
+                        m_ShooterSubsystem = new ShooterSubsystem(new ShooterIOSparkMax());
+                        m_FeederSubsystem = new FeederSubsystem(new FeederIOSparkMax());
+                        m_IntakeSubsystem = new IntakeSubsystem(new IntakeIOSparkMax());
+                        m_ClimbSubsystem = new ClimbSubsystem(new ClimbIOSparkMax());
+                        m_PivotSubsystem = new PivotSubsystem(new PivotIOSparkMax());
+                        break;
+                case SIM:
+                        throw new UnsupportedOperationException("Simulation mode is not yet supported");
+                        // m_SwerveSubsystem = initSwerve();
+                        // m_ShooterSubsystem = new ShooterSubsystem(new ShooterIOSim());
+                        // m_FeederSubsystem = new FeederSubsystem(new FeederIOSim());
+                        // m_IntakeSubsystem = new IntakeSubsystem(new IntakeIOSim());
+                        // m_ClimbSubsystem = new ClimbSubsystem(new ClimbIOSim());
+                        // m_PivotSubsystem = new PivotSubsystem(new PivotIOSim());
+                case REPLAY:
+                        throw new UnsupportedOperationException("Replay mode is not yet supported");
+                default:
+                        DriverStation.reportError("Robot Logging Mode invalid, enabling default mode", false);
+                        m_SwerveSubsystem = initSwerve();
+                        m_ShooterSubsystem = new ShooterSubsystem(new ShooterIOSparkMax());
+                        m_FeederSubsystem = new FeederSubsystem(new FeederIOSparkMax());
+                        m_IntakeSubsystem = new IntakeSubsystem(new IntakeIOSparkMax());
+                        m_ClimbSubsystem = new ClimbSubsystem(new ClimbIOSparkMax());
+                        m_PivotSubsystem = new PivotSubsystem(new PivotIOSparkMax());
+                        break;
+        }
+
+        m_VisionSubsystem = new VisionSubsystem(m_SwerveSubsystem);
+        autoManager = new AutoManager(m_VisionSubsystem, m_SwerveSubsystem);
 
         m_SwerveSubsystem.setDefaultCommand(
                 new DefaultSwerveXboxCommand(
@@ -116,9 +155,15 @@ public class RobotContainer {
 
         m_ShooterSubsystem.setDefaultCommand(
                 new ShooterManualCommand(
-                        () -> operatorController_HID.getLeftTriggerAxis() > OIConstants.kDeadband,
                         () -> operatorController_HID.getRightTriggerAxis() > OIConstants.kDeadband,
                         m_ShooterSubsystem));
+
+        m_FeederSubsystem.setDefaultCommand(
+                new FeederManualCommand(
+                        m_FeederSubsystem,
+                        () -> operatorController_HID.getLeftTriggerAxis() > OIConstants.kDeadband
+                        )
+        );
 
         m_ClimbSubsystem.setDefaultCommand(
                 new ClimbManualCommand(
@@ -372,7 +417,7 @@ public class RobotContainer {
                                         // )
                                         //         // .onlyIf(() -> m_PivotSubsystem.isHandoffOk())
                                         //         .withTimeout(2.0)
-                                        new HandoffAutoCommand(m_IntakeSubsystem, m_ShooterSubsystem, false).withTimeout(2.0)
+                                        new HandoffAutoCommand(m_IntakeSubsystem, m_FeederSubsystem).withTimeout(2.0)
                                 )
                 // )
                 );
@@ -391,23 +436,20 @@ public class RobotContainer {
                             public void execute() {
                                 m_ShooterSubsystem.setShooterRaw(
                                         ShooterConstants.SHOOTER_REVERSE_SPEED);
-                                m_ShooterSubsystem.setFeederSpeed(
+                                m_FeederSubsystem.set(
                                         ShooterConstants.FEEDER_REVERSE_SPEED);
                             }
 
                             @Override
                             public void end(boolean interrupted) {
                                 m_ShooterSubsystem.stopShooter();
-                                m_ShooterSubsystem.stopFeeder();
+                                m_FeederSubsystem.stop();
                             }
                         });
 
         // Handoff Manual Mode
         m_operatorController.a().whileTrue(
-                new TeleopHandoffCommand(
-                        () -> operatorController_HID.getRightTriggerAxis() > OIConstants.kDeadband,
-                        m_ShooterSubsystem, m_IntakeSubsystem
-                 )
+                new HandoffAutoCommand(m_IntakeSubsystem, m_FeederSubsystem)
         );
 
         // Climb Encoder Reset Command
@@ -435,7 +477,7 @@ public class RobotContainer {
     private void registerNamedCommands() {
         NamedCommands.registerCommand(
                 "ScoreSpeaker",
-                new ShootSpeaker(m_ShooterSubsystem));
+                new ShootSpeaker(m_ShooterSubsystem, m_FeederSubsystem));
         NamedCommands.registerCommand(
                 "IntakeNote",
                 new IntakeDriveAutoCommand(m_IntakeSubsystem));
@@ -454,10 +496,10 @@ public class RobotContainer {
                 //         m_IntakeSubsystem,
                 //         m_ShooterSubsystem,
                 //         m_PivotSubsystem));
-                new HandoffAutoCommand(m_IntakeSubsystem, m_ShooterSubsystem, true).withTimeout(3.0));
+                new HandoffAutoCommand(m_IntakeSubsystem, m_FeederSubsystem).withTimeout(3.0));
         NamedCommands.registerCommand(
                 "AutoHandoffNoTimeout",
-                new HandoffAutoCommand(m_IntakeSubsystem, m_ShooterSubsystem, true).onlyIf(() -> !m_IntakeSubsystem.getBeamState())
+                new HandoffAutoCommand(m_IntakeSubsystem, m_FeederSubsystem).onlyIf(() -> !m_IntakeSubsystem.getBeamState())
         );
         NamedCommands.registerCommand(
                 "PrepPivot",
@@ -619,7 +661,7 @@ public class RobotContainer {
                 "Match Number",
                 () -> DriverStation.getMatchNumber());
         autoTab
-                .add("Reset Heading", ResetGyroCommand.getCommand())
+                .add("Reset Heading", new ResetGyroCommand(m_SwerveSubsystem).ignoringDisable(true))
                 .withWidget(BuiltInWidgets.kCommand)
                 .withSize(2, 2);
     }
@@ -638,7 +680,7 @@ public class RobotContainer {
                 );
         } catch(Exception ex) {
                 DriverStation.reportError("Autonomous Command Scheduling Error", true);
-                return new ShootSpeaker(m_ShooterSubsystem);
+                return new ShootSpeaker(m_ShooterSubsystem, m_FeederSubsystem);
         }
         
     }
@@ -648,7 +690,7 @@ public class RobotContainer {
                 m_ledSubsystem,
                 m_IntakeSubsystem::getBeamState,
                 m_IntakeSubsystem::isDown,
-                m_ShooterSubsystem::isProjectileFed,
+                m_FeederSubsystem::getBeamState,
                 () -> (( m_ShooterSubsystem.getShooterVelocity() > ShooterConstants.MIN_SHOOT_SPEED))
                         // || (driverController_HID.getRightBumper() > OIConstants.kDeadband && m_ShooterSubsystem.getShooterVelocity() > ShooterConstants.AmpRPM - 250))
                 );
@@ -665,5 +707,46 @@ public class RobotContainer {
                         operatorController_HID.getRightBumper(),
                 () -> m_ShooterSubsystem.getShooterVelocity() > ShooterConstants.MIN_SHOOT_SPEED &&
                         operatorController_HID.getRightTriggerAxis() > OIConstants.kDeadband);
+    }
+
+    public SwerveSubsystem initSwerve() {
+        return new SwerveSubsystem(
+                new SwerveModuleIONeo(
+                        DriveConstants.kFrontLeftDriveMotorPort,
+                        DriveConstants.kFrontLeftTurningMotorPort,
+                        DriveConstants.kFrontLeftDriveAbsoluteEncoderReversed,
+                        DriveConstants.kFrontLeftTurningEncoderReversed,
+                        DriveConstants.kFrontLeftDriveAbsoluteEncoderPort,
+                        DriveConstants.kFrontLeftDriveAbsoluteEncoderOffsetRad,
+                        DriveConstants.kFrontLeftDriveAbsoluteEncoderReversed
+                ),
+                new SwerveModuleIONeo(
+                        DriveConstants.kFrontRightDriveMotorPort,
+                        DriveConstants.kFrontRightTurningMotorPort,
+                        DriveConstants.kFrontRightDriveAbsoluteEncoderReversed,
+                        DriveConstants.kFrontRightTurningEncoderReversed,
+                        DriveConstants.kFrontRightDriveAbsoluteEncoderPort,
+                        DriveConstants.kFrontRightDriveAbsoluteEncoderOffsetRad,
+                        DriveConstants.kFrontRightDriveAbsoluteEncoderReversed
+                ),
+                new SwerveModuleIONeo(
+                        DriveConstants.kBackLeftDriveMotorPort,
+                        DriveConstants.kBackLeftTurningMotorPort,
+                        DriveConstants.kBackLeftDriveAbsoluteEncoderReversed,
+                        DriveConstants.kBackLeftTurningEncoderReversed,
+                        DriveConstants.kBackLeftDriveAbsoluteEncoderPort,
+                        DriveConstants.kBackLeftDriveAbsoluteEncoderOffsetRad,
+                        DriveConstants.kBackLeftDriveAbsoluteEncoderReversed
+                ),
+                new SwerveModuleIONeo(
+                        DriveConstants.kBackRightDriveMotorPort,
+                        DriveConstants.kBackRightTurningMotorPort,
+                        DriveConstants.kBackRightDriveAbsoluteEncoderReversed,
+                        DriveConstants.kBackRightTurningEncoderReversed,
+                        DriveConstants.kBackRightDriveAbsoluteEncoderPort,
+                        DriveConstants.kBackRightDriveAbsoluteEncoderOffsetRad,
+                        DriveConstants.kBackRightDriveAbsoluteEncoderReversed
+                )
+        );
     }
 }

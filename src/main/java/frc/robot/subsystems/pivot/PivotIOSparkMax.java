@@ -38,6 +38,13 @@ public class PivotIOSparkMax implements PivotIO {
     }
 
     @Override
+    public void updatePID(double kP, double kI, double kD) {
+        pivotPID.setP(kP);
+        pivotPID.setI(kI);
+        pivotPID.setD(kD);
+    }
+
+    @Override
     public void updateInputs(PivotIOInputs inputs) {
         inputs.pivotPos = relativeEncoder.getPosition();
         inputs.pivotAngularSpeed = relativeEncoder.getVelocity();

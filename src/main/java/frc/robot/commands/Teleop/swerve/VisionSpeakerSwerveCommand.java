@@ -35,7 +35,7 @@ public class VisionSpeakerSwerveCommand extends SnapSwerveCommand {
 
         double angle = calculateAngle();
         if (!pivotSubsystem.isAtTarget(angle)) {
-            pivotSubsystem.setRev(angle);
+            pivotSubsystem.setDegrees(angle);
         } else {
             pivotSubsystem.stop();
         }
