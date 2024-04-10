@@ -7,17 +7,13 @@ public interface ShooterIO {
     public class ShooterIOInputs implements LoggableInputs {
         public double velocity = 0.0;
         public double targetVelocity = 0.0;
-        public boolean isAtTarget = false; 
-        public double voltage = 0.0;
-        public double temp = 0.0;
+        public boolean isAtTarget = false;
 
         @Override
         public void toLog(LogTable table) {
             table.put("Velocity", velocity);
             table.put("TargetVelocity", targetVelocity);
             table.put("IsAtTarget", isAtTarget);
-            table.put("Voltage", voltage);
-            table.put("Temperature", temp);
         }
 
         @Override
@@ -25,8 +21,6 @@ public interface ShooterIO {
             velocity = table.get("Velocity", velocity);
             targetVelocity = table.get("TargetVelocity", targetVelocity);
             isAtTarget = table.get("IsAtTarget", isAtTarget);
-            voltage = table.get("Voltage", voltage);
-            temp = table.get("Temperature", temp);
         }
 
     }

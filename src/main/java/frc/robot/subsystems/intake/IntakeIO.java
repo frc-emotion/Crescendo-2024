@@ -46,6 +46,7 @@ public interface IntakeIO {
     public default void updateInputs(IntakeIOInputs inputs) {}
     public default void setDriveRaw(double speed) {}
     public default void setDriveVelocity(double target) {}
+    public default void setDriveVoltage(double volts) {}
     public default void setPivotTarget(double target) {}
     public default void setPivotRaw(double speed) {}
     public default void stopPivot() {}

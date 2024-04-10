@@ -55,7 +55,7 @@ public class SwerveSubsystem extends SubsystemBase {
 
     private final SwerveModuleNeo backRight;
 
-    private AHRS gyro = new AHRS(SPI.Port.kMXP);
+    
 
     private double toDivideBy;
     private double driveSpeedMPS, driveAngularSpeedRPS;
@@ -80,28 +80,18 @@ public class SwerveSubsystem extends SubsystemBase {
 
     // private SysIdRoutine sysIdRoutine;
 
-    public SwerveSubsystem(SwerveModuleIO frontLeft, SwerveModuleIO frontRight, SwerveModuleIO backLeft, SwerveModuleIO backRight) {
-        this.frontLeft = new SwerveModuleNeo(frontLeft);
-        this.frontRight = new SwerveModuleNeo(frontRight);
-        this.backLeft = new SwerveModuleNeo(backLeft);
-        this.backRight = new SwerveModuleNeo(backRight);
+    public SwerveSubsystem() {
+        this.frontLeft = new SwerveModuleNeo(0);
+        this.frontRight = new SwerveModuleNeo(1);
+        this.backLeft = new SwerveModuleNeo(2);
+        this.backRight = new SwerveModuleNeo(3);
 
         // PIDController xController = new PIDController(AutoConstants.kPXController, 0,
         // 0);
         // PIDController yController = new PIDController(AutoConstants.kPYController, 0,
         // 0);
 
-        autoThetaController = new PIDController(AutoConstants.kPThetaController, AutoConstants.kIThetaController,
-                AutoConstants.kDThetaController);
-        autoThetaController.enableContinuousInput(-180, 180);
-
-        teleopThetaController = new PIDController(
-                DriveConstants.kPThetaController,
-                DriveConstants.kIThetaController,
-                DriveConstants.kDThetaController);
-
-        teleopThetaController.enableContinuousInput(-180, 180);
-        teleopThetaController.setTolerance(20, 180);
+        
 
         // new Thread() {
         // @Override
@@ -120,8 +110,6 @@ public class SwerveSubsystem extends SubsystemBase {
         driveAngularSpeedRPS = DriveConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond / toDivideBy;
         // driveAngularAccelRPSS =
         // DriveConstants.kTeleDriveMaxAngularAccelerationUnitsPerSecond / toDivideBy;
-
-        robotSpeeds = new ChassisSpeeds();
 
         // this.sysIdRoutine = new SysIdRoutine(
         // new SysIdRoutine.Config(Volts.of(0.5).per(Seconds.of(1.0)), Volts.of(5),

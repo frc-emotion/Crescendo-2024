@@ -64,6 +64,8 @@ import frc.robot.util.TabManager.SubsystemTab;
 
 import java.util.Map;
 
+import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
+
 /**
  * This class is where the bulk of the robot should be declared. Since
  * Command-based is a
@@ -114,7 +116,7 @@ public class RobotContainer {
     public RobotContainer() {
         switch(Constants.ROBOT_LOGGING_MODE) {
                 case REAL:
-                        m_SwerveSubsystem = initSwerve();
+                        m_SwerveSubsystem = new SwerveSubsystem();
                         m_ShooterSubsystem = new ShooterSubsystem(new ShooterIOSparkMax());
                         m_FeederSubsystem = new FeederSubsystem(new FeederIOSparkMax());
                         m_IntakeSubsystem = new IntakeSubsystem(new IntakeIOSparkMax());
@@ -133,7 +135,7 @@ public class RobotContainer {
                         throw new UnsupportedOperationException("Replay mode is not yet supported");
                 default:
                         DriverStation.reportError("Robot Logging Mode invalid, enabling default mode", false);
-                        m_SwerveSubsystem = initSwerve();
+                        m_SwerveSubsystem = new SwerveSubsystem();
                         m_ShooterSubsystem = new ShooterSubsystem(new ShooterIOSparkMax());
                         m_FeederSubsystem = new FeederSubsystem(new FeederIOSparkMax());
                         m_IntakeSubsystem = new IntakeSubsystem(new IntakeIOSparkMax());
@@ -607,17 +609,6 @@ public class RobotContainer {
         // gameShuffleboardTab.add("Robot Pose", () ->
         // m_SwerveSubsystem.getCurrentPose()).withWidget(BuiltInWidgets.kField).withPosition(4,
         // 6);
-
-        ShuffleboardLayout motorLayout = gameShuffleboardTab
-                .getLayout("Motor Data", BuiltInLayouts.kGrid)
-                .withProperties(Map.of("Number of columns", 2, "Number of rows", 1))
-                .withPosition(8, 3)
-                .withSize(2, 1);
-        motorLayout
-                .addNumber(
-                        "Shooter Temp",
-                        () -> m_ShooterSubsystem.getShooterTemp())
-                .withWidget(BuiltInWidgets.kTextView);
         // Sets GAME to active tab
         // Shuffleboard.selectTab("GAME");
 
@@ -707,46 +698,5 @@ public class RobotContainer {
                         operatorController_HID.getRightBumper(),
                 () -> m_ShooterSubsystem.getShooterVelocity() > ShooterConstants.MIN_SHOOT_SPEED &&
                         operatorController_HID.getRightTriggerAxis() > OIConstants.kDeadband);
-    }
-
-    public SwerveSubsystem initSwerve() {
-        return new SwerveSubsystem(
-                new SwerveModuleIONeo(
-                        DriveConstants.kFrontLeftDriveMotorPort,
-                        DriveConstants.kFrontLeftTurningMotorPort,
-                        DriveConstants.kFrontLeftDriveAbsoluteEncoderReversed,
-                        DriveConstants.kFrontLeftTurningEncoderReversed,
-                        DriveConstants.kFrontLeftDriveAbsoluteEncoderPort,
-                        DriveConstants.kFrontLeftDriveAbsoluteEncoderOffsetRad,
-                        DriveConstants.kFrontLeftDriveAbsoluteEncoderReversed
-                ),
-                new SwerveModuleIONeo(
-                        DriveConstants.kFrontRightDriveMotorPort,
-                        DriveConstants.kFrontRightTurningMotorPort,
-                        DriveConstants.kFrontRightDriveAbsoluteEncoderReversed,
-                        DriveConstants.kFrontRightTurningEncoderReversed,
-                        DriveConstants.kFrontRightDriveAbsoluteEncoderPort,
-                        DriveConstants.kFrontRightDriveAbsoluteEncoderOffsetRad,
-                        DriveConstants.kFrontRightDriveAbsoluteEncoderReversed
-                ),
-                new SwerveModuleIONeo(
-                        DriveConstants.kBackLeftDriveMotorPort,
-                        DriveConstants.kBackLeftTurningMotorPort,
-                        DriveConstants.kBackLeftDriveAbsoluteEncoderReversed,
-                        DriveConstants.kBackLeftTurningEncoderReversed,
-                        DriveConstants.kBackLeftDriveAbsoluteEncoderPort,
-                        DriveConstants.kBackLeftDriveAbsoluteEncoderOffsetRad,
-                        DriveConstants.kBackLeftDriveAbsoluteEncoderReversed
-                ),
-                new SwerveModuleIONeo(
-                        DriveConstants.kBackRightDriveMotorPort,
-                        DriveConstants.kBackRightTurningMotorPort,
-                        DriveConstants.kBackRightDriveAbsoluteEncoderReversed,
-                        DriveConstants.kBackRightTurningEncoderReversed,
-                        DriveConstants.kBackRightDriveAbsoluteEncoderPort,
-                        DriveConstants.kBackRightDriveAbsoluteEncoderOffsetRad,
-                        DriveConstants.kBackRightDriveAbsoluteEncoderReversed
-                )
-        );
     }
 }

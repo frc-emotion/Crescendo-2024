@@ -46,6 +46,7 @@ public class FeederIOSparkMax implements FeederIO {
         inputs.velocity = getVelocity();
         inputs.isAtTarget = isAtTarget();
         inputs.isBeamBroken = getBeamState();
+        inputs.current = feederMotor.getOutputCurrent();
     }
 
     @Override
@@ -59,6 +60,11 @@ public class FeederIOSparkMax implements FeederIO {
     @Override
     public void set(double speed) {
         feederMotor.set(speed);
+    }
+
+    @Override
+    public void setVoltage(double voltage) {
+         feederMotor.setVoltage(voltage);
     }
 
     @Override

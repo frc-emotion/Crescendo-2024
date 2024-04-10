@@ -1,5 +1,7 @@
 package frc.robot.subsystems.shooter;
 
+import org.littletonrobotics.junction.AutoLogOutput;
+
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkPIDController;
@@ -43,8 +45,6 @@ public class ShooterIOSparkMax implements ShooterIO {
         inputs.isAtTarget = isAtTarget();
         inputs.velocity = getVelocity();
         inputs.targetVelocity = target;
-        inputs.temp = getMotorTemperature();
-        inputs.voltage = getShooterVoltage();
     }
 
     @Override
@@ -82,10 +82,12 @@ public class ShooterIOSparkMax implements ShooterIO {
         return encoder.getVelocity() * 2;
     }
 
+    @AutoLogOutput(key = "Shooter/Temperature")
     public double getMotorTemperature() {
         return shooterMotor.getMotorTemperature();
     }
 
+    @AutoLogOutput(key = "Shooter/Voltage")
     public double getShooterVoltage() {
         return shooterMotor.getBusVoltage();
     }

@@ -3,12 +3,9 @@ package frc.robot.subsystems.climb;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
-import java.lang.reflect.GenericArrayType;
-
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 
-import frc.robot.Constants;
 import frc.robot.Constants.ClimbConstants;
 
 public class ClimbIOSparkMax implements ClimbIO {
@@ -40,6 +37,9 @@ public class ClimbIOSparkMax implements ClimbIO {
     public void updateInputs(ClimbIOInputs inputs) {
         inputs.rightPos = getRightPos();
         inputs.leftPos = getLeftPos();
+        inputs.highestPos = getPosition();
+        inputs.isClimbAligned = isClimbAligned();
+        inputs.current = climbMotorLeft.getOutputCurrent();
     }
 
     /**

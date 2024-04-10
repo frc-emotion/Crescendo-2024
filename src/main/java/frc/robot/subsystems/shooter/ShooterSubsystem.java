@@ -102,15 +102,6 @@ public class ShooterSubsystem extends SubsystemBase {
     }
 
     /**
-     * Gets the voltage supplied to the shooter.
-     *
-     * @return The bus voltage to the shooter
-     */
-    public double getShooterVoltage() {
-        return inputs.voltage;
-    }
-
-    /**
      * Stops supplying power to the shooter.
      */
     public void stopShooter() {
@@ -123,14 +114,6 @@ public class ShooterSubsystem extends SubsystemBase {
      */
     public void setShooterRaw(double speed) {
         io.setRaw(speed);
-    }
-
-    /**
-     * Get the current temperature of the Shooter
-     * @return Shooter Motor temperature in Celsius
-     */
-    public double getShooterTemp() {
-        return inputs.temp;
     }
 
     public double getAmpRPM() {

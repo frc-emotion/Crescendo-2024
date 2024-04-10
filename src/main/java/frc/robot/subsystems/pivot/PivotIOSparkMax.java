@@ -3,6 +3,9 @@ package frc.robot.subsystems.pivot;
 import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
+
+import org.littletonrobotics.junction.AutoLogOutput;
+
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkPIDController;
@@ -84,4 +87,10 @@ public class PivotIOSparkMax implements PivotIO {
     public double getTarget() {
         return target;
     }
+
+    @AutoLogOutput(key = "Pivot/Current")
+    public double getCurrent() {
+        return pivotMotor.getOutputCurrent();
+    }
 }
+

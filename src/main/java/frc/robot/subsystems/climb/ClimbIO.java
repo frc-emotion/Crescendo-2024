@@ -9,6 +9,7 @@ public interface ClimbIO {
         public double rightPos = 0.0;
         public double highestPos = 0.0;
         public boolean isClimbAligned = true;
+        public double current = 0.0;
 
         @Override
         public void toLog(LogTable table) {
@@ -16,6 +17,7 @@ public interface ClimbIO {
             table.put("RightPos", rightPos);
             table.put("HighestPos", highestPos);
             table.put("IsClimbAligned", isClimbAligned);
+            table.put("Current", current);
         }
 
         @Override
@@ -24,6 +26,7 @@ public interface ClimbIO {
             rightPos = table.get("RightPos", rightPos);
             highestPos = table.get("HighestPos", highestPos);
             isClimbAligned = table.get("IsClimbAligned", isClimbAligned);
+            current = table.get("Current", current);
         }
     }
 
