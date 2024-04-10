@@ -8,6 +8,8 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkPIDController;
 
 import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.filter.Debouncer;
+import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.DigitalInput;
 import frc.robot.Constants.IntakeConstants;
@@ -20,6 +22,7 @@ public class IntakeIOSparkMax implements IntakeIO {
     private RelativeEncoder pivotEncoder, pivotEncoder2, driveEncoder;
 
     private DigitalInput breakSensor;
+    private Debouncer debouncer;
 
     private final ProfiledPIDController pivotController;
     private final SparkPIDController driveController;
@@ -45,6 +48,8 @@ public class IntakeIOSparkMax implements IntakeIO {
                 MotorType.kBrushless
             );
         breakSensor = new DigitalInput(IntakeConstants.BEAM_BREAKER_PORT);
+
+        debouncer = new Debouncer(IntakeConstants.DEBOUNCE_TIME, DebounceType.kBoth);
 
         intakeMotor.setSmartCurrentLimit(IntakeConstants.SMART_MAX_CURRENT);
         intakeMotor.setSecondaryCurrentLimit(IntakeConstants.MAX_CURRENT);
@@ -152,7 +157,7 @@ public class IntakeIOSparkMax implements IntakeIO {
     }
 
     public boolean getBeamState() {
-        return breakSensor.get();
+        return debouncer.calculate(breakSensor.get());
     }
 
     public boolean isDown() {
