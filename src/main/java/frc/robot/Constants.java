@@ -12,6 +12,7 @@ import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.util.Color;
+import frc.robot.util.SwerveLimiter.LimiterConstraints;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -229,10 +230,22 @@ public final class Constants {
         public static final double MODULE_kP = 1.0;
         public static final double MODULE_kI = 0.0;
         public static final double MODULE_kD = 0.1;
+
+        public static final LimiterConstraints kTurboDriveConstraints = new LimiterConstraints(
+            kTeleDriveMaxAccelerationUnitsPerSecond,
+            kTeleDriveMaxAngularAccelerationUnitsPerSecond,
+            kTeleDriveMaxSpeedMetersPerSecond,
+            kTeleDriveMaxAngularSpeedRadiansPerSecond
+        );
+
+        public static final LimiterConstraints kNormalDriveConstraints = kTurboDriveConstraints.mult(0.5);
+        public static final LimiterConstraints kSlowModeDriveConstraints = kTurboDriveConstraints.mult(0.25);
     }
 
     public static class AutoConstants {
         public static final boolean PATH_LOGGING = true;
+
+        
 
         // Chane all values based on testing
         public static final double kMaxSpeedMetersPerSecond = 5.00;
@@ -451,6 +464,9 @@ public final class Constants {
         public static final double kD_DRIVE = 0.0;
         public static final double DRIVE_SPEED = 0.0;
         public static final double MAX_DRIVE_SPEED_ERROR = 0;
+        public static final double PIVOT_MIN_ANGLE_RAD = 0;
+        public static final double PIVOT_MAX_ANGLE_RAD = 0;
+        public static final double DEBOUNCE_TIME = 0;
         
 
         // -----------------------------------------
@@ -489,6 +505,21 @@ public final class Constants {
         public static final Color DISABLED_COLOR = Color.kYellow;
 
         public static final int FLASH_DELAY = 100;
+    }
+
+    public static final class SimConstants {
+
+        public static final double FEEDER_MOI = 0;
+        public static final int FEEDER_ENCODER_INDEX = 0;
+        public static final int CLIMB_ENCODER_INDEX = 0;
+        public static final double BATTERY_INPUT_VOLTAGE = 0;
+        public static final double INTAKE_DRIVE_MOI = 0;
+        public static final double PIVOT_MOI = 0;
+        public static final double INTAKE_PIVOT_MOI = 0;
+        public static final double INTAKE_PIVOT_ARM_LENGTH = 0;
+        public static final int INTAKE_DRIVE_ENCODER_INDEX = 0;
+        public static final int INTAKE_PIVOT_ENCODER_INDEX = 0;
+        
     }
 
 }

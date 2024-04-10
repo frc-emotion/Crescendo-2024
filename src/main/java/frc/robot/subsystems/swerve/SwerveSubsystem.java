@@ -37,7 +37,9 @@ import frc.robot.Constants;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
+import frc.robot.util.SendableNumber;
 import frc.robot.util.TabManager;
+import frc.robot.util.SwerveLimiter.LimiterConstraints;
 import frc.robot.util.TabManager.SubsystemTab;
 
 /**
@@ -45,21 +47,18 @@ import frc.robot.util.TabManager.SubsystemTab;
  * Holds gyro and odometry methods
  */
 public class SwerveSubsystem extends SubsystemBase {
-    // TODO: Add SendableNumnbers for all constants
+    SendableNumber Module_kP = new SendableNumber(SubsystemTab.DRIVETRAIN, "Drive kP", DriveConstants.MODULE_kP);
+    SendableNumber Module_kI = new SendableNumber(SubsystemTab.DRIVETRAIN, "Drive kI", DriveConstants.MODULE_kI);
+    SendableNumber Module_kD = new SendableNumber(SubsystemTab.DRIVETRAIN, "Drive kD", DriveConstants.MODULE_kD);
+    SendableNumber MaxSpeed = new SendableNumber(SubsystemTab.DRIVETRAIN, "Max Drive Speed", DriveConstants.kTeleDriveMaxSpeedMetersPerSecond);
+    SendableNumber MaxAccel = new SendableNumber(SubsystemTab.DRIVETRAIN, "Max Drive Accel", DriveConstants.kTeleDriveMaxAccelerationUnitsPerSecond);
+    SendableNumber MaxAngSpd = new SendableNumber(SubsystemTab.DRIVETRAIN, "Max Angular Speed", DriveConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond);
+    SendableNumber MaxAngAccel = new SendableNumber(SubsystemTab.DRIVETRAIN, "Max Angular Accel", DriveConstants.kTeleDriveMaxAngularAccelerationUnitsPerSecond);
 
-    private final SwerveModuleNeo frontLeft;
+    private final SwerveIO io;
+    private static final SwerveIOInputsAutoLogged inputs = new SwerveIOInputsAutoLogged();
 
-    private final SwerveModuleNeo frontRight;
-
-    private final SwerveModuleNeo backLeft;
-
-    private final SwerveModuleNeo backRight;
-
-    
-
-    private double toDivideBy;
-    private double driveSpeedMPS, driveAngularSpeedRPS;
-    // private double driveAccelMPSS, driveAngularAccelRPSS;
+    PIDController autoThetaController, teleopThetaController;
 
     private ChassisSpeeds robotSpeeds;
 
@@ -74,42 +73,12 @@ public class SwerveSubsystem extends SubsystemBase {
     // private StringPublisher publisher3 =
     // NetworkTableInstance.getDefault().getStringTopic("SysIdData").publish();
 
-    private final PIDController autoThetaController, teleopThetaController;
-
-    private GenericEntry kIEntry, kDEntry, kPEntry;
-
     // private SysIdRoutine sysIdRoutine;
 
-    public SwerveSubsystem() {
-        this.frontLeft = new SwerveModuleNeo(0);
-        this.frontRight = new SwerveModuleNeo(1);
-        this.backLeft = new SwerveModuleNeo(2);
-        this.backRight = new SwerveModuleNeo(3);
+    private LimiterConstraints turboConstraints, normalConstraints, slowConstraints;
 
-        // PIDController xController = new PIDController(AutoConstants.kPXController, 0,
-        // 0);
-        // PIDController yController = new PIDController(AutoConstants.kPYController, 0,
-        // 0);
-
-        
-
-        // new Thread() {
-        // @Override
-        // public void run() {
-        // try {
-        // sleep(1000);
-        // zeroHeading();
-        // } catch (InterruptedException e) {}
-        // }
-        // }.start();
-
-        toDivideBy = OIConstants.kSpeedDivideAdjustment;
-        driveSpeedMPS = DriveConstants.kTeleDriveMaxSpeedMetersPerSecond / toDivideBy;
-        // driveAccelMPSS = DriveConstants.kTeleDriveMaxAccelerationUnitsPerSecond /
-        // toDivideBy;
-        driveAngularSpeedRPS = DriveConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond / toDivideBy;
-        // driveAngularAccelRPSS =
-        // DriveConstants.kTeleDriveMaxAngularAccelerationUnitsPerSecond / toDivideBy;
+    public SwerveSubsystem(SwerveIO io) {
+        this.io = io;
 
         // this.sysIdRoutine = new SysIdRoutine(
         // new SysIdRoutine.Config(Volts.of(0.5).per(Seconds.of(1.0)), Volts.of(5),
@@ -131,12 +100,13 @@ public class SwerveSubsystem extends SubsystemBase {
             try {
                 Thread.sleep(1000);
                 zeroHeading();
-            } catch (Exception io) {
+            } catch (Exception ex) {
             }
         }).start();
 
         initShuffleboard();
 
+        turboConstraints = DriveConstants.kTurboDriveConstraints;
     }
 
     // public Command quasistaticCommand(boolean forward) {
@@ -155,50 +125,47 @@ public class SwerveSubsystem extends SubsystemBase {
     // }
 
     public void updatePID() {
-       
+       io.updateConstants(Module_kP.get(), Module_kI.get(), Module_kD.get());
     }
 
-    public void offsetGyro(double reading) {
-        gyro.setAngleAdjustment(reading);
+    public void offsetGyro(double offset) {
+        io.setGyroOffset(offset);
     }
 
-    public double[] getSpeedType() {
-        double[] toReturn = new double[2];
-        toReturn[0] = driveSpeedMPS;
-        toReturn[1] = driveAngularSpeedRPS;
-        return toReturn;
+    public void setMaxDriveConstraints(LimiterConstraints constraints) {
+        io.updateDriveConstraints(constraints);
     }
 
-    public void setMaxSpeeds(double driveSpeedMPS, double driveAccelMPSS, double driveAngularSpeedRPS,
-            double driveAngularAccelRPSS) {
-        this.driveSpeedMPS = driveSpeedMPS;
-        // this.driveAccelMPSS = driveAccelMPSS;
-        this.driveAngularSpeedRPS = driveAngularSpeedRPS;
-        // this.driveAngularAccelRPSS = driveAngularAccelRPSS;
+    public void setMaxDriveConstraints(double maxSpeed, double maxAccel, double maxAngSpeed, double maxAngAccel) {
+        setMaxDriveConstraints(new LimiterConstraints(maxSpeed, maxAccel, maxAngSpeed, maxAngAccel));
+    }
+
+    public void updateDriveConstraints() {
+        setMaxDriveConstraints(new LimiterConstraints(MaxSpeed.get(), MaxAccel.get(), MaxAngSpd.get(), MaxAngAccel.get()));
     }
 
     public void autoGyro() {
-        gyro.setAngleAdjustment(180);
+        offsetGyro(180);
     }
 
     public double getPitch() {
-        return Units.degreesToRadians((gyro.getPitch()));
+        return Units.degreesToRadians(inputs.pitch);
     }
 
     public double getRoll() {
-        return Units.degreesToRadians((gyro.getRoll()));
+        return Units.degreesToRadians(inputs.roll);
     }
 
     public void zeroHeading() {
-        gyro.reset();
+        io.resetGyro();
     }
 
     public boolean isGyroCalibrating() {
-        return gyro.isCalibrating();
+        return inputs.isGyroCalibrating;
     }
 
     public double getHeading() {
-        return Math.IEEEremainder(gyro.getAngle(), 360);
+        return Math.IEEEremainder(inputs.yaw, 360);
     }
 
     public double getHeading_180() {
@@ -215,46 +182,24 @@ public class SwerveSubsystem extends SubsystemBase {
     }
 
     public ChassisSpeeds getChassisSpeeds() {
-        return robotSpeeds;
-    }
-
-    public void setChassisSpeeds(ChassisSpeeds speeds) {
-        robotSpeeds = speeds;
+        return inputs.robotSpeeds;
     }
 
     public void driveRobotRelative(ChassisSpeeds speedGiven) {
-        setChassisSpeeds(speedGiven);
-
-        SwerveModuleState[] moduleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(
-                speedGiven);
-        setModuleStates(moduleStates);
+        io.driveRobotRelative(speedGiven);
     }
 
     public void driveFieldRelative(ChassisSpeeds speedGiven) {
-        setChassisSpeeds(speedGiven);
-
-        speedGiven = ChassisSpeeds.fromFieldRelativeSpeeds(speedGiven, getRotation2d());
-
-        setModuleStates(
-                DriveConstants.kDriveKinematics.toSwerveModuleStates(speedGiven));
+        io.driveFieldRelative(speedGiven);
+        
     }
 
     public SwerveModulePosition[] getModulePositions() {
-        return new SwerveModulePosition[] {
-                frontLeft.getPosition(),
-                frontRight.getPosition(),
-                backLeft.getPosition(),
-                backRight.getPosition()
-        };
+        return inputs.modulePositions;
     }
 
     public SwerveModuleState[] getModuleStates() {
-        return new SwerveModuleState[] {
-                frontLeft.getState(),
-                frontRight.getState(),
-                backLeft.getState(),
-                backRight.getState()
-        };
+        return inputs.moduleStates;
     }
 
     @Override
@@ -272,32 +217,7 @@ public class SwerveSubsystem extends SubsystemBase {
     }
 
     public void stopModules() {
-        frontLeft.stop();
-        frontRight.stop();
-        backLeft.stop();
-        backRight.stop();
-    }
-
-    public void setModuleStates(SwerveModuleState[] desiredStates) {
-        SwerveDriveKinematics.desaturateWheelSpeeds(
-                desiredStates,
-                DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
-        frontLeft.setDesiredState(desiredStates[0], false);
-        frontRight.setDesiredState(desiredStates[1], false);
-        backLeft.setDesiredState(desiredStates[2], false);
-        backRight.setDesiredState(desiredStates[3], false);
-    }
-
-    public void setModuleStates(
-            SwerveModuleState[] desiredStates,
-            boolean station) {
-        SwerveDriveKinematics.desaturateWheelSpeeds(
-                desiredStates,
-                DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
-        frontLeft.setDesiredState(desiredStates[0], station);
-        frontRight.setDesiredState(desiredStates[1], station);
-        backLeft.setDesiredState(desiredStates[2], station);
-        backRight.setDesiredState(desiredStates[3], station);
+        io.stop();
     }
 
     private void initShuffleboard() {
@@ -317,33 +237,18 @@ public class SwerveSubsystem extends SubsystemBase {
         frontRightData = moduleData.getLayout("Front Right", BuiltInLayouts.kList);
         backLeftData = moduleData.getLayout("Back Left", BuiltInLayouts.kList);
         backRightData = moduleData.getLayout("Back Right", BuiltInLayouts.kList);
-        fillList(frontLeft, frontLeftData);
-        fillList(frontRight, frontRightData);
-        fillList(backLeft, backLeftData);
-        fillList(backRight, backRightData);
-
-        this.kPEntry = moduleData.add("kP", DriveConstants.kPThetaController).getEntry();
-
-        this.kIEntry = moduleData.add("kI", DriveConstants.kIThetaController).getEntry();
-
-        this.kDEntry = moduleData.add("kD", DriveConstants.kDThetaController).getEntry();
+        if(io instanceof SwerveIOReal) {
+            ((SwerveIOReal) io).fillList(0, frontLeftData);
+            ((SwerveIOReal) io).fillList(1, frontRightData);
+            ((SwerveIOReal) io).fillList(2, backLeftData);
+            ((SwerveIOReal) io).fillList(3, backRightData);
+        }
 
         sensorData = moduleData.getLayout("Gyro Data", BuiltInLayouts.kList);
         sensorData.addNumber("Gyro Heading", () -> getHeading());
         sensorData.addNumber("Gyro Pitch", () -> getPitch());
         sensorData.addNumber("Gyro Roll", () -> getRoll());
 
-    }
-
-    private void fillList(SwerveModuleNeo module, ShuffleboardLayout layout) {
-        layout.addNumber(
-                "Absolute Position",
-                () -> module.getAbsolutePosition());
-        layout.addNumber(
-                "Integrated Position",
-                () -> module.getTurningPosition());
-        layout.addNumber("Velocity", () -> module.getDriveVelocity());
-        layout.withSize(2, 4);
     }
 
     public double calculateThetaPID(double measurement, double setpoint, boolean auto) {

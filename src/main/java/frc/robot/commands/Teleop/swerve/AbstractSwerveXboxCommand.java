@@ -6,20 +6,23 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
+import frc.robot.util.SwerveLimiter.LimiterConstraints;
 
 import java.util.function.Supplier;
 
 public abstract class AbstractSwerveXboxCommand extends Command {
-
     protected final SwerveSubsystem swerveSubsystem;
     protected final Supplier<Double> xSpdFunc, ySpdFunc, turningSpdFunc;
 
-    protected final SlewRateLimiter xLimiter, yLimiter, turningLimiter;
-
-    protected double[] speeds;
-    protected double currentTranslationalSpeed, currentAngularSpeed;
     protected ChassisSpeeds robotSpeeds;
     protected double xSpeed, ySpeed, turningSpeed;
+    protected LimiterConstraints constraints;
+
+    @Override
+    public void initialize() {
+        constraints = DriveConstants.kNormalDriveConstraints;
+        swerveSubsystem.setMaxDriveConstraints(constraints);
+    }
 
     public AbstractSwerveXboxCommand(
             SwerveSubsystem swerveSubsystem,
@@ -37,13 +40,6 @@ public abstract class AbstractSwerveXboxCommand extends Command {
         this.ySpdFunc = ySpdFunc;
         this.turningSpdFunc = turningSpdFunc;
 
-        this.xLimiter = new SlewRateLimiter(
-                DriveConstants.kTeleDriveMaxAccelerationUnitsPerSecond);
-        this.yLimiter = new SlewRateLimiter(
-                DriveConstants.kTeleDriveMaxAccelerationUnitsPerSecond);
-        this.turningLimiter = new SlewRateLimiter(
-                DriveConstants.kTeleDriveMaxAngularAccelerationUnitsPerSecond);
-
         robotSpeeds = new ChassisSpeeds();
 
         addRequirements(swerveSubsystem);
@@ -59,24 +55,13 @@ public abstract class AbstractSwerveXboxCommand extends Command {
         ySpeed = ySpdFunc.get();
         turningSpeed = turningSpdFunc.get();
 
-        speeds = swerveSubsystem.getSpeedType();
-
-        currentTranslationalSpeed = speeds[0];
-        currentAngularSpeed = speeds[1];
-
         // Retrieves the user input and applies a deadzone
-        xSpeed = Math.abs(xSpeed) > (OIConstants.kDeadband / 2) ? xSpeed : 0.0;
-        ySpeed = Math.abs(ySpeed) > (OIConstants.kDeadband / 2) ? ySpeed : 0.0;
-        turningSpeed = Math.abs(turningSpeed) > OIConstants.kDeadband ? turningSpeed : 0.0;
+        xSpeed = Math.abs(xSpeed) > (OIConstants.kDeadband / 2) ? constraints.maxSpeed : 0.0;
+        ySpeed = Math.abs(ySpeed) > (OIConstants.kDeadband / 2) ? constraints.maxSpeed : 0.0;
+        turningSpeed = Math.abs(turningSpeed) > OIConstants.kDeadband ? constraints.maxAngularSpeed : 0.0;
 
-        // Limits the translational and rotational acceleration of the robot
-        xSpeed = xLimiter.calculate(xSpeed) * currentTranslationalSpeed;
-        ySpeed = yLimiter.calculate(ySpeed) * currentTranslationalSpeed;
-        turningSpeed = turningLimiter.calculate(turningSpeed) * currentAngularSpeed;
-
-        // Transfers the ChassisSpeeds to field-relative ChassisSpeeds
-        robotSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, turningSpeed,
-                swerveSubsystem.getRotation2d());
+        robotSpeeds = new ChassisSpeeds(xSpeed, ySpeed, turningSpeed);
+        robotSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(robotSpeeds, swerveSubsystem.getRotation2d());
     }
 
     /**

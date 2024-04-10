@@ -31,11 +31,8 @@ public class SlowModeSwerveCommand extends DefaultSwerveXboxCommand {
      */
     @Override
     public void initialize() {
+        constraints = DriveConstants.kSlowModeDriveConstraints;
         DriveConstants.currentDriveMode = DriveMode.SLOW;
-        swerveSubsystem.setMaxSpeeds(
-                DriveConstants.kTeleDriveMaxSpeedMetersPerSecond / 4,
-                DriveConstants.kTeleDriveMaxAccelerationUnitsPerSecond / 4,
-                DriveConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond / 4,
-                DriveConstants.kTeleDriveMaxAngularAccelerationUnitsPerSecond / 4);
+        swerveSubsystem.setMaxDriveConstraints(constraints);
     }
 }

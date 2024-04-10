@@ -55,6 +55,7 @@ import frc.robot.subsystems.pivot.PivotSubsystem;
 import frc.robot.subsystems.shooter.ShooterIOSim;
 import frc.robot.subsystems.shooter.ShooterIOSparkMax;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
+import frc.robot.subsystems.swerve.SwerveIOReal;
 import frc.robot.subsystems.swerve.SwerveModuleIONeo;
 import frc.robot.subsystems.swerve.SwerveModuleNeo;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
@@ -116,7 +117,7 @@ public class RobotContainer {
     public RobotContainer() {
         switch(Constants.ROBOT_LOGGING_MODE) {
                 case REAL:
-                        m_SwerveSubsystem = new SwerveSubsystem();
+                        m_SwerveSubsystem = new SwerveSubsystem(new SwerveIOReal());
                         m_ShooterSubsystem = new ShooterSubsystem(new ShooterIOSparkMax());
                         m_FeederSubsystem = new FeederSubsystem(new FeederIOSparkMax());
                         m_IntakeSubsystem = new IntakeSubsystem(new IntakeIOSparkMax());
@@ -125,7 +126,7 @@ public class RobotContainer {
                         break;
                 case SIM:
                         throw new UnsupportedOperationException("Simulation mode is not yet supported");
-                        // m_SwerveSubsystem = initSwerve();
+                        // m_SwerveSubsystem = new SwerveSubsystem(new SwerveIOSim());
                         // m_ShooterSubsystem = new ShooterSubsystem(new ShooterIOSim());
                         // m_FeederSubsystem = new FeederSubsystem(new FeederIOSim());
                         // m_IntakeSubsystem = new IntakeSubsystem(new IntakeIOSim());
@@ -135,7 +136,7 @@ public class RobotContainer {
                         throw new UnsupportedOperationException("Replay mode is not yet supported");
                 default:
                         DriverStation.reportError("Robot Logging Mode invalid, enabling default mode", false);
-                        m_SwerveSubsystem = new SwerveSubsystem();
+                        m_SwerveSubsystem = new SwerveSubsystem(new SwerveIOReal());
                         m_ShooterSubsystem = new ShooterSubsystem(new ShooterIOSparkMax());
                         m_FeederSubsystem = new FeederSubsystem(new FeederIOSparkMax());
                         m_IntakeSubsystem = new IntakeSubsystem(new IntakeIOSparkMax());

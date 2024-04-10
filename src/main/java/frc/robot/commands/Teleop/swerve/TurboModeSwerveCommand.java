@@ -28,11 +28,8 @@ public class TurboModeSwerveCommand extends DefaultSwerveXboxCommand {
      */
     @Override
     public void initialize() {
+        constraints = DriveConstants.kTurboDriveConstraints;
         DriveConstants.currentDriveMode = DriveMode.TURBO;
-        swerveSubsystem.setMaxSpeeds(
-                DriveConstants.kTeleDriveMaxSpeedMetersPerSecond,
-                DriveConstants.kTeleDriveMaxAccelerationUnitsPerSecond,
-                DriveConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond,
-                DriveConstants.kTeleDriveMaxAngularAccelerationUnitsPerSecond);
+        swerveSubsystem.setMaxDriveConstraints(constraints);
     }
 }
