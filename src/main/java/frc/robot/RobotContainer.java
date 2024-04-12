@@ -22,8 +22,6 @@ import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.DriveConstants.DriveMode;
 import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.PivotConstants;
-import frc.robot.Constants.RobotDataMode;
-import frc.robot.Constants.RobotLoggingMode;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.commands.LEDCommand;
 import frc.robot.commands.Auto.NamedCommands.CommandContainer;
@@ -39,25 +37,18 @@ import frc.robot.commands.Teleop.swerve.*;
 import frc.robot.commands.debug.ResetGyroCommand;
 import frc.robot.commands.vision.MonitorVision;
 import frc.robot.commands.vision.SpeakerTurret;
-import frc.robot.subsystems.climb.ClimbIOSim;
 import frc.robot.subsystems.climb.ClimbIOSparkMax;
 import frc.robot.subsystems.climb.ClimbSubsystem;
-import frc.robot.subsystems.feeder.FeederIOSim;
 import frc.robot.subsystems.feeder.FeederIOSparkMax;
 import frc.robot.subsystems.feeder.FeederSubsystem;
 import frc.robot.subsystems.intake.*;
 import frc.robot.subsystems.other.LEDSubsystem;
 import frc.robot.subsystems.other.VisionSubsystem;
-import frc.robot.subsystems.pivot.PivotIO;
-import frc.robot.subsystems.pivot.PivotIOSim;
 import frc.robot.subsystems.pivot.PivotIOSparkMax;
 import frc.robot.subsystems.pivot.PivotSubsystem;
-import frc.robot.subsystems.shooter.ShooterIOSim;
 import frc.robot.subsystems.shooter.ShooterIOSparkMax;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
 import frc.robot.subsystems.swerve.SwerveIOReal;
-import frc.robot.subsystems.swerve.SwerveModuleIONeo;
-import frc.robot.subsystems.swerve.SwerveModuleNeo;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
 import frc.robot.util.AutoManager;
 import frc.robot.util.TabManager;
@@ -135,7 +126,7 @@ public class RobotContainer {
                 case REPLAY:
                         throw new UnsupportedOperationException("Replay mode is not yet supported");
                 default:
-                        DriverStation.reportError("Robot Logging Mode invalid, enabling default mode", false);
+                        DriverStation.reportError("Robot Logging Mode invalid, enabling default mode (real)", false);
                         m_SwerveSubsystem = new SwerveSubsystem(new SwerveIOReal());
                         m_ShooterSubsystem = new ShooterSubsystem(new ShooterIOSparkMax());
                         m_FeederSubsystem = new FeederSubsystem(new FeederIOSparkMax());
@@ -177,19 +168,7 @@ public class RobotContainer {
                 new PivotManualCommand(
                         m_PivotSubsystem,
                         () -> -operatorController_HID.getLeftY()
-                // () -> operatorController_HID.getLeftStickButton()
-                // () -> operatorController_HID.getPOV() == 0,
-                // () -> operatorController_HID.getPOV() == 180,
-                // () -> operatorController_HID.getPOV() == 90
                 ));
-
-        // m_IntakeSubsystem.setDefaultCommand(
-        // new IntakeDriveCommand(
-        // m_IntakeSubsystem,
-        // () -> operatorController_HID.getLeftBumper(),
-        // () -> operatorController_HID.getRightBumper()
-        // )
-        // );
 
         m_IntakeSubsystem.setDefaultCommand(
                 new IntakeDriveCommand(
@@ -197,14 +176,6 @@ public class RobotContainer {
                         () -> false, // previous r bumper
                         () -> operatorController_HID.getLeftBumper()));
 
-        // m_ledSubsystem.setDefaultCommand(
-        // new LEDCommand(
-        // m_ledSubsystem,
-        // m_IntakeSubsystem::getBeamState,
-        // m_IntakeSubsystem::isDown,
-        // m_ShooterSubsystem::isAtTarget
-        // )
-        // );
 
         m_VisionSubsystem.setDefaultCommand(
                 new MonitorVision(m_VisionSubsystem));
@@ -353,76 +324,23 @@ public class RobotContainer {
                     }
                 });
 
-        // m_operatorController.povDown()
-        // // .or(m_operatorController.povUp())
-        // .onTrue(new InstantCommand() {
-        // @Override
-        // public void execute() {
-        // int index = m_PivotSubsystem.getIndex();
-        // m_ShooterSubsystem.setTargetRPM(ShooterConstants.PRESET_SPEEDS[index]);
-        // }
-        // });
-
-        // m_operatorController.x().onTrue(
-        // new IntakePivotCommand(m_IntakeSubsystem)
-        // );
-
         // Intake Pivot Command
         m_operatorController
                 .x()
-                // .povUp()
                 .whileTrue(
                         new SequentialCommandGroup(
                                 new IntakePivotCommand(m_IntakeSubsystem)
-                                        .onlyIf(() -> !m_IntakeSubsystem.isDown()), // should
-                                // we
-                                // change
-                                // this
-                                // to
-                                // .andThen()
-                                // instead
-                                // of
-                                // sequential
-                                // command
-                                // group?
+                                        .onlyIf(() -> !m_IntakeSubsystem.isDown()),
                                 new IntakeDriveAutoCommand(m_IntakeSubsystem)))
                 .whileFalse(
-                        // new SequentialCommandGroup(
                         new IntakePivotCommand(m_IntakeSubsystem)
                                 .onlyIf(() -> m_IntakeSubsystem.isDown())
                                 .alongWith(
                                         CommandContainer.resetPivot(m_PivotSubsystem)
-                                // new Command() {
-                                // @Override
-                                // public void execute() {
-                                // m_PivotSubsystem.goToHandoff();
-                                // }
-
-                                // @Override
-                                // public boolean isFinished() {
-                                // return m_PivotSubsystem.isHandoffOk();
-                                // }
-
-                                // @Override
-                                // public void end(boolean interrupted) {
-                                // m_PivotSubsystem.stop();
-                                // }
-                                // }
-                                // .onlyIf(()->!m_PivotSubsystem.isHandoffOk())
-                                // .withTimeout(3.5)
                                 )
                                 .andThen(
-                                        // new TeleopHandoffCommand(
-                                        //         () -> operatorController_HID.getRightTriggerAxis() > OIConstants.kDeadband,
-                                        //         m_ShooterSubsystem,
-                                        //         m_IntakeSubsystem
-                                                
-                                        // )
-                                        //         // .onlyIf(() -> m_PivotSubsystem.isHandoffOk())
-                                        //         .withTimeout(2.0)
                                         new HandoffAutoCommand(m_IntakeSubsystem, m_FeederSubsystem).withTimeout(2.0)
                                 )
-                // )
                 );
 
         // Resets the Pivot to default position
@@ -464,11 +382,6 @@ public class RobotContainer {
         });
 
         m_operatorController.y().whileTrue(
-                // new SpeakerTurret(m_VisionSubsystem, m_PivotSubsystem)
-                // new ParallelCommandGroup(
-                //         new SnapCommand(m_SwerveSubsystem, m_VisionSubsystem), 
-                //         new SpeakerTurret(m_VisionSubsystem, m_PivotSubsystem)
-                //         )
                         new PivotAutoCommand(m_PivotSubsystem, 3)
                 );
 
@@ -495,10 +408,6 @@ public class RobotContainer {
                 new RevShooterAutoCommand(m_ShooterSubsystem));
         NamedCommands.registerCommand(
                 "AutoHandoff",
-                // CommandContainer.getAutoHandoffCommandGroup(
-                //         m_IntakeSubsystem,
-                //         m_ShooterSubsystem,
-                //         m_PivotSubsystem));
                 new HandoffAutoCommand(m_IntakeSubsystem, m_FeederSubsystem).withTimeout(3.0));
         NamedCommands.registerCommand(
                 "AutoHandoffNoTimeout",
@@ -526,12 +435,6 @@ public class RobotContainer {
                 .withWidget(BuiltInWidgets.kGyro)
                 .withPosition(10, 0)
                 .withSize(3, 4);
-        // gameShuffleboardTab
-        //         .addBoolean("Debug Mode", () -> Constants.DEBUG_MODE_ACTIVE)
-        //         .withPosition(10, 4)
-        //         .withSize(3, 1);
-        // gameShuffleboardTab.add("Auto Chooser", autoChooser).withPosition(8,
-        // 2).withSize(2, 1);
 
         // Drive Layout - Shows which drive mode is active (Slow, Normal, Turbo)
         ShuffleboardLayout generalLayout = gameShuffleboardTab
@@ -599,19 +502,6 @@ public class RobotContainer {
                 .withWidget(BuiltInWidgets.kGraph)
                 .withPosition(0, 3)
                 .withSize(3, 3);
-
-        // gameShuffleboardTab.addBoolean("Shooter At Speed", () ->
-        // m_ShooterSubsystem.getShooterVelocity() > 3900)
-        // .withPosition(3, 3).withSize(2, 2);
-        // gameShuffleboardTab.addBoolean("Shooter Beam State", () ->
-        // m_ShooterSubsystem.isProjectileFed())
-        // .withPosition(3, 5).withSize(2, 1);
-
-        // gameShuffleboardTab.add("Robot Pose", () ->
-        // m_SwerveSubsystem.getCurrentPose()).withWidget(BuiltInWidgets.kField).withPosition(4,
-        // 6);
-        // Sets GAME to active tab
-        // Shuffleboard.selectTab("GAME");
 
         gameShuffleboardTab.add(
                 "Pivot Angle",
@@ -684,7 +574,6 @@ public class RobotContainer {
                 m_IntakeSubsystem::isDown,
                 m_FeederSubsystem::getBeamState,
                 () -> (( m_ShooterSubsystem.getShooterVelocity() > ShooterConstants.MIN_SHOOT_SPEED))
-                        // || (driverController_HID.getRightBumper() > OIConstants.kDeadband && m_ShooterSubsystem.getShooterVelocity() > ShooterConstants.AmpRPM - 250))
                 );
     }
 

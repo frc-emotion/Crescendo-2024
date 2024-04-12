@@ -1,7 +1,5 @@
 package frc.robot.subsystems.climb;
 
-import org.littletonrobotics.junction.console.SimConsoleSource;
-
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.simulation.ElevatorSim;

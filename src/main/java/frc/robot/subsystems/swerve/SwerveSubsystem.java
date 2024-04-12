@@ -26,7 +26,6 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructArrayPublisher;
 import edu.wpi.first.networktables.StructPublisher;
 
-import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -34,9 +33,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 //import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants;
-import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
-import frc.robot.Constants.OIConstants;
 import frc.robot.util.SendableNumber;
 import frc.robot.util.TabManager;
 import frc.robot.util.SwerveLimiter.LimiterConstraints;
