@@ -6,12 +6,9 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.system.plant.DCMotor;
-import edu.wpi.first.wpilibj.simulation.BatterySim;
 import edu.wpi.first.wpilibj.simulation.EncoderSim;
 import edu.wpi.first.wpilibj.simulation.FlywheelSim;
-import edu.wpi.first.wpilibj.simulation.RoboRioSim;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.Constants.SimConstants;
 
@@ -34,7 +31,7 @@ public class FeederIOSim implements FeederIO {
     }
 
     @Override
-    public void updateInputs(FeederIOInputsAutoLogged inputs) {
+    public void updateInputs(FeederIOInputs inputs) {
         inputs.isAtTarget = isAtTarget();
         inputs.targetVelocity = targetVelocity;
         inputs.velocity = encoder.getRate();

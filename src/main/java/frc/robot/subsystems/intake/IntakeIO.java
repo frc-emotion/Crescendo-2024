@@ -1,10 +1,10 @@
 package frc.robot.subsystems.intake;
 
-import org.littletonrobotics.junction.LogTable;
-import org.littletonrobotics.junction.inputs.LoggableInputs;
+import org.littletonrobotics.junction.AutoLog;
 
 public interface IntakeIO {
-    public static class IntakeIOInputs implements LoggableInputs {
+    @AutoLog
+    public static class IntakeIOInputs{
         public boolean isDown = false;
         public boolean beamState = false;
         public double pivotPos = 0.0;
@@ -15,32 +15,6 @@ public interface IntakeIO {
         public double driveSpeed = 0.0;
         public double targetDriveSpeed = 0.0;
         public boolean isDriveAtTarget = true;
-
-        @Override
-        public void toLog(LogTable table) {
-            table.put("IsDown", isDown);
-            table.put("BeamState", beamState);
-            table.put("PivotPos", pivotPos);
-            table.put("PivotDeg", pivotDeg);
-            table.put("PivotTarget", pivotTarget);
-            table.put("IsPivotAtTarget", isPivotAtTarget);
-            table.put("DriveSpeed", driveSpeed);
-            table.put("TargetDriveSpeed", targetDriveSpeed);
-            table.put("IsDriveAtTarget", isDriveAtTarget);
-        }
-
-        @Override
-        public void fromLog(LogTable table) {
-            isDown = table.get("IsDown", isDown);
-            beamState = table.get("BeamState", beamState);
-            pivotPos = table.get("PivotPos", pivotPos);
-            pivotDeg = table.get("PivotDeg", pivotDeg);
-            pivotTarget = table.get("PivotTarget", pivotTarget);
-            isPivotAtTarget = table.get("IsPivotAtTarget", isPivotAtTarget);
-            driveSpeed = table.get("DriveSpeed", driveSpeed);
-            targetDriveSpeed = table.get("TargetDriveSpeed", targetDriveSpeed);
-            isDriveAtTarget = table.get("IsDriveAtTarget", isDriveAtTarget);
-        }
     }
 
     public default void updateInputs(IntakeIOInputs inputs) {}

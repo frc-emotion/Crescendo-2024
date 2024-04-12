@@ -2,21 +2,12 @@ package frc.robot.subsystems.shooter;
 
 import org.littletonrobotics.junction.Logger;
 
-import com.revrobotics.CANSparkBase.ControlType;
-import com.revrobotics.CANSparkBase.IdleMode;
-import com.revrobotics.CANSparkLowLevel.MotorType;
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.RelativeEncoder;
-import com.revrobotics.SparkPIDController;
-import edu.wpi.first.networktables.GenericEntry;
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.ShooterConstants;
-import frc.robot.subsystems.shooter.ShooterIO.ShooterIOInputs;
 import frc.robot.util.SendableNumber;
 import frc.robot.util.TabManager;
 import frc.robot.util.TabManager.SubsystemTab;
@@ -33,7 +24,7 @@ public class ShooterSubsystem extends SubsystemBase {
     SendableNumber SpeakerRPM = new SendableNumber(SubsystemTab.SHOOTER, "Shooter Speaker RPM", ShooterConstants.SHOOTER_SPEED_RPM);
 
     private ShooterIO io;
-    private static final ShooterIOInputs inputs = new ShooterIOInputs();
+    private static final ShooterIOInputsAutoLogged inputs = new ShooterIOInputsAutoLogged();
     /**
      * Construct a new instance of Shooter Subsystem
      */

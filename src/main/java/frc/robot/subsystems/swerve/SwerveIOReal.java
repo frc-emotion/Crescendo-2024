@@ -3,9 +3,7 @@ package frc.robot.subsystems.swerve;
 import org.littletonrobotics.junction.AutoLogOutput;
 
 import com.kauailabs.navx.frc.AHRS;
-import com.pathplanner.lib.util.ChassisSpeedsRateLimiter;
 
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -13,7 +11,6 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
-import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.util.SwerveLimiter;
 import frc.robot.util.SwerveLimiter.LimiterConstraints;
@@ -70,7 +67,7 @@ public class SwerveIOReal implements SwerveIO {
     }
 
     @Override
-    public void updateInputs(SwerveIOInputsAutoLogged inputs) {
+    public void updateInputs(SwerveIOInputs inputs) {
         inputs.robotSpeeds = robotSpeeds;
         inputs.modulePositions = getModulePositions();
         inputs.moduleStates = getModuleStates();

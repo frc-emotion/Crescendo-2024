@@ -41,7 +41,7 @@ public class FeederIOSparkMax implements FeederIO {
     }
 
     @Override
-    public void updateInputs(FeederIOInputsAutoLogged inputs) {
+    public void updateInputs(FeederIOInputs inputs) {
         inputs.targetVelocity = getTarget();
         inputs.velocity = getVelocity();
         inputs.isAtTarget = isAtTarget();

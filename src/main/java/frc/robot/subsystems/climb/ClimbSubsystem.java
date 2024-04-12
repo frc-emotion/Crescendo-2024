@@ -9,7 +9,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.ClimbConstants;
 import frc.robot.Constants.RobotDataMode;
-import frc.robot.subsystems.climb.ClimbIO.ClimbIOInputs;
 import frc.robot.util.SendableNumber;
 import frc.robot.util.TabManager;
 import frc.robot.util.TabManager.SubsystemTab;
@@ -21,7 +20,7 @@ public class ClimbSubsystem extends SubsystemBase {
     SendableNumber ClimbMax = new SendableNumber(SubsystemTab.CLIMB, "Climb Extension Limit", ClimbConstants.EXTENSION_LIMIT);
 
     private ClimbIO io;
-    private final ClimbIOInputs inputs = new ClimbIOInputs();
+    private final ClimbIOInputsAutoLogged inputs = new ClimbIOInputsAutoLogged();
 
     /**
      * Constructs a ClimbSubsystem instance

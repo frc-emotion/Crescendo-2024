@@ -3,7 +3,6 @@ package frc.robot.subsystems.pivot;
 import frc.robot.Constants;
 import frc.robot.Constants.PivotConstants;
 import frc.robot.Constants.RobotDataMode;
-import frc.robot.subsystems.pivot.PivotIO.PivotIOInputs;
 import frc.robot.util.SendableNumber;
 import frc.robot.util.TabManager;
 import frc.robot.util.TabManager.SubsystemTab;
@@ -25,7 +24,7 @@ public class PivotSubsystem extends SubsystemBase {
 
 
     private PivotIO io;
-    public static final PivotIOInputs inputs = new PivotIOInputs();
+    public static final PivotIOInputsAutoLogged inputs = new PivotIOInputsAutoLogged();
 
     private boolean turretMode = false;
 

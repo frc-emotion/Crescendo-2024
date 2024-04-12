@@ -3,13 +3,9 @@ package frc.robot.subsystems.intake;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.system.plant.DCMotor;
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.simulation.EncoderSim;
 import edu.wpi.first.wpilibj.simulation.FlywheelSim;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
-import frc.robot.Constants.IntakeConstants;
-import frc.robot.Constants.PivotConstants;
-import frc.robot.Constants.SimConstants;
 
 /** Class unfinished */
 public class IntakeIOSim implements IntakeIO {

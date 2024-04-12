@@ -20,7 +20,7 @@ public interface SwerveIO {
         public double roll = 0.0;
         public boolean isGyroCalibrating = false;
     }
-    public default void updateInputs(SwerveIOInputsAutoLogged inputs) {}
+    public default void updateInputs(SwerveIOInputs inputs) {}
     public default void updateConstants(double Module_kP, double Module_kI, double Module_kD) {}
     public default void updateDriveConstraints(LimiterConstraints constraints) {}
     public default void setModuleStates(SwerveModuleState[] states) {}

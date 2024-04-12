@@ -9,7 +9,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.RobotDataMode;
-import frc.robot.subsystems.intake.IntakeIO.IntakeIOInputs;
 import frc.robot.util.SendableNumber;
 import frc.robot.util.TabManager;
 import frc.robot.util.TabManager.SubsystemTab;
@@ -31,7 +30,7 @@ public class IntakeSubsystem extends SubsystemBase {
 
 
     private final IntakeIO io;
-    private final IntakeIOInputs inputs = new IntakeIOInputs();
+    private final IntakeIOInputsAutoLogged inputs = new IntakeIOInputsAutoLogged();
 
     /**
      * Constructs an IntakeSubsystem Instance
