@@ -16,6 +16,7 @@ import frc.robot.util.SwerveLimiter.LimiterConstraints;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Transform3d;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
@@ -495,6 +496,7 @@ public final class Constants {
         // Thank you super nurds for constnats very nice (nice spelling)
         public static final Translation2d BLUE_SPEAKER_CENTER = new Translation2d(0.457 / 2, 5.557034);
         public static final Translation2d RED_SPEAKER_CENTER = new Translation2d(FIELD_LENGTH - (0.457 / 2), 5.557034);
+        public static final Transform3d CAMERA_TRANSLATION = new Transform3d();
     }
 
     public static final class LEDConstants {

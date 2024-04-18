@@ -1,8 +1,12 @@
 package frc.robot.subsystems.swerve;
 
+import org.photonvision.EstimatedRobotPose;
+
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
+import edu.wpi.first.math.geometry.Pose2d;
 
 // import static edu.wpi.first.units.Units.Seconds;
 // import static edu.wpi.first.units.Units.Volts;
@@ -66,6 +70,8 @@ public class SwerveSubsystem extends SubsystemBase {
     private StructPublisher<Rotation2d> publisher2 = NetworkTableInstance.getDefault()
             .getStructTopic("PersianRotation", Rotation2d.struct).publish();
 
+    private SwerveDrivePoseEstimator poseEstimator;
+
     // private StringPublisher publisher3 =
     // NetworkTableInstance.getDefault().getStringTopic("SysIdData").publish();
 
@@ -98,6 +104,8 @@ public class SwerveSubsystem extends SubsystemBase {
             }
         }).start();
 
+        poseEstimator = new SwerveDrivePoseEstimator(DriveConstants.kDriveKinematics, getRotation2d(), getModulePositions(), new Pose2d());
+
         initShuffleboard();
     }
 
@@ -122,6 +130,10 @@ public class SwerveSubsystem extends SubsystemBase {
 
     public void offsetGyro(double offset) {
         io.setGyroOffset(offset);
+    }
+
+    public void updateVisionPose(EstimatedRobotPose estimatedVisionPose) {
+        poseEstimator.addVisionMeasurement(estimatedVisionPose.estimatedPose.toPose2d(), estimatedVisionPose.timestampSeconds);
     }
 
     public void setMaxDriveConstraints(LimiterConstraints constraints) {
@@ -200,6 +212,8 @@ public class SwerveSubsystem extends SubsystemBase {
         // SmartDashboard.putNumber("Gyro Reading", getHeading());
         // SmartDashboard.putNumber("Gyro Pitch", getPitch());
         // SmartDashboard.putNumber("Gyro Roll", getRoll());
+
+        poseEstimator.update(getRotation2d(), getModulePositions());
 
         SwerveModuleState[] moduleStates = getModuleStates();
         Rotation2d currentRotation = getRotation2d();
