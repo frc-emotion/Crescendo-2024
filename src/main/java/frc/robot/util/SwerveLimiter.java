@@ -3,24 +3,24 @@ package frc.robot.util;
 import com.pathplanner.lib.util.ChassisSpeedsRateLimiter;
 
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
 
+/** 
+ * Limits the maximum speed and acceleration of given {@link ChassisSpeeds}. Uses the
+ * PathPlanner {@link ChassisSpeedsRateLimiter} for acceleration limiting.
+ */
 public class SwerveLimiter {
     private ChassisSpeedsRateLimiter rateLimiter;
 
-    private TrapezoidProfile translationProfile, rotationProfile;
-
     private double maxSpeed, maxAngularSpeed;
 
-    public SwerveLimiter(double maxSpeed, double maxAccel, double maxAngularSpeed, double maxAngularAccel) {
-        rateLimiter = new ChassisSpeedsRateLimiter(maxAccel, maxAngularAccel);
-        this.maxSpeed = maxSpeed;
-        this.maxAngularSpeed = maxAngularSpeed;
-    }
-
     public SwerveLimiter(LimiterConstraints constraints) {
+        this.rateLimiter = new ChassisSpeedsRateLimiter(constraints.maxAcceleration, constraints.maxAngularAcceleration);
+        this.maxSpeed = constraints.maxSpeed;
+        this.maxAngularSpeed = constraints.maxAngularSpeed;
+
         setConstraints(constraints);
     }
+
 
     /** Calculates and limits the ChassisSpeeds */
     public ChassisSpeeds calculate(ChassisSpeeds input) {
@@ -42,28 +42,60 @@ public class SwerveLimiter {
         this.maxAngularSpeed = constraints.maxAngularSpeed;
     }
 
-    /** Calculates the magnitude of the velocity vector from the ChassisSpeeds */
+    /** Calculates the magnitude of the velocity vector from the given ChassisSpeeds */
     private double getSpeed(ChassisSpeeds speeds) {
         return Math.sqrt(Math.pow(speeds.vxMetersPerSecond, 2) + Math.pow(speeds.vyMetersPerSecond, 2));
     }
 
     /**
-     * Limits the speeds of the ChassisSpeeds. If the current speed is greater than the max speed, then it multiplies the entire
-     * ChassisSpeeds object by a multiplier equivalent to the amount above the max speed (ex. max is 1, currently at 1.2, multiplies by 0.83).
-     * The method then checks whether the angular speed is above the max. If it is above the max, the angular speed is set to the max.
+     * Limits the speed of the ChassisSpeeds to the maximum speed provided. If the speed of the robot, as given by 
+     * the {@link #getSpeed()} method calculates the current
+     * angle the robot is facing. It then takes the sine/cosine of the current angle and multiplies it by the max
+     * speed in order to find the appropriate speed for the current angle. Finally, it limits the angular speed by checking
+     * if it is higher than the maximum angular speed.
      * 
      * @param inputSpeeds The initial ChassisSpeeds object
      * @param speed The maximum translational speed
      * @param angularSpeed  The maximum angular sped
-     * @return  The limited ChassisSpeeds object
+     * @return  The limited {@link ChassisSpeeds} object
+     * @see <a href="https://desmos.com/calculator/rvxfmqw5sx">Desmos Visualizer</a>
      */
     private ChassisSpeeds limitSpeed(ChassisSpeeds inputSpeeds, double speed, double angularSpeed) {
-        double multiplier = getSpeed(inputSpeeds) < speed ? 1 : speed / getSpeed(inputSpeeds);
-        ChassisSpeeds output = inputSpeeds.times(multiplier);
-        output.omegaRadiansPerSecond = inputSpeeds.omegaRadiansPerSecond < angularSpeed ? inputSpeeds.omegaRadiansPerSecond : angularSpeed;
-        return output;
+        ChassisSpeeds outputSpeeds;
+        if(getSpeed(inputSpeeds) > speed) {
+                // Calculates the angle which the robot is currently travelling at
+            double angle = Math.atan(inputSpeeds.vyMetersPerSecond / inputSpeeds.vxMetersPerSecond);
+
+                // If the current y velocity is less than zero, the angle is flipped 180 degrees
+            if(inputSpeeds.vyMetersPerSecond < 0) {
+                angle += Math.PI;
+            }
+
+                // Calculates then sets the new speeds
+            outputSpeeds = new ChassisSpeeds(
+                speed * Math.sin(angle),
+                speed * Math.cos(angle),
+                0
+            );
+        } else {
+            outputSpeeds = new ChassisSpeeds(
+                inputSpeeds.vxMetersPerSecond,
+                inputSpeeds.vyMetersPerSecond,
+                0
+            );
+        }
+        if(inputSpeeds.omegaRadiansPerSecond > angularSpeed) {
+            outputSpeeds.omegaRadiansPerSecond = angularSpeed;
+        } else {
+            outputSpeeds.omegaRadiansPerSecond = inputSpeeds.omegaRadiansPerSecond;
+        }
+
+        return outputSpeeds;
     }
 
+    /**
+     * Provides acceleration and velocity constraints to the {@link SwerveLimiter} class.
+     */
     public static class LimiterConstraints {
         public double maxAcceleration, maxAngularAcceleration, maxSpeed, maxAngularSpeed;
 

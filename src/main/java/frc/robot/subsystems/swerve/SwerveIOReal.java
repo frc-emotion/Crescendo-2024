@@ -26,15 +26,16 @@ public class SwerveIOReal implements SwerveIO {
     private SwerveLimiter limiter;
 
     public SwerveIOReal(SwerveModuleNeo frontLeft, SwerveModuleNeo frontRight, SwerveModuleNeo backLeft, SwerveModuleNeo backRight) {
-        swerveModules[0] = frontLeft;
-        swerveModules[1] = frontRight;
-        swerveModules[2] = backLeft;
-        swerveModules[3] = backRight;
+        this.swerveModules = new SwerveModuleNeo[] {frontLeft, frontRight, backLeft, backRight};
+        // swerveModules[0] = frontLeft;
+        // swerveModules[1] = frontRight;
+        // swerveModules[2] = backLeft;
+        // swerveModules[3] = backRight;
 
-        robotSpeeds = new ChassisSpeeds();
-        targetAngle = 0;
+        this.robotSpeeds = new ChassisSpeeds();
+        this.targetAngle = 0;
 
-        limiter = new SwerveLimiter(DriveConstants.kNormalDriveConstraints);
+        this.limiter = new SwerveLimiter(DriveConstants.kNormalDriveConstraints);
     }
 
     public SwerveIOReal() {
