@@ -12,6 +12,7 @@ import com.revrobotics.SparkPIDController;
 
 import frc.robot.Constants.ShooterConstants;
 
+/** The IO Layer for the Feeder Subsystem usign CANSparkMax motor controllers. */
 public class FeederIOSparkMax implements FeederIO {
     private CANSparkMax feederMotor;
     private RelativeEncoder encoder;
@@ -46,7 +47,6 @@ public class FeederIOSparkMax implements FeederIO {
         inputs.velocity = getVelocity();
         inputs.isAtTarget = isAtTarget();
         inputs.isBeamBroken = getBeamState();
-        inputs.current = feederMotor.getOutputCurrent();
     }
 
     @Override
@@ -86,7 +86,7 @@ public class FeederIOSparkMax implements FeederIO {
     }
 
     public boolean getBeamState() {
-        return beamSensor.get();
+        return !beamSensor.get();
     }
 
     @Override

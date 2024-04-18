@@ -41,7 +41,6 @@ import frc.robot.util.TabManager.SubsystemTab;
 
 /**
  * Main Swerve Subsytem class
- * Holds gyro and odometry methods
  */
 public class SwerveSubsystem extends SubsystemBase {
     SendableNumber Module_kP = new SendableNumber(SubsystemTab.DRIVETRAIN, "Drive kP", DriveConstants.MODULE_kP);
@@ -72,8 +71,6 @@ public class SwerveSubsystem extends SubsystemBase {
 
     // private SysIdRoutine sysIdRoutine;
 
-    private LimiterConstraints turboConstraints, normalConstraints, slowConstraints;
-
     public SwerveSubsystem(SwerveIO io) {
         this.io = io;
 
@@ -102,8 +99,6 @@ public class SwerveSubsystem extends SubsystemBase {
         }).start();
 
         initShuffleboard();
-
-        turboConstraints = DriveConstants.kTurboDriveConstraints;
     }
 
     // public Command quasistaticCommand(boolean forward) {
@@ -162,7 +157,7 @@ public class SwerveSubsystem extends SubsystemBase {
     }
 
     public double getHeading() {
-        return Math.IEEEremainder(inputs.yaw, 360);
+        return inputs.yaw;
     }
 
     public double getHeading_180() {

@@ -4,20 +4,24 @@ import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.Constants.DriveConstants;
 
-/**
- * Note: Uses analog absolute encoder instead of a CANCoder
- *
- */
+/** The Swerve Module class */
 public class SwerveModuleNeo {
     private SwerveModuleIO io;
     private SwerveModuleIOInputsAutoLogged inputs = new SwerveModuleIOInputsAutoLogged();
     private int index;
 
+    /**
+     * Intializes a new SwerveModuleNeo object with an IO Layer Object and an index
+     * @param io    The SwerveModuleIO object to interface with.
+     * @param index The index of the Swerve Module
+     */
     public SwerveModuleNeo(SwerveModuleIO io, int index) {
         this.io = io;
         this.index = index;
+        if(index > 3 || index < 0) DriverStation.reportWarning("Swerve Module ID set outside of range", false);
     }
 
     /**
@@ -77,7 +81,7 @@ public class SwerveModuleNeo {
                 );
                 break;
             default:
-                throw new UnsupportedOperationException("No Swerve Module ID set");
+                throw new UnsupportedOperationException("Improper Swerve Module ID set. ID " + index + " does not exist.");
             
         }
 

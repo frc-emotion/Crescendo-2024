@@ -25,6 +25,7 @@ public class SwerveIOReal implements SwerveIO {
 
     private SwerveLimiter limiter;
 
+    /** Initializes the swerve modules using the provided {@link SwerveModuleNeo} objects. */
     public SwerveIOReal(SwerveModuleNeo frontLeft, SwerveModuleNeo frontRight, SwerveModuleNeo backLeft, SwerveModuleNeo backRight) {
         this.swerveModules = new SwerveModuleNeo[] {frontLeft, frontRight, backLeft, backRight};
         // swerveModules[0] = frontLeft;
@@ -38,6 +39,10 @@ public class SwerveIOReal implements SwerveIO {
         this.limiter = new SwerveLimiter(DriveConstants.kNormalDriveConstraints);
     }
 
+    /**
+     * Default constructor, initializes all the {@link SwerveModuleNeo} objects in their respective locations.
+     * @see SwerveModuleNeo#SwerveModuleNeo(int)
+     */
     public SwerveIOReal() {
         this(
             new SwerveModuleNeo(0),
@@ -113,26 +118,31 @@ public class SwerveIOReal implements SwerveIO {
         }
     }
 
+    /** Retrieves the current angular speed from the gyro in degrees per second. Only used when updating the {@link SwerveIOInputs}. */
     public double getAngularSpeed() {
         return gyro.getRate();
     }
 
+    /** Retrieves the current heading of the robot in degrees. Only used when updating the {@link SwerveIOInputs}. */
     public double getHeading() {
-        return gyro.getAngle();
+        return Math.IEEEremainder(gyro.getAngle(), 360);
     }
 
     public double getSpeed() {
         return Math.sqrt(Math.pow(robotSpeeds.vxMetersPerSecond, 2) + Math.pow(robotSpeeds.vyMetersPerSecond, 2));
     }
 
+    /** Converts between {@link ChassisSpeeds} and {@link SwerveModuleState} objects. */
     public SwerveModuleState[] convertToModuleStates(ChassisSpeeds speeds) {
         return DriveConstants.kDriveKinematics.toSwerveModuleStates(speeds);
     }
 
+    /** Converts between {@link SwerveModuleState} objects and {@link ChassisSpeeds}. */
     public ChassisSpeeds convertToChassisSpeeds(SwerveModuleState[] states) {
         return DriveConstants.kDriveKinematics.toChassisSpeeds(states);
     }
 
+    /** Retrieves the current {@link SwerveModuleState} objects from the modules. Only used when updating the {@link SwerveIOInputs}. */
     public SwerveModuleState[] getModuleStates() {
         SwerveModuleState[] states = new SwerveModuleState[4];
         for(int i = 0; i < 4; i++) {
@@ -141,6 +151,7 @@ public class SwerveIOReal implements SwerveIO {
         return states;
     }
 
+    /** Retrieves the current {@link SwerveModulePosition} objects from the modules. Only used when updating the {@link SwerveIOInputs}. */
     public SwerveModulePosition[] getModulePositions() {
         SwerveModulePosition[] positions = new SwerveModulePosition[4];
         for(int i = 0; i < 4; i++) {
@@ -149,11 +160,13 @@ public class SwerveIOReal implements SwerveIO {
         return positions;
     }
 
+    /** Retrieves the current ChassisSpeeds. Is automatically logged by AdvantageKit as an output. */
     @AutoLogOutput(key = "Drive/ChassisSpeeds")
     public ChassisSpeeds getChassisSpeeds() {
         return convertToChassisSpeeds(getModuleStates());
     }
 
+    /** Fills the Shuffleboard Layouts for an individual swerve module */
     public void fillList(int index, ShuffleboardLayout layout) {
         SwerveModuleNeo module = swerveModules[index];
         layout.addNumber(

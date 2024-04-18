@@ -6,6 +6,7 @@ import frc.robot.Constants.ShooterConstants;
 import frc.robot.subsystems.feeder.FeederSubsystem;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
 
+/** Waits for the Shooter to get up to speed, then shoots the note until the beam break is no longer broken. */
 public class ShootSpeaker extends Command {
     protected final ShooterSubsystem shooterSubsystem;
     protected final FeederSubsystem feederSubsystem;

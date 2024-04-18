@@ -13,6 +13,7 @@ import com.revrobotics.SparkPIDController;
 import frc.robot.Constants;
 import frc.robot.Constants.PivotConstants;
 
+/** The IO Layer for the Pivot Subsystem using CANSparkMax motor controllers. */
 public class PivotIOSparkMax implements PivotIO {
     private CANSparkMax pivotMotor;
     private SparkPIDController pivotPID;

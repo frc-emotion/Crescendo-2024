@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.simulation.FlywheelSim;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.Constants.SimConstants;
 
+/** The simulated IO Layer for the Feeder subsystem. */
 public class FeederIOSim implements FeederIO {
     private DCMotor feederMotor;
     private FlywheelSim sim;
@@ -35,7 +36,6 @@ public class FeederIOSim implements FeederIO {
         inputs.isAtTarget = isAtTarget();
         inputs.targetVelocity = targetVelocity;
         inputs.velocity = encoder.getRate();
-        inputs.current = sim.getCurrentDrawAmps();
     }
 
     @Override

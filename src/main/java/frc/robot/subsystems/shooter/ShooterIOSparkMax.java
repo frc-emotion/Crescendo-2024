@@ -11,6 +11,7 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import frc.robot.Constants.ShooterConstants;
 
+/** The IO Layer for the Shooter Subsystem using CANSparkMax motor controllers. */
 public class ShooterIOSparkMax implements ShooterIO {
     private CANSparkMax shooterMotor;
     private RelativeEncoder encoder;
@@ -82,6 +83,7 @@ public class ShooterIOSparkMax implements ShooterIO {
         return encoder.getVelocity() * 2;
     }
 
+    /** Retrieves the current temperature of the Shooter Motor. Is automatically logged by the AdvantageKit Output Auto Logger. */
     @AutoLogOutput(key = "Shooter/Temperature")
     public double getMotorTemperature() {
         return shooterMotor.getMotorTemperature();

@@ -35,7 +35,6 @@ public class ClimbIOSim implements ClimbIO {
         inputs.rightPos = getPosition();
         inputs.highestPos = getPosition();
         inputs.isClimbAligned = true;
-        inputs.current = sim.getCurrentDrawAmps();
     }
 
     @Override

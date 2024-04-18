@@ -39,7 +39,6 @@ public class ClimbIOSparkMax implements ClimbIO {
         inputs.leftPos = getLeftPos();
         inputs.highestPos = getPosition();
         inputs.isClimbAligned = isClimbAligned();
-        inputs.current = climbMotorLeft.getOutputCurrent();
     }
 
     /**

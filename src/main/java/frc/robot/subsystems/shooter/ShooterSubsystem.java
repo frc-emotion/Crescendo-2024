@@ -25,18 +25,24 @@ public class ShooterSubsystem extends SubsystemBase {
 
     private ShooterIO io;
     private static final ShooterIOInputsAutoLogged inputs = new ShooterIOInputsAutoLogged();
+
     /**
-     * Construct a new instance of Shooter Subsystem
+     * Default constructor initializes ShooterSubsystem in REAL mode.
      */
     public ShooterSubsystem() {
         this(new ShooterIOSparkMax());
     }
 
+    /** Initializes a new ShooterSubsystem using a provided input layer. */
     public ShooterSubsystem(ShooterIO io ) {
         this.io = io;
         initShuffleboard();
     }
 
+    /**
+     * {@inheritDoc}
+     * Additionally updates the AdvantageKit telemetry data.
+     */
     @Override
     public void periodic() {
         io.updateInputs(inputs);

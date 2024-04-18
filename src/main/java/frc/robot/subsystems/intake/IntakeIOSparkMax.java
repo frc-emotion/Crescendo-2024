@@ -13,7 +13,9 @@ import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.DigitalInput;
 import frc.robot.Constants.IntakeConstants;
+import frc.robot.Constants.PivotConstants;
 
+/** The IO Layer for the Intake Subsystem using CANSparkMax motor controllers. */
 public class IntakeIOSparkMax implements IntakeIO {
     private CANSparkMax pivotMotor;
     private CANSparkMax pivotMotor2;

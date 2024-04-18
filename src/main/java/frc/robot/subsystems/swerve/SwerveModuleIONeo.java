@@ -17,6 +17,7 @@ import edu.wpi.first.math.util.Units;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.ModuleConstants;
 
+/** Most methods in this class have been ported over from the old SwerveModuleNeo class. Should be updated. */
 public class SwerveModuleIONeo implements SwerveModuleIO {
 
     private final CANSparkMax driveMotor;
@@ -248,9 +249,7 @@ public class SwerveModuleIONeo implements SwerveModuleIO {
 
     /**
      * May have to use velocity PID and a feedforward command to have more accurate
-     * driving
-     *
-     * @param state
+     * driving.
      */
     @Override
     public void setDesiredModuleState(SwerveModuleState state, boolean station) {
