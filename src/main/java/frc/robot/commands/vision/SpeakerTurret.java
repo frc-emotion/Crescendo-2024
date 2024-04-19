@@ -1,44 +1,51 @@
 package frc.robot.commands.vision;
 
+import java.util.Optional;
+
 import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.AutoConstants;
+import frc.robot.Constants.ShooterConstants;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.subsystems.other.VisionSubsystem;
 import frc.robot.subsystems.pivot.PivotSubsystem;
 
-public class SpeakerTurret extends MonitorVision {
+public class SpeakerTurret extends Command {
     protected PivotSubsystem pivotSubsystem;
+    protected VisionSubsystem visionSubsystem;
 
+    protected boolean dynamicSpeedEnabled;
+
+        // Distance to rpm shooter map
     private final static InterpolatingDoubleTreeMap shooterMap = new InterpolatingDoubleTreeMap();
 
+        // Static initializer
     static {
         shooterMap.clear();
-        shooterMap.put(1.46, 61.9);
-
+        shooterMap.put(1.0, ShooterConstants.SHOOTER_SPEED_RPM);
+        shooterMap.put(3.07, 4500.0);
     }
 
     public SpeakerTurret(VisionSubsystem visionSubsystem, PivotSubsystem pivotSubsystem) {
-        super(visionSubsystem);
-        this.pivotSubsystem = pivotSubsystem;
+        this(visionSubsystem, pivotSubsystem, false);
+    }
 
+    public SpeakerTurret(VisionSubsystem visionSubsystem, PivotSubsystem pivotSubsystem, boolean dynamicSpeedEnabled) {
+        this.visionSubsystem = visionSubsystem;
+        this.pivotSubsystem = pivotSubsystem;
         addRequirements(pivotSubsystem);
+
+        this.dynamicSpeedEnabled = dynamicSpeedEnabled;
     }
 
     @Override
     public void initialize() {
-        super.initialize();
         pivotSubsystem.toggleTurret();
     }
 
     @Override
     public void execute() {
-        super.execute();
-        // System.out.println(calculateAngle());
-        // System.out.println("blud");
-        // System.out.println(visionSubsystem.getDistanceTo(
-        //         (DriverStation.getAlliance().get() == DriverStation.Alliance.Red) ? VisionConstants.RED_SPEAKER_CENTER
-        //                 : VisionConstants.BLUE_SPEAKER_CENTER));
         pivotSubsystem.setDegrees(calculateAngle());
     }
 
@@ -64,11 +71,13 @@ public class SpeakerTurret extends MonitorVision {
     protected double calculateAngle() {
         return Math.toDegrees(
                 Math.atan(
-                        (AutoConstants.SPEAKER_MOUTH_HEIGHT - AutoConstants.PIVOT_HEIGHT)
-                                / visionSubsystem.getDistanceTo(
+                        (AutoConstants.SPEAKER_MOUTH_HEIGHT - AutoConstants.PIVOT_HEIGHT) / 
+                        visionSubsystem.getDistanceTo(
                                         (DriverStation.getAlliance().get() == DriverStation.Alliance.Red)
                                                 ? VisionConstants.RED_SPEAKER_CENTER
                                                 : VisionConstants.BLUE_SPEAKER_CENTER)));
     }
+
+    
 
 }

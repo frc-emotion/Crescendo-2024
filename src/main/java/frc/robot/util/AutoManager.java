@@ -45,8 +45,8 @@ public class AutoManager {
 
         // Initializes AutoBuilder for swerve drive.
         AutoBuilder.configureHolonomic(
-                this.visionSubsystem::getCurrentOdoPose, // If this has issues switch to odometry only based pose
-                this.visionSubsystem::resetPoseEstimator,
+                this.visionSubsystem::getPose, // If this has issues switch to odometry only based pose
+                this.visionSubsystem::resetPose,
                 this.swerveSubsystem::getChassisSpeeds,
                 this.swerveSubsystem::driveRobotRelative,
 

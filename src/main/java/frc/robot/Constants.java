@@ -16,6 +16,7 @@ import frc.robot.util.SwerveLimiter.LimiterConstraints;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform3d;
 
 /**
@@ -76,6 +77,7 @@ public final class Constants {
     public static final class GameConstants {
         public static final double RED_NOTE_FEED_ANGLE = -32; // Used to shoot notes into the amp area during teleop
         public static final double BLUE_NOTE_FEED_ANGLE = 32; // Used to shoot notes into the amp area during teleop
+        public static final int SPEAKER_APRILTAG_ID = 0;
     }
 
     public static final class ModuleConstants {
@@ -494,8 +496,8 @@ public final class Constants {
         public static final double TAG_DETECTION_THRESHOLD = Units.feetToMeters(15);
 
         // Thank you super nurds for constnats very nice (nice spelling)
-        public static final Translation2d BLUE_SPEAKER_CENTER = new Translation2d(0.457 / 2, 5.557034);
-        public static final Translation2d RED_SPEAKER_CENTER = new Translation2d(FIELD_LENGTH - (0.457 / 2), 5.557034);
+        public static final Pose2d BLUE_SPEAKER_CENTER = new Pose2d(0.457 / 2, 5.557034, Rotation2d.fromDegrees(0));
+        public static final Pose2d RED_SPEAKER_CENTER = new Pose2d(FIELD_LENGTH - (0.457 / 2), 5.557034, Rotation2d.fromDegrees(180));
         public static final Transform3d CAMERA_TRANSLATION = new Transform3d();
     }
 

@@ -37,16 +37,14 @@ public class DefaultSwerveXboxCommand extends AbstractSwerveXboxCommand {
 
     @Override
     public void execute() {
+        super.execute();
         if (!isRobotCentricFunc.get()) {
             DriveConstants.isRobotCentric = false;
-            super.execute();
-            sendSpeedsToSubsystem();
         } else {
             DriveConstants.isRobotCentric = true;
-            super.execute();
             robotSpeeds = new ChassisSpeeds(xSpeed, ySpeed, turningSpeed);
-            sendSpeedsToSubsystem();
         }
+        sendSpeedsToSubsystem();
     }
 
     /**

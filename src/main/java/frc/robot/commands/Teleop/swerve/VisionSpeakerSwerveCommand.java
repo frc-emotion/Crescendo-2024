@@ -2,7 +2,10 @@ package frc.robot.commands.Teleop.swerve;
 
 import java.util.function.Supplier;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.Constants.AutoConstants;
+import frc.robot.Constants.GameConstants;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.subsystems.other.VisionSubsystem;
 import frc.robot.subsystems.pivot.PivotSubsystem;
@@ -31,20 +34,38 @@ public class VisionSpeakerSwerveCommand extends SnapSwerveCommand {
 
     @Override
     public void execute() {
-        direction = (int) (swerveSubsystem.getHeading() + visionSubsystem.getTX());
 
-        double angle = calculateAngle();
-        if (!pivotSubsystem.isAtTarget(angle)) {
-            pivotSubsystem.setDegrees(angle);
+        double pivotAngle = calculatePivotAngle();
+        if (!pivotSubsystem.isAtTarget(pivotAngle)) {
+            pivotSubsystem.setDegrees(pivotAngle);
         } else {
             pivotSubsystem.stop();
         }
 
+        direction = getDriveAngle();
+
         super.execute();
     }
 
-    private double calculateAngle() {
+    @Override
+    public boolean isFinished() {
+        return false;
+    }
+
+    private double calculatePivotAngle() {
         return Math.atan((AutoConstants.SPEAKER_MOUTH_HEIGHT - AutoConstants.PIVOT_HEIGHT)
-                / visionSubsystem.getDistanceTo(VisionConstants.BLUE_SPEAKER_CENTER));
+                / visionSubsystem.getDistanceTo(
+                    getSpeakerPose()
+                ));
+    }
+
+    private Pose2d getSpeakerPose() {
+        return DriverStation.getAlliance().get() == DriverStation.Alliance.Blue ?
+                        VisionConstants.BLUE_SPEAKER_CENTER :
+                        VisionConstants.RED_SPEAKER_CENTER;
+    }
+
+    private int getDriveAngle() {
+        return (int) visionSubsystem.getAngleTo(getSpeakerPose()).getDegrees();
     }
 }
