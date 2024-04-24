@@ -28,6 +28,9 @@ public interface IntakeIO {
         /** The current speed of the intake drive in rotations per minute. */
         public double driveSpeed = 0.0;
 
+        /** The current position of the intake drive motor in rotations */
+        public double drivePos = 0.0;
+
         /** The target speed of the intake drive in rotations per minute. Only used in PID control mode.  */
         public double targetDriveSpeed = 0.0;
 

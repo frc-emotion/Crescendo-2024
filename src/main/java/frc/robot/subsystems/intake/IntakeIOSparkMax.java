@@ -98,6 +98,7 @@ public class IntakeIOSparkMax implements IntakeIO {
         inputs.pivotTarget = pivotController.getGoal().position;
         inputs.isPivotAtTarget = isPivotAtTarget();
         inputs.driveSpeed = getDriveSpeed();
+        inputs.drivePos = driveEncoder.getPosition();
         inputs.targetDriveSpeed = getDriveTarget();
         inputs.isDriveAtTarget = isDriveAtTarget();
     }

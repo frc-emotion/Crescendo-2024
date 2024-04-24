@@ -175,6 +175,10 @@ public class IntakeSubsystem extends SubsystemBase {
         return inputs.targetDriveSpeed;
     }
 
+    public double getDrivePos() {
+        return inputs.drivePos;
+    }
+
     /**
      * Initialize Intake Shuffleboard
      */
