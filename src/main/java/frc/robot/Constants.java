@@ -467,6 +467,8 @@ public final class Constants {
         public static final double PIVOT_MIN_ANGLE_RAD = 0;
         public static final double PIVOT_MAX_ANGLE_RAD = 0;
         public static final double DEBOUNCE_TIME = 0;
+        public static final double NOTE_CENTER_DISTANCE = 0;
+        public static final int kNoteCenterSpeed = 0;
         
 
         // -----------------------------------------

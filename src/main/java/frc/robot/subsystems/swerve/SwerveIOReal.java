@@ -63,8 +63,8 @@ public class SwerveIOReal implements SwerveIO {
 
     @Override
     public void driveRobotRelative(ChassisSpeeds speeds) {
-        robotSpeeds = limiter.calculate(speeds);
-        setModuleStates(convertToModuleStates(robotSpeeds));
+        // robotSpeeds = limiter.calculate(speeds);
+        setModuleStates(convertToModuleStates(speeds));
     }
 
     @Override
