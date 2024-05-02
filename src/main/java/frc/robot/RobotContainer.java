@@ -289,7 +289,7 @@ public class RobotContainer {
                         new InstantCommand() {
                             @Override
                             public void execute() {
-                                m_SwerveSubsystem.zeroHeading();
+                                m_SwerveSubsystem.resetHeading();
                             }
                         });
 
@@ -297,7 +297,7 @@ public class RobotContainer {
         m_driverController.b().onTrue(new InstantCommand() {
             @Override
             public void execute() {
-                m_SwerveSubsystem.zeroHeading();
+                m_SwerveSubsystem.resetHeading();
             }
         });
 
