@@ -8,16 +8,12 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 public class TabManager {
 
     private static TabManager instance;
-    // private static String[] tabNames = { "DEFAULT", "DRIVETRAIN", "VISION",
-    // "AUTON", "INTAKE", "CLIMB", "SHOOTER", "PIVOT",
-    // "GAME", "AUTO" };
     private SubsystemTab[] tabs;
 
     public enum SubsystemTab {
         DEFAULT,
         DRIVETRAIN,
         VISION,
-        AUTON,
         INTAKE,
         CLIMB,
         SHOOTER,

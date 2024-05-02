@@ -11,11 +11,12 @@ import frc.robot.commands.Auto.SubsystemCommands.HandoffAutoCommand;
 import frc.robot.commands.Auto.SubsystemCommands.IntakeDriveAutoCommand;
 import frc.robot.commands.Auto.SubsystemCommands.ResetPivotAutoCommand;
 import frc.robot.commands.Teleop.IntakePivotCommand;
-import frc.robot.subsystems.ClimbSubsystem;
-import frc.robot.subsystems.IntakeSubsystem;
-import frc.robot.subsystems.PivotSubsystem;
-import frc.robot.subsystems.ShooterSubsystem;
-import frc.robot.subsystems.SwerveSubsystem;
+import frc.robot.subsystems.climb.ClimbSubsystem;
+import frc.robot.subsystems.feeder.FeederSubsystem;
+import frc.robot.subsystems.intake.IntakeSubsystem;
+import frc.robot.subsystems.pivot.PivotSubsystem;
+import frc.robot.subsystems.shooter.ShooterSubsystem;
+import frc.robot.subsystems.swerve.SwerveSubsystem;
 import frc.robot.util.AutoManager;
 
 /**
@@ -77,10 +78,10 @@ public class CommandContainer {
      *         AutoHandoff sequence.
      */
     public static SequentialCommandGroup fullToggleIntake(IntakeSubsystem intakeSubsystem,
-            ShooterSubsystem shooterSubsystem, PivotSubsystem pivotSubsystem) {
+            FeederSubsystem feederSubsystem, PivotSubsystem pivotSubsystem) {
         return new SequentialCommandGroup(
                 new IntakePivotCommand(intakeSubsystem),
-                getHandoffCommandGroup(intakeSubsystem, shooterSubsystem, pivotSubsystem, false));
+                getHandoffCommandGroup(intakeSubsystem, feederSubsystem, pivotSubsystem));
     }
 
     /**
@@ -98,38 +99,11 @@ public class CommandContainer {
      *         AutoHandoff Command
      */
     public static SequentialCommandGroup getHandoffCommandGroup(IntakeSubsystem intakeSubsystem,
-            ShooterSubsystem shooterSubsystem, PivotSubsystem pivotSubsystem) {
+            FeederSubsystem feederSubsystem, PivotSubsystem pivotSubsystem) {
         return new SequentialCommandGroup(
                 resetPivot(pivotSubsystem).onlyIf(() -> !pivotSubsystem.isHandoffOk()), // Check to make sure the intake
                                                                                         // shows true when retracted.
-                new HandoffAutoCommand(intakeSubsystem, shooterSubsystem, false)
-                        .withTimeout(2)
-                        .onlyIf(() -> !intakeSubsystem.getBeamState()));
-    }
-
-    /**
-     * Retrieves a SequentialCommandGroup containing the required sequence in order
-     * to automatically
-     * handoff the note to the feeder mechanism. Allows you to disable revving
-     * during the handoff sequence.
-     * 
-     * @param intakeSubsystem  The Intake Subsystem object to be used in the Command
-     *                         Group
-     * @param shooterSubsystem The Shooter Subsystem object to be used in the
-     *                         Command Group
-     * @param pivotSubsystem   The Pivot Subsystem object to be used in the Command
-     *                         Group
-     * @param rev              Whether or not the Shooter should rev during the
-     *                         handoff
-     * @return The SequentialCommandGroup with the pivot reset Command and the
-     *         AutoHandoff Command
-     */
-    public static SequentialCommandGroup getHandoffCommandGroup(IntakeSubsystem intakeSubsystem,
-            ShooterSubsystem shooterSubsystem, PivotSubsystem pivotSubsystem, boolean rev) {
-        return new SequentialCommandGroup(
-                resetPivot(pivotSubsystem).onlyIf(() -> !pivotSubsystem.isHandoffOk()), // Check to make sure the intake
-                                                                                        // shows true when retracted.
-                new HandoffAutoCommand(intakeSubsystem, shooterSubsystem, rev)
+                new HandoffAutoCommand(intakeSubsystem, feederSubsystem)
                         .withTimeout(2)
                         .onlyIf(() -> !intakeSubsystem.getBeamState()));
     }
@@ -152,11 +126,11 @@ public class CommandContainer {
      *         AutoHandoff Command
      */
     public static SequentialCommandGroup getAutoHandoffCommandGroup(IntakeSubsystem intakeSubsystem,
-            ShooterSubsystem shooterSubsystem, PivotSubsystem pivotSubsystem) {
+            FeederSubsystem feederSubsystem, PivotSubsystem pivotSubsystem) {
         return new SequentialCommandGroup(
                 resetPivot(pivotSubsystem).onlyIf(() -> !pivotSubsystem.isHandoffOk()), // Check to make sure the intake
                                                                                         // shows true when retracted.
-                new HandoffAutoCommand(intakeSubsystem, shooterSubsystem, true)
+                new HandoffAutoCommand(intakeSubsystem, feederSubsystem)
                         .onlyIf(() -> !intakeSubsystem.getBeamState()));
     }
 
@@ -170,8 +144,8 @@ public class CommandContainer {
      * @return A conditional ParallelRaceGroup containing the timeout and the
      *         HanoffAuto Command
      */
-    public static Command getHandoffCommand(IntakeSubsystem intakeSubsystem, ShooterSubsystem shooterSubsystem) {
-        return new HandoffAutoCommand(intakeSubsystem, shooterSubsystem, false)
+    public static Command getHandoffCommand(IntakeSubsystem intakeSubsystem, FeederSubsystem feederSubsystem) {
+        return new HandoffAutoCommand(intakeSubsystem, feederSubsystem)
                 .withTimeout(2)
                 .onlyIf(() -> !intakeSubsystem.getBeamState());
     }
@@ -188,9 +162,9 @@ public class CommandContainer {
      * @return A conditional ParallelRaceGroup containing the timeout and the
      *         HanoffAuto Command
      */
-    public static Command getHandoffCommand(IntakeSubsystem intakeSubsystem, ShooterSubsystem shooterSubsystem,
+    public static Command getHandoffCommand(IntakeSubsystem intakeSubsystem, FeederSubsystem feederSubsystem,
             boolean rev) {
-        return new HandoffAutoCommand(intakeSubsystem, shooterSubsystem, true)
+        return new HandoffAutoCommand(intakeSubsystem, feederSubsystem)
                 .withTimeout(2)
                 .onlyIf(() -> !intakeSubsystem.getBeamState());
     }

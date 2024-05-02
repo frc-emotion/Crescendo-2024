@@ -2,8 +2,9 @@ package frc.robot.commands.debug;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.WrapperCommand;
 import frc.robot.RobotContainer;
-import frc.robot.subsystems.SwerveSubsystem;
+import frc.robot.subsystems.swerve.SwerveSubsystem;
 
 /**
  * Command to reset the gyro. It is not generally recommended to run this
@@ -22,7 +23,7 @@ public class ResetGyroCommand extends Command {
     @Override
     public void initialize() {
         DriverStation.reportWarning("Gyro Calibrating", false);
-        swerve.zeroHeading();
+        swerve.resetHeading();
     }
 
     @Override
@@ -33,14 +34,5 @@ public class ResetGyroCommand extends Command {
     @Override
     public boolean isFinished() {
         return swerve.isGyroCalibrating();
-    }
-
-    /**
-     * Decorates the Command so it can run while disabled.
-     * 
-     * @return A WrappedCommand containing the ResetGyroCommand.
-     */
-    public static Command getCommand() {
-        return new ResetGyroCommand(RobotContainer.m_SwerveSubsystem).ignoringDisable(true);
     }
 }

@@ -3,7 +3,7 @@ package frc.robot.commands.Teleop;
 import java.util.function.Supplier;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.intake.IntakeSubsystem;
 
 /**
  * Runs the intake manually. Teleop only version. Currently only used
@@ -41,13 +41,13 @@ public class IntakeDriveCommand extends Command {
         } else if (reverseFunc.get()) {
             intakeSubsystem.intakeReverse();
         } else {
-            intakeSubsystem.intakeStop();
+            intakeSubsystem.stopDrive();
         }
     }
 
     @Override
     public void end(boolean interrupted) {
-        intakeSubsystem.intakeStop();
+        intakeSubsystem.stopDrive();
     }
 
     @Override

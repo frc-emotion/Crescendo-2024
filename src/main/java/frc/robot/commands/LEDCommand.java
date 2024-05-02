@@ -5,8 +5,8 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.LEDConstants;
-import frc.robot.subsystems.LEDSubsystem;
-import frc.robot.subsystems.LEDSubsystem.LEDStyle;
+import frc.robot.subsystems.other.LEDSubsystem;
+import frc.robot.subsystems.other.LEDSubsystem.LEDStyle;
 
 import java.util.function.Supplier;
 
@@ -50,7 +50,7 @@ public class LEDCommand extends Command {
         } else if (shooterBreakSupplier.get()) {
             nextColor = LEDConstants.SHOOTER_COLOR;
             style = LEDStyle.SOLID;
-        } else if (DriverStation.getAlliance() != null) {
+        } else if (DriverStation.getAlliance() != null && DriverStation.getAlliance().isPresent()) {
             nextColor = DriverStation.getAlliance().get() == Alliance.Blue
                     ? LEDConstants.BLUE_ALLIANCE_COLOR
                     : LEDConstants.RED_ALLIANCE_COLOR;

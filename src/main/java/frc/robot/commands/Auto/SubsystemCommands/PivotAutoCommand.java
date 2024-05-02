@@ -1,31 +1,21 @@
 package frc.robot.commands.Auto.SubsystemCommands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.PivotSubsystem;
+import frc.robot.subsystems.pivot.PivotSubsystem;
 
 public class PivotAutoCommand extends Command {
     private final PivotSubsystem pivotSubsystem;
-    private int targetPreset;
+    private double targetAngle;
 
-    public PivotAutoCommand(PivotSubsystem pivotSubsystem, int targetPreset) {
+    public PivotAutoCommand(PivotSubsystem pivotSubsystem, double targetAngle) {
         this.pivotSubsystem = pivotSubsystem;
-        this.targetPreset = targetPreset;
+        this.targetAngle = targetAngle;
         addRequirements(pivotSubsystem);
-    }
-
-    // public PivotAutoCommand(PivotSubsystem pivotSubsystem, double targetAngle) {
-    //     this.pivotSubsystem = pivotSubsystem;
-
-    // }
-
-    @Override
-    public void initialize() {
-        pivotSubsystem.setIndex(targetPreset);
     }
 
     @Override
     public void execute() {
-        pivotSubsystem.goToPreset();
+        pivotSubsystem.setDegrees(targetAngle);
 
     }
 

@@ -6,11 +6,14 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.simulation.RoboRioSim;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.Constants.SimConstants;
 
+import org.littletonrobotics.junction.AutoLogOutputManager;
+import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.urcl.URCL;
 
 /**
@@ -22,7 +25,7 @@ import org.littletonrobotics.urcl.URCL;
  * build.gradle file in the
  * project.
  */
-public class Robot extends TimedRobot {
+public class Robot extends LoggedRobot {
 
     private Command m_autonomousCommand, m_ledCommand, m_controllerRumbleCommand;
 
@@ -154,6 +157,7 @@ public class Robot extends TimedRobot {
     /** This function is called once when the robot is first started up. */
     @Override
     public void simulationInit() {
+        RoboRioSim.setVInVoltage(SimConstants.BATTERY_INPUT_VOLTAGE);
     }
 
     /** This function is called periodically whilst in simulation. */

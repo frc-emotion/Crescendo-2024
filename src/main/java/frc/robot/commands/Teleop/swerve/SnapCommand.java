@@ -8,8 +8,8 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.VisionConstants;
-import frc.robot.subsystems.SwerveSubsystem;
-import frc.robot.subsystems.VisionSubsystem;
+import frc.robot.subsystems.other.VisionSubsystem;
+import frc.robot.subsystems.swerve.SwerveSubsystem;
 
 /**
  * Theoretically rotates the robot to face a certain direction while not moving
@@ -19,7 +19,7 @@ public class SnapCommand extends Command {
     private SwerveSubsystem swerveSubsystem;
     private VisionSubsystem visionSubsystem;
     private ChassisSpeeds robotSpeeds;
-    private double theta;
+    private int theta;
 
     public SnapCommand(
             SwerveSubsystem swerveSubsystem,
@@ -34,7 +34,7 @@ public class SnapCommand extends Command {
     public SnapCommand(
         SwerveSubsystem swerveSubsystem,
         VisionSubsystem visionSubsystem,
-        double theta
+        int theta
     ) {
         this(swerveSubsystem, visionSubsystem);
         this.theta = theta;
@@ -54,7 +54,7 @@ public class SnapCommand extends Command {
         //Translation2d currentPose2d = visionSubsystem.getCurrentPose().getTranslation();
         // System.out.println(currentPose2d);
 
-        double velocity = swerveSubsystem.calculateThetaPID(swerveSubsystem.getHeading(), this.theta, false);
+        double velocity = swerveSubsystem.calculateThetaPID(this.theta);
 
         // System.out.println("Setpoint: " + theta + " Velocity: " + velocity);
 
@@ -64,7 +64,7 @@ public class SnapCommand extends Command {
 
     @Override
     public boolean isFinished() {
-        return swerveSubsystem.thetaPIDAtSetpoint(false);
+        return swerveSubsystem.isThetaAtSetpoint();
     }
 
         /**

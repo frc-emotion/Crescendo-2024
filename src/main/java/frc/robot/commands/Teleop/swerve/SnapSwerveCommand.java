@@ -5,7 +5,7 @@ import java.util.function.Supplier;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.Constants.GameConstants;
-import frc.robot.subsystems.SwerveSubsystem;
+import frc.robot.subsystems.swerve.SwerveSubsystem;
 
 /**
  * Theoretically rotates the robot to face a certain direction.
@@ -38,9 +38,7 @@ public class SnapSwerveCommand extends AbstractSwerveXboxCommand {
                 xSpeed,
                 ySpeed,
                 swerveSubsystem.calculateThetaPID(
-                    swerveSubsystem.getHeading(), 
-                    (int) (DriverStation.getAlliance().get() == DriverStation.Alliance.Red ? GameConstants.RED_NOTE_FEED_ANGLE : GameConstants.BLUE_NOTE_FEED_ANGLE), 
-                    false
+                    (int) (DriverStation.getAlliance().get() == DriverStation.Alliance.Red ? GameConstants.RED_NOTE_FEED_ANGLE : GameConstants.BLUE_NOTE_FEED_ANGLE)
                 ),
                 swerveSubsystem.getRotation2d());
 
@@ -50,6 +48,6 @@ public class SnapSwerveCommand extends AbstractSwerveXboxCommand {
 
     @Override
     public boolean isFinished() {
-        return swerveSubsystem.thetaPIDAtSetpoint(false);
+        return swerveSubsystem.isThetaAtSetpoint();
     }
 }

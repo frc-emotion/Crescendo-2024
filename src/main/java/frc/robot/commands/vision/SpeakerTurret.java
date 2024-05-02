@@ -4,8 +4,8 @@ import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.VisionConstants;
-import frc.robot.subsystems.PivotSubsystem;
-import frc.robot.subsystems.VisionSubsystem;
+import frc.robot.subsystems.other.VisionSubsystem;
+import frc.robot.subsystems.pivot.PivotSubsystem;
 
 public class SpeakerTurret extends MonitorVision {
     protected PivotSubsystem pivotSubsystem;
@@ -39,7 +39,7 @@ public class SpeakerTurret extends MonitorVision {
         // System.out.println(visionSubsystem.getDistanceTo(
         //         (DriverStation.getAlliance().get() == DriverStation.Alliance.Red) ? VisionConstants.RED_SPEAKER_CENTER
         //                 : VisionConstants.BLUE_SPEAKER_CENTER));
-        pivotSubsystem.setRev(calculateAngle());
+        pivotSubsystem.setDegrees(calculateAngle());
     }
 
     @Override

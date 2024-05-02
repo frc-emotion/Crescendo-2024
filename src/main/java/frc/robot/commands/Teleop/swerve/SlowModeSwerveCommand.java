@@ -4,7 +4,7 @@ import java.util.function.Supplier;
 
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.DriveConstants.DriveMode;
-import frc.robot.subsystems.SwerveSubsystem;
+import frc.robot.subsystems.swerve.SwerveSubsystem;
 
 public class SlowModeSwerveCommand extends DefaultSwerveXboxCommand {
 
@@ -31,11 +31,8 @@ public class SlowModeSwerveCommand extends DefaultSwerveXboxCommand {
      */
     @Override
     public void initialize() {
+        constraints = DriveConstants.kSlowModeDriveConstraints;
         DriveConstants.currentDriveMode = DriveMode.SLOW;
-        swerveSubsystem.setMaxSpeeds(
-                DriveConstants.kTeleDriveMaxSpeedMetersPerSecond / 4,
-                DriveConstants.kTeleDriveMaxAccelerationUnitsPerSecond / 4,
-                DriveConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond / 4,
-                DriveConstants.kTeleDriveMaxAngularAccelerationUnitsPerSecond / 4);
+        swerveSubsystem.setMaxDriveConstraints(constraints);
     }
 }

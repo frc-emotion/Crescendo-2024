@@ -4,7 +4,7 @@ import java.util.function.Supplier;
 
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.DriveConstants.DriveMode;
-import frc.robot.subsystems.SwerveSubsystem;
+import frc.robot.subsystems.swerve.SwerveSubsystem;
 
 public class TurboModeSwerveCommand extends DefaultSwerveXboxCommand {
 
@@ -28,11 +28,8 @@ public class TurboModeSwerveCommand extends DefaultSwerveXboxCommand {
      */
     @Override
     public void initialize() {
+        constraints = DriveConstants.kTurboDriveConstraints;
         DriveConstants.currentDriveMode = DriveMode.TURBO;
-        swerveSubsystem.setMaxSpeeds(
-                DriveConstants.kTeleDriveMaxSpeedMetersPerSecond,
-                DriveConstants.kTeleDriveMaxAccelerationUnitsPerSecond,
-                DriveConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond,
-                DriveConstants.kTeleDriveMaxAngularAccelerationUnitsPerSecond);
+        swerveSubsystem.setMaxDriveConstraints(constraints);
     }
 }

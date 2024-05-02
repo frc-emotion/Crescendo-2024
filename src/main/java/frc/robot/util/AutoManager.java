@@ -20,8 +20,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.RobotContainer;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
-import frc.robot.subsystems.SwerveSubsystem;
-import frc.robot.subsystems.VisionSubsystem;
+import frc.robot.subsystems.other.VisionSubsystem;
+import frc.robot.subsystems.swerve.SwerveSubsystem;
 
 public class AutoManager {
 
@@ -67,12 +67,11 @@ public class AutoManager {
         Pathfinding.setPathfinder(new LocalADStar());
 
         initializeCustomLogging();
+
+        autoManagerInstance = this;
     }
 
     public static AutoManager getInstance() {
-        if (autoManagerInstance == null) {
-            autoManagerInstance = new AutoManager(RobotContainer.m_VisionSubsystem, RobotContainer.m_SwerveSubsystem);
-        }
         return autoManagerInstance;
     }
 

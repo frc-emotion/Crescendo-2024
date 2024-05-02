@@ -3,22 +3,21 @@ package frc.robot.commands.Teleop;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.ShooterConstants;
-import frc.robot.subsystems.ShooterSubsystem;
+import frc.robot.subsystems.shooter.ShooterSubsystem;
+
 import java.util.function.Supplier;
 
 public class ShooterManualCommand extends Command {
 
-    private final Supplier<Boolean> shooterSupplier, feederSupplier;
+    private final Supplier<Boolean> shooterSupplier;
     private final ShooterSubsystem shooterSubsystem;
 
     // private boolean feederState;
     // private boolean hasIndexed;
 
     public ShooterManualCommand(
-            Supplier<Boolean> feederSupplier,
             Supplier<Boolean> shooterSupplier,
             ShooterSubsystem shooterSubsystem) {
-        this.feederSupplier = feederSupplier;
         this.shooterSupplier = shooterSupplier;
         this.shooterSubsystem = shooterSubsystem;
         addRequirements(shooterSubsystem);
@@ -58,13 +57,6 @@ public class ShooterManualCommand extends Command {
             // shooterSubsystem.setShooterVelocity(0);
         }
 
-        if (feederSupplier.get()) {
-            shooterSubsystem.setFeederSpeed(IntakeConstants.INTAKE_MOTOR_SPEED);
-
-        } else {
-            shooterSubsystem.stopFeeder();
-        }
-
         /*
          * // Stops the shooter once indexed
          * if(shooterSubsystem.isProjectileFed() && !hasIndexed) {
@@ -91,8 +83,6 @@ public class ShooterManualCommand extends Command {
 
     @Override
     public void end(boolean interrupted) {
-        super.end(interrupted);
-        shooterSubsystem.stopFeeder();
         shooterSubsystem.stopShooter();
     }
 }

@@ -1,7 +1,7 @@
 package frc.robot.commands.Auto.SubsystemCommands;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.intake.IntakeSubsystem;
 
 public class IntakeDriveAutoCommand extends InstantCommand {
     private IntakeSubsystem intakeSubsystem;
@@ -23,6 +23,6 @@ public class IntakeDriveAutoCommand extends InstantCommand {
 
     @Override
     public void end(boolean interrupted) {
-        intakeSubsystem.intakeStop();
+        intakeSubsystem.stopDrive();
     }
 }

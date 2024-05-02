@@ -5,7 +5,7 @@ import java.util.function.Supplier;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.DriveConstants.DriveMode;
-import frc.robot.subsystems.SwerveSubsystem;
+import frc.robot.subsystems.swerve.SwerveSubsystem;
 
 public class DefaultSwerveXboxCommand extends AbstractSwerveXboxCommand {
     protected final Supplier<Boolean> isRobotCentricFunc;
@@ -30,12 +30,9 @@ public class DefaultSwerveXboxCommand extends AbstractSwerveXboxCommand {
      */
     @Override
     public void initialize() {
+        constraints = DriveConstants.kNormalDriveConstraints;
         DriveConstants.currentDriveMode = DriveMode.NORMAL;
-        swerveSubsystem.setMaxSpeeds(
-                DriveConstants.kTeleDriveMaxSpeedMetersPerSecond / 2,
-                DriveConstants.kTeleDriveMaxAccelerationUnitsPerSecond / 2,
-                DriveConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond / 2,
-                DriveConstants.kTeleDriveMaxAngularAccelerationUnitsPerSecond / 2);
+        swerveSubsystem.setMaxDriveConstraints(constraints);
     }
 
     @Override
@@ -62,11 +59,6 @@ public class DefaultSwerveXboxCommand extends AbstractSwerveXboxCommand {
         if (interrupted) {
             swerveSubsystem.stopModules();
         }
-
-        swerveSubsystem.setMaxSpeeds(
-                DriveConstants.kTeleDriveMaxSpeedMetersPerSecond / 2,
-                DriveConstants.kTeleDriveMaxAccelerationUnitsPerSecond / 2,
-                DriveConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond / 2,
-                DriveConstants.kTeleDriveMaxAngularAccelerationUnitsPerSecond / 2);
+        swerveSubsystem.setMaxDriveConstraints(DriveConstants.kNormalDriveConstraints);
     }
 }
