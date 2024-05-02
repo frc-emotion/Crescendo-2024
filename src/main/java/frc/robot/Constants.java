@@ -391,6 +391,7 @@ public final class Constants {
          */
 
         // Intake Pivot Constants
+        // TODO: Retune PID Constants
         public static final double kP_PIVOT = 4.7;
         public static final double kI_PIVOT = 0;
         public static final double kD_PIVOT = 0;
@@ -406,8 +407,8 @@ public final class Constants {
         // Do not edit these constants -------------
 
         // Actual Speed Constants
-        public static final double kMaxVelocity = 4;
-        public static final double kMaxAccel = 4;
+        public static final double kMaxVelocity = 1.5;
+        public static final double kMaxAccel = 2;
         public static final double kMaxError = 1;
 
         public static final double DEPLOYED_POS = -0.32;
