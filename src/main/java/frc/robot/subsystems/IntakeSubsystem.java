@@ -63,6 +63,7 @@ public class IntakeSubsystem extends SubsystemBase {
         pivotMotor.setSmartCurrentLimit(IntakeConstants.SMART_MAX_CURRENT);
         pivotMotor.setSecondaryCurrentLimit(IntakeConstants.MAX_CURRENT);
         pivotMotor.setIdleMode(IdleMode.kBrake);
+        pivotMotor.setInverted(true);
 
         pivotMotor2.setSmartCurrentLimit(IntakeConstants.SMART_MAX_CURRENT);
         pivotMotor2.setSecondaryCurrentLimit(IntakeConstants.MAX_CURRENT);
