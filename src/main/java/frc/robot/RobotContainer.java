@@ -134,7 +134,8 @@ public class RobotContainer {
                 new IntakeDriveCommand(
                         m_IntakeSubsystem,
                         () -> false, // previous r bumper
-                        () -> operatorController_HID.getLeftBumper()));
+                        () -> operatorController_HID.getLeftBumper()
+                        ));
 
         // m_ledSubsystem.setDefaultCommand(
         // new LEDCommand(
@@ -405,14 +406,27 @@ public class RobotContainer {
             }
         });
 
+        // m_operatorController.y().whileTrue(
+        //         // new SpeakerTurret(m_VisionSubsystem, m_PivotSubsystem)
+        //         // new ParallelCommandGroup(
+        //         //         new SnapCommand(m_SwerveSubsystem, m_VisionSubsystem), 
+        //         //         new SpeakerTurret(m_VisionSubsystem, m_PivotSubsystem)
+        //         //         )
+        //                 new PivotAutoCommand(m_PivotSubsystem, 3)
+        //         );
         m_operatorController.y().whileTrue(
-                // new SpeakerTurret(m_VisionSubsystem, m_PivotSubsystem)
-                // new ParallelCommandGroup(
-                //         new SnapCommand(m_SwerveSubsystem, m_VisionSubsystem), 
-                //         new SpeakerTurret(m_VisionSubsystem, m_PivotSubsystem)
-                //         )
-                        new PivotAutoCommand(m_PivotSubsystem, 3)
-                );
+                new Command() {
+                        @Override
+                        public void execute() {
+                            m_IntakeSubsystem.simplePivot(true);
+                        }
+
+                        @Override
+                        public void end(boolean interrupted) {
+                                m_IntakeSubsystem.pivotStop();
+                        }
+                }
+        );
 
     }
 

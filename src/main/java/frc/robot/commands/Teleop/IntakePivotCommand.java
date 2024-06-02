@@ -19,10 +19,13 @@ public class IntakePivotCommand extends Command {
 
     @Override
     public void initialize() {
+        intakeSubsystem.updatePID();
         if (intakeSubsystem.isUp()) {
-            intakeSubsystem.setGoal(IntakeConstants.DEPLOYED_POS);
+            intakeSubsystem.setGoal(true, -IntakeConstants.DEPLOYED_POS);
+            intakeSubsystem.setGoal(false, IntakeConstants.DEPLOYED_POS);
         } else {
-            intakeSubsystem.setGoal(IntakeConstants.RETRACTED_POS);
+            intakeSubsystem.setGoal(true, IntakeConstants.RETRACTED_POS);
+            intakeSubsystem.setGoal(false, IntakeConstants.RETRACTED_POS);
         }
     }
 

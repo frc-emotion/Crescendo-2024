@@ -6,13 +6,19 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.IntakeConstants;
+import frc.robot.Constants.ShooterConstants;
+import frc.robot.commands.debug.ResetGyroCommand;
 import frc.robot.util.TabManager;
 import frc.robot.util.TabManager.SubsystemTab;
 
@@ -21,16 +27,18 @@ import frc.robot.util.TabManager.SubsystemTab;
  */
 public class IntakeSubsystem extends SubsystemBase {
 
-    private final CANSparkMax pivotMotor;
-    private final CANSparkMax pivotMotor2;
+    private final CANSparkMax leftMotor;
+    private final CANSparkMax rightMotor;
     private final CANSparkMax intakeMotor;
+
+    private GenericEntry kIEntry, kDEntry, kPEntry, kIEntry2, kDEntry2, kPEntry2;
 
     private RelativeEncoder pivotEncoder, pivotEncoder2, driveEncoder;
 
     private final DigitalInput breakSensor;
 
     // private final SparkPIDController pivotController;
-    private final ProfiledPIDController pivotController;
+    private final ProfiledPIDController pivotControllerLeft, pivotControllerRight;
 
     public boolean down;
 
@@ -40,12 +48,12 @@ public class IntakeSubsystem extends SubsystemBase {
     public IntakeSubsystem() {
         down = false;
 
-        pivotMotor =
+        leftMotor =
             new CANSparkMax(
                 IntakeConstants.INTAKE_PIVOT_PORT,
                 MotorType.kBrushless
             );
-        pivotMotor2 =
+        rightMotor =
             new CANSparkMax(
                 IntakeConstants.INTAKE_PIVOT_2_PORT,
                 MotorType.kBrushless
@@ -60,18 +68,19 @@ public class IntakeSubsystem extends SubsystemBase {
         intakeMotor.setSecondaryCurrentLimit(IntakeConstants.MAX_CURRENT);
         intakeMotor.setIdleMode(IdleMode.kBrake);
 
-        pivotMotor.setSmartCurrentLimit(IntakeConstants.SMART_MAX_CURRENT);
-        pivotMotor.setSecondaryCurrentLimit(IntakeConstants.MAX_CURRENT);
-        pivotMotor.setIdleMode(IdleMode.kBrake);
-        pivotMotor.setInverted(true);
+        leftMotor.setSmartCurrentLimit(IntakeConstants.SMART_MAX_CURRENT);
+        leftMotor.setSecondaryCurrentLimit(IntakeConstants.MAX_CURRENT);
+        leftMotor.setIdleMode(IdleMode.kCoast);
 
-        pivotMotor2.setSmartCurrentLimit(IntakeConstants.SMART_MAX_CURRENT);
-        pivotMotor2.setSecondaryCurrentLimit(IntakeConstants.MAX_CURRENT);
-        pivotMotor2.setIdleMode(IdleMode.kBrake);
+        rightMotor.setSmartCurrentLimit(IntakeConstants.SMART_MAX_CURRENT);
+        rightMotor.setSecondaryCurrentLimit(IntakeConstants.MAX_CURRENT);
+        rightMotor.setIdleMode(IdleMode.kCoast);
+        rightMotor.setInverted(true);
 
-        pivotMotor2.follow(pivotMotor, true);
+        //rightMotor.follow(leftMotor, true);
+        //leftMotor.follow(rightMotor, true);
 
-        pivotController =
+        pivotControllerLeft =
             new ProfiledPIDController(
                 IntakeConstants.kP_PIVOT,
                 IntakeConstants.kI_PIVOT,
@@ -81,6 +90,18 @@ public class IntakeSubsystem extends SubsystemBase {
                     IntakeConstants.kMaxAccel
                 )
             );
+
+        pivotControllerRight = 
+            new ProfiledPIDController(
+                IntakeConstants.kP_PIVOT,
+                IntakeConstants.kI_PIVOT,
+                IntakeConstants.kD_PIVOT,
+                new TrapezoidProfile.Constraints(
+                    IntakeConstants.kMaxVelocity,
+                    IntakeConstants.kMaxAccel
+                )
+            );
+
         // pivotController.setTolerance(IntakeConstants.kMaxError);
 
         breakSensor = new DigitalInput(IntakeConstants.BEAM_BREAKER_PORT);
@@ -91,12 +112,12 @@ public class IntakeSubsystem extends SubsystemBase {
         // pivotController.setOutputRange(IntakeConstants.MIN_POSITION,
         // IntakeConstants.MAX_POSITION);
 
-        pivotEncoder = pivotMotor.getEncoder();
+        pivotEncoder = leftMotor.getEncoder();
         pivotEncoder.setPositionConversionFactor(
             1.0 / IntakeConstants.GEAR_REDUCTION
         );
 
-        pivotEncoder2 = pivotMotor2.getEncoder();
+        pivotEncoder2 = rightMotor.getEncoder();
         pivotEncoder2.setPositionConversionFactor(
             1.0 / IntakeConstants.GEAR_REDUCTION
         );
@@ -135,7 +156,7 @@ public class IntakeSubsystem extends SubsystemBase {
      */
     public boolean checkCurrentSpike() {
         return (
-            pivotMotor.getOutputCurrent() >
+            leftMotor.getOutputCurrent() >
             IntakeConstants.CURRENT_SPIKE_THRESHOLD
         );
     }
@@ -144,17 +165,27 @@ public class IntakeSubsystem extends SubsystemBase {
      * Get the current encoder position
      * @return Pivot encoder position
      */
-    public double getPosition() {
+    public double getPositionLeft() {
         return pivotEncoder.getPosition();
+    }
+
+    public double getPositionRight() {
+        return pivotEncoder2.getPosition();
     }
 
     /**
      * Get current encoder position, converted to 0-360 degrees
      * @return Encoder position in degrees
      */
-    public double getDegrees() {
+    public double getDegrees(boolean left) {
+        if (left) {
+            return (
+            (getPositionLeft() / IntakeConstants.GEAR_REDUCTION) *
+            360.0
+        );
+        }
         return (
-            (pivotEncoder.getPosition() / IntakeConstants.GEAR_REDUCTION) *
+            (getPositionRight() / IntakeConstants.GEAR_REDUCTION) *
             360.0
         );
     }
@@ -163,22 +194,29 @@ public class IntakeSubsystem extends SubsystemBase {
      * Stop the pivot motor
      */
     public void pivotStop() {
-        pivotMotor.set(0);
+        leftMotor.set(0);
+        rightMotor.set(0);
     }
 
     /**
      * Set the goal position for the Pivot motor
      * @param position Position to move pivot motor to (0 to 1)
      */
-    public void setGoal(double position) {
-        pivotController.setGoal(position);
+    public void setGoal(boolean leftController, double position) {
+        if (leftController) {
+            pivotControllerLeft.setGoal(position);
+            return;
+        }
+        pivotControllerRight.setGoal(position);
     }
 
     /**
      * Travel to Pivot Controller setpoint
      */
     public void travelToSetpoint() {
-        pivotMotor.set(pivotController.calculate(getPosition()));
+        leftMotor.set(pivotControllerLeft.calculate(getPositionLeft()));
+        rightMotor.set(pivotControllerRight.calculate(getPositionRight()));
+        
     }
 
     /**
@@ -186,7 +224,7 @@ public class IntakeSubsystem extends SubsystemBase {
      * @return true if setpoint has been reached
      */
     public boolean hasReachedSetpoint() {
-        return pivotController.atGoal();
+        return pivotControllerLeft.atGoal() && pivotControllerRight.atGoal();
     }
 
     /**
@@ -199,16 +237,21 @@ public class IntakeSubsystem extends SubsystemBase {
 
     // TESTING ---------------------------------------------
 
-    public void simplePivot() {
-        pivotMotor.set(IntakeConstants.INTAKE_PIVOT_SPEED);
+    public void simplePivot(boolean left) {
+        if (left) {
+            leftMotor.set(IntakeConstants.INTAKE_PIVOT_SPEED);
+            return;
+        }
+        rightMotor.set(IntakeConstants.INTAKE_PIVOT_SPEED);
+        
     }
 
     public void stopSimple() {
-        pivotMotor.set(0.0);
+        leftMotor.set(0.0);
     }
 
-    public void revSimplePivot() {
-        pivotMotor.set(-IntakeConstants.INTAKE_PIVOT_SPEED);
+    public void revSimplePivot(boolean left) {
+        leftMotor.set(-IntakeConstants.INTAKE_PIVOT_SPEED);
     }
 
     // INTAKE MOTORS -------------------------------------------
@@ -240,8 +283,12 @@ public class IntakeSubsystem extends SubsystemBase {
      * Get goal position
      * @return Pivot controller goal position
      */
-    public double getGoal() {
-        return pivotController.getGoal().position;
+    public double getGoal(boolean leftController) {
+        if (leftController) {
+            return pivotControllerLeft.getGoal().position;
+        }
+        
+        return pivotControllerRight.getGoal().position;
     }
 
     /**
@@ -257,7 +304,34 @@ public class IntakeSubsystem extends SubsystemBase {
      * @return Pivot motor temperature in Celsius
      */
     public double getIntakePivotTemp() {
-        return pivotMotor.getMotorTemperature();
+        return leftMotor.getMotorTemperature();
+    }
+
+    public void updatePID() {
+        if(Constants.DEBUG_MODE_ACTIVE) {
+            this.pivotControllerLeft.setI(this.kIEntry.getDouble(IntakeConstants.kI_PIVOT));
+            this.pivotControllerLeft.setD(this.kDEntry.getDouble(IntakeConstants.kD_PIVOT));
+            this.pivotControllerLeft.setP(this.kPEntry.getDouble(IntakeConstants.kP_PIVOT));
+
+            this.pivotControllerRight.setI(this.kIEntry2.getDouble(IntakeConstants.kI_PIVOT2));
+            this.pivotControllerRight.setD(this.kDEntry2.getDouble(IntakeConstants.kD_PIVOT2));
+            this.pivotControllerRight.setP(this.kPEntry2.getDouble(IntakeConstants.kP_PIVOT2));
+        } else {
+            pivotControllerLeft.setPID(
+                IntakeConstants.kP_PIVOT,
+                IntakeConstants.kI_PIVOT,
+                IntakeConstants.kD_PIVOT
+            );
+
+            pivotControllerRight.setPID(
+                IntakeConstants.kP_PIVOT2,
+                IntakeConstants.kI_PIVOT2,
+                IntakeConstants.kD_PIVOT2
+            );
+        }
+
+            
+       
     }
 
     /**
@@ -287,13 +361,78 @@ public class IntakeSubsystem extends SubsystemBase {
             "Pivot Motor 2 Position",
             () -> pivotEncoder2.getPosition()
         );
-        persianPositions.addNumber("Pivot Position Degrees", this::getDegrees);
+        persianPositions.addNumber("Pivot Position Degrees Left", () -> getDegrees(true));
+        persianPositions.addNumber("Pivot Position Degrees Right", () -> getDegrees(false));
         persianPositions.addBoolean("Beam Break", () -> getBeamState());
         persianPositions.addBoolean("At Setpoint", this::hasReachedSetpoint);
         persianPositions.addBoolean("Is Up", this::isUp);
-        persianPositions.addDouble("Current Goal", this::getGoal);
+        persianPositions.addDouble("Current Goal Left", () -> getGoal(true));
+        persianPositions.addDouble("Current Goal Right", () -> getGoal(false));
+        persianPositions.addDouble("Current Left Input", () -> leftMotor.get());
+        persianPositions.addDouble("Current Right Input", () -> rightMotor.get());
 
-        // persianPositions.addDouble("Current", () -> pivotMotor.getOutputCurrent());
+        this.kPEntry = moduleData.add("kP", IntakeConstants.kP_PIVOT).getEntry();
+
+        this.kIEntry = moduleData.add("kI", IntakeConstants.kI_PIVOT).getEntry();
+
+        this.kDEntry = moduleData.add("kD", IntakeConstants.kD_PIVOT).getEntry();
+
+        this.kPEntry2 = moduleData.add("kP2", IntakeConstants.kP_PIVOT2).getEntry();
+
+        this.kIEntry2 = moduleData.add("kI2", IntakeConstants.kI_PIVOT2).getEntry();
+
+        this.kDEntry2 = moduleData.add("kD2", IntakeConstants.kD_PIVOT2).getEntry();
+
+        // moduleData
+        //         .add("Left Up", new InstantCommand() {
+        //             public void execute() {
+        //                 leftMotor.set(0.25);
+        //             };
+
+        //             public void end(boolean interrupted) {
+        //                 rightMotor.set(0);
+        //             };
+        //         })
+        //         .withWidget(BuiltInWidgets.kCommand)
+        //         .withSize(2, 2);
+        // moduleData
+        //         .add("Left Down", new InstantCommand() {
+        //             public void execute() {
+        //                 leftMotor.set(-0.25);
+        //             };
+
+        //             public void end(boolean interrupted) {
+        //                 leftMotor.set(0);
+        //             };
+        //         })
+        //         .withWidget(BuiltInWidgets.kCommand)
+        //         .withSize(2, 2);
+        // moduleData
+        //         .add("Right Up", new InstantCommand() {
+        //             public void execute() {
+        //                 rightMotor.set(0.25);
+        //             };
+
+        //             public void end(boolean interrupted) {
+        //                 rightMotor.set(0);
+        //             };
+        //         })
+        //         .withWidget(BuiltInWidgets.kCommand)
+        //         .withSize(2, 2);
+        // moduleData
+        //         .add("Right Down", new InstantCommand() {
+        //             public void execute() {
+        //                 rightMotor.set(-0.25);
+        //             };
+
+        //             public void end(boolean interrupted) {
+        //                 rightMotor.set(0);
+        //             };
+        //         })
+        //         .withWidget(BuiltInWidgets.kCommand)
+        //         .withSize(2, 2);
+
+        // persianPositions.addDouble("Current", () -> leftMotor.getOutputCurrent());
 
         persianPositions.withSize(2, 4);
     }

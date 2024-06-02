@@ -33,7 +33,7 @@ public final class Constants {
      * Controls whether or not Debug Mode is activated. If it is, each Subsystem Shuffleboard tab
      * is supplied with most important subsystem info.
      */
-    public static final boolean DEBUG_MODE_ACTIVE = false;
+    public static final boolean DEBUG_MODE_ACTIVE = true;
 
     /**
      * Contains controller configurations for the driver and operator
@@ -380,7 +380,7 @@ public final class Constants {
         public static final int SMART_MAX_CURRENT = 40;
         public static final double CURRENT_SPIKE_THRESHOLD = 5.2;
         public static final double INTAKE_MOTOR_SPEED = 0.3;
-        public static final double INTAKE_PIVOT_SPEED = 0.3;
+        public static final double INTAKE_PIVOT_SPEED = 0.15;
         public static final double GEAR_REDUCTION = 43.5;
 
         /*
@@ -396,6 +396,10 @@ public final class Constants {
         public static final double kI_PIVOT = 0;
         public static final double kD_PIVOT = 0;
 
+        public static final double kP_PIVOT2 = 4.7;
+        public static final double kI_PIVOT2 = 0;
+        public static final double kD_PIVOT2 = 0;
+
         // Input Constants (Unused)
         // private static final double kMaxVelocityDeg = 20;
         // private static final double kMaxAccelDeg = 5;
@@ -407,11 +411,11 @@ public final class Constants {
         // Do not edit these constants -------------
 
         // Actual Speed Constants
-        public static final double kMaxVelocity = 1.5;
-        public static final double kMaxAccel = 2;
+        public static final double kMaxVelocity = 1;
+        public static final double kMaxAccel = 1;
         public static final double kMaxError = 1;
 
-        public static final double DEPLOYED_POS = -0.32;
+        public static final double DEPLOYED_POS = -0.1; // 0.3
         public static final double RETRACTED_POS = 0;
 
         public static final double SHOOTER_TRANSFER_SPEED = 0.35;
