@@ -370,9 +370,9 @@ public final class Constants {
     public static final class IntakeConstants {
 
         // CAN IDs and Ports
-        public static final int INTAKE_PIVOT_PORT = 15;
+        public static final int INTAKE_PIVOT_PORT_LEFT = 29;
         public static final int INTAKE_MOTOR_PORT = 19;
-        public static final int INTAKE_PIVOT_2_PORT = 29;
+        public static final int INTAKE_PIVOT_PORT_RIGHT = 15;
         public static final int BEAM_BREAKER_PORT = 8;
 
         // Motor Constants
@@ -396,9 +396,9 @@ public final class Constants {
         public static final double kI_PIVOT = 0;
         public static final double kD_PIVOT = 0;
 
-        public static final double kP_PIVOT2 = 4.7;
-        public static final double kI_PIVOT2 = 0;
-        public static final double kD_PIVOT2 = 0;
+        public static final double kPR_PIVOT = 4.7;
+        public static final double kIR_PIVOT = 0;
+        public static final double kDR_PIVOT = 0;
 
         // Input Constants (Unused)
         // private static final double kMaxVelocityDeg = 20;
@@ -415,7 +415,7 @@ public final class Constants {
         public static final double kMaxAccel = 1;
         public static final double kMaxError = 1;
 
-        public static final double DEPLOYED_POS = -0.1; // 0.3
+        public static final double DEPLOYED_POS = 0.3; // 0.3
         public static final double RETRACTED_POS = 0;
 
         public static final double SHOOTER_TRANSFER_SPEED = 0.35;

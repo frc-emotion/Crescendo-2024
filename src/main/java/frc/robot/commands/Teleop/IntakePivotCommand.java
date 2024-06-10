@@ -21,11 +21,10 @@ public class IntakePivotCommand extends Command {
     public void initialize() {
         intakeSubsystem.updatePID();
         if (intakeSubsystem.isUp()) {
-            intakeSubsystem.setGoal(true, -IntakeConstants.DEPLOYED_POS);
-            intakeSubsystem.setGoal(false, IntakeConstants.DEPLOYED_POS);
+            intakeSubsystem.setGoal(IntakeConstants.DEPLOYED_POS, IntakeConstants.DEPLOYED_POS);
         } else {
-            intakeSubsystem.setGoal(true, IntakeConstants.RETRACTED_POS);
-            intakeSubsystem.setGoal(false, IntakeConstants.RETRACTED_POS);
+            
+            intakeSubsystem.setGoal(IntakeConstants.RETRACTED_POS, IntakeConstants.RETRACTED_POS);
         }
     }
 
