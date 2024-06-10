@@ -28,8 +28,9 @@ public class DualProfiledPIDController {
     private SafetyMode safetyMode;
 
     /**
-     * The level of safety to use. Warnings are always printed to the console
-     * in all other modes.
+     * The level of safety to use. Warnings are printed to the console
+     * in all modes except DISABLED. RETURN returns to the default position 
+     * as defined in the constructor.
      */
     public enum SafetyMode {
         DISABLED,
@@ -38,12 +39,12 @@ public class DualProfiledPIDController {
         RETURN
     }
 
-    // Syncs both PID controllers essentially.
+    // Syncs both PID controllers essentially. Basically only used for error monitoring.
     public DualProfiledPIDController(double kP, double kI, double kD, TrapezoidProfile.Constraints constraints, double defaultPos, double maxSafetyError, SafetyMode safetyMode) {
         this(kP, kI, kD, constraints, defaultPos, kP, kI, kD, constraints, defaultPos, maxSafetyError, safetyMode);
     }
 
-    // May be a bit too many args. Somebody lmk.
+    // May be a bit too many args. Somebody lmk if it is.
     public DualProfiledPIDController(
         double kP1, 
         double kI1, 
@@ -96,6 +97,9 @@ public class DualProfiledPIDController {
         return results;
     }
 
+    /**
+     * Calculates PID based off of previous targets
+     */
     public double[] calculate(double measurementOne, double measurementTwo) {
         return calculate(measurementOne, measurementTwo, targetOne, targetTwo);
     }
@@ -108,11 +112,18 @@ public class DualProfiledPIDController {
         return (Math.abs(measurementOne - measurementTwo) < maxSafetyError) || !isSafetyEnabled();
     }
 
+    /**
+     * Sets the PID targets.
+     */
     public void setTargets(double targetOne, double targetTwo) {
         this.targetOne = targetOne;
         this.targetTwo = targetTwo;
     }
 
+    /**
+     * Checks if the current safety mode is SafetyMode.DISABLED.
+     * @return
+     */
     public boolean isSafetyEnabled() {
         return !safetyMode.equals(SafetyMode.DISABLED);
     }

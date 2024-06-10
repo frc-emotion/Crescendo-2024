@@ -415,7 +415,7 @@ public final class Constants {
         public static final double kMaxAccel = 1;
         public static final double kMaxError = 1;
 
-        public static final double DEPLOYED_POS = 0.3; // 0.3
+        public static final double DEPLOYED_POS = -0.3; // 0.3
         public static final double RETRACTED_POS = 0;
 
         public static final double SHOOTER_TRANSFER_SPEED = 0.35;

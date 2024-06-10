@@ -71,6 +71,7 @@ public class IntakeSubsystem extends SubsystemBase {
         leftMotor.setSmartCurrentLimit(IntakeConstants.SMART_MAX_CURRENT);
         leftMotor.setSecondaryCurrentLimit(IntakeConstants.MAX_CURRENT);
         leftMotor.setIdleMode(IdleMode.kBrake);
+        leftMotor.setInverted(true);
 
         rightMotor.setSmartCurrentLimit(IntakeConstants.SMART_MAX_CURRENT);
         rightMotor.setSecondaryCurrentLimit(IntakeConstants.MAX_CURRENT);
@@ -98,7 +99,7 @@ public class IntakeSubsystem extends SubsystemBase {
                 IntakeConstants.kDR_PIVOT,
                 new TrapezoidProfile.Constraints(
                     IntakeConstants.kMaxVelocity,
-                    IntakeConstants.kMaxAccel + 1.0
+                    IntakeConstants.kMaxAccel
                 )
             );
 
@@ -236,18 +237,19 @@ public class IntakeSubsystem extends SubsystemBase {
     // TESTING ---------------------------------------------
 
     public void simplePivot() {
-        leftMotor.set(IntakeConstants.INTAKE_PIVOT_SPEED);
-        rightMotor.set(IntakeConstants.INTAKE_PIVOT_SPEED);
+        leftMotor.set(0.15);
+        rightMotor.set(0.15);
         
     }
 
     public void stopSimple() {
         leftMotor.set(0.0);
+        rightMotor.set(0.0);
     }
 
     public void revSimplePivot() {
-        rightMotor.set(-IntakeConstants.INTAKE_PIVOT_SPEED);
-        leftMotor.set(-IntakeConstants.INTAKE_PIVOT_SPEED);
+        leftMotor.set(-0.15);
+        rightMotor.set(-0.15);
     }
 
     // INTAKE MOTORS -------------------------------------------
