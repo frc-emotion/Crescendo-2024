@@ -411,8 +411,8 @@ public final class Constants {
         // Do not edit these constants -------------
 
         // Actual Speed Constants
-        public static final double kMaxVelocity = 1;
-        public static final double kMaxAccel = 1;
+        public static final double kMaxVelocity = 2;
+        public static final double kMaxAccel = 3;
         public static final double kMaxError = 1;
 
         public static final double DEPLOYED_POS = -0.3; // 0.3

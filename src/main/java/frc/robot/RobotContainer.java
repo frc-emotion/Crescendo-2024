@@ -65,7 +65,7 @@ public class RobotContainer {
     public static final ShooterSubsystem m_ShooterSubsystem = new ShooterSubsystem();
     public static final IntakeSubsystem m_IntakeSubsystem = new IntakeSubsystem();
     public static final ClimbSubsystem m_ClimbSubsystem = new ClimbSubsystem();
-//     public static final PivotSubsystem m_PivotSubsystem = new PivotSubsystem();
+    public static final PivotSubsystem m_PivotSubsystem = new PivotSubsystem();
     public static final VisionSubsystem m_VisionSubsystem = new VisionSubsystem(
             m_SwerveSubsystem);
     public static final LEDSubsystem m_ledSubsystem = new LEDSubsystem();
@@ -112,15 +112,15 @@ public class RobotContainer {
                         m_ClimbSubsystem,
                         () -> -operatorController_HID.getRightY()));
 
-        // m_PivotSubsystem.setDefaultCommand(
-        //         new PivotManualCommand(
-        //                 m_PivotSubsystem,
-        //                 () -> -operatorController_HID.getLeftY()
-        //         // () -> operatorController_HID.getLeftStickButton()
-        //         // () -> operatorController_HID.getPOV() == 0,
-        //         // () -> operatorController_HID.getPOV() == 180,
-        //         // () -> operatorController_HID.getPOV() == 90
-        //         ));
+        m_PivotSubsystem.setDefaultCommand(
+                new PivotManualCommand(
+                        m_PivotSubsystem,
+                        () -> -operatorController_HID.getLeftY()
+                // () -> operatorController_HID.getLeftStickButton()
+                // () -> operatorController_HID.getPOV() == 0,
+                // () -> operatorController_HID.getPOV() == 180,
+                // () -> operatorController_HID.getPOV() == 90
+                ));
 
         // m_IntakeSubsystem.setDefaultCommand(
         // new IntakeDriveCommand(
@@ -355,19 +355,19 @@ public class RobotContainer {
                                 // // m_PivotSubsystem.stop();
                                 // // }
                                 // // }
-                                // // .onlyIf(()->!m_PivotSubsystem.isHandoffOk())
-                                // // .withTimeout(3.5)
+                                // .onlyIf(()->!m_PivotSubsystem.isHandoffOk())
+                                // .withTimeout(3.5)
                                 // )
                                 .andThen(
-                                        // new TeleopHandoffCommand(
-                                        //         () -> operatorController_HID.getRightTriggerAxis() > OIConstants.kDeadband,
-                                        //         m_ShooterSubsystem,
-                                        //         m_IntakeSubsystem
+                                        new TeleopHandoffCommand(
+                                                () -> operatorController_HID.getRightTriggerAxis() > OIConstants.kDeadband,
+                                                m_ShooterSubsystem,
+                                                m_IntakeSubsystem
                                                 
-                                        // )
-                                        //         // .onlyIf(() -> m_PivotSubsystem.isHandoffOk())
-                                        //         .withTimeout(2.0)
-                                        new HandoffAutoCommand(m_IntakeSubsystem, m_ShooterSubsystem, false).withTimeout(2.0)
+                                        )
+                                                // .onlyIf(() -> m_PivotSubsystem.isHandoffOk())
+                                                .withTimeout(2.0)
+                                        // new HandoffAutoCommand(m_IntakeSubsystem, m_ShooterSubsystem, false).withTimeout(2.0)
                                 )
                 // )
                 );
