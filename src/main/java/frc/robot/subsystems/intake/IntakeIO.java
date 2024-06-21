@@ -6,7 +6,7 @@ import org.littletonrobotics.junction.AutoLog;
  */
 public interface IntakeIO {
     @AutoLog
-    public static class IntakeIOInputs{
+    public static class IntakeIOInputs {
         /** Whether or not the intake is deployed. */
         public boolean isDown = false;
 

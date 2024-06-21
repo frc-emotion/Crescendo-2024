@@ -37,7 +37,7 @@ public interface SwerveModuleIO {
          * essentially just makes rotating the swerve modules to their target positions faster.
          * 
          */
-        public boolean station = false;
+        public boolean station = true;
 
         /** The current position of the CANCoder */
         public double absolutePosition = 0.0;
