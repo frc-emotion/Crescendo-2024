@@ -50,7 +50,7 @@ public class LEDCommand extends Command {
         } else if (shooterBreakSupplier.get()) {
             nextColor = LEDConstants.SHOOTER_COLOR;
             style = LEDStyle.SOLID;
-        } else if (DriverStation.getAlliance() != null) {
+        } else if (DriverStation.getAlliance() != null && DriverStation.getAlliance().isPresent()) {
             nextColor = DriverStation.getAlliance().get() == Alliance.Blue
                     ? LEDConstants.BLUE_ALLIANCE_COLOR
                     : LEDConstants.RED_ALLIANCE_COLOR;

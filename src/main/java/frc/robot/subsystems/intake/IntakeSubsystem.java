@@ -65,6 +65,7 @@ public class IntakeSubsystem extends SubsystemBase {
      */
     public void togglePivot() {
         io.toggleIntake();
+        io.updateInputs(inputs);
     }
 
     /**
@@ -134,6 +135,7 @@ public class IntakeSubsystem extends SubsystemBase {
      * @return true if beam is unbroken
      */
     public boolean getBeamState() {
+        io.updateInputs(inputs);
         return inputs.beamState;
     }
 
@@ -173,6 +175,10 @@ public class IntakeSubsystem extends SubsystemBase {
 
     public double getDriveTarget() {
         return inputs.targetDriveSpeed;
+    }
+
+    public double getDrivePos() {
+        return inputs.drivePos;
     }
 
     /**

@@ -23,7 +23,7 @@ public class ResetGyroCommand extends Command {
     @Override
     public void initialize() {
         DriverStation.reportWarning("Gyro Calibrating", false);
-        swerve.zeroHeading();
+        swerve.resetHeading();
     }
 
     @Override
