@@ -58,11 +58,11 @@ public class SwerveLimiter {
      * @param speed The maximum translational speed
      * @param angularSpeed  The maximum angular sped
      * @return  The limited {@link ChassisSpeeds} object
-     * @see <a href="https://desmos.com/calculator/rvxfmqw5sx">Desmos Visualizer</a>
+     * @see <a href="https://www.desmos.com/calculator/scjw7vizwa">Desmos Visualizer</a>
      */
-    private ChassisSpeeds limitSpeed(ChassisSpeeds inputSpeeds, double speed, double angularSpeed) {
+    private ChassisSpeeds limitSpeed(ChassisSpeeds inputSpeeds, double maxTranslationalSpeed, double maxAngularSpeed) {
         ChassisSpeeds outputSpeeds;
-        if(getSpeed(inputSpeeds) > speed) {
+        if(getSpeed(inputSpeeds) > maxTranslationalSpeed) {
                 // Calculates the angle which the robot is currently travelling at
             double angle = Math.atan(inputSpeeds.vyMetersPerSecond / inputSpeeds.vxMetersPerSecond);
 
@@ -73,8 +73,8 @@ public class SwerveLimiter {
 
                 // Calculates then sets the new speeds
             outputSpeeds = new ChassisSpeeds(
-                speed * Math.sin(angle),
-                speed * Math.cos(angle),
+                maxTranslationalSpeed * Math.sin(angle),
+                maxTranslationalSpeed * Math.cos(angle),
                 0
             );
         } else {
@@ -84,8 +84,9 @@ public class SwerveLimiter {
                 0
             );
         }
-        if(inputSpeeds.omegaRadiansPerSecond > angularSpeed) {
-            outputSpeeds.omegaRadiansPerSecond = angularSpeed;
+
+        if(inputSpeeds.omegaRadiansPerSecond > maxAngularSpeed) {
+            outputSpeeds.omegaRadiansPerSecond = maxAngularSpeed;
         } else {
             outputSpeeds.omegaRadiansPerSecond = inputSpeeds.omegaRadiansPerSecond;
         }

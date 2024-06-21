@@ -130,7 +130,7 @@ public class SwerveModuleNeo {
     }
 
     public void setDesiredModuleState(SwerveModuleState state) {
-        io.setDesiredModuleState(state, false);
+        io.setDesiredModuleState(state, true);
     }
 
     public void setDesiredModuleState(SwerveModuleState state, boolean station) {
