@@ -34,57 +34,7 @@ public class SwerveModuleNeo {
      * @param index The index of the new swerve module object
      */
     public SwerveModuleNeo(int index) {
-        switch(index) {
-            case 0:
-                io = new SwerveModuleIONeo(
-                    DriveConstants.kFrontLeftDriveMotorPort,
-                    DriveConstants.kFrontLeftTurningMotorPort,
-                    DriveConstants.kFrontLeftDriveAbsoluteEncoderReversed,
-                    DriveConstants.kFrontLeftTurningEncoderReversed,
-                    DriveConstants.kFrontLeftDriveAbsoluteEncoderPort,
-                    DriveConstants.kFrontLeftDriveAbsoluteEncoderOffsetRad,
-                    DriveConstants.kFrontLeftDriveAbsoluteEncoderReversed
-                );
-                break;
-            case 1:
-                io = new SwerveModuleIONeo(
-                    DriveConstants.kFrontRightDriveMotorPort,
-                    DriveConstants.kFrontRightTurningMotorPort,
-                    DriveConstants.kFrontRightDriveAbsoluteEncoderReversed,
-                    DriveConstants.kFrontRightTurningEncoderReversed,
-                    DriveConstants.kFrontRightDriveAbsoluteEncoderPort,
-                    DriveConstants.kFrontRightDriveAbsoluteEncoderOffsetRad,
-                    DriveConstants.kFrontRightDriveAbsoluteEncoderReversed
-                );
-                break;
-            case 2:
-                io = new SwerveModuleIONeo(
-                    DriveConstants.kBackLeftDriveMotorPort,
-                    DriveConstants.kBackLeftTurningMotorPort,
-                    DriveConstants.kBackLeftDriveAbsoluteEncoderReversed,
-                    DriveConstants.kBackLeftTurningEncoderReversed,
-                    DriveConstants.kBackLeftDriveAbsoluteEncoderPort,
-                    DriveConstants.kBackLeftDriveAbsoluteEncoderOffsetRad,
-                    DriveConstants.kBackLeftDriveAbsoluteEncoderReversed
-                );
-                break;
-
-            case 3:
-                io = new SwerveModuleIONeo(
-                    DriveConstants.kBackRightDriveMotorPort,
-                    DriveConstants.kBackRightTurningMotorPort,
-                    DriveConstants.kBackRightDriveAbsoluteEncoderReversed,
-                    DriveConstants.kBackRightTurningEncoderReversed,
-                    DriveConstants.kBackRightDriveAbsoluteEncoderPort,
-                    DriveConstants.kBackRightDriveAbsoluteEncoderOffsetRad,
-                    DriveConstants.kBackRightDriveAbsoluteEncoderReversed
-                );
-                break;
-            default:
-                throw new UnsupportedOperationException("Improper Swerve Module ID set. ID " + index + " does not exist.");
-            
-        }
-
+        io = new SwerveModuleIONeo(index);
         this.index = index;
     }
 
@@ -93,12 +43,8 @@ public class SwerveModuleNeo {
         Logger.processInputs("SwerveModule" + index, inputs);
     }
 
-    public void setDesiredState(SwerveModuleState state, boolean station) {
-        io.setDesiredModuleState(state, station);
-    }
-
-    public void updatePID(double kP, double kI, double kD) {
-        io.updatePID(kP, kI, kD);
+    public void updatePID(double kPTurning, double kITurning, double kDTurning, double kPDrive, double kIDrive, double kDDrive) {
+        io.updateConstants(kPTurning, kITurning, kDTurning, kPDrive, kIDrive, kDDrive);
     }
 
     public SwerveModulePosition getPosition() {
@@ -130,11 +76,7 @@ public class SwerveModuleNeo {
     }
 
     public void setDesiredModuleState(SwerveModuleState state) {
-        io.setDesiredModuleState(state, false);
-    }
-
-    public void setDesiredModuleState(SwerveModuleState state, boolean station) {
-        io.setDesiredModuleState(state, station);
+        io.setDesiredModuleState(state);
     }
 
     public void resetEncoders() {

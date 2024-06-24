@@ -56,8 +56,8 @@ public class SwerveIOReal implements SwerveIO {
     public void setModuleStates(SwerveModuleState[] states) {
         SwerveDriveKinematics.desaturateWheelSpeeds(states, DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
 
-        for(int i = 0; i < 4; i++) {
-            swerveModules[i].setDesiredModuleState(states[i], true);
+        for(int i = 0; i < swerveModules.length; i++) {
+            swerveModules[i].setDesiredModuleState(states[i]);
         }
     }
 
@@ -90,9 +90,9 @@ public class SwerveIOReal implements SwerveIO {
     }
 
     @Override
-    public void updateConstants(double Module_kP, double Module_kI, double Module_kD) {
+    public void updateConstants(double kPTurning, double kITurning, double kDTurning, double kPDrive, double kIDrive, double kDDrive) {
         for(SwerveModuleNeo module : swerveModules) {
-            module.updatePID(Module_kP, Module_kI, Module_kD);
+            module.updatePID(kPTurning, kITurning, kDTurning, kPDrive, kIDrive, kDDrive);
         }
     }
 
@@ -113,7 +113,7 @@ public class SwerveIOReal implements SwerveIO {
 
     @Override
     public void stop() {
-        for(int i = 0; i < 4; i++) {
+        for(int i = 0; i < swerveModules.length; i++) {
             swerveModules[i].stop();
         }
     }
@@ -144,8 +144,8 @@ public class SwerveIOReal implements SwerveIO {
 
     /** Retrieves the current {@link SwerveModuleState} objects from the modules. Only used when updating the {@link SwerveIOInputs}. */
     public SwerveModuleState[] getModuleStates() {
-        SwerveModuleState[] states = new SwerveModuleState[4];
-        for(int i = 0; i < 4; i++) {
+        SwerveModuleState[] states = new SwerveModuleState[swerveModules.length];
+        for(int i = 0; i < swerveModules.length; i++) {
             states[i] = swerveModules[i].getCurrentState();
         }
         return states;
@@ -153,8 +153,8 @@ public class SwerveIOReal implements SwerveIO {
 
     /** Retrieves the current {@link SwerveModulePosition} objects from the modules. Only used when updating the {@link SwerveIOInputs}. */
     public SwerveModulePosition[] getModulePositions() {
-        SwerveModulePosition[] positions = new SwerveModulePosition[4];
-        for(int i = 0; i < 4; i++) {
+        SwerveModulePosition[] positions = new SwerveModulePosition[swerveModules.length];
+        for(int i = 0; i < swerveModules.length; i++) {
             positions[i] = swerveModules[i].getPosition();
         }
         return positions;

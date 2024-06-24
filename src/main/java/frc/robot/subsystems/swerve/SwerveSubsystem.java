@@ -61,8 +61,6 @@ public class SwerveSubsystem extends SubsystemBase {
 
     PIDController autoThetaController, teleopThetaController;
 
-    private ChassisSpeeds robotSpeeds;
-
     private ShuffleboardLayout frontLeftData, frontRightData, backLeftData, backRightData, sensorData;
 
     private StructArrayPublisher<SwerveModuleState> publisher = NetworkTableInstance.getDefault()
@@ -126,7 +124,7 @@ public class SwerveSubsystem extends SubsystemBase {
     // }
 
     public void updatePID() {
-       io.updateConstants(Module_kP.get(), Module_kI.get(), Module_kD.get());
+    //    io.updateConstants(Module_kP.get(), Module_kI.get(), Module_kD.get());
     }
 
     public void offsetGyro(double offset) {

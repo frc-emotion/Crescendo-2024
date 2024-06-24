@@ -43,9 +43,10 @@ public interface SwerveModuleIO {
         public double absolutePosition = 0.0;
         
     }
-    public default void updateInputs(SwerveModuleIOInputsAutoLogged inputs) {}
-    public default void updatePID(double kP, double kI, double kD) {}
-    public default void setDesiredModuleState(SwerveModuleState state, boolean station) {}
+    public default void updateInputs(SwerveModuleIOInputs inputs) {}
+    public default void updateConstants(double kPTurning, double kITurning, double kDTurning, double kPDrive, double kIDrive, double kDDrive) {}
+    public default void setDesiredModuleState(SwerveModuleState state) {}
+    public default void setReferenceAngle(double angle) {}
     public default void setUpdateFrequency(double frequency) {}
     public default void stop() {}
     public default void resetEncoders() {}

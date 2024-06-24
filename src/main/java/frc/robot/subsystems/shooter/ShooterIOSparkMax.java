@@ -27,7 +27,7 @@ public class ShooterIOSparkMax implements ShooterIO {
         shooterMotor.setSecondaryCurrentLimit(ShooterConstants.CURRENT_LIMIT);
         shooterMotor.setIdleMode(IdleMode.kCoast);
 
-        shooterMotor.enableVoltageCompensation(7);
+        shooterMotor.enableVoltageCompensation(7); // tune later
 
         encoder = shooterMotor.getEncoder();
         encoder.setMeasurementPeriod(16);

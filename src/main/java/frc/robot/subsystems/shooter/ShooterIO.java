@@ -5,7 +5,7 @@ import org.littletonrobotics.junction.AutoLog;
 /** The IO Layer for the Shooter Subsystem. THIS IO LAYER DOES HANDLE GEAR RATIOS. */
 public interface ShooterIO {
     @AutoLog
-    public class ShooterIOInputs{
+    public class ShooterIOInputs {
         /** The current velocity of the Shooter in rotations per minute. */
         public double velocity = 0.0;
         

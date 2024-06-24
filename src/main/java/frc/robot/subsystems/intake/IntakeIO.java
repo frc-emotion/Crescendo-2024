@@ -74,6 +74,6 @@ public interface IntakeIO {
     /** Updates all the constants for the Intake Subsystem. */
     public default void updateConstants(double kP, double kI, double kD, double maxSpeed, double maxAccel, double kP_Drive, double kI_Drive, double kD_Drive) {}
 
-    /** Calculates and sendss motor inputs in order to travel to the desired setpoint. */
+    /** Calculates and sends motor inputs in order to travel to the desired setpoint. */
     public default void goToPivotSetpoint() {}
 }
