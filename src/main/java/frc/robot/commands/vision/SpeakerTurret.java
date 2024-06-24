@@ -62,13 +62,14 @@ public class SpeakerTurret extends MonitorVision {
      * @return The target angle for the pivot.
      */
     protected double calculateAngle() {
-        return Math.toDegrees(
-                Math.atan(
-                        (AutoConstants.SPEAKER_MOUTH_HEIGHT - AutoConstants.PIVOT_HEIGHT)
-                                / visionSubsystem.getDistanceTo(
-                                        (DriverStation.getAlliance().get() == DriverStation.Alliance.Red)
-                                                ? VisionConstants.RED_SPEAKER_CENTER
-                                                : VisionConstants.BLUE_SPEAKER_CENTER)));
+        return 0;
+        // return Math.toDegrees(
+        //         Math.atan(
+        //                 (AutoConstants.SPEAKER_MOUTH_HEIGHT - AutoConstants.PIVOT_HEIGHT)
+        //                         / visionSubsystem.getDistanceTo(
+        //                                 (DriverStation.getAlliance().get() == DriverStation.Alliance.Red)
+        //                                         ? VisionConstants.RED_SPEAKER_CENTER
+        //                                         : VisionConstants.BLUE_SPEAKER_CENTER)));
     }
 
 }

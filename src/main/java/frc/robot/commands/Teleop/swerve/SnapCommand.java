@@ -49,7 +49,6 @@ public class SnapCommand extends Command {
     @Override
     public void execute() {
         super.execute();
-        visionSubsystem.updateOdometry();
 
         //Translation2d currentPose2d = visionSubsystem.getCurrentPose().getTranslation();
         // System.out.println(currentPose2d);

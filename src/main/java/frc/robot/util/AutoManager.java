@@ -44,24 +44,24 @@ public class AutoManager {
         this.swerveSubsystem = swerveSubsystem;
 
         // Initializes AutoBuilder for swerve drive.
-        AutoBuilder.configureHolonomic(
-                this.visionSubsystem::getCurrentOdoPose, // If this has issues switch to odometry only based pose
-                this.visionSubsystem::resetPoseEstimator,
-                this.swerveSubsystem::getChassisSpeeds,
-                this.swerveSubsystem::driveRobotRelative,
+        // AutoBuilder.configureHolonomic(
+        //         this.visionSubsystem::getCurrentOdoPose, // If this has issues switch to odometry only based pose
+        //         this.visionSubsystem::resetPoseEstimator,
+        //         this.swerveSubsystem::getChassisSpeeds,
+        //         this.swerveSubsystem::driveRobotRelative,
 
-                new HolonomicPathFollowerConfig(
-                        new PIDConstants(AutoConstants.kPXController),
-                        new PIDConstants(AutoConstants.kPThetaController),
-                        AutoConstants.kMaxSpeedMetersPerSecond,
-                        DriveConstants.kWheelBase,
-                        new ReplanningConfig(
-                                AutoConstants.INITIAL_PLANNING_ENABLED,
-                                AutoConstants.DYNAMIC_PLANNING_ENABLED,
-                                AutoConstants.PLANNING_TOTAL_ERROR_THRESHOLD,
-                                AutoConstants.PLANNING_SPIKE_ERROR_THRESHOLD)),
-                () -> DriverStation.getAlliance().get() == DriverStation.Alliance.Red,
-                swerveSubsystem);
+        //         new HolonomicPathFollowerConfig(
+        //                 new PIDConstants(AutoConstants.kPXController),
+        //                 new PIDConstants(AutoConstants.kPThetaController),
+        //                 AutoConstants.kMaxSpeedMetersPerSecond,
+        //                 DriveConstants.kWheelBase,
+        //                 new ReplanningConfig(
+        //                         AutoConstants.INITIAL_PLANNING_ENABLED,
+        //                         AutoConstants.DYNAMIC_PLANNING_ENABLED,
+        //                         AutoConstants.PLANNING_TOTAL_ERROR_THRESHOLD,
+        //                         AutoConstants.PLANNING_SPIKE_ERROR_THRESHOLD)),
+        //         () -> DriverStation.getAlliance().get() == DriverStation.Alliance.Red,
+        //         swerveSubsystem);
 
         // Used for PathPlanner automatic pathfinding
         Pathfinding.setPathfinder(new LocalADStar());
@@ -71,7 +71,7 @@ public class AutoManager {
 
     public static AutoManager getInstance() {
         if (autoManagerInstance == null) {
-            autoManagerInstance = new AutoManager(RobotContainer.m_VisionSubsystem, RobotContainer.m_SwerveSubsystem);
+            // autoManagerInstance = new AutoManager(RobotContainer.m_VisionSubsystem, RobotContainer.m_SwerveSubsystem);
         }
         return autoManagerInstance;
     }

@@ -11,9 +11,16 @@ import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.util.Color;
+
+import org.photonvision.PhotonPoseEstimator.PoseStrategy;
+
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
@@ -435,6 +442,34 @@ public final class Constants {
     }
 
     public static final class VisionConstants {
+        public static final AprilTagFieldLayout m_AprilTagFieldLayout = AprilTagFields.k2024Crescendo.loadAprilTagLayoutField();
+        public static final PoseStrategy POSE_STRATEGY = PoseStrategy.CLOSEST_TO_REFERENCE_POSE;
+
+        public static final Transform3d ROBOT_TO_PI_CAM = new Transform3d(
+            0,
+            0,
+            0,
+            new Rotation3d(
+                0,
+                0,
+                0
+            )
+        );
+
+        public static final Transform3d ROBOT_TO_LIMELIGHT = new Transform3d(
+            0,
+            0,
+            0,
+            new Rotation3d(
+                0,
+                0,
+                0
+            )
+        );
+
+        public static final int APRILTAG_PIPELINE_INDEX = 0;
+        public static final int OD_PIPELINE_INDEX = 1;
+
         public static final double FIELD_LENGTH = 16.541;
         public static boolean VISION_DEBUG_MODE = true;
 
@@ -447,6 +482,8 @@ public final class Constants {
         // Thank you super nurds for constnats very nice (nice spelling)
         public static final Translation2d BLUE_SPEAKER_CENTER = new Translation2d(0.457 / 2, 5.557034);
         public static final Translation2d RED_SPEAKER_CENTER = new Translation2d(FIELD_LENGTH - (0.457 / 2), 5.557034);
+        
+        
     }
 
     public static final class LEDConstants {

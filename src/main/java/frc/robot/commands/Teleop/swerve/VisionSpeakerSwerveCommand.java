@@ -31,7 +31,7 @@ public class VisionSpeakerSwerveCommand extends SnapSwerveCommand {
 
     @Override
     public void execute() {
-        direction = (int) (swerveSubsystem.getHeading() + visionSubsystem.getTX());
+        // direction = (int) (swerveSubsystem.getHeading() + visionSubsystem.getTX()); fix
 
         double angle = calculateAngle();
         if (!pivotSubsystem.isAtTarget(angle)) {
@@ -44,7 +44,6 @@ public class VisionSpeakerSwerveCommand extends SnapSwerveCommand {
     }
 
     private double calculateAngle() {
-        return Math.atan((AutoConstants.SPEAKER_MOUTH_HEIGHT - AutoConstants.PIVOT_HEIGHT)
-                / visionSubsystem.getDistanceTo(VisionConstants.BLUE_SPEAKER_CENTER));
+        return 0; // fix
     }
 }

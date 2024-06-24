@@ -66,8 +66,6 @@ public class RobotContainer {
         public static final IntakeSubsystem m_IntakeSubsystem = new IntakeSubsystem();
         public static final ClimbSubsystem m_ClimbSubsystem = new ClimbSubsystem();
         public static final PivotSubsystem m_PivotSubsystem = new PivotSubsystem();
-        public static final VisionSubsystem m_VisionSubsystem = new VisionSubsystem(
-                        m_SwerveSubsystem);
         public static final LEDSubsystem m_ledSubsystem = new LEDSubsystem();
 
         private final AutoManager autoManager;
@@ -152,9 +150,6 @@ public class RobotContainer {
                 // m_ShooterSubsystem::isAtTarget
                 // )
                 // );
-
-                m_VisionSubsystem.setDefaultCommand(
-                                new MonitorVision(m_VisionSubsystem));
 
                 registerNamedCommands();
                 configureAutoChooser();
@@ -636,8 +631,7 @@ public class RobotContainer {
                 try {
                         return new ParallelCommandGroup(
                                         autoChooser.getSelected(),
-                                        new LEDAutoCommand(m_ledSubsystem),
-                                        new MonitorVision(m_VisionSubsystem));
+                                        new LEDAutoCommand(m_ledSubsystem));
                 } catch (Exception ex) {
                         DriverStation.reportError("Autonomous Command Scheduling Error", true);
                         return new ShootSpeaker(m_ShooterSubsystem);
