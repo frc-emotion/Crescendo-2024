@@ -7,7 +7,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.GameConstants;
 import frc.robot.Constants.VisionConstants;
-import frc.robot.subsystems.other.VisionSubsystem;
+import frc.robot.subsystems.vision.VisionSubsystem;
 import frc.robot.subsystems.pivot.PivotSubsystem;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
 
@@ -66,6 +66,7 @@ public class VisionSpeakerSwerveCommand extends SnapSwerveCommand {
     }
 
     private int getDriveAngle() {
-        return (int) visionSubsystem.getAngleTo(getSpeakerPose()).getDegrees();
+        // return (int) visionSubsystem.getAngleTo(getSpeakerPose()).getDegrees() ; TODO: Fix this
+        return 0;
     }
 }

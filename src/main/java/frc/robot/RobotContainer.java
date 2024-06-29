@@ -35,7 +35,6 @@ import frc.robot.commands.Auto.SubsystemCommands.RevShooterAutoCommand;
 import frc.robot.commands.Teleop.*;
 import frc.robot.commands.Teleop.swerve.*;
 import frc.robot.commands.debug.ResetGyroCommand;
-import frc.robot.commands.vision.MonitorVision;
 import frc.robot.commands.vision.SpeakerTurret;
 import frc.robot.subsystems.climb.ClimbIOSparkMax;
 import frc.robot.subsystems.climb.ClimbSubsystem;
@@ -43,7 +42,7 @@ import frc.robot.subsystems.feeder.FeederIOSparkMax;
 import frc.robot.subsystems.feeder.FeederSubsystem;
 import frc.robot.subsystems.intake.*;
 import frc.robot.subsystems.other.LEDSubsystem;
-import frc.robot.subsystems.other.VisionSubsystem;
+import frc.robot.subsystems.vision.VisionSubsystem;
 import frc.robot.subsystems.pivot.PivotIOSparkMax;
 import frc.robot.subsystems.pivot.PivotSubsystem;
 import frc.robot.subsystems.shooter.ShooterIOSparkMax;
@@ -176,9 +175,6 @@ public class RobotContainer {
                         () -> false, // previous r bumper
                         () -> operatorController_HID.getLeftBumper()));
 
-
-        m_VisionSubsystem.setDefaultCommand(
-                new MonitorVision(m_VisionSubsystem));
 
         registerNamedCommands();
         configureAutoChooser();
@@ -557,8 +553,7 @@ public class RobotContainer {
         try {
                 return new ParallelCommandGroup(
                         autoChooser.getSelected(),
-                        new LEDAutoCommand(m_ledSubsystem),
-                        new MonitorVision(m_VisionSubsystem)
+                        new LEDAutoCommand(m_ledSubsystem)
                 );
         } catch(Exception ex) {
                 DriverStation.reportError("Autonomous Command Scheduling Error", true);

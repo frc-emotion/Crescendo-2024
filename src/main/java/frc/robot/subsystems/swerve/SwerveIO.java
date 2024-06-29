@@ -44,7 +44,7 @@ public interface SwerveIO {
      * Updates the Swerve Module PID Constants
      * @see frc.robot.subsystems.swerve.SwerveModuleIO#updatePID(double, double, double)
      */
-    public default void updateConstants(double Module_kP, double Module_kI, double Module_kD) {}
+    public default void updateConstants(double kPTurning, double kITurning, double kDTurning, double kPDrive, double kIDrive, double kDDrive) {}
 
     /**
      * Updates the current Drive Constraints as set by the {@link frc.robot.util.SwerveLimiter}

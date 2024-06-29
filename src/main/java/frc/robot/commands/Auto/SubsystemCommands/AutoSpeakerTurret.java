@@ -1,7 +1,7 @@
 package frc.robot.commands.Auto.SubsystemCommands;
 
 import frc.robot.commands.vision.SpeakerTurret;
-import frc.robot.subsystems.other.VisionSubsystem;
+import frc.robot.subsystems.vision.VisionSubsystem;
 import frc.robot.subsystems.pivot.PivotSubsystem;
 
 public class AutoSpeakerTurret extends SpeakerTurret {

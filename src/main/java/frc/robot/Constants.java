@@ -556,6 +556,11 @@ public final class Constants {
         public static final Pose2d BLUE_SPEAKER_CENTER = new Pose2d(0.457 / 2, 5.557034, Rotation2d.fromDegrees(0));
         public static final Pose2d RED_SPEAKER_CENTER = new Pose2d(FIELD_LENGTH - (0.457 / 2), 5.557034, Rotation2d.fromDegrees(180));
         public static final Transform3d CAMERA_TRANSLATION = new Transform3d();
+        public static final int APRILTAG_PIPELINE_INDEX = 0;
+        public static final Transform3d[] CAMERA_TRANSLATIONS = {
+
+        };
+        public static final int OD_PIPELINE_INDEX = 1;
     }
 
     public static final class LEDConstants {
