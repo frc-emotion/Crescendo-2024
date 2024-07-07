@@ -64,11 +64,14 @@ public class IntakeIOSparkMax implements IntakeIO {
         pivotMotor2.setSmartCurrentLimit(IntakeConstants.SMART_MAX_CURRENT);
         pivotMotor2.setSecondaryCurrentLimit(IntakeConstants.MAX_CURRENT);
         pivotMotor2.setIdleMode(IdleMode.kBrake);
+        pivotMotor2.setInverted(true);
 
         pivotMotor2.follow(pivotMotor, true);
 
         pivotEncoder = pivotMotor.getEncoder();
         pivotEncoder2 = pivotMotor2.getEncoder();
+        // pivotEncoder2.setInverted(true);
+
         driveEncoder = intakeMotor.getEncoder();
 
         pivotController = new ProfiledPIDController(

@@ -10,6 +10,8 @@ import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
+import edu.wpi.first.math.estimator.PoseEstimator;
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import frc.robot.Constants.VisionConstants;
 
 public class AprilTagVision {
@@ -32,6 +34,8 @@ public class AprilTagVision {
                 cameras[i],
                 VisionConstants.CAMERA_TRANSLATIONS[i]
             );
+            estimators[i].setMultiTagFallbackStrategy(PoseStrategy.CLOSEST_TO_LAST_POSE);
+
             estimatedPoses = new ArrayList<Optional<EstimatedRobotPose>>(cameras.length);
         }
     }
@@ -44,5 +48,13 @@ public class AprilTagVision {
 
     public ArrayList<Optional<EstimatedRobotPose>> getEstimatedPoses() {
         return estimatedPoses;
+    }
+
+    public void updateEstimator(SwerveDrivePoseEstimator estimator) {
+        for(Optional<EstimatedRobotPose> estimatedPose : estimatedPoses) {
+            if(estimatedPose.isPresent()) {
+                estimator.addVisionMeasurement(estimatedPose.get().estimatedPose.toPose2d(), estimatedPose.get().timestampSeconds);
+            }
+        } 
     }
 }

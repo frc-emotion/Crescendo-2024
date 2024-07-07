@@ -63,11 +63,11 @@ public class SwerveSubsystem extends SubsystemBase {
 
     private ShuffleboardLayout frontLeftData, frontRightData, backLeftData, backRightData, sensorData;
 
-    private StructArrayPublisher<SwerveModuleState> publisher = NetworkTableInstance.getDefault()
-            .getStructArrayTopic("PersianSwerveState", SwerveModuleState.struct).publish();
+    private StructArrayPublisher<SwerveModuleState> publisher = NetworkTableInstance.getDefault().getTable("PersianStuff")
+            .getStructArrayTopic("PersianSwerveState3", SwerveModuleState.struct).publish();
 
-    private StructPublisher<Rotation2d> publisher2 = NetworkTableInstance.getDefault()
-            .getStructTopic("PersianRotation", Rotation2d.struct).publish();
+    private StructPublisher<Rotation2d> publisher2 = NetworkTableInstance.getDefault().getTable("PersianStuff")
+            .getStructTopic("PersianRotationn", Rotation2d.struct).publish();
 
     // private SwerveDrivePoseEstimator poseEstimator;
 
@@ -207,7 +207,7 @@ public class SwerveSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-
+        io.updateInputs(inputs);
         // SmartDashboard.putNumber("Gyro Reading", getHeading());
         // SmartDashboard.putNumber("Gyro Pitch", getPitch());
         // SmartDashboard.putNumber("Gyro Roll", getRoll());
@@ -237,6 +237,8 @@ public class SwerveSubsystem extends SubsystemBase {
         // moduleData.add("Quasistatic Reverse", quasistaticCommand(false));
         // moduleData.add("Dynamic Forward", dynamicCommand(true));
         // moduleData.add("Dynamic Reverse", dynamicCommand(false));
+
+        //moduleData.addPersistent("PersianState", () -> getModuleStates());
 
         frontLeftData = moduleData.getLayout("Front Left", BuiltInLayouts.kList);
         frontRightData = moduleData.getLayout("Front Right", BuiltInLayouts.kList);

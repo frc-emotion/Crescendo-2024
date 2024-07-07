@@ -28,6 +28,8 @@ public class ClimbIOSparkMax implements ClimbIO {
         climbMotorRight.setIdleMode(IdleMode.kBrake);
 
         encoderLeft = climbMotorLeft.getEncoder();
+        // encoderLeft.setInverted(true);
+
         encoderRight = climbMotorRight.getEncoder();
 
         climbMotorRight.follow(climbMotorLeft, false);

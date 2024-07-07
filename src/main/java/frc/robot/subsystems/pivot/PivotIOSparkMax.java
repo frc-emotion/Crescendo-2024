@@ -39,6 +39,7 @@ public class PivotIOSparkMax implements PivotIO {
                 Constants.PivotConstants.PIVOT_AUTO_SPEED);
 
         relativeEncoder = pivotMotor.getEncoder();
+        // relativeEncoder.setInverted(true);
     }
 
     @Override

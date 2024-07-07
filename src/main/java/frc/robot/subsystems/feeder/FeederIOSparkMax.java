@@ -31,6 +31,7 @@ public class FeederIOSparkMax implements FeederIO {
         feederMotor.setInverted(true);
 
         encoder = feederMotor.getEncoder();
+        // encoder.setInverted(true);
 
         pidController = feederMotor.getPIDController();
         pidController.setP(ShooterConstants.FEEDER_kP);

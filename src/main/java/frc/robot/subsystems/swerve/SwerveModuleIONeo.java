@@ -5,6 +5,7 @@ import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.signals.AbsoluteSensorRangeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
 import com.revrobotics.CANSparkBase.ControlType;
+import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
@@ -13,6 +14,7 @@ import com.revrobotics.SparkPIDController;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.DriveConstants.ModuleConstants;
@@ -27,6 +29,8 @@ public class SwerveModuleIONeo implements SwerveModuleIO {
     private PIDController turnController;
     private SimpleMotorFeedforward driveFeedForward;
 
+    private SwerveModuleState lastDesiredState = new SwerveModuleState();
+
     public SwerveModuleIONeo(int id) {
         if(id < 0 || id > 3) {
             throw new IndexOutOfBoundsException("Swerve ID " + id + " is out of bounds of length 4.");
@@ -35,6 +39,7 @@ public class SwerveModuleIONeo implements SwerveModuleIO {
         driveMotor.setSmartCurrentLimit(DriveConstants.kSmartCurrentLimit);
         driveMotor.setSecondaryCurrentLimit(DriveConstants.kCurrentLimit);
         driveMotor.setInverted(DriveConstants.DRIVE_REVERSED[id]);
+        driveMotor.setIdleMode(IdleMode.kBrake);
 
         driveController = driveMotor.getPIDController();
         driveController.setP(ModuleConstants.kPDrive);
@@ -43,18 +48,21 @@ public class SwerveModuleIONeo implements SwerveModuleIO {
         driveController.setOutputRange(-1, 1);
 
         driveEncoder = driveMotor.getEncoder();
-        driveEncoder.setInverted(DriveConstants.DRIVE_REVERSED[id]);
+        // driveEncoder.setInverted(DriveConstants.DRIVE_REVERSED[id]);
 
         turningMotor = new CANSparkMax(DriveConstants.TURNING_PORTS[id], MotorType.kBrushless);
         turningMotor.setSmartCurrentLimit(DriveConstants.kSmartCurrentLimit);
         turningMotor.setSecondaryCurrentLimit(DriveConstants.kSmartCurrentLimit);
         turningMotor.setInverted(DriveConstants.TURNING_REVERSED[id]);
+        turningMotor.setIdleMode(IdleMode.kBrake);
 
         turnController = new PIDController(ModuleConstants.kPTurning, ModuleConstants.kITurning, ModuleConstants.kDTurning);
         turnController.enableContinuousInput(-180, 180);
 
         turningEncoder = turningMotor.getEncoder();
-        turningEncoder.setInverted(DriveConstants.TURNING_REVERSED[id]);
+        turningEncoder.setPositionConversionFactor(ModuleConstants.kTurningEncoderRot2Deg);
+
+        // turningEncoder.setInverted(DriveConstants.TURNING_REVERSED[id]);
 
         absoluteEncoder = new CANcoder(DriveConstants.CANCODER_PORTS[id]);
 
@@ -71,11 +79,15 @@ public class SwerveModuleIONeo implements SwerveModuleIO {
 
     @Override
     public void updateInputs(SwerveModuleIOInputs inputs) {
+        inputs.currentModulePosition = new SwerveModulePosition(getDrivePosition(), Rotation2d.fromDegrees(getTurnDegrees_180()));
+        inputs.currentModuleState = new SwerveModuleState(getDriveVelocity(), Rotation2d.fromDegrees(getTurnDegrees_180()));
+        inputs.desiredModuleState = lastDesiredState;
         inputs.drivePosition = getDrivePosition();
         inputs.driveSpeed = getDriveVelocity();
-        inputs.turnPosition = getTurnPosition();
+        inputs.turnPosition = getTurnDegrees_180();
         inputs.turnSpeed = getTurnVelocity();
         inputs.absolutePosition = getAbsolutePosition();
+        inputs.station = true;
     }
 
     @Override
@@ -88,15 +100,17 @@ public class SwerveModuleIONeo implements SwerveModuleIO {
 
     @Override
     public void setDesiredModuleState(SwerveModuleState state) {
-        state = SwerveModuleState.optimize(state, Rotation2d.fromDegrees(getTurnPosition()));
+        var optstate = SwerveModuleState.optimize(state, Rotation2d.fromDegrees(getTurnDegrees_180()));
         // setReferenceAngle(state.angle.getDegrees());
-        setTurnPosition(state.angle.getDegrees());
-        setDriveVelocity(state.speedMetersPerSecond);
+        lastDesiredState = state;
+
+        setTurnPosition(optstate.angle.getDegrees());
+        setDriveVelocity(optstate.speedMetersPerSecond);
     }
 
     @Override
     public void setReferenceAngle(double angle) {
-        double currentAngle = getTurnPosition();
+        double currentAngle = getTurnDegrees_180();
 
         double oppositeAngle = (currentAngle + 180) % 360.0;
 
@@ -115,7 +129,7 @@ public class SwerveModuleIONeo implements SwerveModuleIO {
     }
 
     private void setTurnPosition(double degrees) {
-        turningMotor.set(turnController.calculate(getTurnPosition(), degrees));
+        turningMotor.set(turnController.calculate(getTurnDegrees_180(), degrees));
     }
 
     /** Meters */
@@ -129,12 +143,16 @@ public class SwerveModuleIONeo implements SwerveModuleIO {
     }
 
     /** Degrees */
-    private double getTurnPosition() {
-        double angle = turningEncoder.getPosition() % 360;
-        if(angle <= 180) {
-            return angle;
+    private double getTurnDegrees_360() {
+        return turningEncoder.getPosition() % 360;
+    }
+
+    private double getTurnDegrees_180() {
+        double angle = getAbsolutePosition();
+        if(Math.abs(angle) <= 180) {
+            return angle * Math.signum(angle);
         } else {
-            return 360 - angle;
+            return Math.abs(angle) - 360 * Math.signum(angle);
         }
     }
 

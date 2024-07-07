@@ -20,7 +20,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.RobotContainer;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
-import frc.robot.subsystems.other.VisionSubsystem;
+import frc.robot.subsystems.vision.VisionSubsystem;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
 
 public class AutoManager {
@@ -45,7 +45,7 @@ public class AutoManager {
 
         // Initializes AutoBuilder for swerve drive.
         AutoBuilder.configureHolonomic(
-                this.visionSubsystem::getPose, // If this has issues switch to odometry only based pose
+                this.visionSubsystem::getRobotPose, // If this has issues switch to odometry only based pose
                 this.visionSubsystem::resetPose,
                 this.swerveSubsystem::getChassisSpeeds,
                 this.swerveSubsystem::driveRobotRelative,

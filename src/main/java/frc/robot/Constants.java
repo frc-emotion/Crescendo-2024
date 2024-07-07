@@ -13,6 +13,9 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.util.Color;
 import frc.robot.util.SwerveLimiter.LimiterConstraints;
+
+import com.pathplanner.lib.path.PathConstraints;
+
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -36,7 +39,7 @@ public final class Constants {
     /**
      * The current Mode the robot is in. The options are Debug, Calibration, and Match modes.
      */
-    public static final RobotDataMode ROBOT_DATA_MODE = RobotDataMode.MATCH;
+    public static final RobotDataMode ROBOT_DATA_MODE = RobotDataMode.DEBUG;
 
     /** The current Logging Mode the robot is in. */
     public static final RobotLoggingMode ROBOT_LOGGING_MODE = RobotLoggingMode.REAL;
@@ -119,15 +122,15 @@ public final class Constants {
                 new Translation2d(-kWheelBase / 2, -kTrackWidth / 2));
 
         public static final int[] DRIVE_PORTS = {
-            0, 1, 2, 3
+            13, 9, 6, 7
         };
 
         public static final int[] TURNING_PORTS = {
-            4, 5, 6, 7
+            16, 8, 10, 5
         };
 
         public static final int[] CANCODER_PORTS = {
-            8, 9, 10, 11
+            4, 3, 1, 2
         };
 
         public static final boolean[] DRIVE_REVERSED = {
@@ -157,14 +160,14 @@ public final class Constants {
                 4);
             public static final double kDriveMotorGearRatio = 1.0 / 6.75;
             public static final double kTurningMotorGearRatio = 7.0 / 150.0;
-            public static final double kDriveEncoderRot2Meter = kDriveMotorGearRatio * Math.PI * kWheelDiameterMeters;
+            public static final double kDriveEncoderRot2Meter = kDriveMotorGearRatio * 2 * Math.PI * kWheelDiameterMeters;
             public static final double kTurningEncoderRot2Deg = kTurningMotorGearRatio * 360.0;
             public static final double kDriveEncoderRPM2MeterPerSec = kDriveEncoderRot2Meter / 60;
             public static final double kTurningEncoderRPM2DegPerSec = kTurningEncoderRot2Deg / 60;
             
-            public static final double kPDrive = 0.0;
+            public static final double kPDrive = 1.0;
             public static final double kIDrive = 0.0;
-            public static final double kDDrive = 0.0;
+            public static final double kDDrive = 0.1;
 
             public static final double kPTurning = 0.3;
             public static final double kITurning = 0.0;
@@ -172,7 +175,7 @@ public final class Constants {
             public static final double MAX_TURN_ERROR_DEGREES = 0.5;
             public static final double kSDrive = 0;
             public static final double kVDrive = 0;
-            public static final double CANCODER_UPDATE_FREQUENCY = 0;
+            public static final double CANCODER_UPDATE_FREQUENCY = 5;
         }
 
         /** CAN IDs for all drive motors */
@@ -347,6 +350,14 @@ public final class Constants {
         public static final boolean DYNAMIC_PLANNING_ENABLED = false;
         public static final double PLANNING_TOTAL_ERROR_THRESHOLD = 0;
         public static final double PLANNING_SPIKE_ERROR_THRESHOLD = 0;
+
+
+
+        public static final PathConstraints NAVIGATE_CONSTRAINTS = null;
+
+
+
+        public static final double AUTO_NOTE_PICKUP_END_VELOCITY = 0;
 
     }
 
@@ -561,6 +572,9 @@ public final class Constants {
 
         };
         public static final int OD_PIPELINE_INDEX = 1;
+        public static final Transform3d OD_CAM_TRANFORM = null;
+        public static final String APRILTAG_CAMERA_NT_LABELS = null;
+        public static final String OD_CAMERA_NT_LABEL = null;
     }
 
     public static final class LEDConstants {
