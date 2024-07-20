@@ -1,6 +1,7 @@
 package frc.robot.subsystems.swerve;
 
 import com.ctre.phoenix6.configs.MagnetSensorConfigs;
+import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.signals.AbsoluteSensorRangeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
@@ -39,7 +40,7 @@ public class SwerveModuleIONeo implements SwerveModuleIO {
         driveMotor.setSmartCurrentLimit(DriveConstants.kSmartCurrentLimit);
         driveMotor.setSecondaryCurrentLimit(DriveConstants.kCurrentLimit);
         driveMotor.setInverted(DriveConstants.DRIVE_REVERSED[id]);
-        driveMotor.setIdleMode(IdleMode.kBrake);
+        driveMotor.setIdleMode(IdleMode.kCoast);
 
         driveController = driveMotor.getPIDController();
         driveController.setP(ModuleConstants.kPDrive);
@@ -54,7 +55,7 @@ public class SwerveModuleIONeo implements SwerveModuleIO {
         turningMotor.setSmartCurrentLimit(DriveConstants.kSmartCurrentLimit);
         turningMotor.setSecondaryCurrentLimit(DriveConstants.kSmartCurrentLimit);
         turningMotor.setInverted(DriveConstants.TURNING_REVERSED[id]);
-        turningMotor.setIdleMode(IdleMode.kBrake);
+        turningMotor.setIdleMode(IdleMode.kCoast);
 
         turnController = new PIDController(ModuleConstants.kPTurning, ModuleConstants.kITurning, ModuleConstants.kDTurning);
         turnController.enableContinuousInput(-180, 180);
@@ -71,20 +72,23 @@ public class SwerveModuleIONeo implements SwerveModuleIO {
             .withAbsoluteSensorRange(AbsoluteSensorRangeValue.Signed_PlusMinusHalf)
             .withSensorDirection(SensorDirectionValue.CounterClockwise_Positive);
 
+
         absoluteEncoder.getConfigurator().apply(magnetConfigs);
         absoluteEncoder.getPosition().setUpdateFrequency(ModuleConstants.CANCODER_UPDATE_FREQUENCY);
+
+        //absoluteEncoder.setPosition(absoluteEncoder.getAbsolutePosition().getValue());
 
         driveFeedForward = new SimpleMotorFeedforward(ModuleConstants.kSDrive, ModuleConstants.kVDrive);
     }
 
     @Override
     public void updateInputs(SwerveModuleIOInputs inputs) {
-        inputs.currentModulePosition = new SwerveModulePosition(getDrivePosition(), Rotation2d.fromDegrees(getTurnDegrees_180()));
-        inputs.currentModuleState = new SwerveModuleState(getDriveVelocity(), Rotation2d.fromDegrees(getTurnDegrees_180()));
+        inputs.currentModulePosition = new SwerveModulePosition(getDrivePosition(), Rotation2d.fromDegrees(getAbsolutePosition()));
+        inputs.currentModuleState = new SwerveModuleState(getDriveVelocity(), Rotation2d.fromDegrees(getAbsolutePosition()));
         inputs.desiredModuleState = lastDesiredState;
         inputs.drivePosition = getDrivePosition();
         inputs.driveSpeed = getDriveVelocity();
-        inputs.turnPosition = getTurnDegrees_180();
+        inputs.turnPosition = getAbsolutePosition();
         inputs.turnSpeed = getTurnVelocity();
         inputs.absolutePosition = getAbsolutePosition();
         inputs.station = true;
@@ -163,7 +167,7 @@ public class SwerveModuleIONeo implements SwerveModuleIO {
 
     /** Degrees */
     private double getAbsolutePosition() {
-        return absoluteEncoder.getPosition().getValueAsDouble() * 360.0;
+        return absoluteEncoder.getAbsolutePosition().getValueAsDouble() * 360.0; // 360
     }
 
     /** Degrees per second */

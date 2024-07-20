@@ -251,6 +251,8 @@ public class SwerveSubsystem extends SubsystemBase {
             ((SwerveIOReal) io).fillList(3, backRightData);
         }
 
+        
+
         sensorData = moduleData.getLayout("Gyro Data", BuiltInLayouts.kList);
         sensorData.addNumber("Gyro Heading", () -> getHeading());
         sensorData.addNumber("Gyro Pitch", () -> getPitch());

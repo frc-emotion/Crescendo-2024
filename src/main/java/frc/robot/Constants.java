@@ -4,16 +4,6 @@
 
 package frc.robot;
 
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.math.numbers.N1;
-import edu.wpi.first.math.numbers.N3;
-import edu.wpi.first.math.system.plant.DCMotor;
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.util.Color;
-import frc.robot.util.SwerveLimiter.LimiterConstraints;
-
 import com.pathplanner.lib.path.PathConstraints;
 
 import edu.wpi.first.math.Matrix;
@@ -21,6 +11,14 @@ import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.numbers.N1;
+import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.util.Color;
+import frc.robot.util.SwerveLimiter.LimiterConstraints;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
@@ -165,13 +163,13 @@ public final class Constants {
             public static final double kDriveEncoderRPM2MeterPerSec = kDriveEncoderRot2Meter / 60;
             public static final double kTurningEncoderRPM2DegPerSec = kTurningEncoderRot2Deg / 60;
             
-            public static final double kPDrive = 1.0;
+            public static final double kPDrive = 0.2;
             public static final double kIDrive = 0.0;
-            public static final double kDDrive = 0.1;
+            public static final double kDDrive = 0.0;
 
-            public static final double kPTurning = 0.3;
+            public static final double kPTurning = 1.0;
             public static final double kITurning = 0.0;
-            public static final double kDTurning = 0.0;
+            public static final double kDTurning = 0.1;
             public static final double MAX_TURN_ERROR_DEGREES = 0.5;
             public static final double kSDrive = 0;
             public static final double kVDrive = 0;

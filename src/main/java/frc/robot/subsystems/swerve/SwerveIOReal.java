@@ -46,8 +46,8 @@ public class SwerveIOReal implements SwerveIO {
     public SwerveIOReal() {
         this(
             new SwerveModuleNeo(0),
-            new SwerveModuleNeo(1),
             new SwerveModuleNeo(2),
+            new SwerveModuleNeo(1),
             new SwerveModuleNeo(3)
         );
     }
