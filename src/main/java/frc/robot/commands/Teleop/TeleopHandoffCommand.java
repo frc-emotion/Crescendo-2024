@@ -26,7 +26,7 @@ public class TeleopHandoffCommand extends Command {
         shooterSubsystem.setFeederSpeed(IntakeConstants.SHOOTER_TRANSFER_SPEED);
         intakeSubsystem.setIntake(IntakeConstants.SHOOTER_TRANSFER_SPEED);
         
-        if (shooterRevSupplier.get()) {;
+        if (shooterRevSupplier.get()) {
             shooterSubsystem.setShooterVelocity(ShooterConstants.SHOOTER_SPEED_RPM);
         }
     }

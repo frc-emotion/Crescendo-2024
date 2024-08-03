@@ -2,20 +2,7 @@ package frc.robot.subsystems;
 
 import com.kauailabs.navx.frc.AHRS;
 
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
-
-// import static edu.wpi.first.units.Units.Seconds;
-// import static edu.wpi.first.units.Units.Volts;
-// import edu.wpi.first.units.Measure;
-// import edu.wpi.first.units.Time;
-// import edu.wpi.first.units.Voltage;
-// import java.util.function.Consumer;
-// import edu.wpi.first.networktables.StringPublisher;
-// import edu.wpi.first.wpilibj2.command.Command;
-// import edu.wpi.first.wpilibj2.command.InstantCommand;
-// import org.opencv.core.Mat;
-
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -26,19 +13,15 @@ import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructArrayPublisher;
 import edu.wpi.first.networktables.StructPublisher;
-
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-//import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
-import frc.robot.Constants.ShooterConstants;
 import frc.robot.util.TabManager;
 import frc.robot.util.TabManager.SubsystemTab;
 
@@ -201,9 +184,9 @@ public class SwerveSubsystem extends SubsystemBase {
 
     public void updatePID() {
         if(Constants.DEBUG_MODE_ACTIVE) {
-            this.teleopThetaController.setI(this.kIEntry.getDouble(ShooterConstants.kI));
-            this.teleopThetaController.setD(this.kDEntry.getDouble(ShooterConstants.kD));
-            this.teleopThetaController.setP(this.kPEntry.getDouble(ShooterConstants.kP));
+            this.teleopThetaController.setI(this.kIEntry.getDouble(DriveConstants.kIThetaController));
+            this.teleopThetaController.setD(this.kDEntry.getDouble(DriveConstants.kDThetaController));
+            this.teleopThetaController.setP(this.kPEntry.getDouble(DriveConstants.kPThetaController));
         } else {
             teleopThetaController.setPID(
                 DriveConstants.kPThetaController,

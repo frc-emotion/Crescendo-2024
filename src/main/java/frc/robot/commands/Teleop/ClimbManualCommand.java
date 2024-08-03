@@ -1,9 +1,10 @@
 package frc.robot.commands.Teleop;
 
+import java.util.function.Supplier;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.ClimbConstants;
 import frc.robot.subsystems.ClimbSubsystem;
-import java.util.function.Supplier;
 
 /**
  * Manually controls the Climb Subsystem. Applies maximum and minimum values.
@@ -46,7 +47,7 @@ public class ClimbManualCommand extends Command {
          * );
          * }
          */
-        if (input.get() < -ClimbConstants.DEADZONE && climbSubsystem.getPosition() > 0) {
+        if (input.get() < -ClimbConstants.DEADZONE) {
             climbSubsystem.setRawSpeed(-ClimbConstants.kSpeed);
         } else if (input.get() > ClimbConstants.DEADZONE
                 && climbSubsystem.getPosition() < ClimbConstants.EXTENSION_LIMIT) {

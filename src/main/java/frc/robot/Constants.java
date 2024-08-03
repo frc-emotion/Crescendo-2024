@@ -4,6 +4,9 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.numbers.N1;
@@ -11,9 +14,6 @@ import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.util.Color;
-import edu.wpi.first.math.Matrix;
-import edu.wpi.first.math.VecBuilder;
-import edu.wpi.first.math.geometry.Pose2d;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
@@ -33,7 +33,7 @@ public final class Constants {
      * Controls whether or not Debug Mode is activated. If it is, each Subsystem Shuffleboard tab
      * is supplied with most important subsystem info.
      */
-    public static final boolean DEBUG_MODE_ACTIVE = false;
+    public static final boolean DEBUG_MODE_ACTIVE = true;
 
     /**
      * Contains controller configurations for the driver and operator
@@ -299,7 +299,7 @@ public final class Constants {
         public static final double GEAR_REDUCTION = 0.5;
 
         // PID Controller Constants
-        public static final double kP = 0.001;
+        public static final double kP = 0.0015;
         public static final double kI = 0;
         public static final double kD = 0;
         public static final double kFeedForward = 0.00025;
@@ -312,7 +312,7 @@ public final class Constants {
         public static final double SHOOTER_SPEED_RPM = 3500.0;
         public static final double[] PRESET_SPEEDS = { 3500, 0 }; // rpm
         public static final double IDLE_SPEED = 1000; // rpm
-        public static final double AmpRPM = 1050;
+        public static final double AmpRPM = 1200;
 
         // For SOURCE intake
         protected static final double SHOOTER_REVERSE_SPEED = -0.25; // raw motor output

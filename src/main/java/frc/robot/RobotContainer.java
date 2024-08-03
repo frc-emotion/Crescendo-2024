@@ -413,14 +413,14 @@ public class RobotContainer {
                 // }
                 // });
 
-                // m_operatorController.y().whileTrue(
-                // // new SpeakerTurret(m_VisionSubsystem, m_PivotSubsystem)
-                // // new ParallelCommandGroup(
-                // // new SnapCommand(m_SwerveSubsystem, m_VisionSubsystem),
-                // // new SpeakerTurret(m_VisionSubsystem, m_PivotSubsystem)
-                // // )
-                // new PivotAutoCommand(m_PivotSubsystem, 3)
-                // );
+                m_operatorController.y().whileTrue(
+                // new SpeakerTurret(m_VisionSubsystem, m_PivotSubsystem)
+                // new ParallelCommandGroup(
+                new SnapCommand(m_SwerveSubsystem, m_VisionSubsystem)
+                // new SpeakerTurret(m_VisionSubsystem, m_PivotSubsystem)
+                // )
+                //new PivotAutoCommand(m_PivotSubsystem, 3)
+                );
 
         }
 
