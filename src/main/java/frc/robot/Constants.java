@@ -483,6 +483,12 @@ public final class Constants {
         public static final Translation2d BLUE_SPEAKER_CENTER = new Translation2d(0.457 / 2, 5.557034);
         public static final Translation2d RED_SPEAKER_CENTER = new Translation2d(FIELD_LENGTH - (0.457 / 2), 5.557034);
         
+        public static final Transform3d[] ROBOT_TO_CAMS = new Transform3d[] {
+            ROBOT_TO_PI_CAM
+        };
+
+        public static final String OD_CAM_ID = "odcam";
+        
         
     }
 
