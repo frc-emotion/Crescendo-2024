@@ -309,8 +309,8 @@ public final class Constants {
 
         // Speeds
         public static final double kFeedSpeed = 0.35;
-        public static final double SHOOTER_SPEED_RPM = 3500.0;
-        public static final double[] PRESET_SPEEDS = { 3500, 0 }; // rpm
+        public static final double SHOOTER_SPEED_RPM = 3500.0 + 500.0;
+        public static final double[] PRESET_SPEEDS = { 3500 + 500}; // rpm
         public static final double IDLE_SPEED = 1000; // rpm
         public static final double AmpRPM = 1200;
 
