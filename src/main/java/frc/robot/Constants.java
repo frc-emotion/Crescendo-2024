@@ -275,6 +275,7 @@ public final class Constants {
         public static final double MAX_ACCELERATION = 0.0;
         public static final double MAX_VELOCITY = 0.0;
 
+        
         // Motor Constants
         public static final int CURRENT_LIMIT = 45;
         public static final int SMART_MAX_CURRENT = 40;
