@@ -316,7 +316,7 @@ public final class Constants {
         public static final double IDLE_SPEED = 1000; // rpm
         public static final double AmpRPM = 1200;
 
-        public static final double SHOOTER_FEEDER = 2500.0;
+        public static final double SHOOTER_FEEDER = 2500.0 + 500.0;
 
         // For SOURCE intake
         protected static final double SHOOTER_REVERSE_SPEED = -0.25; // raw motor output
@@ -358,7 +358,7 @@ public final class Constants {
         public static final double PIVOT_MIN_REVOLUTION = 5;
         public static final double PIVOT_MAX_REVOLUTION = 83;
         public static final double PIVOT_THRESHOLD = 6;
-        public static final double[] PIVOT_POSITIONS = { 65.0, 0};
+        public static final double[] PIVOT_POSITIONS = { 65.0, 0 + 5};
 
         // Input Constants
         public static final double TRIGGER_THRESHOLD = 0.3;
