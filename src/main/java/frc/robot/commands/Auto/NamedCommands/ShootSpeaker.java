@@ -13,6 +13,12 @@ public class ShootSpeaker extends Command {
     public ShootSpeaker(ShooterSubsystem shooterSubsystem) {
         this.shooterSubsystem = shooterSubsystem;
         addRequirements(shooterSubsystem);
+        shootSpeed = ShooterConstants.SHOOTER_SPEED_RPM;
+    }
+
+    public ShootSpeaker(ShooterSubsystem shooterSubsystem, double shootSpeed) {
+        this(shooterSubsystem);
+        this.shootSpeed = shootSpeed;
     }
 
     @Override
@@ -22,8 +28,8 @@ public class ShootSpeaker extends Command {
 
     @Override
     public void execute() {
-        shooterSubsystem.setShooterVelocity(ShooterConstants.SHOOTER_SPEED_RPM);
-        if (shooterSubsystem.getShooterVelocity() > ShooterConstants.SHOOTER_SPEED_RPM - 400) {
+        shooterSubsystem.setShooterVelocity(shootSpeed);
+        if (shooterSubsystem.getShooterVelocity() > shootSpeed - 400) {
             shooterSubsystem.setFeederSpeed(IntakeConstants.SHOOTER_TRANSFER_SPEED);
         }
     }

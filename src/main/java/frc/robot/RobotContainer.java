@@ -5,6 +5,7 @@ package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
+
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
@@ -34,7 +35,9 @@ import frc.robot.commands.Auto.SubsystemCommands.HandoffAutoCommand;
 import frc.robot.commands.Auto.SubsystemCommands.IntakeDriveAutoCommand;
 import frc.robot.commands.Auto.SubsystemCommands.LEDAutoCommand;
 import frc.robot.commands.Auto.SubsystemCommands.PivotAutoCommand;
+import frc.robot.commands.Auto.SubsystemCommands.PivotFeed;
 import frc.robot.commands.Auto.SubsystemCommands.RevShooterAutoCommand;
+import frc.robot.commands.Auto.SubsystemCommands.RevShooterCustomCommand;
 import frc.robot.commands.Teleop.*;
 import frc.robot.commands.Teleop.swerve.*;
 import frc.robot.commands.debug.ResetGyroCommand;
@@ -48,6 +51,8 @@ import frc.robot.util.TabManager.SubsystemTab;
 
 import java.sql.Driver;
 import java.util.Map;
+
+import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -413,10 +418,19 @@ public class RobotContainer {
                 // }
                 // });
 
-                m_operatorController.y().whileTrue(
+                m_operatorController.y().onTrue(
+                        new SequentialCommandGroup(
+                                new ParallelDeadlineGroup(
+                                        new PivotAutoCommand(m_PivotSubsystem, 1),
+                                        new RevShooterCustomCommand(m_ShooterSubsystem, ShooterConstants.SHOOTER_FEEDER)
+                                ),
+                                new ShootSpeaker(m_ShooterSubsystem, ShooterConstants.SHOOTER_FEEDER),
+                                new PivotAutoCommand(m_PivotSubsystem, 0)
+                        )
+                        
                 // new SpeakerTurret(m_VisionSubsystem, m_PivotSubsystem)
                 // new ParallelCommandGroup(
-                new SnapCommand(m_SwerveSubsystem, m_VisionSubsystem)
+                //new SnapCommand(m_SwerveSubsystem, m_VisionSubsystem)
                 // new SpeakerTurret(m_VisionSubsystem, m_PivotSubsystem)
                 // )
                 //new PivotAutoCommand(m_PivotSubsystem, 3)
