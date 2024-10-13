@@ -358,7 +358,7 @@ public final class Constants {
         public static final double PIVOT_MIN_REVOLUTION = 5;
         public static final double PIVOT_MAX_REVOLUTION = 83;
         public static final double PIVOT_THRESHOLD = 6;
-        public static final double[] PIVOT_POSITIONS = { 65.0, 0 + 5 + 15 - 5 + 15 - 8};
+        public static final double[] PIVOT_POSITIONS = { 65.0, 0 + 5 + 15 - 5 + 15 - 8 - 2};
 
         // Input Constants
         public static final double TRIGGER_THRESHOLD = 0.3;
