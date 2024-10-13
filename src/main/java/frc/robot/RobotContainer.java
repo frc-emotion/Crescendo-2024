@@ -424,7 +424,7 @@ public class RobotContainer {
                                         new PivotAutoCommand(m_PivotSubsystem, 1),
                                         new RevShooterCustomCommand(m_ShooterSubsystem, ShooterConstants.SHOOTER_FEEDER)
                                 ),
-                                new ShootSpeaker(m_ShooterSubsystem, ShooterConstants.SHOOTER_FEEDER),
+                                new ShootSpeaker(m_ShooterSubsystem, ShooterConstants.SHOOTER_FEEDER, () -> operatorController_HID.getLeftTriggerAxis() > OIConstants.kDeadband),
                                 new PivotAutoCommand(m_PivotSubsystem, 0)
                         )
                         
