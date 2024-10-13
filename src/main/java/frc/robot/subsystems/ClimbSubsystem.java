@@ -52,7 +52,7 @@ public class ClimbSubsystem extends SubsystemBase {
         // controller = climbMotorLeft.getPIDController();
 
         // Set Climb Motor 2 to follow Climb Motor 1
-        climbMotorRight.follow(climbMotorLeft, false);
+        climbMotorRight.follow(climbMotorLeft, true);
 
         // PID Stuff
         // controller.setOutputRange(
