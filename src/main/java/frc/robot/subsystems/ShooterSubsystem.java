@@ -22,14 +22,12 @@ import frc.robot.util.TabManager.SubsystemTab;
  */
 public class ShooterSubsystem extends SubsystemBase {
 
-    private final CANSparkMax shooterMotor, feederMotor;
+    private final CANSparkMax shooterMotor;
     private final SparkPIDController controller;
 
-    private final RelativeEncoder shooterEncoder, feederEncoder;
+    private final RelativeEncoder shooterEncoder;
 
     private GenericEntry ampRPMEntry;
-
-    private DigitalInput breakSensor;
 
     private double targetRPM;
 
@@ -48,20 +46,10 @@ public class ShooterSubsystem extends SubsystemBase {
 
         shooterMotor.enableVoltageCompensation(7);
 
-        feederMotor =
-            new CANSparkMax(ShooterConstants.feederPort, MotorType.kBrushless);
-
-        feederMotor.setSmartCurrentLimit(ShooterConstants.CURRENT_LIMIT_SMART);
-        feederMotor.setSecondaryCurrentLimit(ShooterConstants.CURRENT_LIMIT);
-        feederMotor.setIdleMode(IdleMode.kBrake);
-        feederMotor.setInverted(true);
-
         shooterEncoder = shooterMotor.getEncoder();
         shooterEncoder.setMeasurementPeriod(16);
         shooterEncoder.setAverageDepth(2);
         // shooterEncoder.setVelocityConversionFactor(2);
-
-        feederEncoder = feederMotor.getEncoder();
 
         // Set up PID Controller constants
         controller = shooterMotor.getPIDController();
@@ -93,7 +81,7 @@ public class ShooterSubsystem extends SubsystemBase {
          * );
          */
 
-        breakSensor = new DigitalInput(ShooterConstants.BREAK_SENSOR_PORT);
+        
 
         targetRPM = 0;
 
@@ -200,17 +188,7 @@ public class ShooterSubsystem extends SubsystemBase {
         shooterMotor.stopMotor();
     }
 
-    /**
-     * Sets the speed of the feeder.
-     *
-     * @param speed The speed to set the feeder to
-     */
-    public void setFeederSpeed(double speed) {
-        // Clamps the value on [-1, 1]
-        // speed = Math.max(-1, Math.min(1, speed));
-
-        feederMotor.set(speed);
-    }
+    
 
     /**
      * Sets the speed of the shooter.
@@ -223,20 +201,7 @@ public class ShooterSubsystem extends SubsystemBase {
         shooterMotor.set(speed);
     }
 
-    /**
-     * Stops the feeder
-     */
-    public void stopFeeder() {
-        feederMotor.set(0);
-    }
-
-    /**
-     * Check if note has been fed into the shooter (uses beam-break sensor)
-     * @return true if beam has been broken
-     */
-    public boolean isProjectileFed() {
-        return !breakSensor.get();
-    }
+    
 
     /**
      * Get the current temperature of the Shooter
@@ -268,23 +233,12 @@ public class ShooterSubsystem extends SubsystemBase {
             "Persian Positions",
             BuiltInLayouts.kList
         );
-
-        persianPositions.addBoolean("Line Breaker", this::isProjectileFed);
+        
         persianPositions.addBoolean("At Target Speed", this::isAtTarget);
 
         persianPositions.addDouble(
             "Shooter Velocity",
             this::getShooterVelocity
-        );
-
-        persianPositions.addDouble(
-            "Feeder Position",
-            () -> feederEncoder.getPosition()
-        );
-
-        persianPositions.addDouble(
-            "Feeder Velocity",
-            () -> feederEncoder.getVelocity()
         );
 
         persianPositions.withSize(2, 4);
