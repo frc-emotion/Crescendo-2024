@@ -4,6 +4,7 @@ import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
+
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -51,7 +52,7 @@ public class ClimbSubsystem extends SubsystemBase {
         // controller = climbMotorLeft.getPIDController();
 
         // Set Climb Motor 2 to follow Climb Motor 1
-        climbMotorRight.follow(climbMotorLeft, false);
+        climbMotorRight.follow(climbMotorLeft, true);
 
         // PID Stuff
         // controller.setOutputRange(

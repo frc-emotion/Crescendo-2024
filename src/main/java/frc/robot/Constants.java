@@ -251,6 +251,7 @@ public final class Constants {
         public static final double SPEAKER_TAG_HEIGHT = 1.324;
         public static final double SPEAKER_MOUTH_HEIGHT = 2.083;
         public static final double PIVOT_HEIGHT = 0.371; // meters
+        public static final double STAGE_TO_SPEAKER_THETA = 32.26; // degrees
 
         public static final boolean INITIAL_PLANNING_ENABLED = false;
         public static final boolean DYNAMIC_PLANNING_ENABLED = false;
@@ -274,6 +275,7 @@ public final class Constants {
         public static final double kD = 0.0;
         public static final double MAX_ACCELERATION = 0.0;
         public static final double MAX_VELOCITY = 0.0;
+
 
         // Motor Constants
         public static final int CURRENT_LIMIT = 45;
@@ -314,6 +316,8 @@ public final class Constants {
         public static final double IDLE_SPEED = 1000; // rpm
         public static final double AmpRPM = 1200;
 
+        //public static final double SHOOTER_FEEDER = 2500.0 + 500.0 + 500.0 + 750;
+        public static final double SHOOTER_FEEDER = 3000.0;
         // For SOURCE intake
         protected static final double SHOOTER_REVERSE_SPEED = -0.25; // raw motor output
         protected static final double FEEDER_REVERSE_SPEED = -0.175; // raw motor output
@@ -354,8 +358,8 @@ public final class Constants {
         public static final double PIVOT_MIN_REVOLUTION = 5;
         public static final double PIVOT_MAX_REVOLUTION = 83;
         public static final double PIVOT_THRESHOLD = 6;
-        public static final double[] PIVOT_POSITIONS = { 65.0, 0, 50.0, 44.0};
-
+        //public static final double[] PIVOT_POSITIONS = { 65.0, 0 + 5 + 15 - 5 + 15 - 8 - 2};
+        public static final double[] PIVOT_POSITIONS = { 65.0, 50};
         // Input Constants
         public static final double TRIGGER_THRESHOLD = 0.3;
 
@@ -379,7 +383,7 @@ public final class Constants {
         public static final int MAX_CURRENT = 45;
         public static final int SMART_MAX_CURRENT = 40;
         public static final double CURRENT_SPIKE_THRESHOLD = 5.2;
-        public static final double INTAKE_MOTOR_SPEED = 0.3;
+        public static final double INTAKE_MOTOR_SPEED = 0.40;
         public static final double INTAKE_PIVOT_SPEED = 0.15;
         public static final double GEAR_REDUCTION = 43.5;
 

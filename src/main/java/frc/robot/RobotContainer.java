@@ -5,6 +5,7 @@ package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
+
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
@@ -34,7 +35,9 @@ import frc.robot.commands.Auto.SubsystemCommands.HandoffAutoCommand;
 import frc.robot.commands.Auto.SubsystemCommands.IntakeDriveAutoCommand;
 import frc.robot.commands.Auto.SubsystemCommands.LEDAutoCommand;
 import frc.robot.commands.Auto.SubsystemCommands.PivotAutoCommand;
+import frc.robot.commands.Auto.SubsystemCommands.PivotFeed;
 import frc.robot.commands.Auto.SubsystemCommands.RevShooterAutoCommand;
+import frc.robot.commands.Auto.SubsystemCommands.RevShooterCustomCommand;
 import frc.robot.commands.Teleop.*;
 import frc.robot.commands.Teleop.swerve.*;
 import frc.robot.commands.debug.ResetGyroCommand;
@@ -48,6 +51,8 @@ import frc.robot.util.TabManager.SubsystemTab;
 
 import java.sql.Driver;
 import java.util.Map;
+
+import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -172,31 +177,31 @@ public class RobotContainer {
         private void configureAutoChooser() {
                 // autoChooser.addOption("Simple Shoot", new ShootSpeaker(m_ShooterSubsystem));
                 addOption("4 Note Auto");
-                // addOption("4 Note Angle Auto");
-                // addOption("4 Note Angle Auto No Turn");
-                // addOption("3 Note Top Travel");
-                // addOption("3 Note Mid Top");
-                // addOption("3 Note Mid Bottom");
-                // addOption("3 Note Bottom Travel");
-                // addOption("2 Note Top");
-                // addOption("2 Note Mid");
-                // addOption("2 Note Bottom");
-                // addOption("2 Note Bottom Far");
+                addOption("4 Note Angle Auto");
+                addOption("4 Note Angle Auto No Turn");
+                addOption("3 Note Top Travel");
+                addOption("3 Note Mid Top");
+                addOption("3 Note Mid Bottom");
+                addOption("3 Note Bottom Travel");
+                addOption("2 Note Top");
+                addOption("2 Note Mid");
+                addOption("2 Note Bottom");
+                addOption("2 Note Bottom Far");
 
-                // addOption("Forward Test Auto");
-                // addOption("Jank Test Auto");
-                // addOption("Turn Test Auto");
-                // addOption("Strafe Test Auto");
-                // addOption("3 Note Top");
+                addOption("Forward Test Auto");
+                addOption("Jank Test Auto");
+                addOption("Turn Test Auto");
+                addOption("Strafe Test Auto");
+                addOption("3 Note Top");
 
-                // addOption("Note Push Top");
-                // addOption("Note Push Bottom");
+                addOption("Note Push Top");
+                addOption("Note Push Bottom");
                 addOption("1 Note Stationary");
-                // addOption("1 Note Top");
-                // addOption("1 Note Mid");
+                addOption("1 Note Top");
+                addOption("1 Note Mid");
                 addOption("1 Note Bottom");
-                // addOption("Note Push");
-                // addOption("Str8 Note Push Bottom");
+                addOption("Note Push");
+                addOption("Str8 Note Push Bottom");
         }
 
         /**
@@ -413,10 +418,19 @@ public class RobotContainer {
                 // }
                 // });
 
-                m_operatorController.y().whileTrue(
+                m_operatorController.y().onTrue(
+                        new SequentialCommandGroup(
+                                new ParallelDeadlineGroup(
+                                        new PivotAutoCommand(m_PivotSubsystem, 1),
+                                        new RevShooterCustomCommand(m_ShooterSubsystem, ShooterConstants.SHOOTER_FEEDER)
+                                ),
+                                new ShootSpeaker(m_ShooterSubsystem, ShooterConstants.SHOOTER_FEEDER, () -> operatorController_HID.getLeftTriggerAxis() > OIConstants.kDeadband),
+                                new PivotAutoCommand(m_PivotSubsystem, 0)
+                        )
+                        
                 // new SpeakerTurret(m_VisionSubsystem, m_PivotSubsystem)
                 // new ParallelCommandGroup(
-                new SnapCommand(m_SwerveSubsystem, m_VisionSubsystem)
+                //new SnapCommand(m_SwerveSubsystem, m_VisionSubsystem)
                 // new SpeakerTurret(m_VisionSubsystem, m_PivotSubsystem)
                 // )
                 //new PivotAutoCommand(m_PivotSubsystem, 3)
