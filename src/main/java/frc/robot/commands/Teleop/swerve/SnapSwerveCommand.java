@@ -39,7 +39,7 @@ public class SnapSwerveCommand extends AbstractSwerveXboxCommand {
                 ySpeed,
                 swerveSubsystem.calculateThetaPID(
                     swerveSubsystem.getHeading(), 
-                    (int) (DriverStation.getAlliance().get() == DriverStation.Alliance.Red ? GameConstants.RED_NOTE_FEED_ANGLE : GameConstants.BLUE_NOTE_FEED_ANGLE), 
+                    direction, 
                     false
                 ),
                 swerveSubsystem.getRotation2d());
@@ -50,6 +50,6 @@ public class SnapSwerveCommand extends AbstractSwerveXboxCommand {
 
     @Override
     public boolean isFinished() {
-        return swerveSubsystem.thetaPIDAtSetpoint(false);
+        return false;
     }
 }

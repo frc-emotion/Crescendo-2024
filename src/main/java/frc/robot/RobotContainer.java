@@ -435,6 +435,15 @@ public class RobotContainer {
                 // )
                 //new PivotAutoCommand(m_PivotSubsystem, 3)
                 );
+                m_driverController.y().whileTrue(
+                        new SnapSwerveCommand(m_SwerveSubsystem,
+                                                () -> driverController_HID.getLeftY(),
+                                                () -> driverController_HID.getLeftX(),
+                                                () -> driverController_HID.getRightX(),
+                                                45
+                )
+                );
+                
 
         }
 

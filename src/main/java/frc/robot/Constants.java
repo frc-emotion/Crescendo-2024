@@ -208,7 +208,7 @@ public final class Constants {
         public static final double MAX_LEVEL_ACCELERATION = 0.3; // Fix with testing
         public static final double THRESHOLD = Units.degreesToRadians(3);
 
-        public static final double kPThetaController = 0.2;
+        public static final double kPThetaController = 0.07;
         public static final double kIThetaController = 0.00;
         public static final double kDThetaController = 0.00;
     }
@@ -230,8 +230,8 @@ public final class Constants {
         public static final double kPXController = 3.56 / 2.0;
         public static final double kPYController = 0.75;
 
-        public static final double kPThetaController = 0.52;
-        public static final double kIThetaController = 0.045;
+        public static final double kPThetaController = 0.07;
+        public static final double kIThetaController = 0;
         public static final double kDThetaController = 0;
 
         public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints( //
