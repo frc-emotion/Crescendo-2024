@@ -1,7 +1,6 @@
 package frc.robot.commands.Auto.SubsystemCommands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants.PivotConstants;
 import frc.robot.subsystems.PivotSubsystem;
 
 public class ResetPivotAutoCommand extends Command {

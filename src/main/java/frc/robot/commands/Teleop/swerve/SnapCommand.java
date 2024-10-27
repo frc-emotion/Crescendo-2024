@@ -1,6 +1,5 @@
 package frc.robot.commands.Teleop.swerve;
 
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -50,7 +49,7 @@ public class SnapCommand extends Command {
         super.execute();
         visionSubsystem.updateOdometry();
 
-        Translation2d currentPose2d = visionSubsystem.getCurrentPose().getTranslation();
+        // Translation2d currentPose2d = visionSubsystem.getCurrentPose().getTranslation();
         //System.out.println(currentPose2d);
 
         double velocity = swerveSubsystem.calculateThetaPID(swerveSubsystem.getHeading(), this.theta, false);

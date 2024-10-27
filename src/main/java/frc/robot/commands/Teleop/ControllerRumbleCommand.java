@@ -14,8 +14,6 @@ public class ControllerRumbleCommand extends Command {
     private double lastRumbleTime;
     private double nextDelay;
 
-    private boolean hasIntakePulsed;
-
     public ControllerRumbleCommand(
             XboxController driverController,
             XboxController operatorController,
@@ -32,7 +30,6 @@ public class ControllerRumbleCommand extends Command {
 
         lastRumbleTime = 0;
         nextDelay = 0;
-        hasIntakePulsed = false;
     }
 
     @Override

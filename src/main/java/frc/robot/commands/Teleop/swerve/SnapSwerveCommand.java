@@ -3,8 +3,6 @@ package frc.robot.commands.Teleop.swerve;
 import java.util.function.Supplier;
 
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.wpilibj.DriverStation;
-import frc.robot.Constants.GameConstants;
 import frc.robot.subsystems.SwerveSubsystem;
 
 /**
