@@ -30,7 +30,6 @@ import frc.robot.Constants.VisionConstants;
 import frc.robot.commands.LEDCommand;
 import frc.robot.commands.Auto.NamedCommands.CommandContainer;
 import frc.robot.commands.Auto.NamedCommands.ShootSpeaker;
-import frc.robot.commands.Auto.SubsystemCommands.AutoSpeakerTurret;
 import frc.robot.commands.Auto.SubsystemCommands.HandoffAutoCommand;
 import frc.robot.commands.Auto.SubsystemCommands.IntakeDriveAutoCommand;
 import frc.robot.commands.Auto.SubsystemCommands.LEDAutoCommand;
@@ -40,8 +39,6 @@ import frc.robot.commands.Teleop.*;
 import frc.robot.commands.Teleop.swerve.*;
 import frc.robot.commands.debug.ResetGyroCommand;
 import frc.robot.commands.vision.*;
-import frc.robot.commands.vision.MonitorVision;
-import frc.robot.commands.vision.SpeakerTurret;
 import frc.robot.subsystems.*;
 import frc.robot.util.AutoManager;
 import frc.robot.util.TabManager;
@@ -68,9 +65,7 @@ public class RobotContainer {
         public static final ClimbSubsystem m_ClimbSubsystem = new ClimbSubsystem();
         public static final PivotSubsystem m_PivotSubsystem = new PivotSubsystem();
         public static final LEDSubsystem m_ledSubsystem = new LEDSubsystem();
-        public static final VisionSubsystem m_visionSubsystem = new VisionSubsystem(VisionConstants.APRILTAG_CAM_IDS);
-
-        private final AutoManager autoManager;
+        public static final VisionSubsystem m_VisionSubsystem = new VisionSubsystem(VisionConstants.APRILTAG_CAM_IDS, m_SwerveSubsystem);
 
         // Command controllers used for Triggers
         public static final CommandXboxController m_driverController = new CommandXboxController(
@@ -91,7 +86,6 @@ public class RobotContainer {
          * The container for the robot. Contains subsystems, OI devices, and commands.
          */
         public RobotContainer() {
-                autoManager = AutoManager.getInstance();
 
                 m_SwerveSubsystem.setDefaultCommand(
                                 new DefaultSwerveXboxCommand(
@@ -410,15 +404,9 @@ public class RobotContainer {
                 // }
                 // });
 
-                // m_operatorController.y().whileTrue(
-                // // new SpeakerTurret(m_VisionSubsystem, m_PivotSubsystem)
-                // // new ParallelCommandGroup(
-                // // new SnapCommand(m_SwerveSubsystem, m_VisionSubsystem),
-                // // new SpeakerTurret(m_VisionSubsystem, m_PivotSubsystem)
-                // // )
-                // new PivotAutoCommand(m_PivotSubsystem, 3)
-                // );
-
+                m_operatorController.y().whileTrue(
+                        CommandContainer.getSpeakerTurretCommand(m_SwerveSubsystem, m_ShooterSubsystem, m_PivotSubsystem, m_VisionSubsystem)
+                );
         }
 
         /**
@@ -596,7 +584,7 @@ public class RobotContainer {
 
                 autoTab.add(autoChooser).withSize(3, 1);
                 autoTab
-                                .add("Auto Visualizer", autoManager.getAutoField2d())
+                                .add("Auto Visualizer", AutoManager.getAutoField2d())
                                 .withWidget(BuiltInWidgets.kField)
                                 .withSize(4, 3);
 

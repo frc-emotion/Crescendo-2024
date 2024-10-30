@@ -4,18 +4,23 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.robot.commands.Auto.PivotAutoAimCommand;
 import frc.robot.commands.Auto.SubsystemCommands.ClimbAutoCommand;
 import frc.robot.commands.Auto.SubsystemCommands.HandoffAutoCommand;
 import frc.robot.commands.Auto.SubsystemCommands.IntakeDriveAutoCommand;
 import frc.robot.commands.Auto.SubsystemCommands.ResetPivotAutoCommand;
+import frc.robot.commands.Auto.SubsystemCommands.RevShooterAutoCommand;
 import frc.robot.commands.Teleop.IntakePivotCommand;
+import frc.robot.commands.Teleop.swerve.SnapCommand;
 import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.PivotSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
+import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.util.AutoManager;
 
 /**
@@ -205,8 +210,21 @@ public class CommandContainer {
     public static Command getAutoClimbCommand(ClimbSubsystem climbSubsystem, Pose2d targetPose) {
         return new SequentialCommandGroup(
                 new ParallelCommandGroup(
-                        AutoManager.getInstance().navigateToPose(targetPose),
+                        AutoManager.navigateToPose(targetPose),
                         new ClimbAutoCommand(climbSubsystem, true)),
                 new ClimbAutoCommand(climbSubsystem, false));
+    }
+
+    public static Command getSpeakerTurretCommand(SwerveSubsystem swerveSubsystem, ShooterSubsystem shooterSubsystem, PivotSubsystem pivotSubsystem, VisionSubsystem visionSubsystem) {
+        return new SequentialCommandGroup(
+            new ParallelDeadlineGroup(
+                new ParallelCommandGroup(
+                    new SnapCommand(swerveSubsystem, visionSubsystem),
+                    new PivotAutoAimCommand(pivotSubsystem, visionSubsystem)
+                ),
+                new RevShooterAutoCommand(shooterSubsystem)
+            ),
+            new DynamicShootSpeaker(shooterSubsystem, visionSubsystem)
+        );
     }
 }

@@ -17,6 +17,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Robot;
 import frc.robot.RobotContainer;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
@@ -25,12 +26,12 @@ import frc.robot.subsystems.VisionSubsystem;
 
 public class AutoManager {
 
-    private VisionSubsystem visionSubsystem;
-    private SwerveSubsystem swerveSubsystem;
+    private static VisionSubsystem visionSubsystem;
+    private static SwerveSubsystem swerveSubsystem;
 
     private static AutoManager autoManagerInstance;
 
-    private Field2d autoField;
+    private static Field2d autoField;
 
     private static final PathConstraints kPathConstraints = new PathConstraints(
             AutoConstants.kMaxSpeedMetersPerSecond,
@@ -38,30 +39,30 @@ public class AutoManager {
             AutoConstants.kMaxAngularSpeedRadiansPerSecond,
             AutoConstants.kMaxAngularAccelerationRadiansPerSecondSquared);
 
-    public AutoManager(VisionSubsystem visionSubsystem, SwerveSubsystem swerveSubsystem) {
+    static {
 
-        this.visionSubsystem = visionSubsystem;
-        this.swerveSubsystem = swerveSubsystem;
+        visionSubsystem = RobotContainer.m_VisionSubsystem;
+        swerveSubsystem = RobotContainer.m_SwerveSubsystem;
 
         // Initializes AutoBuilder for swerve drive.
-        // AutoBuilder.configureHolonomic(
-        //         this.visionSubsystem::getCurrentOdoPose, // If this has issues switch to odometry only based pose
-        //         this.visionSubsystem::resetPoseEstimator,
-        //         this.swerveSubsystem::getChassisSpeeds,
-        //         this.swerveSubsystem::driveRobotRelative,
+        AutoBuilder.configureHolonomic(
+                visionSubsystem::getRobotPose, // If this has issues switch to odometry only based pose
+                visionSubsystem::resetPoseEstimator,
+                swerveSubsystem::getChassisSpeeds,
+                swerveSubsystem::driveRobotRelative,
 
-        //         new HolonomicPathFollowerConfig(
-        //                 new PIDConstants(AutoConstants.kPXController),
-        //                 new PIDConstants(AutoConstants.kPThetaController),
-        //                 AutoConstants.kMaxSpeedMetersPerSecond,
-        //                 DriveConstants.kWheelBase,
-        //                 new ReplanningConfig(
-        //                         AutoConstants.INITIAL_PLANNING_ENABLED,
-        //                         AutoConstants.DYNAMIC_PLANNING_ENABLED,
-        //                         AutoConstants.PLANNING_TOTAL_ERROR_THRESHOLD,
-        //                         AutoConstants.PLANNING_SPIKE_ERROR_THRESHOLD)),
-        //         () -> DriverStation.getAlliance().get() == DriverStation.Alliance.Red,
-        //         swerveSubsystem);
+                new HolonomicPathFollowerConfig(
+                        new PIDConstants(AutoConstants.kPXController),
+                        new PIDConstants(AutoConstants.kPThetaController),
+                        AutoConstants.kMaxSpeedMetersPerSecond,
+                        DriveConstants.kWheelBase,
+                        new ReplanningConfig(
+                                AutoConstants.INITIAL_PLANNING_ENABLED,
+                                AutoConstants.DYNAMIC_PLANNING_ENABLED,
+                                AutoConstants.PLANNING_TOTAL_ERROR_THRESHOLD,
+                                AutoConstants.PLANNING_SPIKE_ERROR_THRESHOLD)),
+                () -> DriverStation.getAlliance().get() == DriverStation.Alliance.Red,
+                swerveSubsystem);
 
         // Used for PathPlanner automatic pathfinding
         Pathfinding.setPathfinder(new LocalADStar());
@@ -69,18 +70,11 @@ public class AutoManager {
         initializeCustomLogging();
     }
 
-    public static AutoManager getInstance() {
-        if (autoManagerInstance == null) {
-            autoManagerInstance = new AutoManager(RobotContainer.m_visionSubsystem, RobotContainer.m_SwerveSubsystem);
-        }
-        return autoManagerInstance;
-    }
-
     /**
      * Adds callback triggers to update the Auto Visualizer based on the current
      * PathPlanner path, target pose, and current pose.
      */
-    private void initializeCustomLogging() {
+    private static void initializeCustomLogging() {
         if (AutoConstants.PATH_LOGGING)
             autoField = new Field2d();
 
@@ -100,7 +94,7 @@ public class AutoManager {
                 });
     }
 
-    public Field2d getAutoField2d() {
+    public static Field2d getAutoField2d() {
         return autoField;
     }
 
@@ -111,7 +105,7 @@ public class AutoManager {
      * @param name The name of the auto
      * @return The PathPlanner auto
      */
-    public Command getAutoCommand(String name) {
+    public static Command getAutoCommand(String name) {
         return AutoBuilder.buildAuto(name);
     }
 
@@ -122,7 +116,7 @@ public class AutoManager {
      * @param pose The target pose
      * @return The new command to reach the target pose
      */
-    public Command navigateToPose(Pose2d pose) {
+    public static Command navigateToPose(Pose2d pose) {
         return AutoBuilder.pathfindToPose(
                 pose,
                 kPathConstraints);
@@ -136,7 +130,7 @@ public class AutoManager {
      * @param endVelocity The end velocity
      * @return The new command to reach the target pose
      */
-    public Command navigateToPose(Pose2d pose, double endVelocity) {
+    public static Command navigateToPose(Pose2d pose, double endVelocity) {
         return AutoBuilder.pathfindToPose(
                 pose,
                 kPathConstraints,
@@ -154,7 +148,7 @@ public class AutoManager {
      *                              turning
      * @return The new Command to reach the target pose
      */
-    public Command navigateToPose(Pose2d pose, double endVelocity, double rotationDelayDistance) {
+    public static Command navigateToPose(Pose2d pose, double endVelocity, double rotationDelayDistance) {
         return AutoBuilder.pathfindToPose(
                 pose,
                 kPathConstraints,
