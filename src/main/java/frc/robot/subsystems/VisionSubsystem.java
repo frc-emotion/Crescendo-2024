@@ -6,11 +6,14 @@ import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.targeting.PhotonPipelineResult;
+
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.VisionConstants;
 
 public class VisionSubsystem extends SubsystemBase {
@@ -18,10 +21,15 @@ public class VisionSubsystem extends SubsystemBase {
     private PhotonPoseEstimator[] estimators;
 
     private PhotonCamera odCamera;
+    private SwerveSubsystem swerveSubsystem;
 
-    public VisionSubsystem(String[] cameraIDs) {
+    private SwerveDrivePoseEstimator poseEstimator;
+
+    public VisionSubsystem(String[] cameraIDs, SwerveSubsystem swerveSubsystem) {
         poseCameras = new PhotonCamera[cameraIDs.length];
         estimators = new PhotonPoseEstimator[cameraIDs.length];
+        this.swerveSubsystem = swerveSubsystem;
+        poseEstimator = new SwerveDrivePoseEstimator(DriveConstants.kDriveKinematics, swerveSubsystem.getRotation2d(), swerveSubsystem.getModulePositions(), new Pose2d());
 
         for(int i = 0; i < poseCameras.length; i++) {
             poseCameras[i] = new PhotonCamera(cameraIDs[i]);
@@ -30,11 +38,21 @@ public class VisionSubsystem extends SubsystemBase {
             estimators[i] = new PhotonPoseEstimator(VisionConstants.m_AprilTagFieldLayout, VisionConstants.POSE_STRATEGY, poseCameras[i], VisionConstants.ROBOT_TO_CAMS[i]);
         }
 
-        odCamera = new PhotonCamera(VisionConstants.OD_CAM_ID);
-        odCamera.setPipelineIndex(VisionConstants.OD_PIPELINE_INDEX);
+        // odCamera = new PhotonCamera(VisionConstants.OD_CAM_ID);
+        // odCamera.setPipelineIndex(VisionConstants.OD_PIPELINE_INDEX);
+    }
+
+    @Override
+    public void periodic() {
+        Pose2d lastPose = poseEstimator.update(swerveSubsystem.getRotation2d(), swerveSubsystem.getModulePositions());
+        var nextPoseOptional = getEstimatedRobotPose(lastPose);
+        if(nextPoseOptional.isPresent()) {
+            poseEstimator.addVisionMeasurement(nextPoseOptional.get(), 0);
+        }
     }
 
     public Optional<Pose2d> getEstimatedRobotPose(Pose2d lastPose) {
+        double time;
         Optional<Pose2d> avgPose = Optional.empty();
         for(int i = 0; i < estimators.length; i++) {
             estimators[i].setLastPose(lastPose);
@@ -47,8 +65,6 @@ public class VisionSubsystem extends SubsystemBase {
                 avgPose = Optional.of(estPose.get().estimatedPose.toPose2d());
             }
         }
-
-        return avgPose;
     }
 
     public Optional<Translation2d> getRobotToObject() {

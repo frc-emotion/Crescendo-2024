@@ -26,6 +26,7 @@ import frc.robot.Constants.DriveConstants.DriveMode;
 import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.PivotConstants;
 import frc.robot.Constants.ShooterConstants;
+import frc.robot.Constants.VisionConstants;
 import frc.robot.commands.LEDCommand;
 import frc.robot.commands.Auto.NamedCommands.CommandContainer;
 import frc.robot.commands.Auto.NamedCommands.ShootSpeaker;
@@ -67,6 +68,7 @@ public class RobotContainer {
         public static final ClimbSubsystem m_ClimbSubsystem = new ClimbSubsystem();
         public static final PivotSubsystem m_PivotSubsystem = new PivotSubsystem();
         public static final LEDSubsystem m_ledSubsystem = new LEDSubsystem();
+        public static final VisionSubsystem m_visionSubsystem = new VisionSubsystem(VisionConstants.APRILTAG_CAM_IDS);
 
         private final AutoManager autoManager;
 

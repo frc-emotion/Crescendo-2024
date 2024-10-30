@@ -71,7 +71,7 @@ public class AutoManager {
 
     public static AutoManager getInstance() {
         if (autoManagerInstance == null) {
-            // autoManagerInstance = new AutoManager(RobotContainer.m_VisionSubsystem, RobotContainer.m_SwerveSubsystem);
+            autoManagerInstance = new AutoManager(RobotContainer.m_visionSubsystem, RobotContainer.m_SwerveSubsystem);
         }
         return autoManagerInstance;
     }

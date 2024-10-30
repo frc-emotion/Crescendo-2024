@@ -447,28 +447,28 @@ public final class Constants {
 
         public static final Transform3d ROBOT_TO_PI_CAM = new Transform3d(
             0,
-            0,
-            0,
+            -12.5,
+            9,
             new Rotation3d(
                 0,
-                0,
-                0
+                60,
+                135
             )
         );
 
         public static final Transform3d ROBOT_TO_LIMELIGHT = new Transform3d(
-            0,
-            0,
-            0,
+            -11.5,
+            -11.5,
+            8.5,
             new Rotation3d(
                 0,
-                0,
-                0
+                45,
+                180
             )
         );
 
         public static final int APRILTAG_PIPELINE_INDEX = 0;
-        public static final int OD_PIPELINE_INDEX = 1;
+        // public static final int OD_PIPELINE_INDEX = 1;
 
         public static final double FIELD_LENGTH = 16.541;
         public static boolean VISION_DEBUG_MODE = true;
@@ -484,10 +484,12 @@ public final class Constants {
         public static final Translation2d RED_SPEAKER_CENTER = new Translation2d(FIELD_LENGTH - (0.457 / 2), 5.557034);
         
         public static final Transform3d[] ROBOT_TO_CAMS = new Transform3d[] {
-            ROBOT_TO_PI_CAM
+            ROBOT_TO_PI_CAM,
+            ROBOT_TO_LIMELIGHT
         };
 
-        public static final String OD_CAM_ID = "odcam";
+        // public static final String OD_CAM_ID = "odcam";
+        public static final String[] APRILTAG_CAM_IDS = {"backRightArducam", "limelight"};
         
         
     }
