@@ -329,7 +329,7 @@ public final class Constants {
         public static final double FLYWHEEL_MASS = 0.117; // kg
         public static final double FLYWHEEL_RADIUS = 0.051; // meters
         public static final double FLYWHEEL_MOI = 0.5 * FLYWHEEL_MASS * Math.pow(FLYWHEEL_RADIUS, 2);
-        public static final double NOTE_MASS = 0.232; // kg
+        public static final double NOTE_MASS = 0.232; // kg 
         public static final double MAX_SHOOT_SPEED = 4500;
         
     }
