@@ -29,8 +29,6 @@ public class AutoManager {
     private static VisionSubsystem visionSubsystem;
     private static SwerveSubsystem swerveSubsystem;
 
-    private static AutoManager autoManagerInstance;
-
     private static Field2d autoField;
 
     private static final PathConstraints kPathConstraints = new PathConstraints(

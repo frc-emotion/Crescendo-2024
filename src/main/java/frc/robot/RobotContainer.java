@@ -38,13 +38,10 @@ import frc.robot.commands.Auto.SubsystemCommands.RevShooterAutoCommand;
 import frc.robot.commands.Teleop.*;
 import frc.robot.commands.Teleop.swerve.*;
 import frc.robot.commands.debug.ResetGyroCommand;
-import frc.robot.commands.vision.*;
 import frc.robot.subsystems.*;
 import frc.robot.util.AutoManager;
 import frc.robot.util.TabManager;
 import frc.robot.util.TabManager.SubsystemTab;
-
-import java.sql.Driver;
 import java.util.Map;
 
 /**
@@ -162,7 +159,7 @@ public class RobotContainer {
          */
         private void configureAutoChooser() {
                 // autoChooser.addOption("Simple Shoot", new ShootSpeaker(m_ShooterSubsystem));
-                addOption("4 Note Auto");
+                // addOption("4 Note Auto");
                 // addOption("4 Note Angle Auto");
                 // addOption("4 Note Angle Auto No Turn");
                 // addOption("3 Note Top Travel");
@@ -182,10 +179,10 @@ public class RobotContainer {
 
                 // addOption("Note Push Top");
                 // addOption("Note Push Bottom");
-                addOption("1 Note Stationary");
+                // addOption("1 Note Stationary");
                 // addOption("1 Note Top");
                 // addOption("1 Note Mid");
-                addOption("1 Note Bottom");
+                // addOption("1 Note Bottom");
                 // addOption("Note Push");
                 // addOption("Str8 Note Push Bottom");
         }
@@ -584,9 +581,9 @@ public class RobotContainer {
 
                 autoTab.add(autoChooser).withSize(3, 1);
                 autoTab
-                                .add("Auto Visualizer", AutoManager.getAutoField2d())
-                                .withWidget(BuiltInWidgets.kField)
-                                .withSize(4, 3);
+                        .add("Auto Visualizer", AutoManager.getAutoField2d())
+                        .withWidget(BuiltInWidgets.kField)
+                        .withSize(4, 3);
 
                 ShuffleboardLayout matchLayout = autoTab
                                 .getLayout("Match Data", BuiltInLayouts.kGrid)
@@ -607,9 +604,14 @@ public class RobotContainer {
                                 "Match Number",
                                 () -> DriverStation.getMatchNumber());
                 autoTab
-                                .add("Reset Heading", ResetGyroCommand.getCommand())
-                                .withWidget(BuiltInWidgets.kCommand)
-                                .withSize(2, 2);
+                        .add("Reset Heading", ResetGyroCommand.getCommand())
+                        .withWidget(BuiltInWidgets.kCommand)
+                        .withSize(2, 2);
+                
+                autoTab
+                        .add("Robot Pose", m_VisionSubsystem.getField2d())
+                        .withWidget(BuiltInWidgets.kField)
+                        .withSize(4, 3);
         }
 
         /**

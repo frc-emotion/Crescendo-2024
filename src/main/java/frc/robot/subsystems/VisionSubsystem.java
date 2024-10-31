@@ -16,6 +16,7 @@ import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.VisionConstants;
@@ -28,6 +29,8 @@ public class VisionSubsystem extends SubsystemBase {
     private SwerveSubsystem swerveSubsystem;
 
     private SwerveDrivePoseEstimator poseEstimator;
+
+    private Field2d fieldPose;
 
     public VisionSubsystem(String[] cameraIDs, SwerveSubsystem swerveSubsystem) {
         poseCameras = new PhotonCamera[cameraIDs.length];
@@ -46,6 +49,8 @@ public class VisionSubsystem extends SubsystemBase {
         // odCamera.setPipelineIndex(VisionConstants.OD_PIPELINE_INDEX);
 
         if(odCamera == null) DriverStation.reportWarning("Object Detection Disabled", false);
+
+        fieldPose = new Field2d();
     }
 
     @Override
@@ -55,6 +60,12 @@ public class VisionSubsystem extends SubsystemBase {
         for(EstimatedRobotPose pose : getEstimatedRobotPose(lastPose)) {
             poseEstimator.addVisionMeasurement(pose.estimatedPose.toPose2d(), pose.timestampSeconds);
         }
+
+        fieldPose.setRobotPose(lastPose);
+    }
+
+    public Field2d getField2d() {
+        return fieldPose;
     }
 
     public Pose2d getRobotPose() {

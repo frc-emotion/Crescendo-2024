@@ -446,7 +446,7 @@ public final class Constants {
 
     public static final class VisionConstants {
         public static final AprilTagFieldLayout m_AprilTagFieldLayout = AprilTagFields.k2024Crescendo.loadAprilTagLayoutField();
-        public static final PoseStrategy POSE_STRATEGY = PoseStrategy.CLOSEST_TO_REFERENCE_POSE;
+        public static final PoseStrategy POSE_STRATEGY = PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR;
 
         public static final Transform3d ROBOT_TO_PI_CAM = new Transform3d(
             0,
