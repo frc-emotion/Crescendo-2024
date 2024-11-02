@@ -133,11 +133,14 @@ public class RobotContainer {
                                                 new IntakeDriveCommand(
                                                                 m_IntakeSubsystem,
                                                                 () -> false, // previous r bumper
-                                                                () -> operatorController_HID.getLeftBumper()),
-                                                new IntakeManualPivotCommand(
-                                                                m_IntakeSubsystem,
-                                                                () -> operatorController_HID.getPOV() == 0,
-                                                                () -> operatorController_HID.getPOV() == 90)));
+                                                                () -> operatorController_HID.getLeftBumper()
+                                                )
+                                                // new IntakeManualPivotCommand(
+                                                //                 m_IntakeSubsystem,
+                                                //                 () -> operatorController_HID.getPOV() == 0,
+                                                //                 () -> operatorController_HID.getPOV() == 90)
+                                )
+                );
 
                 // m_ledSubsystem.setDefaultCommand(
                 // new LEDCommand(
@@ -409,32 +412,73 @@ public class RobotContainer {
                 // });
 
                 m_operatorController.y().onTrue(
-                        new SequentialCommandGroup(
-                                new ParallelDeadlineGroup(
-                                        new PivotAutoCommand(m_PivotSubsystem, 1),
-                                        new RevShooterCustomCommand(m_ShooterSubsystem, ShooterConstants.SHOOTER_FEEDER)
-                                ),
-                                new ShootSpeaker(m_ShooterSubsystem, ShooterConstants.SHOOTER_FEEDER, () -> operatorController_HID.getLeftTriggerAxis() > OIConstants.kDeadband),
-                                new PivotAutoCommand(m_PivotSubsystem, 0)
-                        )
+                        new NoteCenteringCommand(m_IntakeSubsystem)
+
+                        // new SequentialCommandGroup(
+                        //         new ParallelDeadlineGroup(
+                        //                 new PivotAutoCommand(m_PivotSubsystem, 1),
+                        //                 new RevShooterCustomCommand(m_ShooterSubsystem, ShooterConstants.SHOOTER_FEEDER)
+                        //         ),
+                        //         new ShootSpeaker(m_ShooterSubsystem, ShooterConstants.SHOOTER_FEEDER, () -> operatorController_HID.getLeftTriggerAxis() > OIConstants.kDeadband),
+                        //         new PivotAutoCommand(m_PivotSubsystem, 0)
+                        // )
                         
-                // new SpeakerTurret(m_VisionSubsystem, m_PivotSubsystem)
-                // new ParallelCommandGroup(
-                //new SnapCommand(m_SwerveSubsystem, m_VisionSubsystem)
-                // new SpeakerTurret(m_VisionSubsystem, m_PivotSubsystem)
-                // )
-                //new PivotAutoCommand(m_PivotSubsystem, 3)
+                        // new SpeakerTurret(m_VisionSubsystem, m_PivotSubsystem)
+                        // new ParallelCommandGroup(
+                        //new SnapCommand(m_SwerveSubsystem, m_VisionSubsystem)
+                        // new SpeakerTurret(m_VisionSubsystem, m_PivotSubsystem)
+                        // )
+                        //new PivotAutoCommand(m_PivotSubsystem, 3)
                 );
+
                 m_driverController.y().whileTrue(
                         new SnapSwerveCommand(m_SwerveSubsystem,
-                                                () -> driverController_HID.getLeftY(),
-                                                () -> driverController_HID.getLeftX(),
-                                                () -> driverController_HID.getRightX(),
-                                                45
+                                () -> driverController_HID.getLeftY(),
+                                () -> driverController_HID.getLeftX(),
+                                () -> driverController_HID.getRightX(),
+                                45
                 )
                 );
-                
 
+                m_driverController.povUp().whileTrue(
+                        new SnapSwerveCommand(
+                                m_SwerveSubsystem,
+                                () -> driverController_HID.getLeftY(),
+                                () -> driverController_HID.getLeftX(),
+                                () -> driverController_HID.getRightX(),
+                                0
+                        )
+                );
+
+                m_driverController.povRight().whileTrue(
+                        new SnapSwerveCommand(
+                                m_SwerveSubsystem,
+                                () -> driverController_HID.getLeftY(),
+                                () -> driverController_HID.getLeftX(),
+                                () -> driverController_HID.getRightX(),
+                                90
+                        )
+                );
+
+                m_driverController.povDown().whileTrue(
+                        new SnapSwerveCommand(
+                                m_SwerveSubsystem,
+                                () -> driverController_HID.getLeftY(),
+                                () -> driverController_HID.getLeftX(),
+                                () -> driverController_HID.getRightX(),
+                                180
+                        )
+                );
+
+                m_driverController.povLeft().whileTrue(
+                        new SnapSwerveCommand(
+                                m_SwerveSubsystem,
+                                () -> driverController_HID.getLeftY(),
+                                () -> driverController_HID.getLeftX(),
+                                () -> driverController_HID.getRightX(),
+                                270
+                        )
+                );
         }
 
         /**

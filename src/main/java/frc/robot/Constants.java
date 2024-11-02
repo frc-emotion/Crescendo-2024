@@ -424,6 +424,9 @@ public final class Constants {
 
         public static final double SHOOTER_TRANSFER_SPEED = 0.35;
         public static final double AUTO_SHOOTER_TRANSFER_SPEED = 0.5;
+        
+        public static final double CENTERING_SPEED = 0.3;
+        public static final int NOTE_CENTERING_ITERATIONS = 3;
 
         // -----------------------------------------
 
