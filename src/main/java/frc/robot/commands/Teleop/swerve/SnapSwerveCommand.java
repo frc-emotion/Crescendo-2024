@@ -20,7 +20,7 @@ public class SnapSwerveCommand extends AbstractSwerveXboxCommand {
             Supplier<Double> turningSpdFunc,
             int direction) {
         super(swerveSubsystem, xSpdFunc, ySpdFunc, turningSpdFunc);
-
+        
         this.direction = direction;
     }
 
