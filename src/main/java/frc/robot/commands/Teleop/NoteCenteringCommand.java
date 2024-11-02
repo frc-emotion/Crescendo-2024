@@ -36,10 +36,10 @@ public class NoteCenteringCommand extends Command {
         }
     }
 
-    /*@Override
+    @Override
     public boolean isFinished() {
      return iterations >= MAX_ITERATIONS;
-    }*/
+    }
 
     @Override
     public void end(boolean interrupted) {

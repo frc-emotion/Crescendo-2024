@@ -415,8 +415,9 @@ public class RobotContainer {
                         new PivotAutoCommand(m_PivotSubsystem, 2)
                 );
 
-                //m_operatorController.y().whileTrue(
-                 //       new NoteCenteringCommand(m_IntakeSubsystem)
+                m_operatorController.b().whileTrue(
+                       new NoteCenteringCommand(m_IntakeSubsystem)
+                       );
 
                         // new SequentialCommandGroup(
                         //         new ParallelDeadlineGroup(
