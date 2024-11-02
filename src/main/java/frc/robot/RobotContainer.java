@@ -411,7 +411,7 @@ public class RobotContainer {
                 // }
                 // });
 
-                m_operatorController.y().onTrue(
+                m_operatorController.y().whileTrue(
                         new NoteCenteringCommand(m_IntakeSubsystem)
 
                         // new SequentialCommandGroup(
