@@ -440,7 +440,7 @@ public class RobotContainer {
                         () -> driverController_HID.getLeftY(),
                         () -> driverController_HID.getLeftX(),
                         () -> driverController_HID.getRightX(),
-                                (DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) ? 45 : -45
+                                45
                 )
                 );
 

@@ -3,6 +3,7 @@ package frc.robot.commands.Teleop.swerve;
 import java.util.function.Supplier;
 
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.subsystems.SwerveSubsystem;
 
 /**
@@ -20,12 +21,15 @@ public class SnapSwerveCommand extends AbstractSwerveXboxCommand {
             Supplier<Double> turningSpdFunc,
             int direction) {
         super(swerveSubsystem, xSpdFunc, ySpdFunc, turningSpdFunc);
-        
+
         this.direction = direction;
     }
 
     @Override
     public void initialize() {
+        if (DriverStation.getAlliance().get() != DriverStation.Alliance.Blue) {
+            this.direction = -this.direction;
+        }
         swerveSubsystem.updatePID();
     }
 
