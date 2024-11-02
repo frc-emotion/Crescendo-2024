@@ -411,6 +411,10 @@ public class RobotContainer {
                 // }
                 // });
 
+                m_operatorController.y().whileTrue(
+                        new PivotAutoCommand(m_PivotSubsystem, 2)
+                );
+
                 //m_operatorController.y().whileTrue(
                  //       new NoteCenteringCommand(m_IntakeSubsystem)
 
@@ -440,7 +444,7 @@ public class RobotContainer {
                 )
                 );
 
-                for(int aaran = 0; aaran < 360; aaran += 45) {
+                for(int aaran = 0; aaran < 360; aaran += 45) { // really?
                         m_driverController.pov(aaran).whileTrue(
                                 new SnapSwerveCommand(m_SwerveSubsystem,
                                 () -> driverController_HID.getRightY(),
