@@ -1,12 +1,13 @@
 package frc.robot.commands.Teleop.swerve;
 
+import java.util.function.Supplier;
+
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.subsystems.SwerveSubsystem;
-import java.util.function.Supplier;
 
 public abstract class AbstractSwerveXboxCommand extends Command {
 
@@ -64,8 +65,8 @@ public abstract class AbstractSwerveXboxCommand extends Command {
         currentAngularSpeed = speeds[1];
 
         // Retrieves the user input and applies a deadzone
-        xSpeed = Math.abs(xSpeed) > (OIConstants.kDeadband / 2) ? xSpeed : 0.0;
-        ySpeed = Math.abs(ySpeed) > (OIConstants.kDeadband / 2) ? ySpeed : 0.0;
+        xSpeed = Math.abs(xSpeed) > (OIConstants.kDeadband) ? xSpeed : 0.0;
+        ySpeed = Math.abs(ySpeed) > (OIConstants.kDeadband) ? ySpeed : 0.0;
         turningSpeed = Math.abs(turningSpeed) > OIConstants.kDeadband ? turningSpeed : 0.0;
 
         // Limits the translational and rotational acceleration of the robot
