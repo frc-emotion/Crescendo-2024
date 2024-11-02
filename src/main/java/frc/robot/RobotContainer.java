@@ -444,7 +444,7 @@ public class RobotContainer {
                 // )
                 // );
 
-                for(int aaran = 0; aaran < 360; aaran += 45) { // really?
+                for(int aaran = 0; aaran < 360; aaran += 90) { // really?
                         m_driverController.pov(aaran).whileTrue(
                                 new SnapSwerveCommand(m_SwerveSubsystem,
                                 () -> driverController_HID.getLeftY(),

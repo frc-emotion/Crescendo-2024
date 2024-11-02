@@ -43,7 +43,7 @@ public final class Constants {
         public static final int kDriverControllerPort = 0;
         public static final int kOperatorControllerPort = 1;
 
-        public static final double kDeadband = 0.15;
+        public static final double kDeadband = 0.17;
 
         public static final double CLIMB_DEADZONE = 0.2;
         public static final double SHOOTER_DEADZONE = 0.2;
