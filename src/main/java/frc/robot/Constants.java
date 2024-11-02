@@ -33,7 +33,7 @@ public final class Constants {
      * Controls whether or not Debug Mode is activated. If it is, each Subsystem Shuffleboard tab
      * is supplied with most important subsystem info.
      */
-    public static final boolean DEBUG_MODE_ACTIVE = true;
+    public static final boolean DEBUG_MODE_ACTIVE = false;
 
     /**
      * Contains controller configurations for the driver and operator
