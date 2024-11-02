@@ -411,11 +411,11 @@ public class RobotContainer {
                 // }
                 // });
 
-                m_operatorController.y().whileTrue(
-                        new PivotAutoCommand(m_PivotSubsystem, 2)
-                );
+                // m_operatorController.y().whileTrue(
+                //         new PivotAutoCommand(m_PivotSubsystem, 2)
+                // );
 
-                m_operatorController.b().whileTrue(
+                m_operatorController.y().whileTrue(
                        new NoteCenteringCommand(m_IntakeSubsystem)
                        );
 
