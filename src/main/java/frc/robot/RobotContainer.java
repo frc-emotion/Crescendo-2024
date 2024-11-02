@@ -91,9 +91,9 @@ public class RobotContainer {
                 m_SwerveSubsystem.setDefaultCommand(
                                 new DefaultSwerveXboxCommand(
                                                 m_SwerveSubsystem,
-                                                () -> driverController_HID.getLeftY(),
-                                                () -> driverController_HID.getLeftX(),
+                                                () -> driverController_HID.getRightY(),
                                                 () -> driverController_HID.getRightX(),
+                                                () -> driverController_HID.getLeftX(),
                                                 () -> driverController_HID
                                                                 .getRightTriggerAxis() > OIConstants.kDeadband));
 
@@ -239,9 +239,9 @@ public class RobotContainer {
                                 .whileTrue(
                                                 new SlowModeSwerveCommand(
                                                                 m_SwerveSubsystem,
-                                                                () -> driverController_HID.getLeftY(),
-                                                                () -> driverController_HID.getLeftX(),
+                                                                () -> driverController_HID.getRightY(),
                                                                 () -> driverController_HID.getRightX(),
+                                                                () -> driverController_HID.getLeftX(),
                                                                 () -> driverController_HID
                                                                                 .getRightTriggerAxis() > OIConstants.kDeadband));
 
@@ -251,9 +251,9 @@ public class RobotContainer {
                                 .whileTrue(
                                                 new TurboModeSwerveCommand(
                                                                 m_SwerveSubsystem,
-                                                                () -> driverController_HID.getLeftY(),
-                                                                () -> driverController_HID.getLeftX(),
+                                                                () -> driverController_HID.getRightY(),
                                                                 () -> driverController_HID.getRightX(),
+                                                                () -> driverController_HID.getLeftX(),
                                                                 () -> driverController_HID
                                                                                 .getRightTriggerAxis() > OIConstants.kDeadband));
 
@@ -280,9 +280,9 @@ public class RobotContainer {
                                 new ParallelCommandGroup(
                                                 new SnapSwerveCommand(
                                                                 m_SwerveSubsystem,
-                                                                () -> driverController_HID.getLeftY(),
-                                                                () -> driverController_HID.getLeftX(),
+                                                                () -> driverController_HID.getRightY(),
                                                                 () -> driverController_HID.getRightX(),
+                                                                () -> driverController_HID.getLeftX(),
                                                                 0)
                                 // new PivotAutoCommand(m_PivotSubsystem, 2)
                                 ));
@@ -433,52 +433,23 @@ public class RobotContainer {
 
                 m_driverController.y().whileTrue(
                         new SnapSwerveCommand(m_SwerveSubsystem,
-                                () -> driverController_HID.getLeftY(),
-                                () -> driverController_HID.getLeftX(),
-                                () -> driverController_HID.getRightX(),
+                        () -> driverController_HID.getRightY(),
+                        () -> driverController_HID.getRightX(),
+                        () -> driverController_HID.getLeftX(),
                                 45
                 )
                 );
 
-                m_driverController.povUp().whileTrue(
-                        new SnapSwerveCommand(
-                                m_SwerveSubsystem,
-                                () -> driverController_HID.getLeftY(),
-                                () -> driverController_HID.getLeftX(),
+                for(int aaran = 0; aaran < 360; aaran += 45) {
+                        m_driverController.pov(aaran).whileTrue(
+                                new SnapSwerveCommand(m_SwerveSubsystem,
+                                () -> driverController_HID.getRightY(),
                                 () -> driverController_HID.getRightX(),
-                                0
-                        )
-                );
-
-                m_driverController.povRight().whileTrue(
-                        new SnapSwerveCommand(
-                                m_SwerveSubsystem,
-                                () -> driverController_HID.getLeftY(),
                                 () -> driverController_HID.getLeftX(),
-                                () -> driverController_HID.getRightX(),
-                                90
-                        )
-                );
-
-                m_driverController.povDown().whileTrue(
-                        new SnapSwerveCommand(
-                                m_SwerveSubsystem,
-                                () -> driverController_HID.getLeftY(),
-                                () -> driverController_HID.getLeftX(),
-                                () -> driverController_HID.getRightX(),
-                                180
-                        )
-                );
-
-                m_driverController.povLeft().whileTrue(
-                        new SnapSwerveCommand(
-                                m_SwerveSubsystem,
-                                () -> driverController_HID.getLeftY(),
-                                () -> driverController_HID.getLeftX(),
-                                () -> driverController_HID.getRightX(),
-                                270
-                        )
-                );
+                                aaran
+                                )
+                        );
+                }
         }
 
         /**
