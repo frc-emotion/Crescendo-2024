@@ -411,8 +411,8 @@ public class RobotContainer {
                 // }
                 // });
 
-                m_operatorController.y().whileTrue(
-                        new NoteCenteringCommand(m_IntakeSubsystem)
+                //m_operatorController.y().whileTrue(
+                 //       new NoteCenteringCommand(m_IntakeSubsystem)
 
                         // new SequentialCommandGroup(
                         //         new ParallelDeadlineGroup(
@@ -429,7 +429,7 @@ public class RobotContainer {
                         // new SpeakerTurret(m_VisionSubsystem, m_PivotSubsystem)
                         // )
                         //new PivotAutoCommand(m_PivotSubsystem, 3)
-                );
+                //);
 
                 m_driverController.y().whileTrue(
                         new SnapSwerveCommand(m_SwerveSubsystem,
