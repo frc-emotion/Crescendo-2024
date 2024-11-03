@@ -108,7 +108,7 @@ public class RobotContainer {
                 m_ClimbSubsystem.setDefaultCommand(
                                 new ClimbManualCommand(
                                                 m_ClimbSubsystem,
-                                                () -> -operatorController_HID.getRightY()));
+                                                () -> operatorController_HID.getRightY()));
 
                 m_PivotSubsystem.setDefaultCommand(
                                 new PivotManualCommand(
@@ -415,9 +415,6 @@ public class RobotContainer {
                 //         new PivotAutoCommand(m_PivotSubsystem, 2)
                 // );
 
-                m_operatorController.y().whileTrue(
-                       new NoteCenteringCommand(m_IntakeSubsystem)
-                       );
 
                         // new SequentialCommandGroup(
                         //         new ParallelDeadlineGroup(
