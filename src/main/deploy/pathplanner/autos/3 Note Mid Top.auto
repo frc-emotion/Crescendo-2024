@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.38,
-      "y": 5.565873600441298
+      "x": 1.3576558062207034,
+      "y": 5.551187918118234
     },
     "rotation": 180.0
   },
@@ -12,15 +12,22 @@
     "data": {
       "commands": [
         {
-          "type": "named",
+          "type": "parallel",
           "data": {
-            "name": "ScoreSpeaker"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "ToggleIntake"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "ScoreSpeaker"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "ToggleIntake"
+                }
+              }
+            ]
           }
         },
         {
@@ -49,13 +56,7 @@
           }
         },
         {
-          "type": "named",
-          "data": {
-            "name": "ToggleIntake"
-          }
-        },
-        {
-          "type": "deadline",
+          "type": "parallel",
           "data": {
             "commands": [
               {
@@ -69,15 +70,28 @@
                 "data": {
                   "commands": [
                     {
-                      "type": "named",
+                      "type": "deadline",
                       "data": {
-                        "name": "AutoHandoff"
+                        "commands": [
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "ToggleIntake"
+                            }
+                          },
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "RevShooter"
+                            }
+                          }
+                        ]
                       }
                     },
                     {
                       "type": "named",
                       "data": {
-                        "name": "RevShooter"
+                        "name": "AutoHandoff"
                       }
                     }
                   ]
@@ -87,15 +101,22 @@
           }
         },
         {
-          "type": "named",
+          "type": "parallel",
           "data": {
-            "name": "ScoreSpeaker"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "ToggleIntake"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "ScoreSpeaker"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "ToggleIntake"
+                }
+              }
+            ]
           }
         },
         {
@@ -124,13 +145,7 @@
           }
         },
         {
-          "type": "named",
-          "data": {
-            "name": "ToggleIntake"
-          }
-        },
-        {
-          "type": "deadline",
+          "type": "parallel",
           "data": {
             "commands": [
               {
@@ -144,15 +159,28 @@
                 "data": {
                   "commands": [
                     {
-                      "type": "named",
+                      "type": "deadline",
                       "data": {
-                        "name": "AutoHandoff"
+                        "commands": [
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "ToggleIntake"
+                            }
+                          },
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "RevShooter"
+                            }
+                          }
+                        ]
                       }
                     },
                     {
                       "type": "named",
                       "data": {
-                        "name": "RevShooter"
+                        "name": "AutoHandoff"
                       }
                     }
                   ]
@@ -162,9 +190,16 @@
           }
         },
         {
-          "type": "named",
+          "type": "parallel",
           "data": {
-            "name": "ScoreSpeaker"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "ScoreSpeaker"
+                }
+              }
+            ]
           }
         }
       ]

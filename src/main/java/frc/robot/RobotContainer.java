@@ -170,31 +170,31 @@ public class RobotContainer {
         private void configureAutoChooser() {
                 // autoChooser.addOption("Simple Shoot", new ShootSpeaker(m_ShooterSubsystem));
                 addOption("4 Note Auto");
-                addOption("4 Note Angle Auto");
-                addOption("4 Note Angle Auto No Turn");
-                addOption("3 Note Top Travel");
+                // addOption("4 Note Angle Auto");
+                // addOption("4 Note Angle Auto No Turn");
+                // addOption("3 Note Top Travel");
                 addOption("3 Note Mid Top");
-                addOption("3 Note Mid Bottom");
-                addOption("3 Note Bottom Travel");
-                addOption("2 Note Top");
-                addOption("2 Note Mid");
-                addOption("2 Note Bottom");
+                // addOption("3 Note Mid Bottom");
+                // addOption("3 Note Bottom Travel");
+                // addOption("2 Note Top");
+                // addOption("2 Note Mid");
+                // addOption("2 Note Bottom");
                 addOption("2 Note Bottom Far");
 
                 addOption("Forward Test Auto");
-                addOption("Jank Test Auto");
-                addOption("Turn Test Auto");
-                addOption("Strafe Test Auto");
-                addOption("3 Note Top");
+                // addOption("Jank Test Auto");
+                // addOption("Turn Test Auto");
+                // addOption("Strafe Test Auto");
+                // addOption("3 Note Top");
 
-                addOption("Note Push Top");
-                addOption("Note Push Bottom");
+                // addOption("Note Push Top");
+                // addOption("Note Push Bottom");
                 addOption("1 Note Stationary");
-                addOption("1 Note Top");
-                addOption("1 Note Mid");
-                addOption("1 Note Bottom");
-                addOption("Note Push");
-                addOption("Str8 Note Push Bottom");
+                // addOption("1 Note Top");
+                // addOption("1 Note Mid");
+                // addOption("1 Note Bottom");
+                // addOption("Note Push");
+                // addOption("Str8 Note Push Bottom");
         }
 
         /**
