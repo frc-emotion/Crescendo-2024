@@ -38,7 +38,7 @@ public class ClimbSubsystem extends SubsystemBase {
         climbMotorLeft.setSmartCurrentLimit(ClimbConstants.CURRENT_LIMIT);
         climbMotorLeft.setSecondaryCurrentLimit(ClimbConstants.CURRENT_LIMIT);
         climbMotorLeft.setIdleMode(IdleMode.kBrake);
-        climbMotorLeft.setInverted(false);
+        climbMotorLeft.setInverted(true);
 
         climbMotorRight.setSmartCurrentLimit(ClimbConstants.SMART_MAX_CURRENT);
         climbMotorRight.setSecondaryCurrentLimit(ClimbConstants.CURRENT_LIMIT);
