@@ -31,7 +31,7 @@ public class VisionSpeakerSwerveCommand extends SnapSwerveCommand {
 
     @Override
     public void execute() {
-        direction = (int) (swerveSubsystem.getHeading() + visionSubsystem.getTX());
+        direction = (int) (swerveSubsystem.getRotation2d().getDegrees() + visionSubsystem.getTX());
 
         double angle = calculateAngle();
         if (!pivotSubsystem.isAtTarget(angle)) {

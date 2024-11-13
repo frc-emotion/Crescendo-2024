@@ -4,6 +4,10 @@
 
 package frc.robot;
 
+import javax.net.ssl.TrustManager;
+
+import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants;
+
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -68,15 +72,19 @@ public final class Constants {
         public static final double kDriveMotorGearRatio = 1.0 / 6.75;
         public static final double kTurningMotorGearRatio = 7.0 / 150.0;
         public static final double kDriveEncoderRot2Meter = kDriveMotorGearRatio * Math.PI * kWheelDiameterMeters;
-        public static final double kTurningEncoderRot2Rad = kTurningMotorGearRatio * 2 * Math.PI;
+        public static final double kTurningEncoderRot2Deg = kTurningMotorGearRatio * 360;
         public static final double kDriveEncoderRPM2MeterPerSec = kDriveEncoderRot2Meter / 60;
-        public static final double kTurningEncoderRPM2RadPerSec = kTurningEncoderRot2Rad / 60;
-        public static final double kPTurning = 0.3;
+        public static final double kTurningEncoderRPM2DegPerSec = kTurningEncoderRot2Deg / 60;
+        public static final double kPTurning = 1.0;
+        public static final double kITurning = 0.1;
         public static final double kDTurning = 0;
 
         public static final double drivekS = 0;
         public static final double drivekV = 0;
         public static final double drivekA = 0;
+
+        public static final int kDriveSecondaryCurrentLimit = 60;
+        public static final int kDriveSmartCurrentLimit = 45;
     }
 
     public static final class DriveConstants {
@@ -176,32 +184,30 @@ public final class Constants {
         public static final double kPhysicalMaxAngularSpeedRadiansPerSecond = kPhysicalMaxSpeedMetersPerSecond /
                 Math.hypot(kTrackWidth / 2.0, kWheelBase / 2.0);
 
-        // No longer needed since calculations are done within code
-        // public static final double kTeleDriveSuperSlowSpeedMetersPerSecond =
-        // kPhysicalMaxSpeedMetersPerSecond / 6;
-        // public static final double kTeleDriveSuperSlowlAngularSpeedRadiansPerSecond =
-        // kPhysicalMaxAngularSpeedRadiansPerSecond / 6;
+        public static final double kTeleDriveSlowSpeedMetersPerSecond =
+        kPhysicalMaxSpeedMetersPerSecond / 4;
+        public static final double kTeleDriveSlowAngularSpeedRadiansPerSecond =
+        kPhysicalMaxAngularSpeedRadiansPerSecond / 4;
 
-        // public static final double kTeleDriveSlowSpeedMetersPerSecond =
-        // kPhysicalMaxSpeedMetersPerSecond / 4;
-        // public static final double kTeleDriveSlowlAngularSpeedRadiansPerSecond =
-        // kPhysicalMaxAngularSpeedRadiansPerSecond / 4;
-
-        // public static final double kTeleDriveNormalSpeedMetersPerSecond =
-        // kPhysicalMaxSpeedMetersPerSecond / 2;
-        // public static final double kTeleDriveNormalAngularSpeedRadiansPerSecond =
-        // kPhysicalMaxAngularSpeedRadiansPerSecond / 2;
+        public static final double kTeleDriveNormalSpeedMetersPerSecond =
+        kPhysicalMaxSpeedMetersPerSecond / 2;
+        public static final double kTeleDriveNormalAngularSpeedRadiansPerSecond =
+        kPhysicalMaxAngularSpeedRadiansPerSecond / 2;
 
         // Don't change these unless you want to increase max mps
         public static final double kTeleDriveMaxSpeedMetersPerSecond = kPhysicalMaxSpeedMetersPerSecond;
         public static final double kTeleDriveMaxAngularSpeedRadiansPerSecond = kPhysicalMaxAngularSpeedRadiansPerSecond;
 
+
         // change acceleration based on drive testing
         public static final double kTeleDriveMaxAccelerationUnitsPerSecond = 4;
         public static final double kTeleDriveMaxAngularAccelerationUnitsPerSecond = 3;
 
-        public static final double kTeleDriveSlowAccelerationUnitsPerSecond = 1.5;
-        public static final double kTeleDriveSlowAngularAccelerationUnitsPerSecond = 1.5;
+        public static final double kTeleDriveNormalAccelerationUnitsPerSecond = kTeleDriveMaxAccelerationUnitsPerSecond / 2;
+        public static final double kTeleDriveNormalAngularAccelerationUnitsPerSecond = kTeleDriveMaxAngularAccelerationUnitsPerSecond / 2;
+
+        public static final double kTeleDriveSlowAccelerationUnitsPerSecond = kTeleDriveMaxAccelerationUnitsPerSecond / 4;
+        public static final double kTeleDriveSlowAngularAccelerationUnitsPerSecond = kTeleDriveMaxAngularAccelerationUnitsPerSecond / 4;
 
         public static final double TARGET_ANGLE = Units.degreesToRadians(1);
         public static final double MAX_LEVEL_VELOCITY = 0.1; // FIX mps

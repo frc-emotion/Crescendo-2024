@@ -89,13 +89,12 @@ public class RobotContainer {
                 autoManager = AutoManager.getInstance();
 
                 m_SwerveSubsystem.setDefaultCommand(
-                                new DefaultSwerveXboxCommand(
+                                new ModalSwerveXboxCommand(
                                                 m_SwerveSubsystem,
                                                 () -> driverController_HID.getLeftY(),
                                                 () -> driverController_HID.getLeftX(),
                                                 () -> driverController_HID.getRightX(),
-                                                () -> driverController_HID
-                                                                .getRightTriggerAxis() > OIConstants.kDeadband));
+                                                DriveMode.NORMAL));
 
                 m_ShooterSubsystem.setDefaultCommand(
                                 new ShooterManualCommand(
@@ -237,25 +236,23 @@ public class RobotContainer {
                 m_driverController
                                 .leftBumper()
                                 .whileTrue(
-                                                new SlowModeSwerveCommand(
-                                                                m_SwerveSubsystem,
-                                                                () -> driverController_HID.getLeftY(),
-                                                                () -> driverController_HID.getLeftX(),
-                                                                () -> driverController_HID.getRightX(),
-                                                                () -> driverController_HID
-                                                                                .getRightTriggerAxis() > OIConstants.kDeadband));
+                                        new ModalSwerveXboxCommand(
+                                                m_SwerveSubsystem,
+                                                () -> driverController_HID.getLeftY(),
+                                                () -> driverController_HID.getLeftX(),
+                                                () -> driverController_HID.getRightX(),
+                                                DriveMode.SLOW));
 
                 // Swerve Turbo Drive Mode
                 m_driverController
                                 .rightBumper()
                                 .whileTrue(
-                                                new TurboModeSwerveCommand(
+                                                new ModalSwerveXboxCommand(
                                                                 m_SwerveSubsystem,
                                                                 () -> driverController_HID.getLeftY(),
                                                                 () -> driverController_HID.getLeftX(),
                                                                 () -> driverController_HID.getRightX(),
-                                                                () -> driverController_HID
-                                                                                .getRightTriggerAxis() > OIConstants.kDeadband));
+                                                                DriveMode.TURBO));
 
                 // Swerve Zero Heading
                 m_driverController
@@ -531,7 +528,7 @@ public class RobotContainer {
                 // chooser.
 
                 gameShuffleboardTab
-                                .addNumber("Robot Heading", () -> m_SwerveSubsystem.getHeading())
+                                .addNumber("Robot Heading", () -> m_SwerveSubsystem.getRotation2d().getDegrees())
                                 .withWidget(BuiltInWidgets.kGyro)
                                 .withPosition(10, 0)
                                 .withSize(3, 4);

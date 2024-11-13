@@ -4,12 +4,15 @@
 
 package frc.robot;
 
+import java.util.ArrayList;
+
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.util.PeriodicFunction;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -25,6 +28,8 @@ public class Robot extends TimedRobot {
     private Command m_autonomousCommand, m_ledCommand, m_controllerRumbleCommand;
 
     private RobotContainer m_robotContainer;
+
+    private static final ArrayList<PeriodicFunction> functions = new ArrayList<PeriodicFunction>();
 
     /**
      * This function is run when the robot is first started up and should be used
@@ -45,6 +50,18 @@ public class Robot extends TimedRobot {
 
         // Record both DS control and joystick data
         DriverStation.startDataLog(DataLogManager.getLog());
+
+        for(PeriodicFunction function : functions) {
+            addPeriodic(function.runnable, function.period_ms);
+        }
+    }
+
+    public static void addPeriodicFunction(Runnable runnable, double ms) {
+        addPeriodicFunction(new PeriodicFunction(runnable, ms));
+    }
+
+    public static void addPeriodicFunction(PeriodicFunction function) {
+        functions.add(function);
     }
 
     /**
