@@ -91,8 +91,8 @@ public class RobotContainer {
                 m_SwerveSubsystem.setDefaultCommand(
                                 new ModalSwerveXboxCommand(
                                                 m_SwerveSubsystem,
-                                                () -> driverController_HID.getLeftY(),
                                                 () -> driverController_HID.getLeftX(),
+                                                () -> driverController_HID.getLeftY(),
                                                 () -> driverController_HID.getRightX(),
                                                 DriveMode.NORMAL));
 

@@ -35,6 +35,8 @@ public class ModalSwerveXboxCommand extends Command {
         this.turningSpdFunc = turningSpdFunc;
         this.driveMode = mode;
 
+        addRequirements(swerveSubsystem);
+
         switch(driveMode) {
             case TURBO:
                 xLimiter = new SlewRateLimiter(DriveConstants.kTeleDriveMaxAccelerationUnitsPerSecond);
@@ -43,13 +45,14 @@ public class ModalSwerveXboxCommand extends Command {
                 maxDriveSpeed = DriveConstants.kTeleDriveMaxSpeedMetersPerSecond;
                 maxAngularSpeed = DriveConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond;
                 break;
-                case SLOW:
+            case SLOW:
                 xLimiter = new SlewRateLimiter(DriveConstants.kTeleDriveSlowAccelerationUnitsPerSecond);
                 yLimiter = new SlewRateLimiter(DriveConstants.kTeleDriveSlowAccelerationUnitsPerSecond);
                 turningLimiter = new SlewRateLimiter(DriveConstants.kTeleDriveSlowAngularAccelerationUnitsPerSecond);
                 maxDriveSpeed = DriveConstants.kTeleDriveSlowSpeedMetersPerSecond;
                 maxAngularSpeed = DriveConstants.kTeleDriveSlowAngularSpeedRadiansPerSecond;
                 break;
+            case NORMAL:
             default:
                 xLimiter = new SlewRateLimiter(DriveConstants.kTeleDriveNormalAccelerationUnitsPerSecond);
                 yLimiter = new SlewRateLimiter(DriveConstants.kTeleDriveNormalAccelerationUnitsPerSecond);
@@ -66,9 +69,9 @@ public class ModalSwerveXboxCommand extends Command {
 
     @Override
     public void execute() {
-        double x = xLimiter.calculate(xSpdFunc.get() * maxDriveSpeed);
-        double y = yLimiter.calculate(ySpdFunc.get() * maxDriveSpeed);
-        double theta = turningLimiter.calculate(turningSpdFunc.get() * maxAngularSpeed);
+        double x = xSpdFunc.get() * maxDriveSpeed;
+        double y = ySpdFunc.get() * maxDriveSpeed;
+        double theta = turningSpdFunc.get() * maxAngularSpeed;
         
         swerveSubsystem.driveRobotRelative(prepareSpeeds(new ChassisSpeeds(x, y, theta)));
     }

@@ -85,6 +85,10 @@ public final class Constants {
 
         public static final int kDriveSecondaryCurrentLimit = 60;
         public static final int kDriveSmartCurrentLimit = 45;
+        public static final double kPDrive = 0.4;
+        public static final double kIDrive = 0;
+        public static final double kDDrive = 0;
+        
     }
 
     public static final class DriveConstants {

@@ -32,7 +32,7 @@ public class SwerveModuleNeo {
     private final CANSparkMax turningMotor;
 
     private final RelativeEncoder driveEncoder, turningEncoder;
-    private final SparkPIDController turningPidController;
+    private final SparkPIDController turningPidController, drivePIDController;
 
     private MagnetSensorConfigs magnetConfiguration;
 
@@ -58,7 +58,7 @@ public class SwerveModuleNeo {
         magnetConfiguration = new MagnetSensorConfigs();
 
         magnetConfiguration.withMagnetOffset(absoluteEncoderOffset);
-        magnetConfiguration.withAbsoluteSensorRange(AbsoluteSensorRangeValue.Unsigned_0To1);
+        magnetConfiguration.withAbsoluteSensorRange(AbsoluteSensorRangeValue.Signed_PlusMinusHalf);
         magnetConfiguration.withSensorDirection(SensorDirectionValue.CounterClockwise_Positive);
 
         absoluteEncoder = new CANcoder(absoluteEncoderId);
@@ -103,6 +103,12 @@ public class SwerveModuleNeo {
         turningPidController.setPositionPIDWrappingMinInput(-180);
         turningPidController.setPositionPIDWrappingMaxInput(180);
         turningPidController.setOutputRange(-1, 1);
+
+        drivePIDController = driveMotor.getPIDController();
+        drivePIDController.setP(ModuleConstants.kPDrive);
+        drivePIDController.setI(ModuleConstants.kIDrive);
+        drivePIDController.setD(ModuleConstants.kDDrive);
+        drivePIDController.setFeedbackDevice(driveEncoder);
 
         turningMotor.burnFlash();
         driveMotor.burnFlash();
@@ -166,10 +172,15 @@ public class SwerveModuleNeo {
     }
 
     public void setDesiredState(SwerveModuleState state, boolean station) {
-        if (Math.abs(state.speedMetersPerSecond) < 0.01 && !station) {
-            stop();
-            return;
+        if(station) {
+            state = SwerveModuleState.optimize(state, getTurningPosition());
         }
+        setAngle(state.angle);
+        setDrive(state.speedMetersPerSecond);
+    }
+
+    public void setDrive(double speed) {
+        drivePIDController.setReference(speed, ControlType.kVelocity);
     }
 
     public void stop() {
