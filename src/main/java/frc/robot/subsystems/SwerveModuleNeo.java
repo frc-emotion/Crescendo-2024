@@ -12,6 +12,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkPIDController;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
@@ -145,7 +146,7 @@ public class SwerveModuleNeo {
 
     public void setAngle(Rotation2d angle) {
         turningPidController.setReference(
-            angle.getDegrees(),
+            MathUtil.inputModulus(angle.getDegrees(), -180, 180),
             ControlType.kPosition
         );
     }
@@ -171,10 +172,9 @@ public class SwerveModuleNeo {
                 getTurningPosition());
     }
 
-    public void setDesiredState(SwerveModuleState state, boolean station) {
-        if(station) {
-            state = SwerveModuleState.optimize(state, getTurningPosition());
-        }
+    public void setDesiredState(SwerveModuleState state) {
+        state = SwerveModuleState.optimize(state, getTurningPosition());
+
         setAngle(state.angle);
         setDrive(state.speedMetersPerSecond);
     }

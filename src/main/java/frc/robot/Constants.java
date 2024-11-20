@@ -75,8 +75,8 @@ public final class Constants {
         public static final double kTurningEncoderRot2Deg = kTurningMotorGearRatio * 360;
         public static final double kDriveEncoderRPM2MeterPerSec = kDriveEncoderRot2Meter / 60;
         public static final double kTurningEncoderRPM2DegPerSec = kTurningEncoderRot2Deg / 60;
-        public static final double kPTurning = 1.0;
-        public static final double kITurning = 0.1;
+        public static final double kPTurning = 0.4;
+        public static final double kITurning = 0;
         public static final double kDTurning = 0;
 
         public static final double drivekS = 0;

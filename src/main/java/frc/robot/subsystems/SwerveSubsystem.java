@@ -92,7 +92,7 @@ public class SwerveSubsystem extends SubsystemBase {
 
     public void setModuleStates(SwerveModuleState[] moduleStates) {
         for(int i = 0; i < 4; i++) {
-            swerveModules[i].setDesiredState(moduleStates[i], true);
+            swerveModules[i].setDesiredState(moduleStates[i]);
         }
     }
 
